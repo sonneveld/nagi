@@ -37,14 +37,14 @@ struct msgstate_struct
 	// text in messagebox
 	TPOS tpos;		// top left pos of text to display
 	TPOS tpos_edge;	// lower right pos of text to display
-	SIZE tsize;		// height and width of the text displayed
+	AGISIZE tsize;		// height and width of the text displayed
 	
 	// added by me.. Nick
 	u16 printed_height;	// the printed height.. for stretched msgs
 	
 	// background graphic (white with red border)
 	POS bgpos;		// lower left position of bg
-	SIZE bgsize;	// size of bg
+	AGISIZE bgsize;	// size of bg
 };
 typedef struct msgstate_struct MSGSTATE;
 

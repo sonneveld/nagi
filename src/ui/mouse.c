@@ -110,7 +110,7 @@ struct mouse_area_struct
 {
 	int id;
 	POS pos;
-	SIZE size;
+	AGISIZE size;
 };
 typedef struct mouse_area_struct M_AREA;
 

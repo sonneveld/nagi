@@ -37,7 +37,7 @@ int list_box (u8 **list, int size, int init);
 
 
 // i would like to apologise for this crappy crappy code.. but at least it checks for buffer overflows
-void list_print(u8 **list, TPOS *pos, SIZE *size, int status, int up, int down)
+void list_print(u8 **list, TPOS *pos, AGISIZE *size, int status, int up, int down)
 {
 	int i;
 	
@@ -98,7 +98,7 @@ void list_box_draw_blank(u16 var8)
 // init is the first item to point at.
 int list_box(u8 **list, int size, int init)
 {
-	SIZE list_size;
+	AGISIZE list_size;
 	TPOS list_pos;
 	
 	int item_cur;
