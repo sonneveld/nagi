@@ -462,6 +462,7 @@ int gi_list_init(INI *ini)
 					(chdir(ep->d_name) != -1) )
 				{
 					// DO STUFF
+					//printf("trying %s\\%s...\n", token, ep->d_name);
 					info_cur = gameinfo_new(ini);
 					if (info_cur != 0)
 					{
