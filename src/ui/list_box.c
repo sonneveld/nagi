@@ -168,9 +168,13 @@ int list_box(u8 **list, int size, int init)
 				switch (state_event->data)
 				{
 					case 0xD:
+						pop_row_col();
+						text_attrib_pop();
 						return item_cur;
 						
 					case 0x1B:
+						pop_row_col();
+						text_attrib_pop();
 						return -1;
 				}
 				break;
