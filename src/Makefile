@@ -5,8 +5,7 @@ state_info.c obj_show.c  game_id.c cmd_misc.c\
 trace.c config.c list.c log.c
 
 # version
-SRC +=  version/agi_crc.c \
-version/standard.c
+SRC +=  version/agi_crc.c version/standard.c
 
 #version/ver_init.c version/gamelist.c
 # resource files
@@ -19,13 +18,9 @@ sys/mem_wrap.c  sys/sys_dir.c sys/vstring.c\
 sys/ini_config.c
 
 # video files
-
-SRC += sys/gfx.c sys/vid_render.c \
-sys/drv_dummy.c sys/drv_sdl.c sys/drv_video.c \
+SRC += sys/gfx.c sys/vid_render.c\
+sys/drv_dummy.c sys/drv_sdl.c sys/drv_video.c\
 sys/chargen.c sys/agi_file.c
-#SRC +=  sys/video.c sys/video_misc.c\
-#sys/vid_sdl.c sys/vid_dummy.c sys/vid_render.c\
-#sys/font_8x8.c sys/font_4x8.c sys/font_16x16.c
 
 # pic files
 SRC += picture/pic_render.c picture/pic_res.c\
@@ -37,13 +32,13 @@ logic/logic_eval.c logic/logic_execute.c
 
 # view files
 SRC += view/view_base.c view/obj_update.c view/obj_blit.c\
-view/obj_base.c  view/obj_proximity.c \
-view/obj_position.c view/obj_loop.c view/obj_motion.c view/obj_drawerase.c \
+view/obj_base.c  view/obj_proximity.c\
+view/obj_position.c view/obj_loop.c view/obj_motion.c view/obj_drawerase.c\
 view/obj_cycle.c view/obj_motion_cmd.c view/obj_block.c\
 view/obj_priority.c view/obj_picbuff.c
 
 # sound files
-SRC += sound/sound_base.c sound/pcm_out.c sound/pcm_out_sdl.c \
+SRC += sound/sound_base.c sound/pcm_out.c sound/pcm_out_sdl.c\
 sound/sound_gen.c sound/tone.c sound/tone_pcm.c sys/drvpick.c
 
 # user input
@@ -52,43 +47,57 @@ SRC += ui/msg.c ui/events.c  ui/cmd_input.c ui/controller.c ui/status.c\
 ui/menu.c ui/mouse.c ui/list_box.c
 
 OBJ = $(SRC:.c=.o)
+OBJ += nagires.o
 
 CC = gcc
 
-CFLAGS := -g
+#CFLAGS := -g
 #CFLAGS += -g -pg  -O2
-#CFLAGS += -O2
+CFLAGS += -O2
 #CFLAGS += -finline-functions
 #CFLAGS += -IC:/mingw/mingw32/include/SDL
 
 DEPFLAGS := $(CFLAGS)
 
-# add warnings
 CFLAGS += -fwritable-strings
+# add warnings
 CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual
 #CFLAGS += -Werror
 
-MACH = -mwindows -mconsole
+MACH_WIN = -mwindows
+MACH_CONSOLE = -mwindows -mconsole
 LIB = -lmingw32 -lSDLmain -lSDL
 
-../bin/n.exe: $(OBJ) 
-	$(CC) $(CFLAGS) $(MACH) $(OBJ) $(LIB) -o $@
+all: nagi nagi-console
+
+nagi: ../bin/n.exe
+
+nagi-console: ../bin/n-console.exe
+
+../bin/n.exe: $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) $(MACH_WIN) -o $@
+
+../bin/n-console.exe: $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) $(MACH_WIN) $(MACH_CONSOLE) -o $@
+
+cleanall: clean depclean
 
 clean:
-	$(RM) $(OBJ) ../bin/n.exe core
+	$(RM) $(OBJ) ../bin/n.exe core ../bin/n-console.exe
 
 depclean:
 	$(RM) $(OBJ:.o=.d)
 
 %.d: %.c
-	sh depend.sh $(DEPFLAGS) $< > $@
+	$(CC) -M -MG $(DEPFLAGS) $< | sed -e 's@ /[^ ]*@@g' -e 's@^\(.*\)\.o:@\1.d \1.o:@' > $@
+#sh depend.sh $(DEPFLAGS) $< > $@
 
-include $(OBJ:.o=.d)
+include $(SRC:.c=.d)
 
 nagires.o: nagi.rc nagi.ico
 	windres -v $< -O coff -o $@
 	
 %.o: %.c
-	$(CC) $(CFLAGS) $(MACH) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 	
 
