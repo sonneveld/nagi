@@ -5,8 +5,10 @@ state_info.c obj_show.c  game_id.c cmd_misc.c\
 trace.c config.c
 
 # version
-SRC += version/ver_init.c version/agi_crc.c version/gamelist.c
+SRC +=  version/agi_crc.c \
+version/standard.c
 
+#version/ver_init.c version/gamelist.c
 # resource files
 SRC += res/res_dir.c res/res_vol.c res/res_lzw.c res/res_pic.c
 
@@ -20,7 +22,7 @@ sys/ini_config.c
 
 SRC += sys/gfx.c sys/vid_render.c \
 sys/drv_dummy.c sys/drv_sdl.c sys/drv_video.c \
-sys/chargen.c
+sys/chargen.c sys/agi_file.c
 #SRC +=  sys/video.c sys/video_misc.c\
 #sys/vid_sdl.c sys/vid_dummy.c sys/vid_render.c\
 #sys/font_8x8.c sys/font_4x8.c sys/font_16x16.c
@@ -52,7 +54,8 @@ OBJ := $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS := -d -O2 -fwritable-strings
+CFLAGS := -fwritable-strings
+#CFLAGS += -g -pg -d -O3 
 #CFLAGS += -finline-functions
 CFLAGS += -IC:/mingw/mingw32/include/SDL
 
@@ -63,7 +66,7 @@ DEPFLAGS := $(CFLAGS)
 CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual 
 #CFLAGS += -Werror
 
-LIB = -lmingw32 -lSDLmain -lSDL -mwindows -mconsole
+LIB = -lmingw32 -lSDLmain -lSDL -mwindows  -mconsole
 
 ../bin/n.exe: $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LIB) 
