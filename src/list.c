@@ -130,7 +130,7 @@ void *list_add(LIST *list)
 	
 	assert(list != 0);
 	
-	n = a_malloc(sizeof(NODE) + list->contents_size - 1);
+	n = a_malloc(sizeof(NODE) + list->contents_size );
 	
 	if (list->tail != 0)
 		(list->tail)->next = n;
