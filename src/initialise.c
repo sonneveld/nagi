@@ -43,10 +43,11 @@ _RoomInit                        cseg     000012DE 00000015
 #include "sys/endian.h"
 #include "objects.h"
 #include "sys/time.h"
-#include "sys/ini_config.h"
 
 #include "logic/cmd_table.h"
 #include "ui/mouse.h"
+
+#include "conf.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 // reads ini file and inits nagi
@@ -58,9 +59,7 @@ void game_init(void);
 // refresh lists for new room
 void room_init(void);
 
-void config_read(void);
-void arrange_mem(void);
-void get_hardware_info(void);
+
 
 
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -70,16 +69,26 @@ void get_hardware_info(void);
 
 
 void nagi_init()
-{
+{	
+	u8 env_value[50];
+	
 	memset( &state, 0, sizeof(AGI_STATE) );
 	state.word_13f = 0x0F;
 	state.script_size = 0x32;
 	state.input_pos = 0x17;
 	state.status_line_row = 0x15;
 	state.menu_state = 1;
+	computer_type = 0;	// ibm pc
+	drives_found = 1;	// yes, drives are known of
+	display_type = 3;		// ega
+	//text_mode = 0;
+	
+	// read nagi.ini
+	conf_read();
 	
 	// for the console window thingy
-	freopen( "CON", "w", stdout );	
+	if (c_nagi_console)
+		freopen( "CON", "w", stdout );	
 	
 	printf("New Adventure Game Interpreter (NAGI) %s\n", NAGI_VERSION);
 	printf("Copyright (C) 2000-2001 Nick Sonneveld\n");
@@ -89,14 +98,20 @@ void nagi_init()
 	printf("Copyright (C) 1984-1988 Sierra On-Line, Inc.\n");
 	printf("Authors: Jeff Stephenson & Chris Iden\n\n");
 	
-	// read nagi.ini
-	config_read();
-
-	// get hardware info
-	get_hardware_info();
-
 	// initialise SDL
 	printf("Initialising Simple DirectMedia Layer (SDL)...");
+
+	// video_dirver
+	if (strlen(c_sdl_drv_video) > 30)
+		c_sdl_drv_video[30] = 0;
+	if (strlen(c_sdl_drv_sound) > 30)
+		c_sdl_drv_sound[30] = 0;
+	sprintf(env_value, "SDL_VIDEODRIVER=%s", c_sdl_drv_video);
+	putenv(env_value);
+	// audio driver
+	sprintf(env_value, "SDL_AUDIODRIVER=%s", c_sdl_drv_sound);
+	putenv(env_value);
+	
 	//SDL_INIT_EVENTTHREAD SDL_INIT_AUDIO|
 	if ( SDL_Init(SDL_INIT_TIMER) < 0 )
 	{
@@ -222,67 +237,3 @@ void room_init(void)
 }
 
 
-
-
-#warning fix arrange_mem() for the stack-based mem to work
-void arrange_mem()
-{
-}
-
-void get_hardware_info()
-{
-	computer_type = 0;	// ibm pc
-	drives_found = 1;	// yes, drives are known of
-	display_type = 3;		// ega
-	//text_mode = 0;
-}
-
-
-void config_read(void)
-{
-	u8 *key_value;
-	u8 env_value[50];
-	
-	printf("\nReading NAGI configuration file...");
-	// read_strng
-	ini_open("nagi.ini");
-
-	// video_driver
-	if ( (key_value=ini_read("video", "video_driver")) != 0)
-	{
-		// mingw does not have snprintf... shocking
-		if (strlen(key_value) < 15)
-		{
-			sprintf(env_value, "%s=%s", "SDL_VIDEODRIVER", key_value);
-			putenv(env_value);
-		}
-	}
-	else
-		putenv("SDL_VIDEODRIVER=windib");
-	// video fullscreen
-	gfx_fullscreen = ini_boolean("video", 0, "video_fullscreen", 0);
-	// video scale
-	gfx_scale = ini_int("video", 0, "video_scale", 1);
-	if (gfx_scale < 1)
-			gfx_scale = 1;
-	
-	// sound_driver
-	if ( (key_value=ini_read("sound", "sound_driver")) != 0)
-	{
-		if (strlen(key_value) < 15)
-		{
-			sprintf(env_value, "%s=%s", "SDL_AUDIODRIVER", key_value);
-			putenv(env_value);
-		}
-	}
-	else
-		putenv("SDL_AUDIODRIVER=waveout");
-	// sound disable
-	nagi_sound_disable = ini_boolean("sound", 0, "sound_disable", 0);
-	
-	// logic_debug
-	// sample
-	// sample freq
-	ini_close();
-	printf("done.\n");
-}
