@@ -83,6 +83,7 @@ u8 *cmd_clear_lines(u8 *c)
 	
 	if (upper > lower)
 	{
+		printf("cmd_clear_lines(): warning, upper and lower in wrong order.\n");
 		lower = upper;
 	}
 	window_portion_clear(upper, lower, attrib);
