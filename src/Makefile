@@ -64,7 +64,7 @@ LIB = -lmingw32 -lSDLmain -lSDL -mwindows -mconsole
 include $(OBJ:.o=.d)
 
 %.d: %.c
-	depend.sh $(CFLAGS) $< > $@
+	sh depend.sh $(CFLAGS) $< > $@
 
 clean:
 	$(RM) $(OBJ) $(OBJ:.o=.d) ../bin/n.exe core
