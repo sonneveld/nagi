@@ -1,6 +1,8 @@
 /* FUNCTION list 	---	---	---	---	---	---	---
 
 */
+//~ RaDIaT1oN (2002-04-29):
+//~ add const to search declaration
 
 /* BASE headers	---	---	---	---	---	---	--- */
 #include "agi.h"
@@ -227,7 +229,7 @@ void *list_element_tail(LIST *list)
 	return (n ? (void *)(n->contents) : 0);
 }
 
-void list_sort(LIST *list, int (*compare)(void*, void*))
+void list_sort(LIST *list, int (*compare)(const void *, const void *))
 {
 	void **node_list, **node_list_ptr;
 	NODE *cur, *prev;

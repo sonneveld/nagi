@@ -1,5 +1,9 @@
 #ifndef list_h_struct
 #define list_h_struct
+
+//~ RaDIaT1oN (2002-04-29):
+//~ add const to search declaration
+
 /* STRUCTURES	---	---	---	---	---	---	--- */
 struct node_struct
 {
@@ -35,10 +39,10 @@ extern void list_clear_past(LIST *list, void *contents);
 extern void *list_add(LIST *list);
 extern void list_remove(LIST *list, void *contents);
 extern int list_length(LIST *list);
-extern void *list_element_at(LIST *list, int index);
+extern void *list_element_at(LIST *list, int elementIndex);
 extern void *list_element_head(LIST *list);
 extern void *list_element_tail(LIST *list);
-extern void list_sort(LIST *list, int (*compare)(void*, void*));
+extern void list_sort(LIST *list, int (*compare)(const void *, const void *));
 
 extern STACK *stack_new(int contents_size);
 extern void stack_free(STACK *stack);
