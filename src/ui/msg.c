@@ -105,14 +105,12 @@ u8 *cmd_display(u8 *c)
 {
 	u16 row, col;
 	u8 msg[1000];
-
 	push_row_col();
 	row = *(c++);
 	col = *(c++);
 	goto_row_col(row, col);
 	agi_printf(str_wordwrap(msg, logic_msg(*(c++)), 40));
 	pop_row_col();
-
 	return c;
 }
 
@@ -127,7 +125,6 @@ u8 *cmd_display_v(u8 *c)
 	goto_row_col(row, col);
 	agi_printf(str_wordwrap(msg, logic_msg(state.var[*(c++)]), 40));
 	pop_row_col();
-	
 	return c;
 }
 
@@ -345,7 +342,7 @@ u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 						case 'o':	// object name
 							source = str_to_int_ptr(source, &my_num);
 							my_str = inv_obj_string;
-							my_str += 	inv_obj_table[my_num].name;
+							my_str += 	inv_obj_table[state.var[my_num]].name;
 							msg = r_display1f93(my_str, msg);
 							break;
 						
