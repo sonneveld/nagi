@@ -2,7 +2,7 @@
 #define agi_h_file
 
 // the only include file i should include in an include file
-#include <sdl/SDL.h>
+#include <SDL/SDL.h>
 
 #ifdef RAD_WARN
 #warning RaDIaT1oN modified agi.h
