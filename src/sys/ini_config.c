@@ -140,7 +140,7 @@ void string_rejoin(INI *ini)
 	}
 }
 
-// we can trash this if we want.. we need ini->cur and we save ini->cur
+// we can trash this (cur_ptr) if we want.. we need ini->cur and we save ini->cur
 // if we can't get to the next line.. we don't need the data.. we just finish
 void line_next(INI *ini)
 {
