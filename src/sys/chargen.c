@@ -21,6 +21,7 @@
 #include "vid_render.h"
 
 #include "mem_wrap.h"
+#include "../conf.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 //void test_function(void);
@@ -140,8 +141,8 @@ void ch_init(void)
 {
 	SIZE needed;
 
-	needed.w = rstate.drv->w * gfx_scale / 40;
-	needed.h = rstate.drv->h * gfx_scale / 21;
+	needed.w = rstate.drv->w * c_vid_scale / 40;
+	needed.h = rstate.drv->h * c_vid_scale / 21;
 
 	// pick the right font.. load it up
 	font_load(font_open(&needed));

@@ -20,8 +20,7 @@ extern u8 gfx_paltype;
 extern PCOLOUR *gfx_pal;	// set from config
 extern u8 gfx_palsize;
 
-extern u8 gfx_scale;	// set from config
-extern u8 gfx_fullscreen;	// set from config
+//extern u8 gfx_scale;	// set from config
 
 extern SIZE gfx_size;	// from render size * scale
 extern u8 *gfx_picbuff;	// created in gfx_init();

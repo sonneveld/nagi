@@ -86,4 +86,4 @@ int snd_off;
 u8 *sample_data;
 
 
-extern u8 nagi_sound_disable;
+//extern u8 nagi_sound_disable;

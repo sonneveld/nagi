@@ -8,6 +8,8 @@
 #include "../sound/sound.h"  
 #include "../flags.h"
 
+#include "../conf.h"
+
 
 #define CHAN_MAX 4
 #define CARD_FREQ 44100
@@ -44,13 +46,13 @@ u16 chan_cur = 0;	// BX
 u8 snd_buff[SND_BUFF_SIZE];
 int snd_off;
 
-u8 nagi_sound_disable = 0;
+//u8 nagi_sound_disable = 0;
 
 void sound_driver_init()
 {
 	SDL_AudioSpec *wanted;
 	
-	if (nagi_sound_disable != 1)
+	if (c_snd_disable != 1)
 	{
 		wanted = (SDL_AudioSpec *)a_malloc(sizeof(SDL_AudioSpec));
 		
@@ -66,7 +68,7 @@ void sound_driver_init()
 		if ( SDL_OpenAudio(wanted, NULL) < 0 )
 		{
 			printf("Couldn't open audio: %s\n", SDL_GetError());
-			nagi_sound_disable = 1;
+			c_snd_disable = 1;
 			a_free(wanted);
 			return;
 		}
@@ -80,7 +82,7 @@ void sound_driver_init()
 
 void sound_driver_denit()
 {
-	if (nagi_sound_disable != 1)
+	if (c_snd_disable != 1)
 	{
 		// turn off sdl driver
 		printf("Waiting for sound thread to die...");
@@ -100,7 +102,7 @@ void sound_new(SOUND *snd)
 	my_cnt = 0;
 	//printf("new sound!\n");
 
-	if (nagi_sound_disable != 1)
+	if (c_snd_disable != 1)
 	{
 		channel[0].sample_num = 0;
 		channel[1].sample_num = 0;
@@ -257,7 +259,7 @@ void sound_vector()
 
 void sound_stop_sdl()
 {
-	if (nagi_sound_disable != 1)
+	if (c_snd_disable != 1)
 	{	
 		sound_playing = 0;
 		SDL_PauseAudio(1);

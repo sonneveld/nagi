@@ -21,6 +21,8 @@
 
 #include "chargen.h"
 
+#include "../conf.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -90,8 +92,8 @@ u8 gfx_paltype = 0;
 PCOLOUR *gfx_pal = 0;	// set from config
 u8 gfx_palsize = 0;
 
-u8 gfx_scale = 1;	// set from config
-u8 gfx_fullscreen = 0;	// set from config
+//u8 gfx_scale = 1;	// set from config
+//u8 gfx_fullscreen = 0;	// set from config
 
 SIZE gfx_size = {320, 200};	// from render size * scale
 u8 *gfx_picbuff = 0;	// created in gfx_init();
@@ -114,12 +116,12 @@ void gfx_init(void)
 	// **************************
 
 	// do something to calc this from render/font
-	gfx_size.w = 320 * gfx_scale;
-	gfx_size.h = 200 * gfx_scale;
+	gfx_size.w = 320 * c_vid_scale;
+	gfx_size.h = 200 * c_vid_scale;
 	// **************************
 
 	// create a surface
-	gfx_surface = vid_display(&gfx_size, gfx_fullscreen);
+	gfx_surface = vid_display(&gfx_size, c_vid_full_screen);
 
 	// setup the palette
 	switch (gfx_paltype)
@@ -174,10 +176,10 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 	rend_w = rect_w * rstate.drv->scale_x;
 	rend_h = rect_h * rstate.drv->scale_y;
 
-	sdl_x = rend_x * gfx_scale;
-	sdl_y = gfx_scale*(rend_y + 1) - 1   + state.window_row_min * font_size.h;
-	sdl_w = rend_w * gfx_scale;
-	sdl_h = rend_h * gfx_scale;
+	sdl_x = rend_x * c_vid_scale;
+	sdl_y = c_vid_scale*(rend_y + 1) - 1   + state.window_row_min * font_size.h;
+	sdl_w = rend_w * c_vid_scale;
+	sdl_h = rend_h * c_vid_scale;
 
 	vid_lock(gfx_surface);
 
@@ -189,24 +191,24 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 		// draw line
 		for (w_count=rend_w; w_count!=0; w_count--)
 		{
-			memset(sdl_buf, (*rend_buf)&0xF, gfx_scale);
-			sdl_buf += gfx_scale;
+			memset(sdl_buf, (*rend_buf)&0xF, c_vid_scale);
+			sdl_buf += c_vid_scale;
 			rend_buf++;
 		}
 
 		// repeat line
-		if (gfx_scale != 1)
+		if (c_vid_scale != 1)
 		{
-			sdl_line = sdl_buf - rend_w*gfx_scale;
-			sdl_buf -= gfx_surface->line_size + rend_w*gfx_scale;
-			for (i=0; i<gfx_scale-1; i++)
+			sdl_line = sdl_buf - rend_w*c_vid_scale;
+			sdl_buf -= gfx_surface->line_size + rend_w*c_vid_scale;
+			for (i=0; i<c_vid_scale-1; i++)
 			{
-				memcpy(sdl_buf, sdl_line, rend_w*gfx_scale);
+				memcpy(sdl_buf, sdl_line, rend_w*c_vid_scale);
 				sdl_buf -= gfx_surface->line_size;
 			}
 		}
 		else
-			sdl_buf -= gfx_surface->line_size*gfx_scale + rend_w*gfx_scale;
+			sdl_buf -= gfx_surface->line_size*c_vid_scale + rend_w*c_vid_scale;
 
 		// next line in buffer
 		rend_buf -= rstate.drv->w + rend_w;
