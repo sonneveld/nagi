@@ -2,6 +2,9 @@
 
 */
 
+//~ RaDIaT1oN (2002-04-29):
+//~ very nice file search routine
+
 /* BASE headers	---	---	---	---	---	---	--- */
 //#include "agi.h"
 #include "../agi.h"
@@ -9,7 +12,14 @@
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
+
+#ifdef RAD_LINUX
+#include <sys/types.h>
+#include <dirent.h>
+#include <string.h>
+#else
 #include <io.h>
+#endif
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"
@@ -36,25 +46,75 @@
 
 u8 *find_first(FIND *token, u8 *name)
 {
+#ifndef RAD_LINUX
 	token->handle = _findfirst(name, &token->winfile_info);
 	if (token->handle != -1)
 		return token->winfile_info.name;
 	else 
 		return 0;
+#else
+	token->dir = opendir(".");
+	strcpy(token->name, name);
+
+	while((token->file = readdir(token->dir))) {
+		char *tok, *found;
+		
+		if(!strcmp(token->file->d_name, name)) 
+			return token->file->d_name;
+			
+		tok = strtok(name, "*");
+		if(tok == NULL) continue;
+		found = strstr(token->file->d_name, tok);
+		if(found == NULL) continue;
+
+		while((tok = strtok(NULL, "*"))) {
+			if(!(found = strstr(found, tok))) break;
+		}
+		if(found) return token->file->d_name;
+	}
+	
+	return NULL;
+#endif
 }
 
 u8 *find_next(FIND *token)
 {
+#ifndef RAD_LINUX
 	if (_findnext(token->handle, &token->winfile_info) == 0)
 		return token->winfile_info.name;
-	else 
+	else
 		return 0;
+#else
+	while((token->file = readdir(token->dir))) {
+		char *tok, *found;
+		
+		if(!strcmp(token->file->d_name, token->name)) 
+			return token->file->d_name;
+
+		tok = strtok(token->name, "*");
+		if(tok == NULL) continue;
+		found = strstr(token->file->d_name, tok);
+		if(found == NULL) continue;
+
+		while((tok = strtok(NULL, "*"))) {
+			if(!(found = strstr(found, tok))) break;
+		}
+		if(found) return token->file->d_name;
+	}
+	
+	return NULL;
+#endif
 }
 
 void find_close(FIND *token)
 {
+#ifndef RAD_LINUX
 	if (token->handle != -1)
 		_findclose(token->handle);
+#else
+	if(token->dir) closedir(token->dir);
+	token->dir = NULL;
+#endif
 }
 
 

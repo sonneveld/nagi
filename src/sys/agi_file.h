@@ -1,14 +1,27 @@
 #ifndef file_h_file
 #define file_h_file
 
+//~ RaDIaT1oN (2002-04-29):
+//~ very nice file search routine
 
+#ifdef RAD_LINUX
+#include <sys/types.h>
+#include <dirent.h>
+#else
 #include <io.h>
+#endif
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 struct find_struct
 {
+#ifndef RAD_LINUX
 	struct _finddata_t winfile_info;
 	int handle;
+#else
+	DIR *dir;	
+	struct dirent *file;
+	char name[50];
+#endif
 };
 typedef struct find_struct FIND;
 	
