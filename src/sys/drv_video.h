@@ -77,28 +77,6 @@ struct video_driver_struct
 	void (*ptr_fill)(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour);
 };
 typedef struct video_driver_struct VDRIVER;
-	
-	
-struct video_state_struct
-{
-	VDRIVER *drv;
-	
-	u8 *pal;
-	u8 pal_size;
-	
-	int scale;
-	int scale_fill;
-	int fullscreen;
-	
-	u16 w;
-	u16 h;
-	
-	u8 *pic_buf;
-	u8 pic_buf_row;
-	u8 text_mode;
-
-};
-typedef struct video_state_struct VSTATE;
 
 struct font_struct
 {

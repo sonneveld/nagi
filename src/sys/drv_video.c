@@ -39,22 +39,6 @@
 
 VDRIVER vdriver;
 
-VSTATE vstate =
-{
-	&vdriver,  // driver
-	0,	// pal
-	16,	// pal_size
- 	1,	// scale
-	1,	// scale_fill
-	0,	// full screen
-	0,	// w
-	0,	// h
-	0,	// pic_buf
-	0,	// pic_buf_row
-	0 // textmode
-};
-
-
 void vid_init(void)
 {
 	// init video (scale x size of renderer)
