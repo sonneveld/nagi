@@ -426,6 +426,8 @@ void gameinfo_namegen(GAMEINFO *info, INI *ini, u8 *dir_sub, u8 *dir)
 	stand_rejoin();
 }
 
+int game_count = 0;
+
 
 // create a new gameinfo struct for a given directory if a game exists in it.. 
 // called on for each dir
@@ -434,6 +436,7 @@ void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 	AGICRC agicrc;
 	GAMEINFO info_new;
 	NODE *n;
+	u8 msg[strlen("Games found: XXXXXXXXXXXX")];
 	
 	assert(list != 0);
 	
@@ -464,6 +467,9 @@ void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 		// if everything ok
 		// ADD TO LIST
 		n = list_add(list);
+		game_count++;
+		sprintf(msg, "Games found: %d", game_count);
+		message_box_draw(msg, 0, 0, 0);
 		memcpy( GI(n), &info_new, sizeof(GAMEINFO) );
 	}
 }
@@ -480,6 +486,8 @@ void gi_list_init(LIST *list, INI *ini)
 	
 	assert(list != 0);
 
+	game_count = list_length(list);
+	
 	// for each dir
 	
 	dir_list = strdupa(c_standard_dir_list);
@@ -728,6 +736,9 @@ void standard_select_ng(void)
 	
 	list_game = list_new(sizeof(GAMEINFO));
 	gi_list_init(list_game, ini_standard);
+	
+	if ( msgstate.active != 0)
+		cmd_close_window(0);
 	
 	if (list_length(list_game) == 0)
 	{

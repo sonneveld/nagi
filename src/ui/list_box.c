@@ -159,6 +159,7 @@ int list_box(u8 **list, int size, int init)
 	
 	for(;;)
 	{
+		int force;
 		ch_update();
 		state_event = event_wait();
 		//joy_butt_map(state_event);
@@ -181,45 +182,60 @@ int list_box(u8 **list, int size, int init)
 				
 			case 2:
 				list_box_draw_blank(list_pos.row + item_cur - item_top);
+				force = 0;
 				switch(state_event->data)
 				{
 					case 1:
-						if (item_cur > 0)
-						{
 							item_cur--;
-							if (item_cur < item_top)
-							{
-								int scroll;
-								scroll = (list_size.h * 3 )/ 4;
-								if ((item_top - scroll) < 0)
-									scroll = item_top;
-								item_top -= scroll;
-								list_print(list+1+item_top, &list_pos, &list_size, 
-										(size>list_size.h), (item_top > 0), ((item_top + list_size.h) < size));
-							}
-						}
-					
 						break;
 						
 					case 5:
-						if (item_cur < (size -1))
-						{
 							item_cur++;
-							if (item_cur > (item_top+list_size.h-1))
-							{
-								int scroll;
-								scroll = (list_size.h * 3 )/ 4;
-								if ((item_top+list_size.h-1+ scroll) > size)
-									scroll = size - (item_top+list_size.h);
-								item_top += scroll;
-								list_print(list+1+item_top, &list_pos, &list_size, 
-									(size>list_size.h), (item_top > 0), ((item_top + list_size.h) < size));
-							}
-						}
+						break;
+						
+					case 4:
+							item_cur = item_top + list_size.h-1;
+							force = 4;
+						break;
+					
+					case 2:
+							item_cur = item_top;
+							force = 2;
 						break;
 						
 					default:
 				}
+				
+				if (item_cur < 0)
+					item_cur = 0;
+				else if (item_cur >= size)
+					item_cur = size-1;
+				
+				if ((item_cur > (item_top+list_size.h-1)) || (force==4))// down below
+				{
+					item_top = item_cur - (list_size.h/4);
+					
+					if (item_top < 0)
+						item_top = 0;
+
+					if ((item_top + list_size.h) > size)
+						item_top = size - list_size.h;
+
+					list_print(list+1+item_top, &list_pos, &list_size, 
+						(size>list_size.h), (item_top > 0), ((item_top + list_size.h) < size));
+				}
+				else 	if ((item_cur < item_top) || (force==2)) // up above
+				{
+					item_top = item_cur - (list_size.h*3)/ 4;
+					if (item_top < 0)
+						item_top = 0;
+					if ((item_top + list_size.h) > size)
+						item_top = size - list_size.h;
+
+					list_print(list+1+item_top, &list_pos, &list_size, 
+							(size>list_size.h), (item_top > 0), ((item_top + list_size.h) < size));
+				}
+				
 				list_box_draw_arrow(list_pos.row + item_cur - item_top);
 
 				break;
