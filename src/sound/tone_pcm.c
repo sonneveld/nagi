@@ -105,7 +105,7 @@ struct tone_chan_struct
 		} n;
 		
 #ifndef RAD_LINUX
-	}
+	};
 #endif
 	
 };
