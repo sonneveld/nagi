@@ -13,8 +13,10 @@
 /* OTHER headers	---	---	---	---	---	---	--- */
 #include "../sys/mem_wrap.h"
 #include "../sys/endian.h"
-#include "video.h"
+
+#include "drv_video.h"
 #include "vid_render.h"
+#include "gfx.h"
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 void ega_update(u16 x, u16 y, u16 width, u16 height);
 void cga_update(u16 x, u16 y, u16 width, u16 height);
@@ -66,7 +68,19 @@ RDRIVER render_drv_dummy =
 	render_colour, dummy_view_dither
 };
 	
-RSTATE rstate = {&render_drv_cga0,0,0};
+RSTATE rstate = {&render_drv_ega,0,0};
+
+/*
+rend_state
+rend_buff
+rend_buff_size
+
+rend_width
+rend_height
+rend_pal_type
+rend_x_scale
+rend_y_scale
+*/
 
 // init or reread new settings
 void render_init()
@@ -103,7 +117,7 @@ void render_shutdown()
 void render_update(u16 x, u16 y, u16 width, u16 height)
 {
 	rstate.drv->func_update(x, y, width, height);
-	vid_update(x, y, width, height);
+	gfx_update(x, y, width, height);
 }
 
 void ega_update(u16 x, u16 y, u16 width, u16 height)
@@ -111,7 +125,7 @@ void ega_update(u16 x, u16 y, u16 width, u16 height)
 	u8 *pbuf, *rbuf;
 	int w, h;
 	
-	pbuf = vstate.pic_buf + 160*y + x;
+	pbuf = gfx_picbuff + 160*y + x;
 	rbuf = rstate.buf + y*rstate.drv->w + x*2;
 	
 	for (h=height ; h!=0 ; h--)
@@ -132,7 +146,7 @@ void cga_update(u16 x, u16 y, u16 width, u16 height)
 	u8 *pbuf, *rbuf;
 	int w, h;
 	
-	pbuf = vstate.pic_buf + 160*y + x;
+	pbuf = gfx_picbuff + 160*y + x;
 	rbuf = rstate.buf + y*rstate.drv->w + x*2;
 	
 	for (h=height ; h!=0 ; h--)
@@ -163,7 +177,9 @@ void dummy_update(u16 x, u16 y, u16 width, u16 height)
 void render_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
 {
 	rstate.drv->func_rect(x, y, width, height, colour);
-	vid_update(x, y, width, height);
+	
+	gfx_update(x, y, width, height);
+	
 }
 
 
