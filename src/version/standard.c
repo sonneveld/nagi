@@ -12,6 +12,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <assert.h>
 //#include <errno.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
@@ -26,6 +27,9 @@
 #include "../sys/sys_dir.h"
 #include "../base.h"
 #include "../ui/msg.h"
+#include "../list.h"
+#include "../ui/list_box.h"
+#include "../ui/events.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 //void test_function(void);
@@ -68,6 +72,8 @@ struct agicrc_struct
 	u32 vol[16];
 };
 typedef struct agicrc_struct AGICRC;
+	
+#define GI(x)  ((GAMEINFO *)x->contents)
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
@@ -75,10 +81,15 @@ typedef struct agicrc_struct AGICRC;
 /* CODE	---	---	---	---	---	---	---	--- */
 
 
+// ---------------------------------------- LIST INIT ----------------------------------------
+
 // generate a crc from a file
 int file_crc_gen(u8 *file_name, u32 *crc32)
 {
 	u8 *buf;
+	
+	assert(file_name != 0);
+	assert(crc32 != 0);
 	
 	buf = file_to_buf(file_name);
 	
@@ -104,14 +115,13 @@ u8 *st_end = 0;
 // hopefully a pointer to the standard you wanna sep
 void stand_sep(u8 *ptr)
 {
-	if (ptr != 0)
+	assert(ptr != 0);
+	
+	st_end = strstr(ptr, ",\0\n\r");
+	if (st_end != 0)
 	{
-		st_end = strstr(ptr, ",\0\n\r");
-		if (st_end != 0)
-		{
-			st_end_char = *st_end;
-			*st_end = 0;
-		}
+		st_end_char = *st_end;
+		*st_end = 0;
 	}
 }
 
@@ -131,6 +141,9 @@ int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 {
 	int i;
 	u8 name[ID_SIZE + 20];
+	
+	assert(agicrc != 0);
+	assert(info != 0);
 	
 	// search for object
 	if (file_crc_gen("object", &agicrc->object) != 0)
@@ -222,20 +235,23 @@ void crc_print(AGICRC *agicrc, GAMEINFO *info)
 	u8 key_vol[20];	// twice as much needed
 	int i;
 	
+	assert(agicrc != 0);
+	assert(info != 0);
+	
 	// print object
 	if (agicrc->object)
-		printf("%s=0x%08X\n", "crc_object", agicrc->object);
+		printf("%s=0x%08X\n", "crc_object", (unsigned int)agicrc->object);
 	
 	// print words
 	if (agicrc->words)
-		printf("%s=0x%08X\n", "crc_words", agicrc->words);
+		printf("%s=0x%08X\n", "crc_words", (unsigned int)agicrc->words);
 	
 	// print vol[0] - vol[15]
 	for (i=0; i<16; i++)
 	{
 		sprintf(key_vol, "crc_vol_%d", i);
 		if (agicrc->vol[i])
-			printf("%s=0x%08X\n", key_vol, agicrc->vol[i]);
+			printf("%s=0x%08X\n", key_vol, (unsigned int)agicrc->vol[i]);
 	}
 	
 	switch (info->dir_type)
@@ -244,23 +260,23 @@ void crc_print(AGICRC *agicrc, GAMEINFO *info)
 		case DIR_AMIGA:
 			// print dir_comb
 			if (agicrc->dir_comb)
-				printf("%s=0x%08X\n", "crc_dir", agicrc->dir_comb);
+				printf("%s=0x%08X\n", "crc_dir", (unsigned int)agicrc->dir_comb);
 			break;
 		
 		default:
 		case DIR_SEP:
 			// print dir.log
 			if (agicrc->dir.log)
-				printf("%s=0x%08X\n", "crc_dir_log", agicrc->dir.log);
+				printf("%s=0x%08X\n", "crc_dir_log", (unsigned int)agicrc->dir.log);
 			// print dir.pic
 			if (agicrc->dir.pic)
-				printf("%s=0x%08X\n", "crc_dir_pic", agicrc->dir.pic);
+				printf("%s=0x%08X\n", "crc_dir_pic", (unsigned int)agicrc->dir.pic);
 			// print dir.view
 			if (agicrc->dir.view)
-				printf("%s=0x%08X\n", "crc_dir_view", agicrc->dir.view);
+				printf("%s=0x%08X\n", "crc_dir_view", (unsigned int)agicrc->dir.view);
 			// print dir.snd
 			if (agicrc->dir.snd)
-				printf("%s=0x%08X\n", "crc_dir_snd", agicrc->dir.snd);
+				printf("%s=0x%08X\n", "crc_dir_snd", (unsigned int)agicrc->dir.snd);
 			break;
 	}
 }
@@ -282,6 +298,10 @@ int crc_compare(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 	u8 key_vol[20];	// twice as much needed
 	int key_touched = 0;
 	int i;
+	
+	assert(agicrc != 0);
+	assert(info != 0);
+	assert(ini != 0);
 	
 	// compare object
 	CRC_FUDGE("crc_object", object, 1);
@@ -332,6 +352,10 @@ u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 	u8 *crc_list;
 	u8 *token, *running;
 	
+	assert(agicrc != 0);
+	assert(info != 0);
+	assert(ini != 0);
+	
 	crc_list = strdupa(c_standard_crc_list);
 	
 	token = strtok_r(crc_list, ",", &running);
@@ -357,8 +381,10 @@ void gameinfo_namegen(GAMEINFO *info, INI *ini)
 {
 	u8 *name = 0;
 	
+	assert(info != 0);
+	
 	// standard separate
-	if (info->standard != 0)
+	if ( (info->standard != 0) && (ini != 0) )
 	{
 		stand_sep(info->standard);
 		// go to section
@@ -384,71 +410,61 @@ void gameinfo_namegen(GAMEINFO *info, INI *ini)
 
 // create a new gameinfo struct for a given directory if a game exists in it.. 
 // called on for each dir
-GAMEINFO *gameinfo_new(INI *ini)
+void gameinfo_add(LIST *list, INI *ini)
 {
 	AGICRC agicrc;
 	GAMEINFO info_new;
+	NODE *n;
+	
+	assert(list != 0);
 	
 	memset(&info_new, 0, sizeof(GAMEINFO) );
 	
-	//dir_preset_change(DIR_PRESET_ORIG);
-	
-	// change directory
-	//if (chdir(dir) == -1)
-	//	return 0;	// fail
-	
-	if (dir_get_info(&agicrc, &info_new) != 0)
-		return 0;	// fail
-	
-	if (c_nagi_crc_print)
-		crc_print(&agicrc, &info_new);
-	
-	if (ini != 0)
-		info_new.standard = crc_search(&agicrc, &info_new, ini);
-	else
-		info_new.standard = 0;
-	
-	//if (standard == 0)
-	// don't worry... we'll just read the conf values.. don't have to dup strings all the time	
-	
-	// get directory
-	info_new.dir = vstring_new(0, 100);
-	vstring_getcwd(info_new.dir);
-	
-	// get name
-	gameinfo_namegen(&info_new, ini);
-	
-	// restore old directory
-	//dir_preset_change(DIR_PRESET_ORIG);
-	
-	// if everything ok
-	// ADD TO LIST
-	return memcpy(a_malloc(sizeof(GAMEINFO)), &info_new, sizeof(GAMEINFO));
-}
+	if (dir_get_info(&agicrc, &info_new) == 0)
+	{
+		if (c_nagi_crc_print)
+			crc_print(&agicrc, &info_new);
+		
+		if (ini != 0)
+			info_new.standard = crc_search(&agicrc, &info_new, ini);
+		
+		//if (standard == 0)
+		// don't worry... we'll just read the conf values.. don't have to dup strings all the time	
+		
+		// get directory
+		info_new.dir = vstring_new(0, 100);
+		vstring_getcwd(info_new.dir);
+		
+		// get name
+		gameinfo_namegen(&info_new, ini);
 
-GAMEINFO *gameinfo_head = 0;
+		// if everything ok
+		// ADD TO LIST
+		n = list_add(list);
+		memcpy( GI(n), &info_new, sizeof(GAMEINFO) );
+	}
+}
 
 // create a list of game infos starting from gameinfo_head from the dirlist in standard.ini
 // search one level into it too if possible
-int gi_list_init(INI *ini)
+void gi_list_init(LIST *list, INI *ini)
 {
-	GAMEINFO *info_cur=0, *info_prev=0;
 	u8 *dir_list;
 	u8 *token, *running;
+	DIR *dp;
+	struct dirent *ep;
+	struct stat fs;
 	
+	assert(list != 0);
+
 	// for each dir
+	
 	dir_list = strdupa(c_standard_dir_list);
 	token = strtok_r(dir_list, ";", &running);
 	while (token != 0)
 	{
-		// for EACH DIRECTORY IN THAT DIR
-		// {
-		
-		DIR *dp;
-		struct dirent *ep;
-		struct stat fs;
-		
 		dir_preset_change(DIR_PRESET_ORIG);
+		
 		dp = opendir(token);
 		if (dp != 0)
 		{
@@ -461,81 +477,68 @@ int gi_list_init(INI *ini)
 					(strcmp(ep->d_name, "..") != 0) &&
 					(chdir(ep->d_name) != -1) )
 				{
-					// DO STUFF
 					//printf("trying %s\\%s...\n", token, ep->d_name);
-					info_cur = gameinfo_new(ini);
-					if (info_cur != 0)
-					{
-						if (gameinfo_head == 0)
-							gameinfo_head = info_cur;
-						if (info_prev != 0)
-							info_prev->next = info_cur;
-						info_prev = info_cur;
-					}
-					
+					gameinfo_add(list, ini);
 				}
 			}
 			closedir(dp);
 		}
-		// }
+		
 		token = strtok_r(0, ";", &running);
 	}
 	
 	dir_preset_change(DIR_PRESET_ORIG);
-
-	if (gameinfo_head == 0)
-		return 1;
-	
-	info_prev->next = 0;
-	return 0;
 }
 
 
-int gi_list_size(GAMEINFO *item)
-{
-	int count;
-	count = 0;
-	
-	while (item != 0)
-	{
-		count++;
-		item = item->next;
-	}
-	
-	return count;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+// ---------------------------------------- MENU ----------------------------------------
 
 // display nice menu of games and allow user to select game to play
 // returns 0 on error
-GAMEINFO *gi_list_menu(void)
+GAMEINFO *gi_list_menu(LIST *list)
 {
-	int list_size, i, selection;
-	GAMEINFO *game_item;
+	int list_size, selection;
 	u8 **str_list, **str_cur;
 	u8 *msg;
 	u8 newline_orig;	// d0d orig
+	NODE *n;
 	
+	assert(list != 0);
+
 	// get the size of the list
-	list_size = gi_list_size(gameinfo_head);
+	list_size = list_length(list);
 
 	// check for errors
 	if (list_size == 0)
 		return 0;
 	if (list_size == 1)
-		return gameinfo_head;
+		return GI(list->head);
 	
 	// allocate list
 	str_list = alloca(sizeof(u8 *) * (list_size+1) );
 	// set the first item to instruction string
 	str_list[0] = "Use the arrow keys to select the game which you wish to play.\nPress ENTER to play the game, ESC to not play a game.";
+	
 	// get the rest of the strings
-	game_item = gameinfo_head;
+	n = list->head;
 	str_cur = str_list;
-	while(game_item != 0)
+	while(n != 0)
 	{
 		str_cur++;
-		*str_cur = game_item->name;
-		game_item = game_item->next;
+		*str_cur = GI(n)->name;
+		n = n->next;
 	}
 	
 	// use list_box
@@ -547,42 +550,33 @@ top:
 		return 0;
 	
 	// convert number to required info struct
-	game_item = gameinfo_head;
-	for (i=selection; i!=0; i--)
-		game_item = game_item->next;
+	n = list_element_at(list, selection);
+	
+	assert(n != 0);
 
 	// check user response.
-	msg = alloca(200 + strlen(game_item->name) + strlen(game_item->dir->data));
+	msg = alloca(200 + strlen(GI(n)->name) + strlen(GI(n)->dir->data));
 	newline_orig = msgstate.newline_char;
 	msgstate.newline_char = '@';
 	sprintf(msg, "About to execute the game\ndescribed as:\n\n%s\n\nfrom dir:\n %s\n\n%s",
-		game_item->name, game_item->dir->data, "Press ENTER to continue.\nPress ESC to cancel.");
+		GI(n)->name, GI(n)->dir->data, "Press ENTER to continue.\nPress ESC to cancel.");
 	message_box_draw(msg, 0, 0x23, 0);
 	msgstate.newline_char = newline_orig;
 	if (user_bolean_poll() == 0)
 		goto top;
 
-	return game_item;
+	return GI(n);
 }
 
-// destory list
-void gi_list_destroy(void)
-{
-	GAMEINFO *info_cur, *next;
-	info_cur = gameinfo_head;
-	while (info_cur != 0)
-	{
-		vstring_free(info_cur->dir);
-		next = info_cur->next;
-		a_free(info_cur);
-		info_cur = next;
-	}
-}
+
+// ---------------------------------------- ITEM INIT ----------------------------------------
 
 u8 *window_caption = 0;
 
 void standard_init_ng(GAMEINFO *game, INI *ini)
 {
+	assert(game != 0);
+	
 	// set the defaults
 
 	// obj_packed
@@ -620,23 +614,26 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 	// change to appropriate section
 	// use the v2 or v3 section defaults if available
 	
-	if (game->standard != 0)
+	if (ini != 0)
 	{
-		stand_sep(game->standard);
-		ini_section(ini, game->standard);
-		stand_rejoin();
-	}
-	else
-	{
-		switch(game->ver_type)
+		if (game->standard != 0)
 		{
-			case 3:
-				ini_section(ini, c_standard_v3_default);
-				break;
-			case 2:
-			default:
-				ini_section(ini, c_standard_v2_default);
-				break;
+			stand_sep(game->standard);
+			ini_section(ini, game->standard);
+			stand_rejoin();
+		}
+		else
+		{
+			switch(game->ver_type)
+			{
+				case 3:
+					ini_section(ini, c_standard_v3_default);
+					break;
+				case 2:
+				default:
+					ini_section(ini, c_standard_v2_default);
+					break;
+			}
 		}
 	}
 	
@@ -666,9 +663,28 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 	SDL_WM_SetCaption(window_caption, 0);
 }
 
+
+// ---------------------------------------- MAIN ----------------------------------------
+
+// destory list
+void gi_list_free(LIST *list)
+{
+	NODE *n;
+	
+	assert(list != 0);
+	
+	n = list->head;
+	while (n != 0)
+	{
+		vstring_free(GI(n)->dir);
+		n = n->next;
+	}
+}
+
 void standard_select_ng(void)
 {
 	INI *ini_standard;
+	LIST *list_game;
 	GAMEINFO *game_selected;
 	
 	dir_preset_change(DIR_PRESET_NAGI);
@@ -676,14 +692,17 @@ void standard_select_ng(void)
 
 	// read in standard parameters
 	config_load(config_standard, ini_standard);
-	if (gi_list_init(ini_standard))
+	
+	list_game = list_new(sizeof(GAMEINFO));
+	gi_list_init(list_game, ini_standard);
+	
+	if (list_length(list_game) == 0)
 	{
 		printf("no games detected\n");
 		agi_exit();
 	}
 	
-	game_selected = gi_list_menu();
-	
+	game_selected = gi_list_menu(list_game);
 	if (game_selected == 0)
 	{
 		printf("user exits.\n");
@@ -697,15 +716,16 @@ void standard_select_ng(void)
 	dir_preset_change(DIR_PRESET_NAGI);
 	ini_close(ini_standard);
 
-	gi_list_destroy();
+	gi_list_free(list_game);	// free up any alloc'd data
+	list_free(list_game);
 }
 
 // TODO
-// menu
+// menu WHOOOOO DONE
 // standard_separation DONE
-// what happens if a dir doesn't exist on list?
-// what happens if no game is set 
-// what happens if there's no crc's on the list
-// if standard.ini doesn't exist.. where's dir_list come from?
-// what if ini_key is called without claling ini_section?
-// instead of c_game_location.. use the dir_preset idea?  (nagi, user, game)
+// what happens if a dir doesn't exist on list? WORKS
+// what happens if no game is set NOT CHECKED
+// what happens if there's no crc's on the list WORKS
+// if standard.ini doesn't exist.. where's dir_list come from? FROM THE CONFIG DEFAULT
+// what if ini_key is called without claling ini_section? WORK
+// instead of c_game_location.. use the dir_preset idea?  (nagi, user, game)  DONE BABY!!!
