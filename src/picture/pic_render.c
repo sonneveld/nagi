@@ -29,9 +29,6 @@ _GetPicYPos                      cseg     0000660D 0000000D
 _DrawLine                        cseg     0000661A 00000096
  ----- END Pic Rendering  */
 
-
-
-
 // *** BIG NOTE
 // all picture functions must contribute to pic_Data and pic_byte!!!
 
@@ -125,7 +122,9 @@ void pic_cmd_loop()
 	while (pic_byte != 0xFF) //goto 63AD;
 	{
 		pic_byte -= 0xF0;	// first command = 0xf0
-		if ( (pic_byte < 0x0) || (pic_byte > 0x0A) )	// 0xA commands possible
+		// Radiation: removed obvious check.
+		//~ if ( (pic_byte < 0x0) || (pic_byte > 0x0A) )
+		if (pic_byte > 0x0A) 	// 0xA commands possible
 			pic_byte = *(pic_code++);		// read next byte
 		else
 		{
