@@ -11,7 +11,7 @@ _LogicExecute                    cseg     0000293C 000000BA
 // data += *(data++) + *(data++) IS WORSE YOU IDIOT!!!
 // ahem
 
-#define LOG_DEBUG 1
+#define LOG_DEBUG 0
 
 
 #include <stdio.h>
