@@ -50,28 +50,29 @@ SRC += ui/parse.c ui/window.c ui/printf.c ui/agi_text.c ui/string.c
 SRC += ui/msg.c ui/events.c  ui/cmd_input.c ui/controller.c ui/status.c\
 ui/menu.c ui/mouse.c ui/list_box.c
 
-OBJ := $(SRC:.c=.o)
+OBJ = $(SRC:.c=.o)
 
 CC = gcc
 
 CFLAGS := -fwritable-strings
-CFLAGS += -g
-#CFLAGS += -g -pg  -O3 
-#CFLAGS += -O2
+#CFLAGS += -g
+#CFLAGS += -g -pg  -O2
+CFLAGS += -O2
 #CFLAGS += -finline-functions
-CFLAGS += -IC:/mingw/mingw32/include/SDL
+#CFLAGS += -IC:/mingw/mingw32/include/SDL
 
 DEPFLAGS := $(CFLAGS)
 
 # add warnings
 
-CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual 
+CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual
 #CFLAGS += -Werror
 
-LIB = -lmingw32 -lSDLmain -lSDL -mwindows  -mconsole
+MACH = -mwindows -mconsole
+LIB = -lmingw32 -lSDLmain -lSDL
 
-../bin/n.exe: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LIB) 
+../bin/n.exe: $(OBJ) nagires.o
+	$(CC) $(CFLAGS) $(MACH) $(OBJ) nagires.o $(LIB) -o $@
 
 clean:
 	$(RM) $(OBJ) ../bin/n.exe core
@@ -81,8 +82,13 @@ depclean:
 
 %.d: %.c
 	sh depend.sh $(DEPFLAGS) $< > $@
-	
+
 include $(OBJ:.o=.d)
 
+nagires.o: nagi.rc nagi.ico
+	windres -v $< -O coff -o $@
+	
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(MACH) -c $< -o $@
+	
+
