@@ -47,8 +47,8 @@ R_Logic13A5                      cseg     000013A5 0000002F
 #include "../trace.h"
 
 LOGIC logic_head = {0,0,0,0,0,0,0};
-LOGIC *logic_cur;
-LOGIC *logic_last;
+LOGIC *logic_cur = 0;
+LOGIC *logic_last = 0;
 u16 scan_start_list[60];
 
 // initialising the list for the first time
@@ -200,9 +200,9 @@ u8 *cmd_call_v(u8 *c)
 
 u8 *logic_call(u16 logic_num)
 {
-	LOGIC *logic_new;	// the new struct opened.. so you can free it later
+	LOGIC *logic_new = 0;	// the new struct opened.. so you can free it later
 	u8 *code;			// logic code return
-	LOGIC *last_orig;		// original last node
+	LOGIC *last_orig = 0;		// original last node
 	LOGIC *cur_orig;		// oringal current node
 	u16 untouched;
 	
@@ -211,7 +211,9 @@ u8 *logic_call(u16 logic_num)
 	
 	logic_cur = logic_list_find(logic_num);
 	
-	
+	//~ if logic_cur == 0, then we're running logic.0 (since logic_cur is initialised to
+	//~ a null pointer)
+	// ie.. we don't need to remember the previous logic
 	if (logic_cur == 0)
 	{
 		last_orig = logic_last;
@@ -227,8 +229,12 @@ u8 *logic_call(u16 logic_num)
 	
 	code = logic_execute(logic_cur);
 
-	if (untouched == 0)
+	#warning another AGI bug.  if restore/restart/newroom is called from a called logic, havoc may be wrecked when returning.
+	if ( (untouched == 0) && (code != NULL) )
 	{
+		assert(logic_new != NULL);
+		assert(last_orig != NULL);
+		
 		last_orig->next = 0;
 		blists_erase();
 		//set_mem_ptr(logic_new);
