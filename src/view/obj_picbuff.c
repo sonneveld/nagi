@@ -23,10 +23,11 @@ _VidMode_Get                     cseg     000059AC 00000015
 //#include "view/crap.h"
 #include "../view/obj_picbuff.h"
 #include "../flags.h"
-#include "../sys/video.h"
 #include "../view/obj_proximity.h"
 #include "../view/obj_blit.h"
 #include "../picture/pic_res.h"
+#include "../sys/drv_video.h"
+#include "../sys/gfx.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 u16 obj_chk_walk_area(VIEW *v);
@@ -76,7 +77,7 @@ u16 obj_chk_control(VIEW *v)
 	if ( (v->flags & O_PRIFIXED) == 0)
 		v->priority = pri_table[v->y];
 	
-	pb = vstate.pic_buf + PBUF_MULT(v->y) + v->x;
+	pb = gfx_picbuff + PBUF_MULT(v->y) + v->x;
 	flag_water = 0;
 	flag_signal = 0;
 
@@ -251,7 +252,7 @@ void obj_add_pic_pri(VIEW *v)
 		height = pri_height;
 	
 	// draw the box  -------------------------------
-	pb = vstate.pic_buf + PBUF_MULT(v->y) + v->x;
+	pb = gfx_picbuff + PBUF_MULT(v->y) + v->x;
 	
 	// bottom line
 	cx = (v->cel_data)[0];
@@ -265,7 +266,7 @@ void obj_add_pic_pri(VIEW *v)
 	// if there's a height..we'll build it.. or something
 	if (height > 1) 
 	{
-		pb = vstate.pic_buf + PBUF_MULT(v->y) + v->x;
+		pb = gfx_picbuff + PBUF_MULT(v->y) + v->x;
 		
 		// the sides
 		sideoff = (v->cel_data)[0] - 1;
