@@ -1,5 +1,5 @@
-#ifndef template_header_h_file
-#define template_header_h_file
+#ifndef lib_wrapper_h_file
+#define lib_wrapper_h_file
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
