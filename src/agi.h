@@ -381,6 +381,7 @@ extern CONF_BOOL c_nagi_log_debug;
 extern CONF_BOOL c_nagi_console;
 extern CONF_BOOL c_nagi_run_correctly;
 extern CONF_BOOL c_nagi_font_benchmark;
+extern CONF_BOOL c_nagi_crc_print;
 extern CONF_STRING c_vid_driver;
 extern CONF_INT c_vid_scale;
 extern CONF_BOOL c_vid_full_screen;

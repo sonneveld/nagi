@@ -9,6 +9,7 @@ CONF_BOOL c_nagi_log_debug = 0;
 CONF_BOOL c_nagi_console = 1;
 CONF_BOOL c_nagi_run_correctly = 1;
 CONF_BOOL c_nagi_font_benchmark = 0;
+CONF_BOOL c_nagi_crc_print = 0;
 CONF_STRING c_vid_driver = 0;
 CONF_INT c_vid_scale = 2;
 CONF_BOOL c_vid_full_screen = 0;
@@ -63,6 +64,7 @@ CONF config_nagi[] =
 	{"console", 0, CT_BOOL, {b:{&c_nagi_console, 1}} },
 	{"run_correctly", 0, CT_BOOL, {b:{&c_nagi_run_correctly, 1}} },
 	{"font_benchmark", 0, CT_BOOL, {b:{&c_nagi_font_benchmark, 0}} },
+	{"crc_print", 0, CT_BOOL, {b:{&c_nagi_crc_print, 0}} },
 	{"driver", "vid", CT_STRING, {s:{&c_vid_driver, "sdl"}} },
 	{"scale", 0, CT_INT, {i:{&c_vid_scale, 2, 1, -1}} },
 	{"full_screen", 0, CT_BOOL, {b:{&c_vid_full_screen, 0}} },
