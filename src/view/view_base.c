@@ -68,15 +68,15 @@ void obj_cel_data(VIEW *v, u16 loop_num);
 
 void view_list_init()
 {
-	if (view_list == 0)
-		view_list = list_new(sizeof(VIEW_NODE));
-	else
+	if (view_list)
 		list_clear(view_list);
+	else
+		view_list = list_new(sizeof(VIEW_NODE));		
 }
 
 void view_list_free()
 {
-	if (view_list != 0)
+	if (view_list)
 	{
 		list_free(view_list);
 		view_list = 0;
@@ -88,15 +88,16 @@ void view_list_new_room()
 	view_list_init();
 }
 
-NODE *view_find(u16 num)
+VIEW_NODE *view_find(u16 num)
 {
-	NODE *node;
+	VIEW_NODE *v;
 	
-	node = view_list->head;
-	while ( (node != 0) && (num != VN(node)->num) )
-		node = node->next;
+	v = list_element_head(view_list);
 	
-	return node;
+	while ( (v) && (num != v->num) )
+		v = node_next(v);
+	
+	return v;
 }
 	
 	
@@ -115,30 +116,30 @@ u8 *cmd_load_view_v(u8 *c)
 
 VIEW_NODE *view_load(u16 num, u16 force_load)
 {
-	NODE *n;
-	
-	n = view_find(num);
-	if ( (n != 0) && (force_load == 0) )
-		return VN(n);
+	VIEW_NODE *v;
+
+	v = view_find(num);
+	if ( (v) && (force_load == 0) )
+		return v;
 
 	blists_erase();
 
-	if (n == 0)
+	if (v == 0)
 	{
 		script_write(1, num);
-		n = list_add(view_list);
-		VN(n)->num = num;
-		VN(n)->data = 0;
+		v = list_add(view_list);
+		v->num = num;
+		v->data = 0;
 	}
 
-	VN(n)->data = vol_res_load(dir_view(VN(n)->num), VN(n)->data);
+	v->data = vol_res_load(dir_view(v->num), v->data);
 
-	if (VN(n)->data == 0)
+	if (v->data == 0)
 		return 0;
 
-	render_view_dither(VN(n)->data);
+	render_view_dither(v->data);
 	blists_draw();
-	return VN(n);
+	return v;
 }
 
 u8 *cmd_set_view(u8 *c)
@@ -167,13 +168,13 @@ u8 *cmd_set_view_v(u8 *c)
 // need set loop, set cel
 void obj_view_set(VIEW *v, u16 num)
 {
-	NODE *vn;
+	VIEW_NODE *vn;
 
 	vn = view_find(num);
 	if (vn == 0)
 		set_agi_error(0x3, num);
 	
-	v->view_data = VN(vn)->data;
+	v->view_data = vn->data;
 	v->view_cur = num;
 	v->loop_total = (v->view_data)[2];
 	
@@ -218,7 +219,6 @@ void obj_loop_set(VIEW *v, u16 loop_num)
 	
 	if (v->view_data == 0)
 		set_agi_error(6, view_num);
-	#warning error in the agi ???
 	if (loop_num > v->loop_total)
 		set_agi_error(5, view_num);
 	if (loop_num == v->loop_total)
@@ -369,22 +369,19 @@ u8 *cmd_discard_view_v(u8 *c)
 
 void view_discard(u16 num)
 {
-	NODE *n;
+	VIEW_NODE *v;
 	
-	n = view_find(num);
-	if (n == 0)
+	v = view_find(num);
+	if (v == 0)
 		set_agi_error(1, num);
 	
 	script_write(7, num);
 	blists_erase();
 	
-	list_clear_past(view_list, n);	// standard behaviour for pc agi
-	list_remove(view_list, n);
+	list_clear_past(view_list, v);	// standard behaviour for pc agi
+	list_remove(view_list, v);
 	//set_mem_ptr(si);
 	
 	blists_draw();
 	update_var8();
 }
-
-#warning check the malloc() and free() stuff. .
-#warning what if you run discard on a view object that points to another??

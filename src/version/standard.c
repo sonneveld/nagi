@@ -72,8 +72,6 @@ struct agicrc_struct
 	u32 vol[16];
 };
 typedef struct agicrc_struct AGICRC;
-	
-#define GI(x)  ((GAMEINFO *)x->contents)
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
@@ -435,7 +433,7 @@ void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 {
 	AGICRC agicrc;
 	GAMEINFO info_new;
-	NODE *n;
+	GAMEINFO *info;
 	u8 msg[strlen("Games found: XXXXXXXXXXXX")];
 	
 	assert(list != 0);
@@ -466,11 +464,11 @@ void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 		
 		// if everything ok
 		// ADD TO LIST
-		n = list_add(list);
+		info = list_add(list);
 		game_count++;
 		sprintf(msg, "Games found: %d", game_count);
 		message_box_draw(msg, 0, 0, 0);
-		memcpy( GI(n), &info_new, sizeof(GAMEINFO) );
+		memcpy( info, &info_new, sizeof(GAMEINFO) );
 	}
 }
 
@@ -544,7 +542,7 @@ GAMEINFO *gi_list_menu(LIST *list)
 	u8 **str_list, **str_cur;
 	u8 *msg;
 	u8 newline_orig;	// d0d orig
-	NODE *n;
+	GAMEINFO *info;
 	
 	assert(list != 0);
 
@@ -555,7 +553,7 @@ GAMEINFO *gi_list_menu(LIST *list)
 	if (list_size == 0)
 		return 0;
 	if (list_size == 1)
-		return GI(list->head);
+		return list_element_head(list);
 	
 	// allocate list
 	str_list = alloca(sizeof(u8 *) * (list_size+1) );
@@ -563,13 +561,13 @@ GAMEINFO *gi_list_menu(LIST *list)
 	str_list[0] = "Use the arrow keys to select the game which you wish to play.\nPress ENTER to play the game, ESC to not play a game.";
 	
 	// get the rest of the strings
-	n = list->head;
+	info = list_element_head(list);
 	str_cur = str_list;
-	while(n != 0)
+	while(info)
 	{
 		str_cur++;
-		*str_cur = GI(n)->name;
-		n = n->next;
+		*str_cur = info->name;
+		info = node_next(info);
 	}
 	
 	// use list_box
@@ -582,19 +580,19 @@ top:
 		return 0;
 	
 	// convert number to required info struct
-	n = list_element_at(list, selection);
+	info = list_element_at(list, selection);
 	
-	assert(n != 0);
+	assert(info != 0);
 
 	// check user response.
 	// uses malloc so I can free it again after.
 	// i free again after in case the user decides to pick and cancel a whole bunch of games
 	// i didn't want to fill up the stack
-	msg = a_malloc(200 + strlen(GI(n)->name) + strlen(GI(n)->dir->data));
+	msg = a_malloc(200 + strlen(info->name) + strlen(info->dir->data));
 	newline_orig = msgstate.newline_char;
 	msgstate.newline_char = '@';
 	sprintf(msg, "About to execute the game\ndescribed as:\n\n%s\n\nfrom dir:\n %s\n\n%s",
-		GI(n)->name, GI(n)->dir->data, "Press ENTER to continue.\nPress ESC to cancel.");
+		info->name, info->dir->data, "Press ENTER to continue.\nPress ESC to cancel.");
 	message_box_draw(msg, 0, 0x23, 0);
 	a_free(msg);
 	msg = 0;
@@ -602,7 +600,7 @@ top:
 	if (user_bolean_poll() == 0)
 		goto top;
 
-	return GI(n);
+	return info;
 }
 
 
@@ -716,31 +714,31 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 
 int gameinfo_compare(void *a, void *b)
 {
-	NODE **node_a;
-	NODE **node_b;
+	GAMEINFO *info_a;
+	GAMEINFO *info_b;
 	
-	node_a = (NODE **)a;
-	node_b = (NODE **)b;
+	info_a = *((GAMEINFO **)a);
+	info_b = *((GAMEINFO **)b);
 	
-	return strcasecmp( GI((*node_a))->name, GI((*node_b))->name);
+	return strcasecmp(info_a->name, info_b->name);
 }
 
 // destory list
 void gi_list_free(LIST *list)
 {
-	NODE *n;
+	GAMEINFO *info;
 	
-	assert(list != 0);
+	assert(list);
 	
-	n = list->head;
-	while (n != 0)
+	info = list_element_head(list);
+	while (info)
 	{
-		vstring_free(GI(n)->dir);
-		n = n->next;
+		vstring_free(info->dir);
+		info = node_next(info);
 	}
 }
 
-void text_init()
+void text_init(void)
 {
 	state.window_row_min = 2;
 	state.window_row_max = 23;
@@ -758,7 +756,7 @@ void text_init()
 	pop_row_col();
 }
 
-void text_shutdown()
+void text_shutdown(void)
 {
 	// clear window
 	gfx_clear();

@@ -11,21 +11,55 @@
 #include <stdio.h>
 
 #include <assert.h>
-//#include <errno.h>
+#include <stddef.h>
+
 
 /* OTHER headers	---	---	---	---	---	---	--- */
-//#include "view/crap.h"
+
 #include "list.h"
 #include "sys/mem_wrap.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
-//void test_function(void);
-
-
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
 
 /* CODE	---	---	---	---	---	---	---	--- */
+
+// NODE ------------------------------------------------
+
+// returns a node pointer from a contents pointer
+NODE *node_header(void *contents)
+{
+	NODE *node;
+	
+	assert(contents);
+	
+	node = (NODE *)((u8 *)contents - offsetof(NODE, contents));
+	return node;
+}
+
+void *node_next(void *contents)
+{
+	NODE *n;
+	
+	assert(contents);
+	
+	n = node_header(contents);
+	n = n->next;
+	return (n ? (void *)(n->contents) : 0);}
+
+void *node_prev(void *contents)
+{
+	NODE *n;
+	
+	assert(contents);
+	
+	n = node_header(contents);
+	n = n->prev;
+	return (n ? (void *)(n->contents) : 0);}
+
+// LIST ------------------------------------------------
 
 // list *list_new(node_size)
 LIST *list_new(int contents_size)
@@ -66,11 +100,14 @@ void list_clear(LIST *list)
 }
 
 // free all after a certain node
-void list_clear_past(LIST *list, NODE *node)
+void list_clear_past(LIST *list, void *contents)
 {
+	NODE *node;
 	NODE *c, *n;
 	
-	assert((list != 0) && (node != 0));
+	assert((list != 0) && (contents != 0));
+	
+	node = node_header(contents);
 	c = node->next;
 	while (c)
 	{
@@ -83,9 +120,9 @@ void list_clear_past(LIST *list, NODE *node)
 	node->next = 0;
 }
 
-// node *list_add (list *)
+// void *list_add (list *)
 // return a new node at the end of the list.
-NODE *list_add(LIST *list)
+void *list_add(LIST *list)
 {
 	NODE *n;
 	
@@ -103,15 +140,18 @@ NODE *list_add(LIST *list)
 	if (list->head == 0)
 		list->head = n;
 	
-	return n;
+	return (void *)(n->contents);
 }
 
 
-// void list_remove (list *, node *)
+// void list_remove (list *, void *)
 // hopefully node is in the list or strange things will happen
-void list_remove(LIST *list, NODE *node)
+void list_remove(LIST *list, void *contents)
 {
-	assert( (list != 0) && (node != 0) );
+	NODE *node;
+	assert( (list != 0) && (contents != 0) );
+	
+	node = node_header(contents);
 	
 	if ((node == list->tail) && (node == list->head) )	// 1 item
 	{
@@ -154,7 +194,7 @@ int list_length(LIST *list)
 	return length;
 }
 
-NODE *list_element_at(LIST *list, int index)
+void *list_element_at(LIST *list, int index)
 {
 	NODE *c;
 	
@@ -168,15 +208,28 @@ NODE *list_element_at(LIST *list, int index)
 		c = c->next;
 	}
 	
-	return (index ? 0: c);
+	return (index ? 0: (void *)(c->contents));
 }
 
-
-
-
-void list_sort(LIST *list, int (*compare)(const void*, const void*))
+void *list_element_head(LIST *list)
 {
-	NODE **node_list, **node_list_ptr;
+	NODE *n;
+	assert(list);
+	n = list->head;
+	return (n ? (void *)(n->contents) : 0);
+}
+
+void *list_element_tail(LIST *list)
+{
+	NODE *n;
+	assert(list);
+	n = list->tail;
+	return (n ? (void *)(n->contents) : 0);
+}
+
+void list_sort(LIST *list, int (*compare)(void*, void*))
+{
+	void **node_list, **node_list_ptr;
 	NODE *cur, *prev;
 	int len;
 	
@@ -186,14 +239,14 @@ void list_sort(LIST *list, int (*compare)(const void*, const void*))
 		return;
 	
 	// create list of pointers
-	node_list = alloca( (len + 1) * sizeof(NODE *) );
+	node_list = alloca( (len + 1) * sizeof(void *) );
 	
 	node_list_ptr = node_list;
 	cur = list->head;
 	
 	while (cur != 0)
 	{
-		*node_list_ptr = cur;
+		*node_list_ptr = cur->contents;
 		node_list_ptr++;
 		cur = cur->next;
 	}
@@ -201,12 +254,12 @@ void list_sort(LIST *list, int (*compare)(const void*, const void*))
 	node_list[len] = 0;
 
 	// sort
-	qsort(node_list, len, sizeof(NODE *), compare);
+	qsort(node_list, len, sizeof(void *), compare);
 	
 	// put ptrs back into list
 	node_list_ptr = node_list;
 
-	cur = *(node_list_ptr++);
+	cur = node_header(*(node_list_ptr++));
 	prev = 0;
 	list->head = cur;
 	
@@ -216,7 +269,10 @@ void list_sort(LIST *list, int (*compare)(const void*, const void*))
 		if (prev)
 			prev->next = cur;
 		prev = cur;
-		cur = *(node_list_ptr++);
+		if (*node_list_ptr)
+			cur = node_header(*(node_list_ptr++));
+		else
+			cur = 0;
 	} while (cur);
 	
 	if (prev)
@@ -227,6 +283,7 @@ void list_sort(LIST *list, int (*compare)(const void*, const void*))
 	list->tail->next = 0;
 }
 
+// STACK ------------------------------------------------
 
 STACK *stack_new(int contents_size)
 {
@@ -235,28 +292,34 @@ STACK *stack_new(int contents_size)
 
 void stack_free(STACK *stack)
 {
+	assert(stack);
 	list_free(stack);
 }
 
 void stack_clear(STACK *stack)
 {
+	assert(stack);
 	list_clear(stack);
 }
 
-NODE *stack_push(STACK *stack)
+void *stack_top(STACK *stack)
 {
+	assert(stack);
+	return list_element_tail(stack);
+}
+
+void *stack_push(STACK *stack)
+{
+	assert(stack);
 	return list_add(stack);
 }
 
 void stack_pop(STACK *stack)
 {
-	list_remove(stack, stack->tail);
+	assert(stack);
+	list_remove(stack, stack_top(stack));
 }
 
-NODE *stack_top(STACK *stack)
-{
-	return stack->tail;
-}
 
 
 

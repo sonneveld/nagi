@@ -131,13 +131,14 @@ void mouse_area_shutdown(void)
 
 void mouse_area_push(int id, int x, int y, int w, int h)
 {
-	NODE *n;
-	n = stack_push(m_area_stack);
-	((M_AREA *)n->contents)->id = id;
-	((M_AREA *)n->contents)->pos.x = x;
-	((M_AREA *)n->contents)->pos.y = y;
-	((M_AREA *)n->contents)->size.w = w;
-	((M_AREA *)n->contents)->size.h = h;
+	M_AREA *m;
+	
+	m = stack_push(m_area_stack);
+	m->id = id;
+	m->pos.x = x;
+	m->pos.y = y;
+	m->size.w = w;
+	m->size.h = h;
 }
 
 void mouse_area_pop(void)

@@ -26,21 +26,29 @@ typedef struct list_struct STACK;
 #define list_h_file
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
-LIST *list_new(int contents_size);
-void list_free(LIST *list);
-void list_clear(LIST *list);
-void list_clear_past(LIST *list, NODE *node);
-NODE *list_add(LIST *list);
-void list_remove(LIST *list, NODE *node);
-int list_length(LIST *list);
-NODE *list_element_at(LIST *list, int index);
 
-STACK *stack_new(int contents_size);
-void stack_free(STACK *stack);
-void stack_clear(STACK *stack);
-NODE *stack_push(STACK *stack);
-void stack_pop(STACK *stack);
-NODE *stack_top(STACK *stack);
+extern NODE *node_header(void *contents);
+extern void *node_next(void *contents);
+extern void *node_prev(void *contents);
+
+extern LIST *list_new(int contents_size);
+extern void list_free(LIST *list);
+extern void list_clear(LIST *list);
+extern void list_clear_past(LIST *list, void *contents);
+extern void *list_add(LIST *list);
+extern void list_remove(LIST *list, void *contents);
+extern int list_length(LIST *list);
+extern void *list_element_at(LIST *list, int index);
+extern void *list_element_head(LIST *list);
+extern void *list_element_tail(LIST *list);
+extern void list_sort(LIST *list, int (*compare)(void*, void*));
+
+extern STACK *stack_new(int contents_size);
+extern void stack_free(STACK *stack);
+extern void stack_clear(STACK *stack);
+extern void *stack_push(STACK *stack);
+extern void stack_pop(STACK *stack);
+extern void *stack_top(STACK *stack);
 
 
 #endif
