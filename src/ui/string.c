@@ -39,6 +39,7 @@ These are implemented in the gnu library:
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <assert.h>
 #include "../agi.h"
 
 #include "string.h"
@@ -184,6 +185,9 @@ u8 *strtok_r(u8 *newstring, u8 *delimiters, u8 **save_ptr)
 	u8 *token_cur;
 	u8 *token_cur_end;
 	u8 *token_next;
+	
+	assert(save_ptr != 0);
+	assert(delimiters != 0);
 	
 	if (newstring != 0)
 		token_cur = newstring;
