@@ -251,8 +251,15 @@ u8 logic_eval()
 {
 	u8 result;
 	
+
+	if (op > 19)
+	{
+		print_hex_array(logic_data, 10);
+		agi_exit();
+	}
+	
 	data_orig = logic_data - 1;
-	if ( op >= 0x26)
+	if ( op > 19)
 		set_agi_error(0xF, op);
 	
 	#ifdef LOG_DEBUG
@@ -266,7 +273,7 @@ u8 logic_eval()
 		result = ((EVAL_TYPE)eval_table[op].func)();	// return in si, ax
 	else
 	{
-		printf("no eval=\"%s\"    ", eval_table[op].func_name);
+		printf("no eval=\"%s\"    \n", eval_table[op].func_name);
 		logic_data = logic_data + eval_table[op].param_total;
 		result = 0;
 	}
@@ -275,6 +282,7 @@ u8 logic_eval()
 	{
 		trace_eval(result, data_orig);	// don't touch ax
 	}
+
 	return result;
 }
 

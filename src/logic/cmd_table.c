@@ -102,7 +102,8 @@ FUNC eval_table[] = {
 			{"compare.strings", cmd_compare_strings, 2, 0},
 			{"obj.in.box", cmd_obj_in_box, 5, 0},
 			{"center.posn", cmd_center_posn, 5, 0},
-			{"right.posn", cmd_right_posn, 5, 0}
+			{"right.posn", cmd_right_posn, 5, 0},
+			{"unknown.19", cmd_ret_false, 0, 0}
 	   	};
  
 FUNC cmd_table[CMD_MAX + 1] = {
