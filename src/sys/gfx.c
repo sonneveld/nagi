@@ -247,8 +247,9 @@ void gfx_shake(u8 count)
 
 
 // draws the familiar white/red boxes that sierra used in the picture buffer
-void gfx_msgbox(u8 x, u8 y, u8 w, u8 h, u8 bg, u8 line)
+void gfx_msgbox(int x, int y, int w, int h, u8 bg, u8 line)
 {
+	//printf("gfx_msgbox= x=%d y=%d w=%d h=%d\n", x, y, w, h);
 	render_rect(x,y, w, h, bg);			// white
 	render_rect(x+1, y-1, w-2, 1, line);	// bottom
 	render_rect(x+w-2, y-2, 1, h-4, line);	// right

@@ -33,7 +33,7 @@ extern void gfx_init(void);
 extern void gfx_shutdown(void);
 extern void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h);
 extern void gfx_shake(u8 count);
-extern void gfx_msgbox(u8 x, u8 y, u8 w, u8 h, u8 bg, u8 line);
+extern void gfx_msgbox(int x, int y, int w, int h, u8 bg, u8 line);
 extern void gfx_palette_update(void);
 extern void gfx_clear(void);
 extern void gfx_picbuff_update(void);

@@ -13,8 +13,8 @@ extern int rend_buf_size;
 extern void render_init(void);
 extern void render_shutdown(void);
 extern void render_drv_rotate(void);
-extern void render_update(u16 x, u16 y, u16 width, u16 height);
-extern void render_rect(u16 x, u16 y, u16 width, u16 height, u8 colour);
+extern void render_update(int x, int y, int width, int height);
+extern void render_rect(int x, int y, int width, int height, u8 colour);
 extern void render_colour(u8 col, COLOUR *col_dith);
 extern void render_view_dither(u8 *view_data);
 

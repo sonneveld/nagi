@@ -22,13 +22,13 @@
 
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
-void ega_update(u16 x, u16 y, u16 width, u16 height);
-void cga_update(u16 x, u16 y, u16 width, u16 height);
-void dummy_update(u16 x, u16 y, u16 width, u16 height);
+void ega_update(int x, int y, int width, int height);
+void cga_update(int x, int y, int width, int height);
+void dummy_update(int x, int y, int width, int height);
 
-void ega_rect(u16 x, u16 y, u16 width, u16 height, u8 colour);
-void cga_rect(u16 x, u16 y, u16 width, u16 height, u8 colour);
-void dummy_rect(u16 x, u16 y, u16 width, u16 height, u8 colour);
+void ega_rect(int x, int y, int width, int height, u8 colour);
+void cga_rect(int x, int y, int width, int height, u8 colour);
+void dummy_rect(int x, int y, int width, int height, u8 colour);
 
 void dummy_view_dither(u8 *view_data);
 void cga_view_dither(u8 *view_data);	// dither view
@@ -145,17 +145,58 @@ void render_shutdown()
 	}
 }
 
+int render_clip(int *r_x, int *r_y, int *r_w, int *r_h)
+{
+	int w_max, h_max;
 
+	w_max = 160;
+	h_max = 168;
+	
+	// check boundaries
+
+	// we check if ANY of it is actually within window
+	if (	(*r_x >= w_max) ||		// completly over the right
+		((*r_x + (*r_w-1)) < 0) ||	// over the left
+		(*r_y < 0) ||				// over the top
+		((*r_y - (*r_h-1)) >= h_max) )	// under the bottom
+		return -1;
+	
+	// top
+	if ((*r_y - *r_h + 1) < 0)
+		*r_h = *r_y + 1;
+	
+	// bottom
+	if (*r_y >= h_max)
+	{
+		*r_h -= *r_y - (h_max - 1);
+		*r_y = h_max - 1;
+	}
+	
+	// left
+	if (*r_x < 0)
+	{
+		*r_w += *r_x;
+		*r_x = 0;
+	}
+	
+	// right
+	if ((*r_x +*r_w - 1) >= w_max)
+		*r_w = w_max - *r_x;
+		
+	return 0;
+}
 
 // ---------- UPDATE -------------------------
 
-void render_update(u16 x, u16 y, u16 width, u16 height)
+void render_update(int x, int y, int width, int height)
 {
+	if (render_clip(&x, &y, &width, &height))
+		return;
 	rend_drv->func_update(x, y, width, height);
 	gfx_update(x, y, width, height);
 }
 
-void ega_update(u16 x, u16 y, u16 width, u16 height)
+void ega_update(int x, int y, int width, int height)
 {
 	u8 *pbuf, *rbuf;
 	int w, h;
@@ -176,7 +217,7 @@ void ega_update(u16 x, u16 y, u16 width, u16 height)
 	
 }
 
-void cga_update(u16 x, u16 y, u16 width, u16 height)
+void cga_update(int x, int y, int width, int height)
 {
 	u8 *pbuf, *rbuf;
 	int w, h;
@@ -197,7 +238,7 @@ void cga_update(u16 x, u16 y, u16 width, u16 height)
 	}
 }
 
-void dummy_update(u16 x, u16 y, u16 width, u16 height)
+void dummy_update(int x, int y, int width, int height)
 {
 	(void) x;
 	(void) y;
@@ -209,15 +250,18 @@ void dummy_update(u16 x, u16 y, u16 width, u16 height)
 // ---------- RECT (ally) -------------------------
 
 // render clear can be replaced by this
-void render_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
+void render_rect(int x, int y, int width, int height, u8 colour)
 {
+	if (render_clip(&x, &y, &width, &height))
+		return;
+	
 	rend_drv->func_rect(x, y, width, height, colour);
 	
 	gfx_update(x, y, width, height);
 }
 
 
-void ega_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
+void ega_rect(int x, int y, int width, int height, u8 colour)
 {
 	u8 *rbuf;
 	int h;
@@ -227,11 +271,11 @@ void ega_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
 	for (h=height ; h>0 ; h--)
 	{
 		memset(rbuf, colour&0xF, width*2);
-		rbuf -= rend_drv->w;
+		rbuf -= rend_drv->w;		
 	}
 }
 
-void cga_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
+void cga_rect(int x, int y, int width, int height, u8 colour)
 {
 	u8 *rbuf;
 	COLOUR rend_col;
@@ -276,7 +320,7 @@ void cga_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
 
 }
 
-void dummy_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
+void dummy_rect(int x, int y, int width, int height, u8 colour)
 {
 	(void) x;
 	(void) y;

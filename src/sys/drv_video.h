@@ -17,8 +17,8 @@ struct render_driver_struct
 	u8 scale_x;  // scale from agi coordinates to render coordinates
 	u8 scale_y;  // ""             ""                            ""              ""
 	
-	void (*func_update)(u16 x, u16 y, u16 width, u16 height);
-	void (*func_rect)(u16 x, u16 y, u16 width, u16 height, u8 colour);
+	void (*func_update)(int x, int y, int width, int height);
+	void (*func_rect)(int x, int y, int width, int height, u8 colour);
 	void (*func_colour)(u8 col, COLOUR *col_dith);
 	void (*func_view_dither)(u8 *view_data);
 };
