@@ -132,21 +132,12 @@ union position_struct
 };
 typedef union position_struct POS;
 	
-union size_struct
+struct size_struct
 {
-	struct
-	{
-		int w;
-		int h;
-	};
-	
-	struct
-	{
-		int width;
-		int height;
-	};
+	int w;
+	int h;
 };
-typedef union size_struct SIZE;
+typedef struct size_struct SIZE;
 
 #define VAR_SIZE 256
 // using individual bits
