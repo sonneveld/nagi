@@ -5,7 +5,7 @@ struct node_struct
 {
 	struct node_struct *next;
 	struct node_struct *prev;
-	unsigned char contents[0];
+	unsigned char contents[1];
 };
 typedef struct node_struct NODE;
 

@@ -91,14 +91,15 @@ NODE *list_add(LIST *list)
 	
 	assert(list != 0);
 	
-	n = a_malloc(sizeof(NODE) + list->contents_size);
+	n = a_malloc(sizeof(NODE) + list->contents_size - 1);
 	
 	if (list->tail != 0)
-		list->tail->next = n;
+		(list->tail)->next = n;
 	n->next = 0;
 	n->prev = list->tail;
 	
 	list->tail = n;
+	
 	if (list->head == 0)
 		list->head = n;
 	
@@ -112,15 +113,26 @@ void list_remove(LIST *list, NODE *node)
 {
 	assert( (list != 0) && (node != 0) );
 	
-	if (list->tail == node)
+	if ((node == list->tail) && (node == list->head) )	// 1 item
+	{
+		list->tail = 0;
+		list->head = 0;
+	}
+	else if (node == list->tail)	// end
+	{
+		(node->prev)->next = 0;
 		list->tail = node->prev;
-	if (list->head == node)
+	}
+	else if (node == list->head)	// start
+	{
+		(node->next)->prev = 0;
 		list->head = node->next;
-	
-	if (node->prev != 0)
+	}
+	else					// middle
+	{
 		(node->prev)->next = node->next;
-	if (node->next != 0)
 		(node->next)->prev = node->prev;
+	}
 	
 	a_free(node);		
 }
@@ -156,10 +168,7 @@ NODE *list_element_at(LIST *list, int index)
 		c = c->next;
 	}
 	
-	if (index == 0)
-		return c;
-	else
-		return 0;
+	return (index ? 0: c);
 }
 
 
