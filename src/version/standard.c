@@ -702,6 +702,9 @@ void standard_select_ng(void)
 		agi_exit();
 	}
 	
+	// SORT THE LIST
+	// list_sort(list, gameinfo_compare);
+	
 	game_selected = gi_list_menu(list_game);
 	if (game_selected == 0)
 	{
