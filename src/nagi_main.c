@@ -78,16 +78,20 @@ int main(int argc, char *argv[])
 	printf("\nEntering main AGI loop...\n");
 	for (;;)
 	{
-		do_delay();
-
+		// reset all input vars
 		control_state_clear();
 		flag_reset(F02_PLAYERCMD);		// player has not issued command line
 		flag_reset(F04_SAIDACCEPT);	// said command has not yet accepted the user input
-
-		#warning need joy polling setup.
+		state.var[V19_KEYPRESSED] = 0;
+		state.var[V09_BADWORD] = 0;
+		
+		//#warning need joy polling setup.
 		//poll_joystick();	// poll the joystick
-		input_poll();	// read the events and do something with them
-
+		//input_poll();	// read the events and do something with them
+		
+		// do_delay now calls input_poll during delay to decrease key lag
+		do_delay();
+		
 		if (state.ego_control_state == 0)
 			state.var[V06_DIRECTION] = objtable->direction;	// program control
 		else

@@ -61,15 +61,12 @@ u16 input_cur = 0;
 void input_poll(void)
 {
 	AGI_EVENT *si;
-
-	state.var[V19_KEYPRESSED] = 0;
-	state.var[V09_BADWORD] = 0;
 	
 	if ( menu_next_input != 0)
 		menu_input();
 	si = control_key_map(event_read());
 	
-	while (si != 0)
+	while ( (si != 0) && (!flag_test(F02_PLAYERCMD)) )
 	{
 		switch (si->type)
 		{

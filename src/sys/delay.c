@@ -23,15 +23,21 @@ void delay_init()
 
 void do_delay()
 {
-	//printf("time diff = %d", (state.var[V10_DELAY]) - (calc_agi_tick() - tick_prev) );
+	SDL_PumpEvents();
+	input_poll();
+	SDL_Delay(1);	// so fastest speed doesn't run too fast
 	
-	//while( state.var[V10_DELAY] * DELAY_MULT > (calc_agi_tick() - tick_prev) )
-	//{
-	//	SDL_PumpEvents();
-	//	SDL_Delay(5);
-	//	printf("  %d", (state.var[V10_DELAY]) - (calc_agi_tick() - tick_prev) );
-	//}
+	while ( ( (state.var[V10_DELAY] * DELAY_MULT) > (SDL_GetTicks() - tick_prev) )
+			&& (!flag_test(F02_PLAYERCMD)) )
+	{
+		SDL_PumpEvents();
+		input_poll();
+		SDL_Delay(5);	// to prevent it taking 100% cpu
+	}
+
+	tick_prev = SDL_GetTicks();
 	
+	/*
 	s32 delay_len;
 	//s32 stuff;
 	//s32 more;
@@ -45,9 +51,9 @@ void do_delay()
 
 	//more = SDL_GetTicks() - stuff;
 	//printf("len=%d d=%d diff=%d\n", delay_len, more, more-delay_len);
-	
-	tick_prev = SDL_GetTicks();
-	SDL_PumpEvents();
+	*/
+	//tick_prev = SDL_GetTicks();
+	//SDL_PumpEvents();
 }
 
 
