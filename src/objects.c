@@ -23,6 +23,8 @@ _GetV                            cseg     0000759C 00000064
 #include "view/obj_base.h"
 #include "decrypt.h"
 
+#include "sys/sys_dir.h"
+
 /*
 old:
 u8 *object_ptr = 0;
@@ -57,6 +59,7 @@ int object_file_load()
 	if (inv_obj_table != 0)
 		object_file_unload();
 	
+	dir_preset_change(DIR_PRESET_GAME);
 	obj_data = file_load("object", 0);
 	
 	// 7 is an object with one item that has a name with no chars (nul) (3+3+1)

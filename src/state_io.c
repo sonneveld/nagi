@@ -24,6 +24,8 @@ _StateWrite                      cseg     000028C6 00000074
 #include "objects.h"
 #include "sys/glob_sys.h"
 
+#include "sys/sys_dir.h"
+
 
 #include "flags.h"
 
@@ -130,6 +132,7 @@ u8 *cmd_restore_game(u8 *c)
 			if ( user_bolean_poll() == 0)
 				goto rest_end;
 		}
+		dir_preset_change(DIR_PRESET_GAME);
 		rest_stream = fopen(save_filename->data, "rb");
 		if ( rest_stream == 0)
 		{
@@ -241,6 +244,7 @@ u8 *cmd_save_game(u8 *c)
 			if ( user_bolean_poll() == 0)
 				goto save_end;
 		}
+		dir_preset_change(DIR_PRESET_GAME);
 		save_stream = fopen(save_filename->data, "wb");
 		if ( save_stream == 0)
 		{
@@ -256,7 +260,7 @@ u8 *cmd_save_game(u8 *c)
 				goto save_err;
 			if (state_write(save_stream, objtable, objtable_size) == 0)
 				goto save_err;
-			if (state_write(save_stream, inv_obj_table, inv_obj_table_size) == 0)
+			if (state_write(save_stream, inv_obj_table, inv_obj_table_size*sizeof(INV_OBJ)) == 0)
 				goto save_err;
 			if (state_write(save_stream, inv_obj_string, inv_obj_string_size) == 0)
 				goto save_err;

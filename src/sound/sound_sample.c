@@ -17,6 +17,8 @@ mix_add
 #include "../sys/endian.h"
 #include "../sys/mem_wrap.h"
 
+#include "../sys/sys_dir.h"
+
 #define TABLE_SIZE 1024
 // 111843.75
 #define FREQ_DIV 111844
@@ -36,8 +38,10 @@ void mix_add(u8 *stream, CHANNEL *c, int len);
 void sample_init()
 { 
 	// open up an array of two samples
+	dir_preset_change(DIR_PRESET_NAGI);
 	sample[0] = sample_open("tone50.pcm", 50);
 	sample[1] = sample_open("tone50.pcm", 50);
+
 }
 
 

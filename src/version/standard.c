@@ -389,8 +389,11 @@ GAMEINFO *gameinfo_new(u8 *dir, INI *ini)
 	
 	memset(&info_new, 0, sizeof(GAMEINFO) );
 	
+	dir_preset_change(DIR_PRESET_ORIG);
+	
 	// change directory
-	if (dir_change(dir)) return 0;	// fail
+	if (chdir(dir) == -1)
+		return 0;	// fail
 	
 	if (dir_get_info(&agicrc, &info_new) != 0)
 		return 0;	// fail
@@ -414,7 +417,7 @@ GAMEINFO *gameinfo_new(u8 *dir, INI *ini)
 	gameinfo_namegen(&info_new, ini);
 	
 	// restore old directory
-	dir_nagi();
+	dir_preset_change(DIR_PRESET_ORIG);
 	
 	// if everything ok
 	// ADD TO LIST
@@ -494,7 +497,7 @@ void gi_list_destroy(void)
 	}
 }
 
-u8 *window_caption = "NAGI";
+u8 *window_caption = 0;
 
 void standard_init_ng(GAMEINFO *game, INI *ini)
 {
@@ -559,7 +562,8 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 	strcpy(c_game_file_id, game->file_id);
 	
 	// set up location
-	c_game_location = vstring_new(game->dir->data, 10);
+	//c_game_location = vstring_new(game->dir->data, 10);
+	dir_preset_set(DIR_PRESET_GAME, game->dir->data);
 	
 	// need to setup game.id if you want to load up savegames before agi is init'd
 	// standard.ini, or the file_id, or the default ""
@@ -585,6 +589,7 @@ void standard_select_ng(void)
 	INI *ini_standard;
 	GAMEINFO *game_selected;
 	
+	dir_preset_change(DIR_PRESET_NAGI);
 	ini_standard = ini_open("standard.ini");
 
 	// read in standard parameters
@@ -600,6 +605,7 @@ void standard_select_ng(void)
 	standard_init_ng(game_selected, ini_standard);
 
 	// close ini file
+	dir_preset_change(DIR_PRESET_NAGI);
 	ini_close(ini_standard);
 
 	gi_list_destroy();

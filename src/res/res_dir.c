@@ -19,6 +19,7 @@ _ResNotFound                     cseg     00004441 0000002F
 #include "../sys/endian.h"
 
 #include "../game_id.h"
+#include "../sys/sys_dir.h"
 
 #define DIR_ITEM_SIZE 3
 
@@ -75,6 +76,8 @@ void v3_dir_load(void)
 
 void dir_load(void)
 {
+	dir_preset_change(DIR_PRESET_GAME);
+	
 	switch(c_game_dir_type)
 	{
 		case DIR_COMB:

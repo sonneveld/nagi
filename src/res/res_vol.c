@@ -30,6 +30,8 @@ _FileLoad                        cseg     00003113 000000C5
 
 #include "../sys/mem_wrap.h"
 
+#include "../sys/sys_dir.h"
+
 
 
 u16 volume_error = 0;
@@ -288,7 +290,8 @@ void volumes_open()
 		vol_max = 0x10;
 	else
 		vol_max = 0x5;*/
-	
+	dir_preset_change(DIR_PRESET_GAME);
+
 	for (i=0 ; i<0x10 ; i++)
 	{
 		if (c_game_file_id[0] != '\0')
@@ -331,6 +334,8 @@ u8 *file_load(u8 *name, u8 *buff)
 	FILE *file_stream;
 	u8 newline_orig;
 	
+	
+
 	newline_orig = msgstate.newline_char;
 	msgstate.newline_char = '@';
 	while (  (file_stream=fopen(name, "rb")) == 0  )
@@ -338,7 +343,9 @@ u8 *file_load(u8 *name, u8 *buff)
 		sprintf(msg, "Can't find %s.%s%s", name,
 			"\nPress ENTER to try again.", "\nPress ESC to quit.");
 		if (message_box(msg) == 0)
+		{
 			agi_exit();
+		}
 	}
 	msgstate.newline_char = newline_orig;
 	
@@ -351,7 +358,9 @@ u8 *file_load(u8 *name, u8 *buff)
 	
 	if ( fread(buff, sizeof(u8), file_size, file_stream) != file_size)
 		if (print_err_code == 0)
+		{
 			agi_exit();
+		}
 		
 	fclose(file_stream);
 	return buff;

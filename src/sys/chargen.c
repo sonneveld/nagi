@@ -22,6 +22,7 @@
 #include "vid_render.h"
 
 #include "mem_wrap.h"
+#include "sys_dir.h"
 
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
@@ -50,7 +51,7 @@ void ch_clear(TPOS *pos1, TPOS *pos2, u8 attrib)
 u8 chgen_textmode;
 TPOS chgen_textpos = {0,0};
 
-u8 *font_list = "font_8x8.fnt,font_16x16.fnt";
+//u8 *font_list = "font_8x8.fnt,font_16x16.fnt";
 u8 *font_data = 0;
 u8 *font_work = 0;
 SIZE font_size = {0,0};
@@ -73,8 +74,8 @@ FILE *font_open(SIZE *needed)
 	FILE *cur_font;
 	SIZE cur_size;
 
-	list = strdupa(font_list);
-	token = strtok_r(list, ",", &running);
+	list = strdupa(c_vid_fonts_bitmap);
+	token = strtok_r(list, ";", &running);
 	while (token != 0)
 	{
 		//check token
@@ -104,7 +105,7 @@ FILE *font_open(SIZE *needed)
 			if (cur_font != 0)
 				fclose(cur_font);
 		}
-		token = strtok_r(0, ",", &running);
+		token = strtok_r(0, ";", &running);
 	}
 
 	return file_font;
@@ -148,7 +149,9 @@ void ch_init(void)
 	needed.h = rstate.drv->h * c_vid_scale / 21;
 
 	// pick the right font.. load it up
+	dir_preset_change(DIR_PRESET_NAGI);
 	font_load(font_open(&needed));
+
 
 	// FIXME..  SCALE THE GOD DAMN FONTTTTT!!
 
@@ -177,6 +180,7 @@ void ch_shutdown(void)
 // font pos to screen pos
 
 // force update of fonts and unfreeze any freezing
+
 void ch_update(void)
 {
 	vid_update(gfx_surface, &update_pos, &update_size);

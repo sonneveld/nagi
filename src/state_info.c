@@ -430,6 +430,7 @@ u16 state_get_diz(u16 s_num, SAVE *s_item, u32 *s_date)
 	
 	name_temp = vstring_new(0, 300);
 	state_name_create(s_num, name_temp);
+	dir_preset_change(DIR_PRESET_GAME);
 	state_stream = fopen(name_temp->data, "rb");
 	vstring_free(name_temp);
 	
@@ -456,9 +457,11 @@ u16 state_get_diz(u16 s_num, SAVE *s_item, u32 *s_date)
 
 void state_draw_arrow(u16 var8)
 {
+	//system ("PAUSE");
 	goto_row_col(var8, msgstate.tpos.col);
 	window_put_char(0x1A);
 	ch_update();
+	//system("PAUSE");
 }
 
 void state_draw_blank(u16 var8)

@@ -20,6 +20,7 @@
 #include "flags.h"
 #include "res/res.h"
 
+#include "sys/sys_dir.h"
 
 #include "sys/drv_video.h"
 
@@ -57,5 +58,8 @@ void agi_exit()
 	vid_shutdown();
 	
 	free(lzw_dict);
+	
+	dir_preset_change(DIR_PRESET_ORIG);
+	
 	exit(0);
 }

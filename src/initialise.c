@@ -50,6 +50,7 @@ _RoomInit                        cseg     000012DE 00000015
 #include "sys/ini_config.h"
 #include "config.h"
 
+#include "sys/sys_dir.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 // reads ini file and inits nagi
@@ -74,7 +75,7 @@ void nagi_init()
 {	
 	u8 env_value[50];
 	INI *ini_nagi;
-	
+
 	memset( &state, 0, sizeof(AGI_STATE) );
 	state.word_13f = 0x0F;
 	state.script_size = 0x32;
@@ -85,8 +86,9 @@ void nagi_init()
 	drives_found = 1;	// yes, drives are known of
 	display_type = 3;		// ega
 	//text_mode = 0;
-	
+
 	// read nagi.ini
+	dir_preset_change(DIR_PRESET_NAGI);
 	ini_nagi = ini_open("nagi.ini");
 	config_load(config_nagi, ini_nagi);
 	ini_close(ini_nagi);
@@ -102,7 +104,7 @@ void nagi_init()
 	printf("Based upon the Adventure Game Interpreter (AGI) v2.917 and v3.002.149\n");
 	printf("Copyright (C) 1984-1988 Sierra On-Line, Inc.\n");
 	printf("Authors: Jeff Stephenson & Chris Iden\n\n");
-	
+
 	// initialise SDL
 	printf("Initialising Simple DirectMedia Layer (SDL)...");
 
@@ -172,8 +174,10 @@ void agi_init()
 	/* load directories for the various resources */
 	/* logics, pictures, views, sound */
 	dir_load();
-
+	
+	dir_preset_change(DIR_PRESET_GAME);
 	words_tok_data = file_load("words.tok", 0);
+	
 	logic_list_init();
 	view_list_init();
 	sound_list_init();
