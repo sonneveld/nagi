@@ -47,7 +47,7 @@ CmdCloseDialogu                  cseg     0000394B 00000012
 
 #include "../ui/mouse.h"
 #include "../view/obj_motion.h"
-#include "../sys/video.h"
+
 
 
 u16 input_edit_disabled = 0;
@@ -98,12 +98,13 @@ void input_poll(void)
 				control_state[si->data] = 1;
 				break;
 			case 10:	// mouse
+				/*
 				if (standard.mouse == M_BRIAN)
 					mstack_push(si->data, si->x, si->y);
 				else if (standard.mouse == M_SIERRA)
 				{
 					mouse_x = si->x / (vstate.scale*2);
-					mouse_y = (si->y/vstate.scale) - vstate.pic_buf_row;
+					mouse_y = (si->y/vstate.scale) - gfx_picbuff_row;
 					//printf("Mouse Button! x=%d y=%d\n", mouse_x, mouse_y);
 					if (mouse_y < 0)
 						cmd_menu_input(0);
@@ -120,7 +121,7 @@ void input_poll(void)
 							mouse_y = 168;
 						ego_move(mouse_x, mouse_y);
 					}
-				}
+				}*/
 					
 				break;
 			default:	
@@ -153,6 +154,7 @@ void input_put_char(u16 key_char)
 				input_cur --;
 				input[input_cur] = 0;
 				window_put_char(key_char);
+				ch_update();
 			}
 			break;
 			
@@ -177,6 +179,7 @@ void input_put_char(u16 key_char)
 				input_cur++;
 				input[input_cur] = 0;
 				window_put_char(key_char);
+				ch_update();
 			}
 	}
 
@@ -210,6 +213,7 @@ void input_echo()
 			input_cur ++;
 			input[input_cur] = input_prev[input_cur];
 		}
+		ch_update();
 
 		input[input_cur] = 0;
 		input_edit_off();
@@ -222,7 +226,10 @@ void input_edit_off()
 	{
 		input_edit_disabled = 1;
 		if ( state.cursor != 0) 
+		{
 			window_put_char(state.cursor);
+			ch_update();
+		}
 	}
 }
 
@@ -232,7 +239,10 @@ void input_edit_on()
 	{
 		input_edit_disabled = 0;
 		if ( state.cursor != 0) 
+		{
 			window_put_char(0x8);
+			ch_update();
+		}
 	}
 }
 
