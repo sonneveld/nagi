@@ -86,7 +86,6 @@ void nagi_init()
 	display_type = 3;		// ega
 	//text_mode = 0;
 	
-			freopen( "CON", "w", stdout );	
 	// read nagi.ini
 	ini_nagi = ini_open("nagi.ini");
 	config_load(config_nagi, ini_nagi);
@@ -156,7 +155,7 @@ void agi_init()
 	// quit 0-1 param
 	
 	// cmd171 for brian mouse support
-	if (standard.mouse == M_BRIAN)
+	if (c_game_mouse == M_BRIAN)
 	{
 		cmd_table[171].func_name = "cmd.poll.mouse";
 		cmd_table[171].func = cmd_brian_poll_mouse;
@@ -190,26 +189,8 @@ void agi_init()
 
 void game_init(void)
 {
-	u16 name_offset;					// invent offset
-	u16 anim_obj_max;
-	
-	if ( object != 0 )
-		object -= 3;
-	object = file_load("object", object);
-	if (standard.object_decrypt != 0)
-	{
-		printf("Decrypting 'object' file...");
-		decrypt_string(object, object + res_size);
-		printf("done.\n");
-	}
-	object_size = res_size - 3;
-	
-	name_offset = load_le_16(object);
-	anim_obj_max = object[2] + 1;
-	object += 3;					// skip the header
-	object_name = object + name_offset;
-
-	objtable_new(anim_obj_max);			// new view table baby
+	if (object_file_load())
+		agi_exit();
 	memset(state.var, 0, sizeof(state.var));	// clear variables
 	flags_clear();
 	control_state_clear();

@@ -1,12 +1,19 @@
+struct inv_obj_struct
+{
+	u16 name;
+	u8 location;
+};
+typedef struct inv_obj_struct INV_OBJ;
+
+
 extern u8 *cmd_get(u8 *c);
 extern u8 *cmd_get_v(u8 *c);
 extern u8 *cmd_drop(u8 *c);
 extern u8 *cmd_put(u8 *c);
 extern u8 *cmd_put_v(u8 *c);
 extern u8 *cmd_get_room_v(u8 *c);
-extern u8 *invent_find(u8 **c);
-extern u8 *invent_find_v(u8 **c);
 
-extern u8 *object;
-extern u8 *object_name;
-extern u16 object_size;
+extern INV_OBJ *inv_obj_table;
+extern int inv_obj_table_size;
+extern u8 *inv_obj_string;
+extern int inv_obj_string_size;

@@ -143,7 +143,9 @@ u8 *cmd_restore_game(u8 *c)
 				goto loc2630;
 			if (state_read(rest_stream, objtable) == 0)
 				goto loc2630;
-			if (state_read(rest_stream, object) == 0)
+			if (state_read(rest_stream, inv_obj_table) == 0)
+				goto loc2630;
+			if (state_read(rest_stream, inv_obj_string) == 0)
 				goto loc2630;
 			if (state_read(rest_stream, script_head) == 0)
 				goto loc2630;
@@ -156,7 +158,7 @@ u8 *cmd_restore_game(u8 *c)
 					// structures with stuff
 		loc2647:
 			fclose(rest_stream);
-			decrypt_string(object, object+object_size);
+			decrypt_string(inv_obj_string, inv_obj_string+inv_obj_string_size);
 			state.var[V20_COMPUTER] = computer_type;
 			state.var[V26_MONITORTYPE] = display_type;
 			if (computer_type == 0)
@@ -216,7 +218,7 @@ u8 *cmd_save_game(u8 *c)
 	newline_orig = msgstate.newline_char;
 	msgstate.newline_char = '@';
 		
-	decrypt_string(object, object+object_size);
+	decrypt_string(inv_obj_string, inv_obj_string+inv_obj_string_size);
 	
 	if (save_dir == 0)
 		save_dir = vstring_new(0, 200);
@@ -254,7 +256,9 @@ u8 *cmd_save_game(u8 *c)
 				goto save_err;
 			if (state_write(save_stream, objtable, objtable_size) == 0)
 				goto save_err;
-			if (state_write(save_stream, object, object_size) == 0)
+			if (state_write(save_stream, inv_obj_table, inv_obj_table_size) == 0)
+				goto save_err;
+			if (state_write(save_stream, inv_obj_string, inv_obj_string_size) == 0)
 				goto save_err;
 			if (state_write(save_stream, script_head, state.script_size<<1) == 0)
 				goto save_err;
@@ -273,7 +277,7 @@ save_end:
 	cmd_close_window(0);
 	msgstate.newline_char = newline_orig;
 	clock_state = 0;
-	decrypt_string(object, object+object_size);
+	decrypt_string(inv_obj_string, inv_obj_string+inv_obj_string_size);
 	return c;
 }
 

@@ -113,10 +113,7 @@ u8 cmd_isset_v()
 
 u8 cmd_has()
 {
-	if (object[*(logic_data++)*3 + 2] == 0xFF)
-		return 1;
-	else
-		return 0;
+	return (inv_obj_table[*(logic_data++)].location == 0xFF);
 }
 
 
@@ -186,11 +183,8 @@ u8 cmd_controller()
 u8 cmd_obj_in_room()
 {
 	u8 obj_room;
-	obj_room = object[*(logic_data++) * 3 +2];
-	if ( obj_room == state.var[*(logic_data++)] )
-		return 1;
-	else
-		return 0;
+	obj_room = inv_obj_table[*(logic_data++)].location;
+	return ( obj_room == state.var[*(logic_data++)] );
 }
 
 u8 cmd_said()

@@ -344,9 +344,8 @@ u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 							
 						case 'o':	// object name
 							source = str_to_int_ptr(source, &my_num);
-							bx = object + state.var[my_num] * 3;
-							my_str = object;
-							my_str += load_le_16(bx);
+							my_str = inv_obj_string;
+							my_str += 	inv_obj_table[my_num].name;
 							msg = r_display1f93(my_str, msg);
 							break;
 						

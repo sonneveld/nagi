@@ -78,7 +78,7 @@ void inventory(void)
 	INVENT *item_last;
 	INVENT *item_cur;
 	INVENT invent_item[50];
-	u8 *obj_cur;		// object pointer
+	int obj_cur;		// object pointer
 	INVENT *si;
 	AGI_EVENT *di;
 	
@@ -86,18 +86,18 @@ void inventory(void)
 	col = 0;
 	si = invent_item;
 	item_cur = invent_item;
-	obj_cur = object;
+	obj_cur = 0;
 	item_count = 0;
 
-	while  (obj_cur < object_name)
+	while (obj_cur < inv_obj_table_size)
 	{
-		if (obj_cur[2] == 0xFF)
+		if (inv_obj_table[obj_cur].location == 0xFF)
 		{
 			if (item_count == state.var[V25_ITEM])
 				item_cur = si;
 		
 			si->num = item_count;
-			si->name = object +  load_le_16(obj_cur);
+			si->name = inv_obj_string + inv_obj_table[obj_cur].name;
 			si->row = row;
 		
 			if ( (col & 1) == 0)
@@ -111,7 +111,7 @@ void inventory(void)
 			col ++;
 			si ++;
 		}
-		obj_cur += 3;
+		obj_cur ++;
 		item_count ++;
 	}
 
