@@ -45,7 +45,7 @@ u8 res_header[8];
 // size 16 for v3,  10 for v2
 FILE *vol_handle_table[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0};
 u16 free_mem_check = 0;
-u16 res_size = 0;
+int res_size = 0;
 u16 vol_disk_num = 0;
 	
 u16 not_compressed = 0;
@@ -359,11 +359,11 @@ u8 *file_load(u8 *name, u8 *buff)
 	fseek(file_stream, 0, SEEK_END);
 	fgetpos(file_stream, &file_size);
 	fseek(file_stream, 0, SEEK_SET);
-	res_size = file_size;
+	res_size = (int)file_size;
 	if (buff == 0)
-		buff = (u8 *)a_malloc(file_size);
+		buff = (u8 *)a_malloc(res_size);
 	
-	if ( fread(buff, sizeof(u8), file_size, file_stream) != file_size)
+	if ( fread(buff, sizeof(u8), res_size, file_stream) != res_size)
 		if (print_err_code == 0)
 		{
 			agi_exit();

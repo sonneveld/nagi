@@ -12,7 +12,7 @@ extern u8 *dir_sound(u16 num);
 
 
 extern u16 free_mem_check;
-extern u16 res_size;
+extern int res_size;
 extern u16 not_compressed;
 
 extern u8 *vol_res_load(u8 *dir_entry, u8 *buff);

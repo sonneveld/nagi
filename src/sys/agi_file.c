@@ -176,9 +176,9 @@ u8 *file_to_buf(u8 *file_name)
 	fseek(file_stream, 0, SEEK_SET);
 	file_buf_size = (u32)file_size;
 	
-	buf = (u8 *)a_malloc(file_size);
+	buf = (u8 *)a_malloc(file_buf_size);
 	
-	if ( fread(buf, sizeof(u8), file_size, file_stream) != file_size)
+	if ( fread(buf, sizeof(u8), file_buf_size, file_stream) != file_buf_size)
 	{
 		a_free(buf);
 		return 0;

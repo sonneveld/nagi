@@ -5,7 +5,7 @@
 struct ini_struct
 {
 	FILE *stream;
-	fpos_t size;
+	int size;
 	
 	u8 *data;
 	u8 *last;
