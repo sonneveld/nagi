@@ -43,6 +43,7 @@ _DrawLine                        cseg     0000661A 00000096
 #include "../picture/pic_res.h"
 #include "../picture/pic_render.h"
 #include "../sys/drv_video.h"
+#include "../sys/vid_render.h"
 
 u8 pos_init_y = 0;
 u8 pos_init_x = 0;
@@ -557,12 +558,10 @@ int get_x_pos(u8 *x)
 	pic_byte = *(pic_code++);
 	*x = pic_byte;
 
-	if ( (*x) > 0xEF)	// command
+	if ( *x > 0xEF)	// command
 		return 1;
-	if ( (*x) > 159)	// 159
+	if ( *x > 159)	// 159
 		*x = 159;
-
-	#warning check the values of get_x_pos
 	return 0;
 }
 
