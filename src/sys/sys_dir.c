@@ -28,6 +28,10 @@
 VSTRING *directory_nagi  = 0;
 
 
+// dir_nagi
+// dir_home
+// dir_game
+
 /* CODE	---	---	---	---	---	---	---	--- */
 
 
