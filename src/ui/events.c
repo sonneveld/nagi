@@ -264,7 +264,21 @@ AGI_EVENT *event_mouse_button(u8 button, u16 x, u16 y)
 	AGI_EVENT *agi_event = &passed_agi_event;	
 	
 	agi_event->type = 10;	// mouse
-	agi_event->data = button;
+	switch (button)
+	{
+		case SDL_BUTTON_LEFT:
+			agi_event->data = 1;
+		break;
+		case SDL_BUTTON_MIDDLE:
+			agi_event->data = 3;
+		break;
+		case SDL_BUTTON_RIGHT:
+			agi_event->data = 2;
+		break;
+		default:
+			agi_event->data = 0;
+		break;
+	}
 	agi_event->x = x;
 	agi_event->y = y;
 	
