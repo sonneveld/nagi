@@ -168,16 +168,16 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 {
 	u8 *sdl_buf;
 	u8 *sdl_line;
-	u8 *rend_buf;
+	u8 *r_buf;
 
 	u16 sdl_x, sdl_y, sdl_w, sdl_h;
 	u16 rend_x, rend_y, rend_w, rend_h;
 	u16 h_count, w_count, i;
 
-	rend_x = rect_x * rstate.drv->scale_x;
-	rend_y = rstate.drv->scale_y*(rect_y + 1) - 1;
-	rend_w = rect_w * rstate.drv->scale_x;
-	rend_h = rect_h * rstate.drv->scale_y;
+	rend_x = rect_x * rend_drv->scale_x;
+	rend_y = rend_drv->scale_y*(rect_y + 1) - 1;
+	rend_w = rect_w * rend_drv->scale_x;
+	rend_h = rect_h * rend_drv->scale_y;
 
 	sdl_x = rend_x * c_vid_scale;
 	sdl_y = c_vid_scale*(rend_y + 1) - 1   + state.window_row_min * font_size.h;
@@ -186,7 +186,7 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 
 	vid_lock(gfx_surface);
 
-	rend_buf = rstate.buf + rend_y*rstate.drv->w + rend_x;
+	r_buf = rend_buf + rend_y*rend_drv->w + rend_x;
 	sdl_buf = (u8 *)gfx_surface->pixels + sdl_y*gfx_surface->line_size + sdl_x;
 
 	for (h_count=rend_h; h_count!=0; h_count--)
@@ -194,9 +194,9 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 		// draw line
 		for (w_count=rend_w; w_count!=0; w_count--)
 		{
-			memset(sdl_buf, (*rend_buf)&0xF, c_vid_scale);
+			memset(sdl_buf, (*r_buf)&0xF, c_vid_scale);
 			sdl_buf += c_vid_scale;
-			rend_buf++;
+			r_buf++;
 		}
 
 		// repeat line
@@ -214,7 +214,7 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 			sdl_buf -= gfx_surface->line_size*c_vid_scale + rend_w*c_vid_scale;
 
 		// next line in buffer
-		rend_buf -= rstate.drv->w + rend_w;
+		r_buf -= rend_drv->w + rend_w;
 	}
 
 	vid_unlock(gfx_surface);

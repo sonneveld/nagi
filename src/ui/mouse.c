@@ -203,9 +203,9 @@ u8 *cmd_brian_poll_mouse(u8 *c)
 	}
 	
 	state.var[27] = get_butt;
-	state.var[28] = get_x / c_vid_scale / rstate.drv->scale_x;
+	state.var[28] = get_x / c_vid_scale / rend_drv->scale_x;
 
-	state.var[29] = get_y / c_vid_scale / rstate.drv->scale_y;
+	state.var[29] = get_y / c_vid_scale / rend_drv->scale_y;
 	
 	return c;
 }
@@ -294,8 +294,8 @@ void mouse_event_handle(AGI_EVENT *event)
 			pos.y = event->y;
 			id = mouse_area_check(&pos);
 			//printf("Mouse Button! x=%d y=%d\n", pos.x, pos.y);
-			pos.x = pos.x / c_vid_scale / rstate.drv->scale_x;
-			pos.y = pos.y / c_vid_scale / rstate.drv->scale_y;
+			pos.x = pos.x / c_vid_scale / rend_drv->scale_x;
+			pos.y = pos.y / c_vid_scale / rend_drv->scale_y;
 			switch (id)
 			{
 				case 0:	// status bar

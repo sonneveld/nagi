@@ -25,7 +25,7 @@ _PopTextAtt                      cseg     000078FC 0000003A
 // state.window_row_min, max
 #include "../ui/msg.h"
 // gfx_picbuff_row
-// rstate
+
 #include "../sys/drv_video.h"
 #include "../sys/gfx.h"
 #include "../sys/chargen.h"
@@ -56,6 +56,7 @@ u8 *cmd_text_screen(u8 *c)
 {
 	input_edit_on();
 	chgen_textmode = 1;
+	gfx_palette_update();
 	text_colour(state.text_fg, state.text_bg);
 	gfx_clear();
 	window_portion_clear(0, 24, state.text_comb);
@@ -137,10 +138,10 @@ u16 text_combine(u16 fg, u16 bg)
 		comb = fg | (bg << 4);
 	else
 	{
-		switch(rstate.drv->type)
+		switch(gfx_paltype)
 		{
-			case R_CGA0:
-			case R_CGA1:
+			case PAL_CGA0:
+			case PAL_CGA1:
 				if ( bg != 0)
 					comb = 0x83;
 				else if (fg > 0xE)
@@ -148,6 +149,7 @@ u16 text_combine(u16 fg, u16 bg)
 				else
 					comb = cga_text_conv[fg];
 				break;
+			case PAL_16:
 			default:
 				if ( bg != 0)
 					comb = 0x8F;
@@ -176,6 +178,7 @@ u16 calc_text_bg(u16 colour)
 void screen_redraw()
 {
 	chgen_textmode = 0;
+	gfx_palette_update();
 	text_colour(state.text_fg, state.text_bg);
 	gfx_clear();
 	gfx_picbuff_update();
@@ -202,6 +205,7 @@ u8 *cmd_toggle_monitor(u8 *c)
 		push_row_col();
 		AGI_TRACE
 		gfx_shutdown();
+		render_drv_rotate();
 		gfx_init();
 		AGI_TRACE
 		pop_row_col();

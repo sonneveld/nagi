@@ -10,6 +10,7 @@ struct render_driver_struct
 {
 	u8 type;
 	u8 agi_type;
+	u8 pal_type;
 	u16 w;
 	u16 h;
 	
@@ -23,7 +24,6 @@ struct render_driver_struct
 };
 typedef struct render_driver_struct RDRIVER;
 
-
 #define R_NONE	0
 #define R_EGA	1
 #define R_CGA0	2
@@ -32,15 +32,6 @@ typedef struct render_driver_struct RDRIVER;
 // unsupported
 #define R_HERC	4
 #define R_PALM	5
-
-struct render_state_struct
-{
-	RDRIVER *drv;
-	
-	u8 *buf;
-	int buf_size;
-};
-typedef struct render_state_struct RSTATE;
 
 
 

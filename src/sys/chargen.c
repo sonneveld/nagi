@@ -71,8 +71,8 @@ int font_check(SIZE *size)
 {
 	int render_w, render_h;
 	
-	render_w = rstate.drv->w;
-	render_h = rstate.drv->h;
+	render_w = rend_drv->w;
+	render_h = rend_drv->h;
 	
 	// make sure they're multiples of the render w/h
 	if ((size->w * 40) % render_w)
@@ -171,8 +171,8 @@ void ch_init(void)
 {
 	SIZE needed;
 
-	needed.w = rstate.drv->w * c_vid_scale / 40;
-	needed.h = rstate.drv->h * c_vid_scale / 21;
+	needed.w = rend_drv->w * c_vid_scale / 40;
+	needed.h = rend_drv->h * c_vid_scale / 21;
 
 	// pick the right font.. load it up
 	dir_preset_change(DIR_PRESET_NAGI);

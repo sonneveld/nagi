@@ -42,7 +42,7 @@ void cga_view_dither(u8 *view_data);	// dither view
 
 RDRIVER render_drv_cga0 = 
 {
-	R_CGA0, 0,
+	R_CGA0, 0, PAL_CGA0,
 	320, 168, 2,1, 
 	cga_update, cga_rect,
 	render_colour, cga_view_dither
@@ -50,15 +50,15 @@ RDRIVER render_drv_cga0 =
 
 RDRIVER render_drv_cga1 = 
 {
-	R_CGA1, 1, 
-	320, 168, 2,1, 
+	R_CGA1, 1, PAL_CGA1,
+	320, 168, 2, 1, 
 	cga_update, cga_rect,
 	render_colour, cga_view_dither
 };
 
 RDRIVER render_drv_ega = 
 {
-	R_EGA, 0,
+	R_EGA, 3, PAL_16,
 	320, 168, 2,1, 
 	ega_update, ega_rect,
 	render_colour, dummy_view_dither
@@ -66,13 +66,23 @@ RDRIVER render_drv_ega =
 
 RDRIVER render_drv_dummy = 
 {
-	R_NONE, 0,
+	R_NONE, 0, PAL_16,
 	0, 0, 1,1, 
 	dummy_update, dummy_rect,
 	render_colour, dummy_view_dither
 };
-	
-RSTATE rstate = {&render_drv_ega,0,0};
+
+RDRIVER *rend_drv;
+u8 *rend_buf;
+int rend_buf_size;
+
+RDRIVER *drv_list[] = {&render_drv_ega, 
+				&render_drv_cga0,
+				&render_drv_cga1,
+				0};
+RDRIVER **drv_list_ptr = 0;
+
+
 
 /*
 rend_state
@@ -92,43 +102,46 @@ void render_init()
 	// free buffer if it already exists
 	render_shutdown();
 
-	if (!strcasecmp(c_vid_renderer, "ega"))
+	if (drv_list_ptr == 0)
 	{
-		rstate.drv = &render_drv_ega;
-		gfx_paltype = PAL_16;
+		if (!strcasecmp(c_vid_renderer, "cga0"))
+			drv_list_ptr = &drv_list[1];
+		else if (!strcasecmp(c_vid_renderer, "cga1"))
+			drv_list_ptr = &drv_list[2];
+		else //if (!strcasecmp(c_vid_renderer, "ega"))
+			drv_list_ptr = &drv_list[0];
 	}
-	else if (!strcasecmp(c_vid_renderer, "cga0"))
-	{
-		rstate.drv = &render_drv_cga0;
-		gfx_paltype = PAL_CGA0;
-	}
-	else if (!strcasecmp(c_vid_renderer, "cga1"))
-	{
-		rstate.drv = &render_drv_cga1;
-		gfx_paltype = PAL_CGA1;
-	}
-	else 
-		rstate.drv = &render_drv_dummy;
+	
+	rend_drv = *drv_list_ptr;
 
-	rstate.buf_size = rstate.drv->w * rstate.drv->h;
-	rstate.buf = a_malloc(rstate.buf_size);
-	memset(rstate.buf, 0, rstate.buf_size);
+	rend_buf_size = rend_drv->w * rend_drv->h;
+	rend_buf = a_malloc(rend_buf_size);
+	memset(rend_buf, 0, rend_buf_size);
 	
 	// set variables.
-	state.var[V26_MONITORTYPE] = rstate.drv->agi_type;
+	state.var[V26_MONITORTYPE] = rend_drv->agi_type;
 	
 	// only here so games that only setup ctrl-R for cga games work
 	if (state.var[V26_MONITORTYPE] > 1)
 		state.var[V26_MONITORTYPE] = 0;
+	
+	gfx_paltype = rend_drv->pal_type;
+}
+
+void render_drv_rotate(void)
+{
+	drv_list_ptr++;
+	if (*drv_list_ptr == 0)
+		drv_list_ptr = &drv_list[0];
 }
 
 void render_shutdown()
 {	
-	if (rstate.buf != 0)
+	if (rend_buf != 0)
 	{
-		a_free(rstate.buf);
-		rstate.buf = 0;
-		rstate.buf_size = 0;
+		a_free(rend_buf);
+		rend_buf = 0;
+		rend_buf_size = 0;
 	}
 }
 
@@ -138,7 +151,7 @@ void render_shutdown()
 
 void render_update(u16 x, u16 y, u16 width, u16 height)
 {
-	rstate.drv->func_update(x, y, width, height);
+	rend_drv->func_update(x, y, width, height);
 	gfx_update(x, y, width, height);
 }
 
@@ -148,7 +161,7 @@ void ega_update(u16 x, u16 y, u16 width, u16 height)
 	int w, h;
 	
 	pbuf = gfx_picbuff + 160*y + x;
-	rbuf = rstate.buf + y*rstate.drv->w + x*2;
+	rbuf = rend_buf + y*rend_drv->w + x*2;
 	
 	for (h=height ; h!=0 ; h--)
 	{
@@ -158,7 +171,7 @@ void ega_update(u16 x, u16 y, u16 width, u16 height)
 			*(rbuf++) = *(pbuf++)&0xF;
 		}
 		pbuf -= 160 + width;
-		rbuf -= rstate.drv->w + width*2;
+		rbuf -= rend_drv->w + width*2;
 	}
 	
 }
@@ -169,7 +182,7 @@ void cga_update(u16 x, u16 y, u16 width, u16 height)
 	int w, h;
 	
 	pbuf = gfx_picbuff + 160*y + x;
-	rbuf = rstate.buf + y*rstate.drv->w + x*2;
+	rbuf = rend_buf + y*rend_drv->w + x*2;
 	
 	for (h=height ; h!=0 ; h--)
 	{
@@ -180,7 +193,7 @@ void cga_update(u16 x, u16 y, u16 width, u16 height)
 			pbuf++;
 		}
 		pbuf -= 160 + width;
-		rbuf -= rstate.drv->w + width*2;
+		rbuf -= rend_drv->w + width*2;
 	}
 }
 
@@ -198,7 +211,7 @@ void dummy_update(u16 x, u16 y, u16 width, u16 height)
 // render clear can be replaced by this
 void render_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
 {
-	rstate.drv->func_rect(x, y, width, height, colour);
+	rend_drv->func_rect(x, y, width, height, colour);
 	
 	gfx_update(x, y, width, height);
 }
@@ -209,12 +222,12 @@ void ega_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
 	u8 *rbuf;
 	int h;
 	
-	rbuf = rstate.buf + y*rstate.drv->w + x*2;
+	rbuf = rend_buf + y*rend_drv->w + x*2;
 	
 	for (h=height ; h>0 ; h--)
 	{
 		memset(rbuf, colour&0xF, width*2);
-		rbuf -= rstate.drv->w;
+		rbuf -= rend_drv->w;
 	}
 }
 
@@ -224,7 +237,7 @@ void cga_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
 	COLOUR rend_col;
 	u16 h_count, w_count;
 	
-	rbuf = rstate.buf + y*rstate.drv->w + x*2;
+	rbuf = rend_buf + y*rend_drv->w + x*2;
 	
 	// get cga colour!!
 	// uses odd AND even colours
@@ -243,7 +256,7 @@ void cga_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
 				*(rbuf++) = (rend_col.odd & 0xC)>>2;
 				*(rbuf++) = rend_col.odd & 0x3;
 			}
-			rbuf -= rstate.drv->w + width*2;
+			rbuf -= rend_drv->w + width*2;
 		}
 	}
 	else
@@ -257,7 +270,7 @@ void cga_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
 				*(rbuf++) = (rend_col.odd & 0xC)>>2;
 				*(rbuf++) = rend_col.odd & 0x3;
 			}
-			rbuf -= rstate.drv->w + width*2;
+			rbuf -= rend_drv->w + width*2;
 		}
 	}
 
@@ -285,7 +298,7 @@ u8 cga_colour_pal[]={0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x01, 0x04,
 
 void render_colour(u8 col, COLOUR *col_dith)
 {
-	switch (rstate.drv->type)
+	switch (rend_drv->type)
 	{
 		case R_CGA0:
 			col_dith->odd = cga_colour_pal[3*col];
@@ -320,7 +333,7 @@ u8 cga1_view_buff[]={0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 
 void render_view_dither(u8 *view_data)
 {
-	rstate.drv->func_view_dither(view_data);
+	rend_drv->func_view_dither(view_data);
 }
 
 void dummy_view_dither(u8 *view_data)
@@ -336,7 +349,7 @@ void cga_view_dither(u8 *view_data)	// dither view
 	u8 loop_count;
 	
 	loop_prev = 0;
-	if (rstate.drv->type == R_CGA1)
+	if (rend_drv->type == R_CGA1)
 		memcpy(cga1_view_buff, cga1_view_pal, 16);
 	loop_count = view_data[2];	// number of loops
 	loop_table = view_data + 5;
@@ -365,7 +378,7 @@ void cga_view_dither(u8 *view_data)	// dither view
 				line_count = *(si++);	// height
 				// *si&0x0F = transparent colour
 				// *si&0xF0 = loop/mirror information
-				if (rstate.drv->type == R_CGA1)
+				if (rend_drv->type == R_CGA1)
 				{
 					palette = cga1_view_buff;
 					palette[*si&0x0F] = 0x44;	// transparent colour
