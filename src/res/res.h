@@ -1,12 +1,15 @@
 
 // res_dir.c
+
 extern void dir_load(void);
+extern void dir_unload(void);
 extern u8 *dir_logic(u16 num);
 extern u8 *dir_view(u16 num);
 extern u8 *dir_picture(u16 num);
 extern u8 *dir_sound(u16 num);
 
 // res_vol.c
+
 
 extern u16 free_mem_check;
 extern u16 res_size;

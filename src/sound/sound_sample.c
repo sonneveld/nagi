@@ -97,9 +97,12 @@ SAMPLE *sample_open(u8 *file_name, int freq_base)
 
 void sample_close(SAMPLE *s)
 {
-	a_free(s->scale_table);
-	a_free(s->data);
-	a_free(s);
+	if (s != 0)
+	{
+		a_free(s->scale_table);
+		a_free(s->data);
+		a_free(s);
+	}
 }
 
 

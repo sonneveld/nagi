@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 //#include <errno.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
@@ -55,36 +56,48 @@ void vid_shutdown(void)
 
 VSURFACE *vid_display(SIZE *screen_size, int fullscreen_state)
 {
+	assert(screen_size != 0);
 	return vdriver.ptr_display(screen_size, fullscreen_state);
 }
 
 void vid_free(VSURFACE *vsurface)
 {
+	assert(vsurface != 0);
 	vdriver.ptr_free(vsurface);
 }
 
 void vid_lock(VSURFACE *vsurface)
 {
+	assert(vsurface != 0);
 	vdriver.ptr_lock(vsurface);
 }
 
 void vid_unlock(VSURFACE *vsurface)
 {
+	assert(vsurface != 0);
 	vdriver.ptr_unlock(vsurface);
 }
 
 void vid_update(VSURFACE *vsurface, POS *pos, SIZE *size)
 {
+	assert(vsurface != 0);
+	assert(pos != 0);
+	assert(size != 0);
 	vdriver.ptr_update(vsurface, pos, size);
 }
 
 void vid_palette_set(VSURFACE *vsurface, PCOLOUR *palette, u8 num)
 {
+	assert(vsurface != 0);
+	assert(palette != 0);
 	vdriver.ptr_palette_set(vsurface, palette, num);
 }
 
 void vid_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour)
 {
+	assert(vsurface != 0);
+	assert(pos != 0);
+	assert(size != 0);
 	vdriver.ptr_fill(vsurface, pos, size, colour);
 }
 

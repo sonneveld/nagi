@@ -254,6 +254,26 @@ void mouse_init(void)
 
 }
 
+void mouse_shutdown(void)
+{
+	switch (c_game_mouse)
+	{
+		case M_SIERRA_V2:
+			mouse_area_shutdown();
+			break;
+		
+		case M_SIERRA_V3:
+		case M_NICK:
+		case M_BRIAN:
+		default: 
+			break;
+	}
+	
+	cmd_table[171].func_name = "cmd.push.script";
+	cmd_table[171].func = cmd_unknown_171;
+	cmd_table[171].param_total = 0;
+	cmd_table[171].param_flag = 0;
+}
 
 void mouse_event_handle(AGI_EVENT *event)
 {

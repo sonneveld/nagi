@@ -23,6 +23,8 @@ _ResNotFound                     cseg     00004441 0000002F
 
 #define DIR_ITEM_SIZE 3
 
+u8 dir_ver = 0;
+u8 *dir_data = 0;
 u8 *dir_log_data = 0;
 u8 *dir_pic_data = 0;
 u8 *dir_view_data = 0;
@@ -35,13 +37,13 @@ void v2_dir_load(void)
 	dir_pic_data = file_load("picdir", 0);
 	dir_view_data = file_load("viewdir", 0);
 	dir_snd_data = file_load("snddir", 0);
+	dir_ver = 2;
 }
 
 void v3_dir_load(void)
 {
 	u8 dir_v3_name[15];
 	FILE *dir_stream;
-	u8 *dir_data;
 	
 	if (c_game_dir_type == DIR_AMIGA)
 	{
@@ -61,6 +63,7 @@ void v3_dir_load(void)
 		dir_pic_data = dir_data + load_le_16(dir_data+2);
 		dir_view_data = dir_data + load_le_16(dir_data+4);
 		dir_snd_data = dir_data + load_le_16(dir_data+6);
+		dir_ver = 3;
 	}
 	else
 	{
@@ -91,6 +94,28 @@ void dir_load(void)
 			printf("dir_load(): unknown resource type\n");
 			agi_exit();
 	}
+}
+
+void dir_unload(void)
+{
+	switch (dir_ver)
+	{
+		case 2:
+			a_free(dir_log_data);
+			a_free(dir_pic_data);
+			a_free(dir_view_data);
+			a_free(dir_snd_data);
+			break;
+		case 3:
+			a_free(dir_data);
+			break;
+	}
+	
+	dir_data = 0;
+	dir_log_data = 0;
+	dir_pic_data = 0;
+	dir_view_data = 0;
+	dir_snd_data = 0;
 }
 
 // checks the first four bits of a vol_item.

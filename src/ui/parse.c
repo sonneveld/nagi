@@ -99,7 +99,7 @@ loc1940:
 	if ( di <= 0) goto loc1952;
 	word_total = di;
 loc1948:
-	flag_set(2);
+	flag_set(F02_PLAYERCMD);
 loc1952:
 }
 

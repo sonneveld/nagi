@@ -48,16 +48,14 @@ u8 *cmd_quit(u8 *c)
 
 void agi_exit()
 {
-	//close_log_file();
+	agi_shutdown();
+	nagi_shutdown();
+	
+	
 	//restore_vectors();
 
-	clock_denit();
 	// includes sound, time, events
 	//vid_mode_set(original_video_mode);
-	sound_driver_denit();
-	vid_shutdown();
-	
-	free(lzw_dict);
 	
 	dir_preset_change(DIR_PRESET_ORIG);
 	

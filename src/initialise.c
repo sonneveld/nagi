@@ -222,3 +222,64 @@ void room_init(void)
 }
 
 
+void agi_shutdown(void)
+{
+	// anything opened/alloced in game_init and during the game
+	
+	// object_free
+	object_file_unload();
+	
+	// blists free
+	blists_free();
+	
+	// log file
+	//close_log_file();
+	
+	// menus
+	// res
+	// window name
+	// TODO
+	
+	// the agi info that is init'd every game
+	
+	//pic_list_free();
+	view_list_free();
+	//logic_list_free();
+	//sound_list_free();
+	
+	// words.tok free
+	a_free(words_tok_data);
+	words_tok_data = 0;
+	
+	// dir_load free
+	dir_unload();
+	
+	// mouse shutdown
+	mouse_shutdown();
+}
+
+void nagi_shutdown(void)
+{
+	// lzw dict
+	free(lzw_dict);
+	lzw_dict = 0;
+
+	//sound_shutdown
+	sound_driver_denit();
+	
+	// clock_shutdown
+	clock_denit();
+
+	// events_shutdown
+	// TODO during events rewrite
+	
+	// gfx_shutdown
+	gfx_shutdown();
+	
+	// sdl_shutdown
+	SDL_Quit();
+	
+	// console close
+	// config write
+	// TODO
+}

@@ -74,6 +74,15 @@ void view_list_init()
 		list_clear(view_list);
 }
 
+void view_list_free()
+{
+	if (view_list != 0)
+	{
+		list_free(view_list);
+		view_list = 0;
+	}
+}
+
 void view_list_new_room()
 {
 	view_list_init();

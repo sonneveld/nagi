@@ -154,9 +154,10 @@ void gfx_init(void)
 
 void gfx_shutdown()
 {
-	vid_free(gfx_surface);
 	ch_shutdown();
 	render_shutdown();
+	if (gfx_surface != 0)
+		vid_free(gfx_surface);
 	vid_shutdown();
 }
 
