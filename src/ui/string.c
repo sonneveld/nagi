@@ -181,7 +181,7 @@ u8 *sub4f96(u8 *given_string, u16 ch)
 }
 
 #ifndef RAD_LINUX
-u8 *strtok_r(u8 *newstring, u8 *delimiters, u8 **save_ptr)
+u8 *strtok_r(char *newstring, char *delimiters, char **save_ptr)
 {
 	u8 *token_cur;
 	u8 *token_cur_end;

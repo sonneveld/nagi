@@ -367,7 +367,7 @@ int crc_compare(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 // return pointer to section in section list if a match is found.
 u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 {
-	u8 *crc_list;
+	u8 *crc_list; 
 	u8 *token, *running;
 	
 	assert(agicrc != 0);
@@ -734,11 +734,11 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 
 int gameinfo_compare(const void *a, const void *b)
 {
-	GAMEINFO *info_a;
-	GAMEINFO *info_b;
+	const GAMEINFO *info_a = *((const GAMEINFO **)a);
+	const GAMEINFO *info_b = *((const GAMEINFO **)b);
 	
-	info_a = *((GAMEINFO **)a);
-	info_b = *((GAMEINFO **)b);
+	//~ info_a = *((GAMEINFO **)a);
+	//~ info_b = *((GAMEINFO **)b);
 	
 	return strcasecmp(info_a->name, info_b->name);
 }

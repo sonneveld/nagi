@@ -7,5 +7,5 @@ extern u8 *string_reverse(u8 *str);
 extern u8 *string_lower(u8 *str);
 
 #ifndef RAD_LINUX
-extern u8 *strtok_r(u8 *newstring, u8 *delimiters, u8 **save_ptr);
+extern u8 *strtok_r(char *newstring, char *delimiters, char **save_ptr);
 #endif
