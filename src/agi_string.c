@@ -8,6 +8,9 @@ sub_cseg_EAC                     cseg     00000EAC 0000004C
 sub_cseg_EF8                     cseg     00000EF8 00000054
 */
 
+//~ RaDIaT1oN (2002-04-29):
+//~ fix unit'd variable
+
 /*
 CmdGetNum                        cseg     00007126 000000C8
 */
@@ -287,7 +290,7 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 	u8 *str_tail;	// tail of the edited string;
 	u8 *str_end;	// the absolute end
 	
-	u8 ch;
+	u8 ch = 0;
 	
 	// init string
 	str_edit = alloca(str_size);
