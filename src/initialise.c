@@ -139,7 +139,7 @@ void nagi_init()
 	putenv(env_value);
 	// audio driver
 	sprintf(env_value, "SDL_AUDIODRIVER=%s", c_sdl_drv_sound);
-	putenv(env_value);*/
+	putenv(env_value);
 #else	
 	if(c_sdl_drv_video[0]) 
 		setenv("SDL_VIDEODRIVER", c_sdl_drv_video, 1);
