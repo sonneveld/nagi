@@ -2,14 +2,33 @@
                                                      
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
                                                      
-  <meta name="Generator" content="Microsoft Word 97"><title>NAGI History</title></head>
-
-<body>
+  <meta name="Generator" content="Microsoft Word 97"><title>NAGI History</title><base href="file:///C:/nagi_project/working_directory/nagi/doc/nagi_history.html"></head><body>
                             
 <h3>NAGI History</h3>
                             
+<p>18th February 2002 (Version 2.06)<br>
+</p>
+<ul>
+  <li>Workaround for Gold Rush.  It reads the free memory variable but it's
+never set.  Now deliberately sets it to 10 during new games, rooms and restores.</li>
+  <li>New sound engine!  Supports noise channel (both types of noise with
+different frequencies), volume control, uses square wave, various options
+supported in the config file and notes will dissolve to silence if played
+for too long (just like Sierra's implementation).  Various changes have gone
+on underneath to make it easier to add other sound support.</li>
+  <li> Application icon by Charles Irwin added.  I had to reduce the colours because I didn't want NAGI to get too big yet.</li>
+  <li>Non-console version of NAGI is default, there is now a separate console
+version.  If you don't like the console, you can run NAGI without having
+to worry about it.  If you're a developer and you appreciate the debug messages,
+the console version is still there.</li>
+  <li>NAGI doesn't crash if you restore in Serguei's Destiny too many times
+in the same place.  Will fix any other game that calls restore from a logic
+other than logic.0</li>
+  <li>Logging has been added.  You can now log all the unknown words in games you're developing.</li>
+</ul>
 <p>14th January 2002 (Version 2.05)<br>
 </p>
+
 <ul>
 <li>no more external sample - NAGI generates it's own sine wave.</li><li>Mothergoose crash fixed by checking size for updated rectangles.</li><li>Manhunter disk error fixed, not properly clearing errno.</li><li>fixed background for Mothergoose name entry and Kings Quest 3 spell entry.</li><li>more CRC's thanks to Charles Irwin, Chris Cromer and I.</li><li>other internal details tidied up<br></li>
 </ul>
