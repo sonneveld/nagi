@@ -9,9 +9,10 @@ _VolumesClose                    cseg     000030D6 0000003D
 _FileLoad                        cseg     00003113 000000C5
 */
 
-// RaDIaT1oN - dependancy for errno
-#include <errno.h>
+//~ RaDIaT1oN (2002-04-29):
+//~ open first lowercase name changes
 
+#include <errno.h>
 
 #define RES_HEAD_SIZE 5
 
@@ -306,7 +307,8 @@ void volumes_open()
 		//do
 		//{
 			//errno = 0;
-			vol_handle_table[i] = fopen(name, "rb");
+//			vol_handle_table[i] = fopen(name, "rb");
+			vol_handle_table[i] = fopen_nocase(name, "rb");
 			/*
 			if ( (errno != 0) && (errno != ENOENT)  )
 				if (print_err_code() == 0)
@@ -342,7 +344,8 @@ u8 *file_load(u8 *name, u8 *buff)
 
 	newline_orig = msgstate.newline_char;
 	msgstate.newline_char = '@';
-	while (  (file_stream=fopen(name, "rb")) == 0  )
+//	while (  (file_stream=fopen(name, "rb")) == 0  )
+	while (  (file_stream=fopen_nocase(name, "rb")) == 0  )
 	{
 		sprintf(msg, "Can't find %s.%s%s", name,
 			"\nPress ENTER to try again.", "\nPress ESC to quit.");

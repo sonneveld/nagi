@@ -10,6 +10,9 @@ _DirSound                        cseg     0000440D 00000034
 _ResNotFound                     cseg     00004441 0000002F
 */
 
+//~ RaDIaT1oN (2002-04-29):
+//~ open first lowercase name changes
+
 #include "../agi.h"
 #include "res.h"
 
@@ -94,13 +97,15 @@ void dir_load(void)
 				if (dir_type_ptr)
 					printf("dir_load(): attempting to load combined PC dir structure.\n");
 				sprintf(dir_v3_name, "%sdir", c_game_file_id);
-				dir_stream = fopen(dir_v3_name, "rb");
+//				dir_stream = fopen(dir_v3_name, "rb");
+				dir_stream = fopen_nocase(dir_v3_name);
 				break;
 			case 3:
 				if (dir_type_ptr)
 					printf("dir_load(): attempting to load combined Amiga dir structure.\n");
 				sprintf(dir_v3_name, "dirs");
-				dir_stream = fopen(dir_v3_name, "rb");
+//				dir_stream = fopen(dir_v3_name, "rb");
+				dir_stream = fopen_nocase(dir_v3_name);
 				break;
 			case -1:
 			default:
