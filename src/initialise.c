@@ -14,7 +14,8 @@ _RoomInit                        cseg     000012DE 00000015
 #include <string.h> 
 
 /* OTHER headers	---	---	---	---	---	---	--- */
-#include "sys/video_misc.h"
+#include "sys/drv_video.h"
+#include "sys/gfx.h"
 #include "sys/glob_sys.h"
 #include "picture/pic_res.h"
 #include "game_id.h"
@@ -22,7 +23,6 @@ _RoomInit                        cseg     000012DE 00000015
 #include "decrypt.h"
 #include "res/res.h"
 #include "logic/logic_base.h"
-#include "sys/video.h"
 #include "picture/sbuf_util.h"
 // for blists_erase
 #include "view/obj_update.h"
@@ -98,7 +98,7 @@ void nagi_init()
 	// initialise SDL
 	printf("Initialising Simple DirectMedia Layer (SDL)...");
 	//SDL_INIT_EVENTTHREAD SDL_INIT_AUDIO|
-	if ( SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO) < 0 )
+	if ( SDL_Init(SDL_INIT_TIMER) < 0 )
 	{
 		printf("Unable to init SDL: %s\n", SDL_GetError());
 		exit(1);
@@ -106,17 +106,13 @@ void nagi_init()
 	atexit(SDL_Quit);
 	printf("done.\n");
 	
+	gfx_init();
+	
 	// clear keyboard input
 	//clear_input();
 	#warning keyboard needs a bit of cleanup
 	events_init();
 	
-	// initialise picture buffer
-	//pic_buff = a_malloc(160*168);
-	
-	// Initialise video
-	graf_init();
-
 	//load_vectors();	// keyboard, timer, critical error
 	
 	// call do_clock at 20Hz.
@@ -264,13 +260,11 @@ void config_read(void)
 	else
 		putenv("SDL_VIDEODRIVER=windib");
 	// video fullscreen
-	vstate.fullscreen = ini_boolean("video", 0, "video_fullscreen", 0);
+	gfx_fullscreen = ini_boolean("video", 0, "video_fullscreen", 0);
 	// video scale
-	vstate.scale = ini_int("video", 0, "video_scale", 1);
-	if (vstate.scale < 1)
-			vstate.scale = 1;
-	// video fill line
-	vstate.scale_fill = ini_boolean("video", 0, "video_fill_line", 0);
+	gfx_scale = ini_int("video", 0, "video_scale", 1);
+	if (gfx_scale < 1)
+			gfx_scale = 1;
 	
 	// sound_driver
 	if ( (key_value=ini_read("sound", "sound_driver")) != 0)
