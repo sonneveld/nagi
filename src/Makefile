@@ -16,9 +16,13 @@ sys/delay.c  sys/memory.c sys/rand.c sys/endian.c sys/time.c\
 sys/mem_wrap.c sys/ini_config.c sys/sys_dir.c sys/vstring.c
 
 # video files
-SRC +=  sys/video.c sys/video_misc.c\
-sys/vid_sdl.c sys/vid_dummy.c sys/vid_render.c\
-sys/font_8x8.c sys/font_4x8.c sys/font_16x16.c
+
+SRC += sys/gfx.c sys/vid_render.c \
+sys/drv_dummy.c sys/drv_sdl.c sys/drv_video.c \
+sys/chargen.c
+#SRC +=  sys/video.c sys/video_misc.c\
+#sys/vid_sdl.c sys/vid_dummy.c sys/vid_render.c\
+#sys/font_8x8.c sys/font_4x8.c sys/font_16x16.c
 
 # pic files
 SRC += picture/pic_render.c picture/pic_res.c\
@@ -49,25 +53,30 @@ CC = gcc
 
 CFLAGS := -O2 -fwritable-strings
 #CFLAGS += -finline-functions
+CFLAGS += -IC:/mingw/mingw32/include/SDL
+
+DEPFLAGS := $(CFLAGS)
+
+# add warnings
+
 CFLAGS += -W -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual 
 #CFLAGS += -Werror
-CFLAGS += -IC:/mingw/mingw32/include/SDL
 
 LIB = -lmingw32 -lSDLmain -lSDL -mwindows -mconsole
 
 ../bin/n.exe: $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LIB) 
 
-#%.o: %.c
-#	$(CC) $(CFLAGS) -c $< -o $@
-
-include $(OBJ:.o=.d)
-
-%.d: %.c
-	sh depend.sh $(CFLAGS) $< > $@
-
 clean:
 	$(RM) $(OBJ) ../bin/n.exe core
 
 depclean:
-	$(OBJ:.o=.d)
+	$(RM) $(OBJ:.o=.d)
+
+%.d: %.c
+	sh depend.sh $(DEPFLAGS) $< > $@
+	
+include $(OBJ:.o=.d)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
