@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-fpos_t crc_file_size;
 
 u32 crctable[256] =
 {

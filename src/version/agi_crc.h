@@ -5,5 +5,5 @@
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 extern u32 crc_generate(u8 *data, int size);
-extern int file_crc_compare(u8 *file_name, u32 crc_correct);
+
 #endif
