@@ -216,7 +216,7 @@ void logic_cmd()
 {
 	while (  (op < 0xFC) && (op != 0)  )
 	{
-		if ( op > standard.cmd_max)
+		if ( op > CMD_MAX)
 			set_agi_error(0x10, op);
 
 		if ( trace_state == 1)

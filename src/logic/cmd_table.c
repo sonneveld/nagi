@@ -105,7 +105,7 @@ FUNC eval_table[] = {
 			{"right.posn", cmd_right_posn, 5, 0}
 	   	};
  
-FUNC cmd_table[] = {
+FUNC cmd_table[CMD_MAX + 1] = {
 			// 0
 			{"cmd.return", cmd_do_nothing, 0, 0},
 
@@ -344,7 +344,7 @@ FUNC cmd_table[] = {
 			{"cmd.fence.mouse (incomplete)", cmd_do_nothing, 4, 0},
 			// 180
 			{"cmd.mouse.posn (incomplete)", cmd_do_nothing, 2, 0xC0},
-			{"cmd.unknown.181", cmd_unknown_181, 0, 0},
+			{"cmd.release.key", cmd_unknown_181, 0, 0},
 			{"cmd.adj.ego.move.to.x.y (incomplete)", cmd_do_nothing, 0, 0}
 	   	};
 
