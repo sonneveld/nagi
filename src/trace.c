@@ -178,18 +178,17 @@ void trace_add(u16 op, FUNC *table, u8 *log_data, u16 table_offset, u16 result)
 	text_attrib_push();
 	text_colour(0, 0xF);
 	trace_scroll();
-	
+
 	if (logic_called != 0)
 	{
 		logic_called = 0;
 		agi_printf("==========================");
 		trace_scroll();
 	}
-	
 	logic_orig = logic_cur;
 	if ((trace_logic==0) || ((logic_cur=logic_list_find(trace_logic)) == 0))
 	{
-		agi_printf("%d: %d",  logic_cur->num, op);
+		agi_printf("%d: cmd.%d",  logic_orig->num, op);
 	}
 	else
 	{
@@ -210,10 +209,10 @@ void trace_add(u16 op, FUNC *table, u8 *log_data, u16 table_offset, u16 result)
 		}
 	}
 	logic_cur = logic_orig;
-	
+
 	// print function name?
 	trace_var_print(table, log_data);
-	
+
 	if (result != 0xFFFF)
 	{
 		goto_row_col(trace_bottom, trace_right-2);
@@ -223,6 +222,7 @@ void trace_add(u16 op, FUNC *table, u8 *log_data, u16 table_offset, u16 result)
 			agi_printf(" :%c", 'T');
 	}
 
+	ch_update();
 	while (trace_state != 0)
 	{
 		temp4 = event_read();
@@ -258,7 +258,7 @@ void trace_var_print(FUNC *table, u8 *log_data)
 	var_flags = table->param_flag;	// type of stuff
 	window_put_char('(');
 	var_cur = 0;
-	
+
 	while (var_cur < var_total)
 	{
 		// get a number
