@@ -175,7 +175,7 @@ AGI_EVENT *event_key_up(SDL_keysym *keysym)
 	if (  (k->symbol != 0) && (k->value != 0)  )
 	{
 		k->value = 0;
-		if (state.walk_mode != 0)
+		if (state.walk_mode)
 			agi_event = &stop_ego;	// stop player
 	}
 		
