@@ -9,6 +9,7 @@
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 #include "../sys/mem_wrap.h"
@@ -17,6 +18,9 @@
 #include "drv_video.h"
 #include "vid_render.h"
 #include "gfx.h"
+
+
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 void ega_update(u16 x, u16 y, u16 width, u16 height);
 void cga_update(u16 x, u16 y, u16 width, u16 height);
@@ -87,6 +91,24 @@ void render_init()
 {
 	// free buffer if it already exists
 	render_shutdown();
+
+	if (!strcasecmp(c_vid_renderer, "ega"))
+	{
+		rstate.drv = &render_drv_ega;
+		gfx_paltype = PAL_16;
+	}
+	else if (!strcasecmp(c_vid_renderer, "cga0"))
+	{
+		rstate.drv = &render_drv_cga0;
+		gfx_paltype = PAL_CGA0;
+	}
+	else if (!strcasecmp(c_vid_renderer, "cga1"))
+	{
+		rstate.drv = &render_drv_cga1;
+		gfx_paltype = PAL_CGA1;
+	}
+	else 
+		rstate.drv = &render_drv_dummy;
 
 	rstate.buf_size = rstate.drv->w * rstate.drv->h;
 	rstate.buf = a_malloc(rstate.buf_size);

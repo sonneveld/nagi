@@ -54,17 +54,12 @@ VSTATE vstate =
 	0 // textmode
 };
 
-u8 config[] = "SDL";
 
 void vid_init(void)
 {
 	// init video (scale x size of renderer)
-	if (strcasecmp (config, "SDL") == 0 )
+	if (strcasecmp (c_vid_driver, "SDL") == 0)
 		sdl_driver_init(&vdriver);
-	else if (strcasecmp (config, "DIRECTX") == 0)
-	{
-		//directx_driver_init(&vdriver);
-	}
 	else
 		dummy_driver_init(&vdriver);
 }
