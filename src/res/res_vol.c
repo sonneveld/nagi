@@ -12,6 +12,7 @@ _FileLoad                        cseg     00003113 000000C5
 //~ RaDIaT1oN (2002-04-29):
 //~ open first lowercase name changes
 
+#include <string.h>
 #include <errno.h>
 
 #define RES_HEAD_SIZE 5
@@ -324,7 +325,8 @@ void volumes_close()
 {
 	u16 i;
 	
-	for (i=0 ; i<5 ; i++)
+// it should be 0x10.  original interpreter only closes first 0x5?
+	for (i=0 ; i<0x10 ; i++)
 	{
 		if (vol_handle_table[i] != 0)
 		{
@@ -373,3 +375,4 @@ u8 *file_load(u8 *name, u8 *buff)
 	fclose(file_stream);
 	return buff;
 }
+

@@ -146,6 +146,8 @@ void lzw_buff_fill(u16 cur_byte)	// cur point?
 	}
 }
 
+
+
 u16 lzw_read_next()
 {
 	u16 code_new, over_flow;
@@ -178,3 +180,4 @@ void lzw_buff_shift()
 	lzw_buff_fill(cx);
 	lzw_bit_cur = lzw_bit_cur & 7;
 }
+

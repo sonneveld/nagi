@@ -13,6 +13,8 @@ _ResNotFound                     cseg     00004441 0000002F
 //~ RaDIaT1oN (2002-04-29):
 //~ open first lowercase name changes
 
+#include <string.h>
+
 #include "../agi.h"
 #include "res.h"
 
@@ -109,6 +111,7 @@ void dir_load(void)
 				break;
 			case -1:
 			default:
+			;
 		}
 		
 		if (dir_stream != 0)
