@@ -78,3 +78,13 @@ typedef struct __GFX_DRIVER
 // sound driver
 // sys driver - timer, thread, blah
 // events driver - key, mouse, joy
+
+// file system wrapper
+
+// file search
+// file next
+// file open
+// file writen
+// file close
+// file read
+// file size
