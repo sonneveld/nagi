@@ -19,7 +19,7 @@ _Save5F6B                        cseg     00005F6B 000000CF
 
 void game_id_test()
 {
-	u8 *si, *di, al;
+	//u8 *si, *di, al;
 	/*
 	// have to check since v3 NEED the game id to be ok
 	if (standard.game_id_honour != 0) 
