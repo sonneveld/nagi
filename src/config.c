@@ -38,58 +38,43 @@ void config_load(CONF *config, INI *ini)
 	{
 		if (conf_ptr->section != 0)
 			ini_section(ini, conf_ptr->section);	// change to section
+
+		key_data = ini_recursive(ini, 0, conf_ptr->key);
 		
-		// read_key = blah
-		key_data = ini_key(ini, conf_ptr->key);
-		
-		if (key_data != 0)
+		switch (conf_ptr->type)
 		{
-			switch (conf_ptr->type)
-			{
-				case CT_BOOL:
-					*conf_ptr->b.ptr = (CONF_BOOL)(strtol(key_data, 0, 10) != 0);
-					break;
-				
-				case CT_STRING:
-					if (!strcmp(key_data, conf_ptr->s.def))
-						*conf_ptr->s.ptr = conf_ptr->s.def;
-					else
-						*conf_ptr->s.ptr = strdup(key_data);
-					break;
-				
-				case CT_INT: 
+			case CT_BOOL:
+				if (key_data != 0)
+					*conf_ptr->b.ptr = (strtol(key_data, 0, 10) != 0);
+				else
+					*conf_ptr->b.ptr = conf_ptr->b.def;
+				break;
+			
+			case CT_STRING:
+				if ((key_data != 0) && (strcmp(key_data, conf_ptr->s.def)) )
+					*(conf_ptr->s.ptr) = strdup(key_data);
+				else
+					*conf_ptr->s.ptr = conf_ptr->s.def;
+				break;
+			
+			case CT_INT: 
+				if (key_data != 0)
+				{
 					*conf_ptr->i.ptr = (CONF_INT)strtol(key_data, 0, 10);
 					if (*conf_ptr->i.ptr < conf_ptr->i.min)
 						*conf_ptr->i.ptr = conf_ptr->i.min;
 					else if (conf_ptr->i.max != -1)
 							if (*conf_ptr->i.ptr > conf_ptr->i.max)
 								*conf_ptr->i.ptr = conf_ptr->i.max;
-					break;
-							
-				default:		// probably safest for defaults
-					printf("config_read(): cannot determine type %d\n", conf_ptr->type);
-			}
-		}
-		else
-		{
-			switch (conf_ptr->type)
-			{
-				case CT_BOOL: 
-					*conf_ptr->b.ptr = conf_ptr->b.def;
-					break;
-				
-				case CT_STRING: 
-					*conf_ptr->s.ptr = conf_ptr->s.def;
-					break;
-				
-				case CT_INT:  
+				}
+				else
 					*conf_ptr->i.ptr = conf_ptr->i.def;
-					break;
-				
-				default:		// probably safest for defaults
-					printf("config_read(): cannot determine type %d\n", conf_ptr->type);
-			}
+				break;
+						
+			default:		// probably safest for defaults
+				printf("config_read(): cannot determine type %d\n", conf_ptr->type);
 		}
+			
 		conf_ptr++;
 	}
 
@@ -135,7 +120,7 @@ void config_unload(CONF *config)
 		switch (conf_ptr->type)
 		{
 			case CT_STRING:
-				if (strcmp(*conf_ptr->s.ptr, conf_ptr->s.def))
+				if (*conf_ptr->s.ptr != conf_ptr->s.def)
 				{
 					// if not using the default
 					a_free(*conf_ptr->s.ptr);
