@@ -107,8 +107,11 @@ void stand_sep(u8 *ptr)
 	if (ptr != 0)
 	{
 		st_end = strstr(ptr, ",\0\n\r");
-		st_end_char = *st_end;
-		*st_end = 0;
+		if (st_end != 0)
+		{
+			st_end_char = *st_end;
+			*st_end = 0;
+		}
 	}
 }
 
@@ -358,10 +361,8 @@ void gameinfo_namegen(GAMEINFO *info, INI *ini)
 	if (info->standard != 0)
 	{
 		stand_sep(info->standard);
-		
 		// go to section
 		ini_section(ini, info->standard);
-		
 		// read name
 		name = ini_key(ini, "name");
 	}
@@ -660,7 +661,7 @@ void standard_select_ng(void)
 		printf("user exits.\n");
 		agi_exit();
 	}
-	
+
 	// init game
 	standard_init_ng(game_selected, ini_standard);
 
