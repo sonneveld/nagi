@@ -214,7 +214,7 @@ u8 *logic_call(u16 logic_num)
 	//~ if logic_cur == 0, then we're running logic.0 (since logic_cur is initialised to
 	//~ a null pointer)
 	// ie.. we don't need to remember the previous logic
-	if (logic_cur == 0)
+	if (logic_cur == NULL)
 	{
 		last_orig = logic_last;
 		logic_cur = logic_load_2(logic_num);
@@ -229,7 +229,8 @@ u8 *logic_call(u16 logic_num)
 	
 	code = logic_execute(logic_cur);
 
-	#warning another AGI bug.  if restore/restart/newroom is called from a called logic, havoc may be wrecked when returning.
+	//warning another AGI bug.  if restore/restart/newroom is called from a called logic, havoc may be wrecked when returning.
+	// you don't want to try and free the previous logic code if it was just free'd by a returning restore command.
 	if ( (untouched == 0) && (code != NULL) )
 	{
 		assert(logic_new != NULL);
