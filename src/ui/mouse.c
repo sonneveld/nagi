@@ -193,7 +193,6 @@ int mouse_area_check(POS *pos)
 
 u8 *cmd_brian_poll_mouse(u8 *c)
 {
-	/*
 	int get_butt, get_x, get_y;
 	
 	if (mstack_pop(&get_butt, &get_x, &get_y) != 0)
@@ -204,10 +203,10 @@ u8 *cmd_brian_poll_mouse(u8 *c)
 	}
 	
 	state.var[27] = get_butt;
-	state.var[28] = get_x/vstate.scale/2;
-	state.var[29] = get_y/vstate.scale;
-	return c;
-	*/
+	state.var[28] = get_x / c_vid_scale / rstate.drv->scale_x;
+
+	state.var[29] = get_y / c_vid_scale / rstate.drv->scale_y;
+	
 	return c;
 }
 

@@ -105,7 +105,7 @@ CONF config_standard[] =
 CONF config_game[] =
 {
 	{"version_info", 0, CT_STRING, {s:{&c_game_version_info, 0}} },
-	{"mouse", 0, CT_INT, {i:{&c_game_mouse, 0, 0, 5}} },
+	{"mouse", 0, CT_INT, {i:{&c_game_mouse, 0, 0, 20}} },
 	{"loop_update", 0, CT_INT, {i:{&c_game_loop_update, 0, 0, 4}} },
 	
 	{"id", 0, CT_STRING, {s:{&c_game_id, 0}} },
