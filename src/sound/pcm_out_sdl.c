@@ -100,15 +100,17 @@ int pcm_out_sdl_init(int freq, int format)
 	
 	(void) freq;
 	(void) format;
-	
+
 	printf("pcm_out_sdl_init(): Initialising SDL audio subsystem... ");
-	
+	#if 0
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0)
 	{
 		printf("\npcm_out_sdl_init(): unable to initialise SDL audio subsystem.\n");
 		printf("%s\n", SDL_GetError());
 		return -1;
 	}
+	#endif
+
 	
 	// sets the freq/type
 	wanted.freq = 44100;
