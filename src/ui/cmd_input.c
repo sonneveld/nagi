@@ -46,7 +46,7 @@ CmdCloseDialogu                  cseg     0000394B 00000012
 #include "../ui/controller.h"
 
 #include "../ui/mouse.h"
-#include "../view/obj_motion.h"
+
 #include "../sys/chargen.h"
 
 
@@ -61,18 +61,13 @@ u16 input_cur = 0;
 void input_poll(void)
 {
 	AGI_EVENT *si;
-	s16 mouse_x, mouse_y;
 
 	state.var[V19_KEYPRESSED] = 0;
 	state.var[V09_BADWORD] = 0;
 	
 	if ( menu_next_input != 0)
 		menu_input();
-
-	//si = control_key_map(  event_read()  );
-
-	si = event_read();
-	si = control_key_map(si);
+	si = control_key_map(event_read());
 	
 	while (si != 0)
 	{
@@ -90,39 +85,13 @@ void input_poll(void)
 				else
 					state.var[V06_DIRECTION] = si->data;
 				if (state.ego_control_state != 0)
-				{
 					objtable->motion = MT_NORM;
-				}
 				break;
 			case 3:	// controller
 				control_state[si->data] = 1;
 				break;
 			case 10:	// mouse
-				/*
-				if (c_game_mouse == M_BRIAN)
-					mstack_push(si->data, si->x, si->y);
-				else if (c_game_mouse == M_SIERRA)
-				{
-					mouse_x = si->x / (vstate.scale*2);
-					mouse_y = (si->y/vstate.scale) - gfx_picbuff_row;
-					//printf("Mouse Button! x=%d y=%d\n", mouse_x, mouse_y);
-					if (mouse_y < 0)
-						cmd_menu_input(0);
-					else
-					{
-						if (mouse_x < 0)
-							mouse_x = -1;
-						else if (mouse_x > 159)
-							mouse_x = 160;
-						
-						if (mouse_y < 0)
-							mouse_y = -1;
-						else if (mouse_y > 167)
-							mouse_y = 168;
-						ego_move(mouse_x, mouse_y);
-					}
-				}*/
-					
+				mouse_event_handle(si);	
 				break;
 			default:	
 		}

@@ -157,19 +157,13 @@ void agi_init()
 	// quit 0-1 param
 	
 	// cmd171 for brian mouse support
-	if (c_game_mouse == M_BRIAN)
-	{
-		cmd_table[171].func_name = "cmd.poll.mouse";
-		cmd_table[171].func = cmd_brian_poll_mouse;
-		cmd_table[171].param_total = 0;
-		cmd_table[171].param_flag = 0;
-	}
+
 		
 	// printat support
 	
 	// cmd176 if it's EVER used
 	
-	
+	mouse_init();
 	
 	/* load directories for the various resources */
 	/* logics, pictures, views, sound */

@@ -95,6 +95,8 @@ u8 gfx_palsize = 0;
 //u8 gfx_scale = 1;	// set from config
 //u8 gfx_fullscreen = 0;	// set from config
 
+POS render_scale = {0, 0};
+
 SIZE gfx_size = {320, 200};	// from render size * scale
 u8 *gfx_picbuff = 0;	// created in gfx_init();
 u8 gfx_picbuffrow = 0;	// set after fonts are init'd

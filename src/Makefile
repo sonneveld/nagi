@@ -2,7 +2,7 @@
 SRC := base.c debug.c decrypt.c flags.c nagi_main.c\
 initialise.c agi_string.c new_room.c objects.c state_io.c agi.c\
 state_info.c obj_show.c  game_id.c cmd_misc.c\
-trace.c config.c
+trace.c config.c list.c
 
 # version
 SRC +=  version/agi_crc.c \
@@ -48,14 +48,16 @@ SRC += sound/sound_base.c sound/sound_sample.c sound/sound_sdl.c
 # user input
 SRC += ui/parse.c ui/window.c ui/printf.c ui/agi_text.c ui/string.c
 SRC += ui/msg.c ui/events.c  ui/cmd_input.c ui/controller.c ui/status.c\
-ui/menu.c ui/mouse.c
+ui/menu.c ui/mouse.c ui/list_box.c
 
 OBJ := $(SRC:.c=.o)
 
 CC = gcc
 
 CFLAGS := -fwritable-strings
-#CFLAGS += -g -pg -d -O3 
+CFLAGS += -g
+#CFLAGS += -g -pg  -O3 
+#CFLAGS += -O2
 #CFLAGS += -finline-functions
 CFLAGS += -IC:/mingw/mingw32/include/SDL
 

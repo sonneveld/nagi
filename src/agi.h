@@ -212,9 +212,10 @@ enum res_enum {RES_NONE=0, RES_V2=1, RES_V3_4=2, RES_V3=3, RES_V3_AMIGA=4};
 enum dir_enum {DIR_NONE=0, DIR_SEP=1, DIR_COMB=2, DIR_AMIGA=3};
 
 enum loop_enum {L_FOUR=1, L_ALL=2, L_FLAG=3};
-enum mouse_enum {M_NONE=0, M_SIERRA=1, M_BRIAN=10, M_NICK=11};
+enum mouse_enum {M_NONE=0, M_SIERRA_V2=1, M_SIERRA_V3=2, M_BRIAN=10, M_NICK=11};
 enum system_enum {SYS_PC, SYS_APPLE, SYS_AMIGA, SYS_AGDS, SYS_TANDY};
 
+/*
 struct agi_standard_struct
 {
 	u8 *name;
@@ -238,7 +239,7 @@ struct agi_standard_struct
 	enum mouse_enum mouse;		// mouse type (brian or controller method)
 };
 typedef struct agi_standard_struct AGI_STANDARD;
-
+*/
 //extern AGI_STANDARD standard;
 
 
