@@ -39,6 +39,9 @@ struct msgstate_struct
 	TPOS tpos_edge;	// lower right pos of text to display
 	SIZE tsize;		// height and width of the text displayed
 	
+	// added by me.. Nick
+	u16 printed_height;	// the printed height.. for stretched msgs
+	
 	// background graphic (white with red border)
 	POS bgpos;		// lower left position of bg
 	SIZE bgsize;	// size of bg

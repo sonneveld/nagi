@@ -54,7 +54,7 @@ _DispNewLine                     cseg     0000234E 0000001F
 
 MSGSTATE msgstate = { 0xFFFF, {0xFFFF, 0xFFFF},
 				0, '\\', 0, 
-				{0,0}, {0,0}, {0,0},
+				{0,0}, {0,0}, {0,0}, 0,
 				{0,0}, {0,0}
 				};
 
@@ -200,6 +200,8 @@ void message_box_draw(u8 *str, u16 row, u16 w, u16 toggle)
 	for(;;)
 	{
 		str_wordwrap(msg, str, w);	//split it up to fit in a msg box???
+		msgstate.printed_height = msgstate.tsize.h;
+		
 		if (toggle != 0)
 		{
 			msgstate.tsize.w = w;
