@@ -36,7 +36,6 @@ _Finish                          cseg     000002AE 00000015
 #include "ui/events.h"
 #include "ui/controller.h"
 #include "ui/status.h"
-#include "sys/video.h"
 #include "ui/cmd_input.h"
 #include "logic/logic_base.h"
 #include "sys/ini_config.h"
@@ -46,6 +45,7 @@ _Finish                          cseg     000002AE 00000015
 #include "version/gamelist.h"
 #include "version/ver_init.h"
 
+#include "sys/chargen.h"
 
 #include "ui/msg.h"
 
@@ -63,18 +63,13 @@ u16 old_score = 0;
 
 u8 *window_title = 0;
 
+u8 *fb_buff;
 
-
-void font_benchmark(void)
+void fbenchmark_init(void)
 {
 	fpos_t file_size;
 	FILE *file_stream;
-	u8 *buff;
-	
-	int ticks=0;
-	int i = 0;
-	POS my_pos;
-	
+
 	file_stream=fopen("petshop.txt", "rb");
 	
 	if (file_stream == 0)
@@ -87,26 +82,36 @@ void font_benchmark(void)
 	fgetpos(file_stream, &file_size);
 	fseek(file_stream, 0, SEEK_SET);
 
-	buff = (u8 *)a_malloc(file_size);
+	fb_buff = (u8 *)a_malloc(file_size);
 	
-	if ( fread(buff, sizeof(u8), file_size, file_stream) != file_size)
+	if ( fread(fb_buff, sizeof(u8), file_size, file_stream) != file_size)
 		if (print_err_code == 0)
 			agi_exit();
 		
 	fclose(file_stream);
+}
+
+
+void font_benchmark(void)
+{
+	int ticks=0;
+	int i = 0;
+	POS my_pos;
+	
+	u8 *wbuff;
 	
 	// basic
 	// inverted
 	// shaded
 	// inverted/shaded
 	
-		text_shade = 1;
+wbuff = fb_buff;
 		
 		ticks = SDL_GetTicks();
 		
 		while (i < 100000)
 		{
-			switch (*buff)
+			switch (*wbuff)
 			{
 				case 0x08:
 				case 0x0D:
@@ -116,20 +121,19 @@ void font_benchmark(void)
 				default:
 					i++;
 					
-					window_put_char(*(buff));
-					sdlvid_pos_get(&my_pos);
+					window_put_char(*(wbuff));
+					ch_pos_get(&my_pos);
 					if (my_pos.row==24)
 					{
 						my_pos.row = 0;
-						sdlvid_pos_set(&my_pos);
+						ch_pos_set(&my_pos);
+						ch_update();
 					}
 			}
-			buff++;
+			wbuff++;
 		}
 		
-		printf("time = %dms\n", SDL_GetTicks() - ticks);
-		
-	a_free(buff);
+		printf("time = %f per sec\n", (double) 100000000 / (double)(SDL_GetTicks() - ticks));
 }
 
 int main(int argc, char *argv[])
@@ -141,10 +145,26 @@ int main(int argc, char *argv[])
 	(void) argv;	// i think
 	
 	nagi_init();		// initiailise NAGI
+	/*
+	printf("starting font benchmark...bitch...\n");
+	fbenchmark_init();
 	
-	//printf("starting font benchmark...bitch...\n");
-	//font_benchmark();
-	//agi_exit();
+	printf("plain\n");
+	text_colour(1, 0);
+	font_benchmark();
+	
+	printf("invert\n");
+	text_colour(1, 1);
+	font_benchmark();	
+	
+	printf("shaded\n");
+	text_shade = 1;
+	font_benchmark();
+	text_shade = 0;
+	
+	
+	a_free(fb_buff);
+	agi_exit();*/
 	
 	ini_open("standard.ini");
 	g_cur = standard_select();
@@ -219,7 +239,7 @@ int main(int argc, char *argv[])
 		flag_reset(F12_RESTORE);	// restore game not executed
 
 		// update graphics if not in textmode		
-		if (vstate.text_mode == 0)
+		if (chgen_textmode == 0)
 			objtable_update();
 	}
 }
