@@ -81,19 +81,19 @@ struct tone_chan_struct
 	int gen_type;
 	int gen_type_prev;
 #ifndef RAD_LINUX
-	
 	union
+	{
 #endif
+		
 #if USE_SAMPLE
-		#if USE_SAMPLE
 		struct 
 		{
 			int count;	// for scaling
 			int scale;	// ""      ""
 			SAMPLE *samp;
 			u16 *samp_cur; // current sample point
+		} s;
 #endif
-		#endif
 		
 		struct
 		{
@@ -102,8 +102,10 @@ struct tone_chan_struct
 			int sign;
 			unsigned int noise_state;		/* noise generator      */
 			int feedback;		/* noise feedback mask */
-#ifndef RAD_LINUX
 		} n;
+		
+#ifndef RAD_LINUX
+	}
 #endif
 	
 };
