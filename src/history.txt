@@ -1,6 +1,0 @@
-fix the gamid comparison
-
-updated the video interface to allow me to easily add new drivers 
-or render models (ie, I can easily add hercules emulation when I get to it)
-
-add detection of old save games

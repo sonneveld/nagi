@@ -1,1 +1,0 @@
-extern FONT font_4x8;
