@@ -203,11 +203,9 @@ u8 *cmd_toggle_monitor(u8 *c)
 		logic_save_scan_start();
 		display_type ^= 1;
 		push_row_col();
-		AGI_TRACE
 		gfx_shutdown();
 		render_drv_rotate();
 		gfx_init();
-		AGI_TRACE
 		pop_row_col();
 		state_reload();
 	}
