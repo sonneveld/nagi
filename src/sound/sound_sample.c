@@ -18,6 +18,8 @@ mix_add
 #include "../sys/mem_wrap.h"
 
 #include "../sys/sys_dir.h"
+#include <math.h>
+
 
 #define TABLE_SIZE 1024
 // 111843.75
@@ -34,14 +36,15 @@ int *table_new(u16 freq_base);
 void mix_new(u8 *stream, CHANNEL *c, int len);
 void mix_add(u8 *stream, CHANNEL *c, int len);
 
+// lowest defined agi freq is around 109
 
 int sample_init()
 { 
 	// open up an array of two samples
 	dir_preset_change(DIR_PRESET_NAGI);
-	if ((sample[0] = sample_open("tone50.pcm", 50)) == 0)
+	if ((sample[0] = sample_open("tone50.pcm", 105)) == 0)
 		return -1;
-	if ((sample[1] = sample_open("tone50.pcm", 50)) == 0)
+	if ((sample[1] = sample_open("tone50.pcm", 105)) == 0)
 		return -1;
 	
 	return 0;
@@ -55,7 +58,7 @@ void sample_denit()
 }
 
 
-SAMPLE *sample_open(u8 *file_name, int freq_base)
+SAMPLE *sample_open2(u8 *file_name, int freq_base)
 {
 	FILE *file;
 	SAMPLE *s;
@@ -97,15 +100,62 @@ SAMPLE *sample_open(u8 *file_name, int freq_base)
 	return(s);	
 }
 
+#define M_PI 3.14159265358979323846264338327
+#define WAVE_HEIGHT  (32000/4)
+
+
+
+SAMPLE *sample_open(u8 *file_name, int freq)
+{
+	int i;
+	double mult;
+	SAMPLE *s;
+	s16 *wave;
+	int wave_len;
+	int wave_freq;
+	
+	int time;
+	
+	time = SDL_GetTicks();
+	
+	s = (SAMPLE *)a_malloc(sizeof(SAMPLE) );
+
+	wave_len = 44100 / freq;
+	wave = a_malloc(sizeof(s16) * wave_len);
+	
+	printf("using %d bytes.\n", sizeof(s16) * wave_len);
+	
+	mult =  (2.0*M_PI) / (wave_len);
+	
+//	(M_PI / 2.0) / ((44100.0/freq)+1);
+	
+	for (i=0; i<wave_len; i++)
+	{
+		wave[i] = (s16)(sin(i * mult)*WAVE_HEIGHT );
+	// printf("%.2f  ", (float)wave[i]);
+	}
+	
+	printf("\n");
+	s->freq_base = freq;
+	s->data = (u8 *)wave;
+	s->size = wave_len *2;
+	s->scale_table = table_new(s->freq_base);
+	
+	printf("time=%dms\n", SDL_GetTicks() - time);
+	
+	return s;
+	
+}
+
 
 void sample_close(SAMPLE *s)
 {
-	if (s != 0)
+	/*if (s != 0)
 	{
 		a_free(s->scale_table);
 		a_free(s->data);
 		a_free(s);
-	}
+	}*/
 }
 
 
