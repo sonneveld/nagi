@@ -119,36 +119,36 @@ u8 pic_byte;
 void pic_cmd_loop()
 {
 	pic_code = given_pic_data;
-	
-next_byte:
 	pic_byte = *(pic_code++);		// read next byte
-	
-next_cmd:
-	// get next command
-	if (pic_byte == 0xFF) return;	//goto 63AD;
-		
-	pic_byte -= 0xF0;	// first command = 0xf0
-	if ( (pic_byte < 0x0) || (pic_byte > 0x0A) )	// 0xA commands possible
-		goto next_byte;
 
-	switch(pic_byte)
+	// get next command
+	while (pic_byte != 0xFF) //goto 63AD;
 	{
-		case 0x00: enable_pic_draw();  break;
-		case 0x01: disable_pic_draw();  break;
-		case 0x02: enable_pri_draw();  break;
-		case 0x03: disable_pri_draw();  break;
-		case 0x04: draw_y_corner();  break;
-		case 0x05: draw_x_corner();  break;
-		case 0x06: absolute_line();  break;
-		case 0x07: relative_line();  break;
-		case 0x08: pic_fill();  break;
-		case 0x09: read_pen_status();  break;
-		case 0x0A: plot_with_pen();  break;
+		pic_byte -= 0xF0;	// first command = 0xf0
+		if ( (pic_byte < 0x0) || (pic_byte > 0x0A) )	// 0xA commands possible
+			pic_byte = *(pic_code++);		// read next byte
+		else
+		{
+			switch(pic_byte)
+			{
+				case 0x00: enable_pic_draw();  break;
+				case 0x01: disable_pic_draw();  break;
+				case 0x02: enable_pri_draw();  break;
+				case 0x03: disable_pri_draw();  break;
+				case 0x04: draw_y_corner();  break;
+				case 0x05: draw_x_corner();  break;
+				case 0x06: absolute_line();  break;
+				case 0x07: relative_line();  break;
+				case 0x08: pic_fill();  break;
+				case 0x09: read_pen_status();  break;
+				case 0x0A: plot_with_pen();  break;
+			}
+		}
 	}
-	goto next_cmd;
+
 
 	// not used?
-	pic_byte = *(pic_code++);	
+	//pic_byte = *(pic_code++);	
 	return;	
 }
 
@@ -174,7 +174,6 @@ void enable_pic_draw()
 	col_even = (col_even & 0xF0) | new_col.even;
 
 	pic_byte = *(pic_code++);	
-	return;	
 }
 
 // 0xF1: Disable picture draw
@@ -379,23 +378,14 @@ loc651b:
 
 // 0xF6: Absolute line
 void absolute_line()
-{
-	u8 orig_x, orig_y;
-	
-	if (read_xy_pos(&pos_init_x, &pos_init_y) == 1)
-		return;
-	sbuff_plot();
-	
-loc658A:
-	if (read_xy_pos(&pos_final_x, &pos_final_y) == 1)
-		return;
-
-	orig_x = pos_final_x;
-	orig_y = pos_final_y;
-	draw_line();
-	pos_init_y = orig_y;
-	pos_init_x = orig_x;
-	goto loc658A;
+{	
+	if (read_xy_pos(&pos_init_x, &pos_init_y) != 1)
+	{
+		sbuff_plot();
+		
+		while (read_xy_pos(&pos_final_x, &pos_final_y) != 1)
+		draw_line();
+	}
 }
 
 
@@ -405,23 +395,21 @@ loc658A:
 // 0xF5: Draw an X corner
 void draw_x_corner()
 {
-	if (read_xy_pos(&pos_init_x, &pos_init_y) == 1)
-		return;
-
-	sbuff_plot();
-	draw_corner(0);
-	return;
+	if (read_xy_pos(&pos_init_x, &pos_init_y) != 1)
+	{
+		sbuff_plot();
+		draw_corner(0);
+	}
 }
 
 // 0xF4: Draw a Y corner
 void draw_y_corner()
 {
-	if (read_xy_pos(&pos_init_x, &pos_init_y) == 1)
-		return;
-
-	sbuff_plot();
-	draw_corner(1);
-	return;
+	if (read_xy_pos(&pos_init_x, &pos_init_y) != 1)
+	{
+		sbuff_plot();
+		draw_corner(1);
+	}
 } 
 
 // 0 = x corner
@@ -480,7 +468,8 @@ void relative_line()
 	if (read_xy_pos(&pos_init_x, &pos_init_y) == 1)
 		return;
 	sbuff_plot();
-loc65a2:
+
+	loc65a2:
 	pic_byte = *(pic_code++);
 	pos_data = pic_byte ;
 	if (pos_data > 0xEF)
@@ -502,7 +491,6 @@ loc65a2:
 	if (x_pos > 0x9F)
 		x_pos = 0x9F;
 
-	
 	y_step = pos_data;
 	y_step = y_step & 0x7;
 	
@@ -518,9 +506,7 @@ loc65a2:
 	pos_final_y = y_pos;
 
 	draw_line();
-	
-	pos_init_x = x_pos;
-	pos_init_y = y_pos;
+
 	goto loc65a2;
 	
 }
@@ -532,14 +518,8 @@ loc65a2:
 // 0xF8: Fill
 void pic_fill()
 {
-	
-fill_start:
-	
-	if (read_xy_pos(&pos_init_x, &pos_init_y) == 1)
-		return;
-	sbuff_picfill(pos_init_y, pos_init_x);
-	
-	goto fill_start;
+	while (read_xy_pos(&pos_init_x, &pos_init_y) != 1)
+		sbuff_picfill(pos_init_y, pos_init_x);
 }
 
 
@@ -603,15 +583,11 @@ void draw_line()
 	if (pos_y == pos_final_y)
 	{
 		sbuff_xline();
-		//pos_init_y = pos_final_y;
-		//pos_init_x = pos_final_x;
 		return;
 	}
 	else if (pos_x == pos_final_x)
 	{
 		sbuff_yline();
-		//pos_init_y = pos_final_y;
-		//pos_init_x = pos_final_x;
 		return;
 	}
 

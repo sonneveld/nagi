@@ -110,7 +110,7 @@ void sbuff_xline()
 		len--;
 	}
 	
-	x1 = x_orig;	// pop init position
+	pos_init_x= x_orig;	// pop init position
 	
 }
 
