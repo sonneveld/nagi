@@ -23,7 +23,7 @@ _StateDrawBlank                  cseg     00008FB3 00000020
 #include "ui/cmd_input.h"
 #include "ui/agi_text.h"
 #include "ui/window.h"
-#include "sound/sound.h"
+#include "sound/sound_base.h"
 #include "ui/msg.h"
 #include "ui/string.h"
 #include "ui/events.h"

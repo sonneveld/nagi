@@ -50,7 +50,8 @@ int drvpick_first(DRVINITSTATE *dstate, DRVINIT *init_list, int size, u8 *def, v
 	dstate->size = size;
 	dstate->ptr_list = ptr_list;
 	
-	while ((i<size) && (!strcasecmp(init_list[i].name, def)) )
+	i=0;
+	while ((i<size) && (strcasecmp(init_list[i].name, def)) )
 		i++;
 	
 	if (i != size)	// we've found the default
@@ -77,7 +78,7 @@ int drvpick_next(DRVINITSTATE *dstate)
 	assert(dstate->size > 0);
 	assert(dstate->ptr_list);
 	assert(dstate->cur);
-	assert(dstate->def);
+	//assert(dstate->def);
 	
 	// if default the first time.. then go to start of list
 	if (dstate->cur == dstate->def)

@@ -28,7 +28,7 @@ _RoomInit                        cseg     000012DE 00000015
 #include "view/obj_update.h"
 #include "view/obj_base.h"
 #include "view/view_base.h"
-#include "sound/sound.h"
+#include "sound/sound_base.h"
 // words.tok.data
 #include "ui/parse.h"
 // event_init
@@ -121,7 +121,7 @@ void nagi_init()
 	// audio driver
 	sprintf(env_value, "SDL_AUDIODRIVER=%s", c_sdl_drv_sound);
 	putenv(env_value);
-	
+
 	//SDL_INIT_EVENTTHREAD SDL_INIT_AUDIO|
 	if ( SDL_Init(SDL_INIT_TIMER) < 0 )
 	{
@@ -142,7 +142,7 @@ void nagi_init()
 	
 	// call do_clock at 20Hz.
 	clock_init();
-	sound_driver_init();
+	sndgen_init();
 	
 	/*
 	input_init();	// inits joystick
@@ -268,7 +268,7 @@ void nagi_shutdown(void)
 	lzw_dict = 0;
 
 	//sound_shutdown
-	sound_driver_denit();
+	sndgen_shutdown();
 	
 	// clock_shutdown
 	clock_denit();

@@ -15,7 +15,7 @@ _PrintErrCode                    cseg     0000401D 00000095
 // clear events
 #include "../ui/events.h"
 // stop sound
-#include "../sound/sound.h"
+#include "../sound/sound_base.h"
 // print
 #include "../ui/msg.h"
 // input_edit_on

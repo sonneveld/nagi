@@ -29,7 +29,7 @@ _StateWrite                      cseg     000028C6 00000074
 
 #include "flags.h"
 
-#include "sound/sound.h"
+#include "sound/sound_base.h"
 #include "ui/msg.h"
 #include "ui/cmd_input.h"
 #include "initialise.h"

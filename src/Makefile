@@ -43,7 +43,8 @@ view/obj_cycle.c view/obj_motion_cmd.c view/obj_block.c\
 view/obj_priority.c view/obj_picbuff.c
 
 # sound files
-SRC += sound/sound_base.c sound/sound_sample.c sound/sound_sdl.c
+SRC += sound/sound_base.c sound/pcm_out.c sound/pcm_out_sdl.c \
+sound/sound_gen.c sound/tone.c sound/tone_pcm.c sys/drvpick.c
 
 # user input
 SRC += ui/parse.c ui/window.c ui/printf.c ui/agi_text.c ui/string.c
@@ -55,9 +56,9 @@ OBJ = $(SRC:.c=.o)
 CC = gcc
 
 CFLAGS := -fwritable-strings
-#CFLAGS += -g
+CFLAGS += -g
 #CFLAGS += -g -pg  -O2
-CFLAGS += -O2
+#CFLAGS += -O2
 #CFLAGS += -finline-functions
 #CFLAGS += -IC:/mingw/mingw32/include/SDL
 
@@ -71,8 +72,8 @@ CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qua
 MACH = -mwindows -mconsole
 LIB = -lmingw32 -lSDLmain -lSDL
 
-../bin/n.exe: $(OBJ) nagires.o
-	$(CC) $(CFLAGS) $(MACH) $(OBJ) nagires.o $(LIB) -o $@
+../bin/n.exe: $(OBJ) 
+	$(CC) $(CFLAGS) $(MACH) $(OBJ) $(LIB) -o $@
 
 clean:
 	$(RM) $(OBJ) ../bin/n.exe core

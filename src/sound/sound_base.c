@@ -14,32 +14,37 @@ _SoundStop                       cseg     0000516C 00000023
 
 #include "../agi.h"
 
+#include "sound_base.h"
+#include "sound_gen.h"
+
+// blists_update
 #include "../view/obj_base.h" 
 #include "../view/obj_update.h"
 
+#include "../flags.h"
+#include "../res/res.h"
+// byte-order support
+#include "../sys/endian.h"
+#include "../sys/mem_wrap.h"
+#include "../list.h"
 #include "../sys/script.h"
+
 #include <setjmp.h>
 #include "../sys/error.h"
 
-#include "../flags.h"
-#include "../sound/sound.h"  
 
 
-#include "../res/res.h"
 
-// byte-order support
-#include "../sys/endian.h"
+int sound_state = 0;
 
-#include "../sys/mem_wrap.h"
 
-#include "../list.h"
 
 u16 sound_playing = 0;
 u16 sound_flag = 0;		// the flag to set when the sound is finished
 
 LIST *sound_list = 0;
 
-void sound_list_init()
+void sound_list_init(void)
 {
 	if (sound_list)
 		list_clear(sound_list);
@@ -47,7 +52,7 @@ void sound_list_init()
 		sound_list = list_new(sizeof(SOUND));	
 }
 
-void sound_list_new_room()
+void sound_list_new_room(void)
 {
 	sound_list_init();
 }
@@ -114,7 +119,7 @@ u8 *cmd_sound(u8 *c)
 	if ( snd == 0)
 		set_agi_error(0, num);
 	
-	sound_new(snd);
+	sndgen_play(snd);
 	return c;
 }
 
@@ -124,13 +129,13 @@ u8 *cmd_stop_sound(u8 *c)
 	return c;
 }
 
-void sound_stop()
+void sound_stop(void)
 {
-	if (sound_playing != 0)
+	if (sound_state != SS_CLOSED)
 	{
-		sound_playing = 0;
+		sound_state = SS_CLOSED;
 		flag_set(sound_flag);
-		sound_stop_sdl();
+		sndgen_stop();
 	}
 }
 

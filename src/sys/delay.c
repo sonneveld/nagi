@@ -4,6 +4,8 @@
 #include "../agi.h"
 #include "delay.h"
 
+#include "../sound/sound_base.h"
+#include "../sound/sound_gen.h"
 
 u32 tick_prev = 0;
 // 1/20 sec intervals
@@ -25,6 +27,8 @@ void do_delay()
 {
 	SDL_PumpEvents();
 	input_poll();
+	
+	
 	SDL_Delay(1);	// so fastest speed doesn't run too fast
 	
 	while ( ( (state.var[V10_DELAY] * DELAY_MULT) > (SDL_GetTicks() - tick_prev) )
@@ -32,6 +36,7 @@ void do_delay()
 	{
 		SDL_PumpEvents();
 		input_poll();
+		sndgen_poll();
 		SDL_Delay(5);	// to prevent it taking 100% cpu
 	}
 

@@ -38,7 +38,7 @@
 // random
 #include "../sys/rand.h"
 // sound
-#include "../sound/sound.h"
+#include "../sound/sound_base.h"
 #include "../ui/agi_text.h"
 #include "../ui/cmd_input.h"
 #include "../ui/msg.h"

@@ -6,7 +6,7 @@ _NewRoom                         cseg     00001792 0000011A
 
 #include "agi.h"
 
-#include "sound/sound.h"
+#include "sound/sound_base.h"
 // input clear
 #include "ui/events.h"
 // controller
