@@ -50,8 +50,9 @@ int object_file_load()
 	u8 *obj_data;
 	u8 *ptr;
 	u16 count, i;
-	u8 field_size;
-	u16 head_anim_obj_max;
+	//~ RaDIaT1oN: zero init variables
+	u8 field_size = 0;
+	u16 head_anim_obj_max = 0;
 	u16 head_string_offset;
 	u16 string_size;
 	u8 *string_ptr;
