@@ -258,6 +258,7 @@ void status_line_write()
  
 	text_attrib_pop();
 	pop_row_col();
+	ch_update();
 }
 
 u8 *cmd_status_line_on(u8 *c)
@@ -271,5 +272,6 @@ u8 *cmd_status_line_off(u8 *c)
 {
 	state.status_state = 0;
 	window_line_clear(state.status_line_row, 0);
+	ch_update();
 	return c;
 }

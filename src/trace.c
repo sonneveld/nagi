@@ -233,6 +233,8 @@ void trace_add(u16 op, FUNC *table, u8 *log_data, u16 table_offset, u16 result)
 		
 	pop_row_col();
 	text_attrib_pop();
+	
+	ch_update();
 }
 // trace var print more like I think
 void trace_var_print(FUNC *table, u8 *log_data)
@@ -289,7 +291,6 @@ void trace_var_print(FUNC *table, u8 *log_data)
 		}
 		window_put_char(')');
 	}
-	ch_update();
 }
 
 

@@ -256,6 +256,7 @@ u8 *cmd_prevent_input(u8 *c)
 	state.input_state = 0;
 	input_edit_on();
 	window_line_clear(state.input_pos, 0);
+	ch_update();
 	return c;
 }
 
@@ -287,6 +288,7 @@ void input_redraw()
 		agi_printf(str_wordwrap(msg, state.string[0], 40) );
 		agi_printf(input);
 		input_edit_off();
+		ch_update();
 	}
 }
 

@@ -58,6 +58,7 @@ u8 *cmd_text_screen(u8 *c)
 	text_colour(state.text_fg, state.text_bg);
 	gfx_clear();
 	window_portion_clear(0, 24, state.text_comb);
+	ch_update();
 	return c; 
 }
 
@@ -84,6 +85,7 @@ u8 *cmd_clear_lines(u8 *c)
 		lower = upper;
 	}
 	window_portion_clear(upper, lower, attrib);
+	ch_update();
 	return c;
 }
 
@@ -101,6 +103,7 @@ u8 *cmd_clear_text_rect(u8 *c)
 	lower_col = *(c++);
 	attrib = calc_text_bg(*(c++) );
 	window_clear(upper_row, upper_col, lower_row, lower_col, attrib);
+	ch_update();
 	return c;
 }
 

@@ -245,6 +245,7 @@ void menu_input()
 	push_row_col();
 	text_attrib_push();
 	window_line_clear(0, calc_text_bg(0xF));
+	ch_update();
 	si = menu_head;
 	do
 	{
@@ -279,7 +280,10 @@ menu_loop:
 					if ( state.status_state != 0)
 						status_line_write();
 					else
+					{
 						window_line_clear(0,0);
+						ch_update();
+					}
 					menu_next_input = 0;
 					menu_drawn = 0;
 					return;
