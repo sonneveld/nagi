@@ -24,7 +24,7 @@ sys/ini_config.c
 
 # video files
 SRC += sys/gfx.c sys/vid_render.c\
-sys/drv_dummy.c sys/drv_sdl.c sys/drv_video.c\
+ sys/sdl_vid.c \
 sys/chargen.c sys/agi_file.c
 
 # pic files
@@ -55,13 +55,13 @@ OBJ = $(SRC:.c=.o)
 
 CC = gcc
 
-#CFLAGS += -g
+CFLAGS += -g3 -ggdb3 
 #CFLAGS += -pg
 CFLAGS += -O2 
 #CFLAGS += -finline-functions
 CFLAGS += -fwritable-strings
 
 # Warnings
-CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes
+CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes -W
 
 #CFLAGS += -Werror

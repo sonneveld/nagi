@@ -14,7 +14,7 @@
 #define PAL_BW 4
 #define PAL_CUSTOM 100
 
-extern VSURFACE *gfx_surface;
+//extern VSURFACE *gfx_surface;
 
 extern u8 gfx_paltype;
 extern PCOLOUR *gfx_pal;	// set from config
@@ -22,7 +22,7 @@ extern u8 gfx_palsize;
 
 //extern u8 gfx_scale;	// set from config
 
-extern SIZE gfx_size;	// from render size * scale
+extern AGISIZE gfx_size;	// from render size * scale
 extern u8 *gfx_picbuff;	// created in gfx_init();
 extern u8 gfx_picbuffrow;	// set after fonts are init'd
 extern int gfx_picbuffrotate; 

@@ -22,6 +22,8 @@
 
 #include "chargen.h"
 
+#include "sdl_vid.h"
+
 
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
@@ -87,7 +89,7 @@ PCOLOUR bw_palette[] =
 };
 
 
-VSURFACE *gfx_surface = 0;
+//VSURFACE *gfx_surface = 0;
 
 u8 gfx_paltype = 0;
 PCOLOUR *gfx_pal = 0;	// set from config
@@ -98,7 +100,7 @@ u8 gfx_palsize = 0;
 
 POS render_scale = {0, 0};
 
-SIZE gfx_size = {320, 200};	// from render size * scale
+AGISIZE gfx_size = {320, 200};	// from render size * scale
 u8 *gfx_picbuff = 0;	// created in gfx_init();
 u8 gfx_picbuffrow = 0;	// set after fonts are init'd
 int gfx_picbuffrotate = 0;
@@ -122,7 +124,7 @@ void gfx_init(void)
 	gfx_size.w = 40 * font_size.w;
 	gfx_size.h = 25 * font_size.h;
 	
-	gfx_surface = vid_display(0, &gfx_size, c_vid_full_screen);
+	vid_display(&gfx_size, c_vid_full_screen); // create a video surface
 
 	// setup the palette
 	gfx_palette_update();
@@ -141,11 +143,8 @@ void gfx_shutdown()
 {
 	ch_shutdown();
 	render_shutdown();
-	if (gfx_surface != 0)
-	{
-		vid_free(gfx_surface);
-		gfx_surface = 0;
-	}
+
+	vid_free();
 	vid_shutdown();
 	if (gfx_picbuff != 0)
 	{
@@ -165,7 +164,7 @@ void gfx_reinit()
 	gfx_size.w = 40 * font_size.w;
 	gfx_size.h = 25 * font_size.h;
 	
-	gfx_surface = vid_display(gfx_surface, &gfx_size, c_vid_full_screen);
+	vid_display(&gfx_size, c_vid_full_screen);
 	gfx_palette_update();
 }
 
@@ -192,10 +191,11 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 	sdl_w = rend_w * c_vid_scale;
 	sdl_h = rend_h * c_vid_scale;
 
-	vid_lock(gfx_surface);
+	
+	vid_lock();
 
 	r_buf = rend_buf + rend_y*rend_drv->w + rend_x;
-	sdl_buf = (u8 *)gfx_surface->pixels + sdl_y*gfx_surface->line_size + sdl_x;
+	sdl_buf = (u8 *)vid_getbuf() + sdl_y*vid_getlinesize() + sdl_x;
 
 	for (h_count=rend_h; h_count!=0; h_count--)
 	{
@@ -211,33 +211,33 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 		if (c_vid_scale != 1)
 		{
 			sdl_line = sdl_buf - rend_w*c_vid_scale;
-			sdl_buf -= gfx_surface->line_size + rend_w*c_vid_scale;
+			sdl_buf -= vid_getlinesize() + rend_w*c_vid_scale;
 			for (i=0; i<c_vid_scale-1; i++)
 			{
 				memcpy(sdl_buf, sdl_line, rend_w*c_vid_scale);
-				sdl_buf -= gfx_surface->line_size;
+				sdl_buf -= vid_getlinesize();
 			}
 		}
 		else
-			sdl_buf -= gfx_surface->line_size*c_vid_scale + rend_w*c_vid_scale;
+			sdl_buf -= vid_getlinesize()*c_vid_scale + rend_w*c_vid_scale;
 
 		// next line in buffer
 		r_buf -= rend_drv->w + rend_w;
 	}
 
-	vid_unlock(gfx_surface);
+	vid_unlock();
 
 	{
 		POS sdl_pos = {sdl_x, sdl_y-sdl_h+1};
-		SIZE sdl_size = {sdl_w, sdl_h};
-		vid_update(gfx_surface, &sdl_pos, &sdl_size);
+		AGISIZE sdl_size = {sdl_w, sdl_h};
+		vid_update(&sdl_pos, &sdl_size);
 	}
 }
 
 
 void gfx_shake(int count)
 {
-	vid_shake(gfx_surface, count);
+	vid_shake(count);
 }
 
 
@@ -256,23 +256,23 @@ void gfx_msgbox(int x, int y, int w, int h, u8 bg, u8 line)
 void gfx_palette_update(void)
 {
 	if (chgen_textmode)
-		vid_palette_set(gfx_surface, text_palette, 16);
+		vid_palette_set(text_palette, 16);
 	else
 	{
 		switch (gfx_paltype)
 		{
 			case PAL_CUSTOM:
-				vid_palette_set(gfx_surface, gfx_pal, gfx_palsize);
+				vid_palette_set(gfx_pal, gfx_palsize);
 				break;
 			case PAL_CGA0:
-				vid_palette_set(gfx_surface, cga_0_palette, 4);
+				vid_palette_set(cga_0_palette, 4);
 				break;
 			case PAL_CGA1:
-				vid_palette_set(gfx_surface, cga_1_palette, 4);
+				vid_palette_set(cga_1_palette, 4);
 				break;
 			case PAL_16:
 			default:
-				vid_palette_set(gfx_surface, ega_palette, 16);
+				vid_palette_set(ega_palette, 16);
 		}
 	}
 }
@@ -280,12 +280,10 @@ void gfx_palette_update(void)
 void gfx_clear(void)
 {
 	POS pos = {0, 0};
-	SIZE size = {0, 0};
+	AGISIZE size = {0, 0};
 
-	vid_lock(gfx_surface);
-	vid_fill(gfx_surface, &pos, &size, 0);
-	vid_unlock(gfx_surface);
-	vid_update(gfx_surface, &pos, &size);
+	vid_fill(&pos, &size, 0);
+	vid_update(&pos, &size);
 }
 
 // updates the picture buffer on the screen.
