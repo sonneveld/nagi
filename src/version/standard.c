@@ -504,7 +504,6 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 	if (game->dir_type == DIR_AMIGA)
 	{
 		config_game[5].b.def = 1;
-		AGI_TRACE
 	}
 	else
 		config_game[5].b.def = 0;
@@ -592,7 +591,6 @@ void standard_select_ng(void)
 	config_load(config_standard, ini_standard);
 	if (gi_list_init(ini_standard))
 	{
-		AGI_TRACE
 		printf("no games detected\n");
 		agi_exit();
 	}

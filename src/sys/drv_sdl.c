@@ -81,7 +81,6 @@ VSURFACE *sdl_display(SIZE *screen_size, int fullscreen_state)
 
 	if (sdl_vsurface.system_surface != 0)
 	{
-		AGI_TRACE
 		printf("SDL: video surface already created!\n");
 		agi_exit();
 	}
@@ -101,7 +100,6 @@ VSURFACE *sdl_display(SIZE *screen_size, int fullscreen_state)
 
 	if (sdl_surface == 0)
 	{
-		AGI_TRACE
 		printf("Unable to create video surface: %s\n", SDL_GetError());
 		agi_exit();
 	}
@@ -136,7 +134,6 @@ void sdl_lock(VSURFACE *vsurface)
 	if ( SDL_MUSTLOCK( SDLPTR(vsurface) ) )
 		if (SDL_LockSurface(SDLPTR(vsurface)) != 0)
 		{
-			AGI_TRACE
 			printf("SDL: unable to lock surface\n");
 			agi_exit();
 		}
