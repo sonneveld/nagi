@@ -1,371 +1,331 @@
-/*
-open 
-close
-read
-write
-delete
+/* FUNCTION list 	---	---	---	---	---	---	---
+
 */
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-
+/* BASE headers	---	---	---	---	---	---	--- */
+//#include "agi.h"
 #include "../agi.h"
-#include "../sys/ini_config.h"
 
-u8 *ini_data = 0;
-u8 *ini_name = 0;
-u8 *key_data = 0;
-fpos_t ini_size = 0;
+/* LIBRARY headers	---	---	---	---	---	---	--- */
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+//#include <errno.h>
+
+/* OTHER headers	---	---	---	---	---	---	--- */
+//#include "view/crap.h"
+#include "mem_wrap.h"
+#include "ini_config.h"
+
+/* PROTOTYPES	---	---	---	---	---	---	--- */
+//void test_function(void);
 
 
-//int ini_write(u8 *key_name, u8 *key_data);
-//int ini_delete(u8 *key_name);
+
+/* VARIABLES	---	---	---	---	---	---	--- */
 
 
-u8 *line_next(u8 *data, u8 *last);
-u8 *section_find(u8 *data, u8 *sect_name, u8 *last);
-u8 *key_find(u8 *data, u8 *key_name, u8 *last);
-u8 *key_read(u8 *data, u8 *last);
+/* CODE	---	---	---	---	---	---	---	--- */
+
+
+INI *ini_open(u8 *ini_name);
+void ini_close(INI *inistate);
+
+INI *ini_open(u8 *ini_name)
+{
+	FILE *file_stream;
+	INI *ini_new;
+	
+	// open file
+	if ( (file_stream=fopen(ini_name, "rb")) == 0)
+		return 0;
+	
+	// malloc an INI
+	ini_new = (INI *)a_malloc(sizeof(INI));
+	
+	// get size
+	fseek(file_stream, 0, SEEK_END);
+	fgetpos(file_stream, &(ini_new->size));
+	fseek(file_stream, 0, SEEK_SET);
+	
+	// read file
+	ini_new->data = a_malloc(ini_new->size + 1);
+	if ( fread(ini_new->data, sizeof(u8), ini_new->size, file_stream) !=(size_t)ini_new->size)
+	{
+		ini_close(ini_new);
+		return 0;
+	}
+	
+	// add a newline char at the end of the file so it can properly read the last key
+	ini_new->size ++;
+	ini_new->data[ini_new->size - 1] = '\n';
+	
+	// zero other pointers
+	ini_new->last = ini_new->data + ini_new->size - 1;
+	ini_new->cur_ptr = ini_new->data;
+	ini_new->sect_ptr = 0;
+	ini_new->isol_ptr = 0;
+
+	// close ini file
+	fclose(file_stream);
+	
+	//return ini
+	return ini_new;
+}
+
+void ini_close(INI *ini)
+{
+	if (ini != 0)
+	{
+		if (ini->data != 0)
+			a_free(ini->data);
+		a_free(ini);
+	}
+}
 
 // return 0 if ok
-int ini_open(u8 *ini_given_name)
+// return 1 if reach end of file or line
+// starts from ini->cur_ptr
+// don't trash ini_cur ptr if stuffed.. because we can still continue
+int string_isolate(INI *ini, u8 ch)
 {
-	FILE *file_stream;
-	
-	if (((int)ini_data|(int)ini_name) != 0)	// something's open..... damnit!
-		return 3;
-	
-	ini_name = strdup(ini_given_name);
-	
-	if ( (file_stream=fopen(ini_name, "rb")) == 0)
-		return 1;
-	
-	fseek(file_stream, 0, SEEK_END);
-	fgetpos(file_stream, &ini_size);
-	fseek(file_stream, 0, SEEK_SET);
-
-	ini_data = (u8 *)malloc(ini_size);
-	
-	if ( fread(ini_data, sizeof(u8), ini_size, file_stream) !=(size_t)ini_size)
-		return 2;
-	
-	fclose(file_stream);
-	return 0;
-}
-
-int ini_close()
-{
-	FILE *file_stream;
-	
-	// write the ini file
-	if ( (ini_name!=0) && (ini_data!=0) )
-	{
-		if ( (file_stream=fopen(ini_name, "wb")) != 0)
-		{
-			fseek(file_stream, 0, SEEK_SET);
-			fwrite(ini_data, sizeof(u8), ini_size, file_stream);
-			fclose(file_stream);
-		}
-	}
-	// free memory
-	if (ini_name != 0)
-		free(ini_name);
-	ini_name = 0;
-	if (ini_data != 0)
-		free(ini_data);
-	ini_data = 0;
-	if (key_data != 0)
-		free(key_data);
-	key_data = 0;
-	
-	return 0;
-}
-
-
-u8 *line_next(u8 *data, u8 *last)
-{
-	u8 lstate;
 	u8 *cur;
-	// 0 = looking for new line .. 1 = currently reading new line characters
-	// 2 = after the new line
 	
-	cur = data;
-	lstate = 0;	// looking
-	
-	while ( (cur<=last) && (lstate!=2) && (cur != 0) )
+	cur = ini->cur_ptr;
+
+	// check for eof, eoln
+	while ( (cur <= ini->last) && (*cur!='\n') && (*cur!='\r') )
 	{
-		switch (lstate)
+		if (*cur == ch)
 		{
-			case 0:
-				if ( (*cur==0xA) || (*cur==0xD) )
-					lstate = 1;	// reading newline characters
-				cur++;
-				break;
-			case 1:
-				if ( (*cur!=0xA) && (*cur!=0xD) )
-					lstate = 2;	// new line!
-				else
-					cur++;
-				break;
+			ini->isol_ptr = cur;
+			ini->isol_ch = *cur;
+			*cur = 0;	// null at the end of string
+			return 0;  // alright!!  you better run string_rejoin later on matey
 		}
+		cur++;
 	}
 	
-	return (lstate==2)? cur: 0;
+	return -1; // i failed.. nothing has been touched
 }
 
-u8 *section_find(u8 *data, u8 *sect_name, u8 *last)
+// this means if you have a key on the last line.. it better have a eoln at the end
+int line_isolate(INI *ini)
 {
-	u8 *ini_cur;
-	u8 *sect_cur;
-	u8 result;
-	
-	if (data==0)
-		return 0;
-	
-	ini_cur = data;
-	result = 0;
+	u8 *cur;
+	cur = ini->cur_ptr;
 
-	while ( (ini_cur != 0) && (result != 1) )
+	// check for eof
+	while (cur <= ini->last) 
 	{
-		// find a line starting with '['
-		while ( (ini_cur != 0) && (ini_cur[0] != '[') )
-			ini_cur = line_next(ini_cur, last);
-		if (ini_cur != 0)
+		if ((*cur=='\n')||(*cur=='\r')) 	// eoln
 		{
-			ini_cur++;	// skip the '['
-			sect_cur = sect_name;
-			
-			while ( (ini_cur != 0) && (result == 0) )
+			ini->isol_ptr = cur;
+			ini->isol_ch = *cur;
+			*cur = 0;	// null at the end of string
+			return 0;  // alright!!  you better run string_rejoin later on matey
+		}
+		cur++;
+	}
+	
+	return -1; // i failed.. nothing has been touched
+}
+
+void string_rejoin(INI *ini)
+{
+	if (ini->isol_ptr != 0)
+	{
+		*(ini->isol_ptr) = ini->isol_ch;
+		ini->isol_ptr = 0;
+	}
+}
+
+// we can trash this if we want.. we need ini->cur and we save ini->cur
+// if we can't get to the next line.. we don't need the data.. we just finish
+void line_next(INI *ini)
+{
+	u8 *cur;
+	cur = ini->cur_ptr;
+	
+	// step through text
+	while ( (cur <= ini->last) && (*cur!='\n') && (*cur!='\r') )
+		cur++;
+	
+	// step through new line chars
+	while ( (cur <= ini->last) && ((*cur=='\n')||(*cur=='\r')) )
+		cur++;
+	
+	// set cur ptr
+	if (cur <= ini->last)
+		ini->cur_ptr = cur;
+	else
+		ini->cur_ptr = 0;
+}
+
+
+// starts from the start on the ini.
+// if found sect_ptr = ptr
+// else sect_ptr = 0;
+// returns 0 if found.. so we don't have to call key_get
+int ini_section(INI *ini, u8 *sect_name)
+{
+	string_rejoin(ini);		// in case a key was read
+	
+	ini->cur_ptr = ini->data;
+	
+	while (ini->cur_ptr != 0)
+	{
+		// find a line starting with [
+		if ( *(ini->cur_ptr) == '[' )
+		{
+			ini->cur_ptr++;
+			if (string_isolate(ini, ']') == 0)	// isolate the section name
 			{
-				//printf("%c ? %c ", *sect_cur, *ini_cur);
-				if (ini_cur > last) 
+				// if isolated : compare and then rejoin the string
+				if (strcmp(sect_name, ini->cur_ptr) == 0) 
 				{
-					//printf("over size\n");
-					ini_cur=0;
-					result=1;
-				}
-				else if ( (*sect_cur==0) && (*ini_cur == ']') )
-				{
-					//printf("found\n");
-					result = 1;
-				}
-				else if  ( (*sect_cur!=*ini_cur) || (*sect_cur==0)  )
-				{
-					//printf("next line\n");
-					while ( (ini_cur != 0) && (ini_cur[0] != '[') )
-						ini_cur = line_next(ini_cur, last);
-					if (ini_cur != 0)
-						ini_cur++;
-					sect_cur = sect_name;
-					//printf("blah");
-					//system("PAUSE");
+					// if equal then return with sect_ptr to next line
+					string_rejoin(ini);
+					line_next(ini);
+					// if the line_next points to nothing.. it will be set to 0 so no further
+					// processing will happen anyways
+					break;				// RETURN
 				}
 				else
-				{
-					//printf("equal\n");
-					sect_cur++;
-					ini_cur++;
-				}
+					string_rejoin(ini);
+			}
+		}
+		
+		// try the next line 
+		line_next(ini);
+	}
+	
+	ini->sect_ptr = ini->cur_ptr;	// sect_ptr is SET!
+	return (ini->sect_ptr == 0);
+}
+
+u8 *ini_key(INI *ini, u8 *key_name)
+{
+	string_rejoin(ini);	// in case we're reading a new key
+	
+	// always search from start of section
+	ini->cur_ptr = ini->sect_ptr;
+	
+	// keep on going until end of file or line starts with [ (assumed vaild sect name)
+	while ( (ini->cur_ptr != 0) && (*(ini->cur_ptr) != '[') )
+	{
+		if (string_isolate(ini, '=') == 0)	// isolate the key name
+		{
+			// if isolated : compare and then rejoin the string
+			if (strcmp(key_name, ini->cur_ptr) == 0) 
+			{
+				// if equal then return with ptr to key data
+				string_rejoin(ini);
 				
+				// since we're here.. we KNOW there's a '=' 				
+				ini->cur_ptr = strchr(ini->cur_ptr, '=') + 1;
+				
+				if (line_isolate(ini) == 0)
+					return ini->cur_ptr;
+				// else keep on looking for a line which does work.. which won't exist since
+				// it's at the end of the file if this error occurs
 			}
-			
-			ini_cur = line_next(ini_cur, last);
+			else
+				string_rejoin(ini);
 		}
-		
+
+		// try the next line 
+		line_next(ini);
 	}
-	
-	return ini_cur;
+
+	if ( (ini->cur_ptr != 0) && (*(ini->cur_ptr) == '[') )
+		ini->cur_ptr = 0;	// no use..  might as well eof
+	return ini->cur_ptr;
 }
 
 
-u8 *key_find(u8 *data, u8 *key_name, u8 *last)
+// if sect_name == 0
+// then use the current one
+u8 *ini_recursive(INI *ini, u8 *sect_name, u8 *key_name)
 {
-	u8 *cur;
-	u8 *key_cur;
-	u8 result;
+	u8 *sect_orig;
+	u8 *key_data;
+	u8 *inherits;
 	
-	if (data==0)
-		return 0;
+	//remember old section
+	sect_orig = ini->sect_ptr;
 	
-	cur = data;
-	result = 0;
-	key_cur = key_name;
-	if (cur[0] == '[')
-		cur = 0;
+	if (sect_name != 0)
+		ini_section(ini, sect_name);
 	
-	while (  (result != 1) && (cur!=0)  )
+	key_data = ini_key(ini, key_name);
+	if (key_data == 0)
 	{
-		//printf("%c(%X) ? %c(%X) ", *key_cur, *key_cur, *cur, *cur);
-		if (cur > last)
+		//read inherits key (have to copy it since the null char is removed 
+		key_data = ini_key(ini, "inherits");
+		if (key_data != 0)
 		{
-			//printf("oversize\n");
-			cur=0;
-		}
-		else if (  (*key_cur == 0) && (*cur == '=')  )
-		{
-			//printf("found\n");
-			result = 1;
-		}
-		else if  ( (*key_cur!=*cur) || ((*key_cur == 0) && (*cur != '=')) )
-		{
-			//printf("not eq\n");
-			key_cur = key_name;
-			cur = line_next(cur, last);
-			if (cur != 0)
-				if (cur[0] == '[')
-					cur = 0;
-		}
-		else
-		{
-			//printf("equal\n");
-			key_cur++;
-			cur++;
+			inherits = alloca(strlen(key_data) + 1);
+			strcpy(inherits, key_data);
+			key_data = ini_recursive(ini, inherits, key_name);
 		}
 	}
-
-	return cur;
 	
+	ini->sect_ptr = sect_orig;
+	
+	//return to original section
+	return key_data;	
 }
 
-u8 *key_read(u8 *data, u8 *last)
+
+// calls recursive and converts to the appropriate thingy.
+
+int ini_int(INI *ini, u8 *key, int def)
 {
-	u8 *next, *cur;
-	int key_size;
-	u8 *key_cur=0;
+	u8 *data;
+	data = ini_recursive(ini, 0, key);
 	
-	if (data==0)
-		return 0;
-	
-	next = line_next(data,last);
-	if (next == 0)
-		key_size = last-data+1;
+	if (data != 0)
+		return (int)strtol(data, 0, 10);
 	else
-		key_size = next-data+1;
-	
-	if (key_size != 0)
-	{
-		if (key_data == 0)
-			key_data = (u8 *)malloc(key_size);
-		else
-			key_data = (u8 *)realloc(key_data, key_size);
-		key_cur = key_data;
-		
-		cur=data;
-		
-		if (*cur == '=')
-		{
-			cur++;
-			if (cur > last)
-				cur=0;
-		}
-		
-		while(cur!=0)
-		{
-			if ((cur>last)||(*cur==0xA)||(*cur==0xD))
-				cur = 0;
-			else 
-			{
-				//printf("%c %c\n", *key_cur, *cur);
-				*(key_cur++) = *(cur++);
-			}
-		}
-		*key_cur = 0;
-		return key_data;
-	}
-	else
-		return 0;
+		return def;
 }
 
-u8 *ini_read(u8 *sect_name, u8 *key_name)
+int ini_boolean(INI *ini, u8 *key, int def)
 {
-	u8 *ini_cur;
-	u8 *ini_last;
-	u8 *key_value = 0;
-
-	if ((ini_data ==0)||(sect_name==0)||(key_name==0))
-		return 0;
+	u8 *data;
+	data = ini_recursive(ini, 0, key);
 	
-	ini_cur = ini_data;
-	if (ini_size != 0)
-		ini_last = ini_data + ini_size - 1;
+	if (data != 0)
+		return (int)(strtol(data, 0, 10) != 0);
 	else
-		ini_last = ini_data;
+		return (def!=0);
+}
+
+u8 *ini_string(INI *ini, u8 *key, u8 *def)
+{
+	u8 *data;
+	data = ini_recursive(ini, 0, key);
 	
-	ini_cur = section_find(ini_cur, sect_name, ini_last);
-	if (ini_cur != 0)
-	{
-		ini_cur = key_find(ini_cur, key_name, ini_last);
-		if (ini_cur != 0)
-			key_value = key_read(ini_cur, ini_last);
-		
-	}
-	
-	return key_value;
-}
-
-int ini_boolean(u8 *sect, u8 *sect_parent, u8 *key, int val_default)
-{
-	u8 *key_value;
-	// child section
-	if ( (key_value=ini_read(sect, key)) != 0)
-	{
-		//printf("  [child|%s] is set to \"%s\".\n", key, key_value);
-		return (strtoul (key_value, 0, 10) != 0);
-	}
+	if (data != 0)
+		return data;
 	else
-		if (sect_parent != 0)	// parent section
-			if ( (key_value=ini_read(sect_parent, key)) != 0)
-			{
-				//printf("  [parent|%s] is set to \"%s\".\n", key, key_value);
-				return (strtoul(key_value, 0, 10) != 0);
-			}
-	// default value
-	//printf("  [%s] is NOT set!  Default to %d.\n", key, val_default);
-	return (val_default != 0);
+		return def;
 }
 
-int ini_int(u8 *sect, u8 *sect_parent, u8 *key, int val_default)
-{
-	u8 *key_value;
-	// child section
-	if ( (key_value=ini_read(sect, key)) != 0)
-	{
-		//printf("  [child|%s] is set to \"%s\".\n", key, key_value);
-		return strtol(key_value, 0, 10);
-	}
-	else
-		if (sect_parent != 0)	// parent section
-			if ( (key_value=ini_read(sect_parent, key)) != 0)
-			{
-				//printf("  [parent|%s] is set to \"%s\".\n", key, key_value);
-				return strtol(key_value, 0, 10);
-			}
-	// default value
-	//printf("  [%s] is NOT set!  Default to %d.\n", key, val_default);
-	return val_default;
-}
 
-// returns something from a buffer... use it before you call ini_string or ini_read again
-// exactly the same as using ini_read but with the parent bit
-u8 *ini_string(u8 *sect, u8 *sect_parent, u8 *key)
-{
-	u8 *key_value;
-	// child section
-	if ( (key_value=ini_read(sect, key)) != 0)
-	{
-		//printf("  [child|%s] is set to \"%s\".\n", key, key_value);
-		return key_value;
-	}
-	else
-		if (sect_parent != 0)	// parent section
-			if ( (key_value=ini_read(sect_parent, key)) != 0)
-			{
-				//printf("  [parent|%s] is set to \"%s\".\n", key, key_value);
-				return key_value;
-			}
-	// default value
-	//printf("  [%s] is NOT set!\n", key);
-	return 0;
-}
 
+// FIXME
+// it probably won't read key data that starts with [ (returning 0)  FIXED
+// crashes if key data ends at EOF  FIXED
+// read keys at the end of the file without a newline FIXED
+
+// bugs fixed:
+// no longer puts 0's everywhere at the end of lines
+// looks cleaner / solid
+// put some often used code into functions
+// made it reentrant
+// doesn't save the ini when you close it
+// more than one ini can be opened at a time.
+
+//  recursive inhertitance actually works more than one level

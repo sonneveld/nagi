@@ -21,7 +21,7 @@
 #include "vid_render.h"
 
 #include "mem_wrap.h"
-#include "../conf.h"
+
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 //void test_function(void);

@@ -2,7 +2,7 @@
 SRC := base.c debug.c decrypt.c flags.c nagi_main.c\
 initialise.c agi_string.c new_room.c objects.c state_io.c agi.c\
 state_info.c obj_show.c  game_id.c cmd_misc.c\
-trace.c
+trace.c config.c
 
 # version
 SRC += version/ver_init.c version/agi_crc.c version/gamelist.c
@@ -13,7 +13,8 @@ SRC += res/res_dir.c res/res_vol.c res/res_lzw.c res/res_pic.c
 # sys files
 SRC += sys/script.c sys/error.c sys/glob_sys.c\
 sys/delay.c  sys/memory.c sys/rand.c sys/endian.c sys/time.c\
-sys/mem_wrap.c sys/ini_config.c sys/sys_dir.c sys/vstring.c
+sys/mem_wrap.c  sys/sys_dir.c sys/vstring.c\
+sys/ini_config.c
 
 # video files
 
@@ -51,7 +52,7 @@ OBJ := $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS := -O2 -fwritable-strings
+CFLAGS := -d -O2 -fwritable-strings
 #CFLAGS += -finline-functions
 CFLAGS += -IC:/mingw/mingw32/include/SDL
 
@@ -59,7 +60,7 @@ DEPFLAGS := $(CFLAGS)
 
 # add warnings
 
-CFLAGS += -W -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual 
+CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual 
 #CFLAGS += -Werror
 
 LIB = -lmingw32 -lSDLmain -lSDL -mwindows -mconsole

@@ -321,4 +321,80 @@ typedef struct view_struct VIEW;
 
 #define AGI_TRACE printf("trace at: %s:%d\n", __FILE__,__LINE__);
 
+#define CT_INT (0)
+#define CT_BOOL (1)
+#define CT_STRING (2)
+
+typedef s32 CONF_INT;
+typedef u32 CONF_BOOL;
+typedef u8 *CONF_STRING;
+
+struct conf_struct
+{
+	u8 *key;
+	u8 *section;
+	u8 type;
+	union
+	{
+		struct
+		{
+			CONF_INT *ptr;
+			CONF_INT def;
+			s32 min;
+			s32 max;
+		} i;
+		
+		struct
+		{
+			CONF_BOOL *ptr;
+			CONF_BOOL def;
+		} b;
+		
+		struct
+		{
+			CONF_STRING *ptr;
+			CONF_STRING def;
+		} s;
+	};
+};
+typedef struct conf_struct CONF;
+
+
+extern CONF_BOOL c_nagi_log_debug;
+extern CONF_BOOL c_nagi_console;
+extern CONF_BOOL c_nagi_run_correctly;
+extern CONF_BOOL c_nagi_font_benchmark;
+extern CONF_STRING c_vid_driver;
+extern CONF_INT c_vid_scale;
+extern CONF_BOOL c_vid_full_screen;
+extern CONF_INT c_vid_renderer;
+extern CONF_STRING c_vid_pal_16;
+extern CONF_STRING c_vid_pal_text;
+extern CONF_STRING c_vid_pal_cga0;
+extern CONF_STRING c_vid_pal_cga1;
+extern CONF_STRING c_vid_pal_bw;
+extern CONF_STRING c_vid_fonts_bitmap;
+extern CONF_STRING c_vid_fonts_vector;
+extern CONF_STRING c_snd_driver;
+extern CONF_INT c_snd_channels;
+extern CONF_INT c_snd_gen_tone;
+extern CONF_INT c_snd_gen_noise0;
+extern CONF_INT c_snd_gen_noise1;
+extern CONF_BOOL c_snd_disable;
+extern CONF_STRING c_snd_sample;
+extern CONF_INT c_snd_sample_freq;
+extern CONF_STRING c_sdl_drv_video;
+extern CONF_STRING c_sdl_drv_sound;
+
+extern CONF_STRING c_standard_crc_list;
+extern CONF_STRING c_standard_agi_list;
+extern CONF_STRING c_standard_dir_list;
+extern CONF_STRING c_standard_force;
+extern CONF_STRING c_standard_v2_default;
+extern CONF_STRING c_standard_v3_default;
+extern CONF_STRING c_standard_sort;
+
+extern CONF config_nagi[];
+extern CONF config_standard[];
+
 #endif

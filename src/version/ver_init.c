@@ -5,7 +5,7 @@ verinit()
 /* BASE headers	---	---	---	---	---	---	--- */
 #include "../agi.h"
 #include "gamelist.h"
-#include "ver_init.h"
+
 
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
@@ -18,6 +18,7 @@ verinit()
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"
 #include "../sys/ini_config.h"
+#include "ver_init.h"
 #include "../ui/msg.h"
 #include "../ui/printf.h"
 #include "../ui/window.h"
@@ -37,6 +38,9 @@ void standard_init(GAMEINFO *g_info);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 GAMEINFO *default_game_info;
+
+INI *ini_standard;
+
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
@@ -80,7 +84,8 @@ void version_stat_write()
 void dir_iterate()
 {
 	u8 *key_value;
-	if ((key_value=ini_read("standard", "force")) != 0)
+	ini_section(ini_standard, "standard");
+	if ((key_value=ini_key(ini_standard, "force")) != 0)
 		default_game_info = game_list_force(key_value);
 	else
 		default_game_info = game_list_new(".");
@@ -107,14 +112,18 @@ void standard_init(GAMEINFO *g_info)
 		printf("Reading and initialising \"%s\" AGI standard...", g_info->standard);
 	else
 		printf("Initialising default AGI standard...");
+	
+	
 	// read_strng
 
 	// inherited parent
-	if ( (key_value=ini_read(g_info->standard, "inherits")) != 0)
-	{
-		parent = strdup(key_value);
-		//printf("  Standard has parent \"%s\".\n", parent);
-	}
+	//if ( (key_value=ini_read(g_info->standard, "inherits")) != 0)
+	//{
+	//	parent = strdup(key_value);
+	//	//printf("  Standard has parent \"%s\".\n", parent);
+	//}
+	
+	ini_section(ini_standard, g_info->standard);
 	
 	// game_id
 	// if crc match then use the standard.ini game.id
@@ -124,7 +133,7 @@ void standard_init(GAMEINFO *g_info)
 	
 	if (g_info->crc_match != 0)
 	{
-		if ( (key_value=ini_string(g_info->standard, parent, "game_id")) != 0)
+		if ( (key_value=ini_key(ini_standard, "game_id")) != 0)
 		{
 			//printf("  Using standard defined game id (%s).\n", key_value);
 			strncpy(standard.game_id, key_value, 7);
@@ -141,7 +150,7 @@ void standard_init(GAMEINFO *g_info)
 	
 	if (standard.game_id[0] == 0)
 	{
-		if ( (key_value=ini_string(g_info->standard, parent, "game_id")) != 0)
+		if ( (key_value=ini_key(ini_standard, "game_id")) != 0)
 		{
 			//printf("  Using default standard defined game id (%s).\n", key_value);
 			strncpy(standard.game_id, key_value, 7);
@@ -157,30 +166,30 @@ void standard_init(GAMEINFO *g_info)
 	}
 	
 	// game_id_honour
-	standard.game_id_honour = ini_boolean(g_info->standard, parent, "game_id_honour", 0);
+	standard.game_id_honour = ini_boolean(ini_standard, "game_id_honour", 0);
 	// object_decrypt
-	standard.object_decrypt = ini_boolean(g_info->standard, parent, "object_decrypt", 1);
+	standard.object_decrypt = ini_boolean(ini_standard, "object_decrypt", 1);
 	// mouse_support
-	standard.mouse = ini_int(g_info->standard, parent, "mouse_support", 1);
+	standard.mouse = ini_int(ini_standard, "mouse_support", 1);
 	
 	// res_type
 	switch(g_info->format)
 	{
 		case 2:
 		case 3:
-			standard.cmd_max = ini_int(g_info->standard, parent, "cmd_max", 181);
-			standard.res_type = ini_int(g_info->standard, parent, "res_type", RES_V3);
-			standard.ver_major = ini_int(g_info->standard, parent, "ver_major", 3);
-			standard.ver_minor = ini_int(g_info->standard, parent, "ver_minor", 149);
-			standard.update_loop = ini_int(g_info->standard, parent, "update_loop", L_FLAG);
+			standard.cmd_max = ini_int(ini_standard, "cmd_max", 181);
+			standard.res_type = ini_int(ini_standard, "res_type", RES_V3);
+			standard.ver_major = ini_int(ini_standard, "ver_major", 3);
+			standard.ver_minor = ini_int(ini_standard, "ver_minor", 149);
+			standard.update_loop = ini_int(ini_standard, "update_loop", L_FLAG);
 			break;
 		case 1:
 		default:
-			standard.cmd_max = ini_int(g_info->standard, parent, "cmd_max", 175);
-			standard.res_type = ini_int(g_info->standard, parent, "res_type", RES_V2);
-			standard.ver_major = ini_int(g_info->standard, parent, "ver_major", 2);
-			standard.ver_minor = ini_int(g_info->standard, parent, "ver_minor", 936);
-			standard.update_loop = ini_int(g_info->standard, parent, "update_loop", L_FOUR);
+			standard.cmd_max = ini_int(ini_standard, "cmd_max", 175);
+			standard.res_type = ini_int(ini_standard, "res_type", RES_V2);
+			standard.ver_major = ini_int(ini_standard, "ver_major", 2);
+			standard.ver_minor = ini_int(ini_standard, "ver_minor", 936);
+			standard.update_loop = ini_int(ini_standard, "update_loop", L_FOUR);
 	}
 	if (standard.cmd_max > 0xFB)
 		standard.cmd_max = 0xFB;

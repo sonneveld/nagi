@@ -20,6 +20,7 @@
 #include "../sys/vstring.h"
 #include "../sys/sys_dir.h"
 #include "../sys/ini_config.h"
+#include "ver_init.h"
 #include "../sys/mem_wrap.h"
 #include "agi_crc.h"
 
@@ -78,7 +79,8 @@ GAMEINFO *game_list_new(u8 *search_dir)
 
 	// compare against known crc's and make a match
 	#warning test if standard.ini does not exist
-	key_value=ini_read("standard", "crc_list");
+	ini_section(ini_standard, "standard");
+	key_value=ini_key(ini_standard, "crc_list");
 	
 	dir_change(g_info->location);
 	if (key_value != 0)
@@ -96,13 +98,16 @@ GAMEINFO *game_list_new(u8 *search_dir)
 		}
 	}
 	
+	AGI_TRACE
+	printf("%s\n", g_info->standard);
 	// if match found, then store it's resource type
 	// duplicate the standard name
 	// set the match type = crc
 	if (g_info->standard != 0)
 	{
 		g_info->standard = strdup(g_info->standard);
-		g_info->format = ini_int(g_info->standard, 0, "res_type", 0);
+		ini_section(ini_standard, g_info->standard);
+		g_info->format = ini_int(ini_standard, "res_type", 0);
 		g_info->crc_match = 1;
 	}
 	
@@ -116,16 +121,18 @@ GAMEINFO *game_list_new(u8 *search_dir)
 	// if we haven't found a crc match, use the guessed res_type to use a default standard
 	if (g_info->standard == 0)
 	{
+		ini_section(ini_standard, "standard");
 		switch(g_info->format)
 		{
 			case RES_V3:
 			case RES_V3_4:
-				key_value = ini_read("standard", "v3_default");
+				
+				key_value = ini_key(ini_standard, "v3_default");
 				if (key_value != 0)
 					g_info->standard = strdup(key_value);
 				break;
 			case RES_V2:
-				key_value = ini_read("standard", "v2_default");
+				key_value = ini_key(ini_standard, "v2_default");
 				if (key_value != 0)
 					g_info->standard = strdup(key_value);
 				break;
@@ -136,7 +143,8 @@ GAMEINFO *game_list_new(u8 *search_dir)
 	if (g_info->standard != 0)
 	{
 		// NAME
-		key_value = ini_read(g_info->standard, "name");
+		ini_section(ini_standard, g_info->standard);
+		key_value = ini_key(ini_standard, "name");
 		if (key_value != 0)
 			g_info->name = strdup(key_value);
 	}
@@ -159,7 +167,8 @@ u8 *crc_check(u8 *section)
 	for (i=0; i<=99; i++)
 	{
 		sprintf(key_name, "crc%d", i);
-		key_value = ini_read(section, key_name);
+		ini_section(ini_standard, section);
+		key_value = ini_key(ini_standard, key_name);
 		if (key_value == 0)
 		{
 			return section;	 // FOUND
@@ -305,7 +314,8 @@ GAMEINFO *game_list_force(u8 *f_standard)
 	// duplicate the standard name
 	// set the match type = crc
 	g_info->standard = strdup(f_standard);
-	g_info->format = ini_int(g_info->standard, 0, "res_type", 0);
+	ini_section(ini_standard, g_info->standard);
+	g_info->format = ini_int(ini_standard, "res_type", 0);
 	g_info->crc_match = 1;
 	
 	// if not restype found (because of no crc match) then guess
@@ -317,7 +327,8 @@ GAMEINFO *game_list_force(u8 *f_standard)
 
 	// if we've found a standard, read it's name
 	// NAME
-	key_value = ini_read(g_info->standard, "name");
+	ini_section(ini_standard, g_info->standard);
+	key_value = ini_key(ini_standard, "name");
 	if (key_value != 0)
 		g_info->name = strdup(key_value);
 

@@ -21,7 +21,7 @@
 
 #include "chargen.h"
 
-#include "../conf.h"
+
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 

@@ -49,7 +49,6 @@ _Finish                          cseg     000002AE 00000015
 
 #include "ui/msg.h"
 
-
 #include "ui/window.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
@@ -136,18 +135,10 @@ wbuff = fb_buff;
 		printf("time = %f per sec\n", (double) 100000000 / (double)(SDL_GetTicks() - ticks));
 }
 
-int main(int argc, char *argv[])
-{
-	u16 snd_flag;
-	GAMEINFO *g_cur;
+/*
 
-	(void) argc;	// SDL won't let me use these anyway
-	(void) argv;	// i think
-	
-	nagi_init();		// initiailise NAGI
-	/*
 	printf("starting font benchmark...bitch...\n");
-	fbenchmark_init();
+	fbenchmark_init(); 
 	
 	printf("plain\n");
 	text_colour(1, 0);
@@ -166,7 +157,16 @@ int main(int argc, char *argv[])
 	a_free(fb_buff);
 	agi_exit();*/
 	
-	ini_open("standard.ini");
+int main(int argc, char *argv[])
+{
+	u16 snd_flag;
+	GAMEINFO *g_cur;
+
+	(void) argc;	// SDL won't let me use these anyway
+	(void) argv;	// i think
+	
+	nagi_init();		// initiailise NAGI
+	ini_standard = ini_open("standard.ini");
 	g_cur = standard_select();
 	standard_init(g_cur);	// find the agi standard to emulate
 	
@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
 	SDL_WM_SetCaption(window_title, 0);
 
 	game_list_delete(g_cur);
-	ini_close();
+	ini_close(ini_standard);
 	
 	agi_init();		// initiailise AGI with version
 	delay_init();	// initiailise delay

@@ -8,7 +8,7 @@
 #include "../sound/sound.h"  
 #include "../flags.h"
 
-#include "../conf.h"
+
 
 
 #define CHAN_MAX 4

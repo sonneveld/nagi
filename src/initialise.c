@@ -47,7 +47,9 @@ _RoomInit                        cseg     000012DE 00000015
 #include "logic/cmd_table.h"
 #include "ui/mouse.h"
 
-#include "conf.h"
+#include "sys/ini_config.h"
+#include "config.h"
+
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 // reads ini file and inits nagi
@@ -71,6 +73,7 @@ void room_init(void);
 void nagi_init()
 {	
 	u8 env_value[50];
+	INI *ini_nagi;
 	
 	memset( &state, 0, sizeof(AGI_STATE) );
 	state.word_13f = 0x0F;
@@ -83,13 +86,16 @@ void nagi_init()
 	display_type = 3;		// ega
 	//text_mode = 0;
 	
+			freopen( "CON", "w", stdout );	
 	// read nagi.ini
-	conf_read();
-	
+	ini_nagi = ini_open("nagi.ini");
+	config_load(config_nagi, ini_nagi);
+	ini_close(ini_nagi);
+
 	// for the console window thingy
 	if (c_nagi_console)
 		freopen( "CON", "w", stdout );	
-	
+
 	printf("New Adventure Game Interpreter (NAGI) %s\n", NAGI_VERSION);
 	printf("Copyright (C) 2000-2001 Nick Sonneveld\n");
 	printf("Author: Nick Sonneveld\n\n");

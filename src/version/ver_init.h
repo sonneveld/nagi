@@ -6,4 +6,7 @@
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 extern GAMEINFO *standard_select(void);
 extern void standard_init(GAMEINFO *g_info);
+
+
+extern INI *ini_standard;
 #endif
