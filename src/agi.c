@@ -1,9 +1,6 @@
 
 #include "agi.h"
 
-#ifdef RAD_WARN
-#warning RaDIaT1oN modified agi.c
-#endif
 	
 AGI_STATE state;
 //AGI_STANDARD standard;
@@ -55,6 +52,8 @@ CONF_INT c_game_dir_type = 1;	// RES TYPE
 // pre calc'd
 u8 c_game_file_id[ID_SIZE+1] = "";// RES TYPE
 VSTRING *c_game_location = 0;
+
+// TODO: need to figure out if we're going to use one method or the other here:
 
 
 #ifndef RAD_LINUX

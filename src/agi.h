@@ -4,9 +4,7 @@
 // the only include file i should include in an include file
 #include <SDL/SDL.h>
 
-#ifdef RAD_WARN
-#warning RaDIaT1oN modified agi.h
-#endif
+// ok no warning here
 
 #ifndef list_h_struct
 #define list_h_struct
@@ -186,6 +184,7 @@ typedef struct rect_struct RECT;
 #define ID_SIZE 20
 // 00 .. 182
 #define CMD_MAX 182
+#define EVAL_MAX 19
 
 struct cmap_struct
 {
