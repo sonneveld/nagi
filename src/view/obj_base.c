@@ -178,7 +178,8 @@ s16 gen_sort_pos(s16 var8)
 		while (pri_table[temp2] >= var8)
 		{
 			temp2--;
-			#warning this is a workaround for a bug in the original agi
+			//~ this is a workaround for a bug in the original agi
+			//~ does not do this check.
 			if (temp2 < 0)
 				return -1;
 		}
