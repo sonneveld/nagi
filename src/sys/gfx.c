@@ -217,10 +217,8 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 	vid_unlock(gfx_surface);
 
 	{
-		POS sdl_pos = { {sdl_x, sdl_y-sdl_h+1}};
+		POS sdl_pos = {sdl_x, sdl_y-sdl_h+1};
 		SIZE sdl_size = {sdl_w, sdl_h};
-		sdl_pos.x = sdl_x;
-		sdl_pos.y = sdl_y-sdl_h+1;
 		vid_update(gfx_surface, &sdl_pos, &sdl_size);
 	}
 }
@@ -246,7 +244,7 @@ void gfx_msgbox(u8 x, u8 y, u8 w, u8 h, u8 bg, u8 line)
 	render_rect(x+1, y-2, 1, h-4, line);	// left
 }
 
-
+ 
 void gfx_palette_update(void)
 {
 	if (chgen_textmode)
@@ -273,7 +271,7 @@ void gfx_palette_update(void)
 
 void gfx_clear(void)
 {
-	POS pos = {{0, 0}};
+	POS pos = {0, 0};
 	SIZE size = {0, 0};
 
 	vid_lock(gfx_surface);

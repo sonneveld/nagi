@@ -230,7 +230,7 @@ u8 *cmd_get_num(u8 *c)
 
 
 
-POS stredit_pos = {0,0};
+TPOS stredit_pos = {0,0};
 
 
 

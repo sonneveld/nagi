@@ -116,21 +116,19 @@ typedef signed int		sint;
 #define NAGI_VERSION "v2.02"
 
 
-union position_struct
+struct position_struct
 {
-	struct
-	{
-		int row;
-		int col;
-	};
-	
-	struct
-	{
-		int y;
-		int x;
-	};
+	int x;
+	int y;
 };
-typedef union position_struct POS;
+typedef struct position_struct POS;
+	
+struct text_position_struct
+{
+	int row;
+	int col;
+};
+typedef struct text_position_struct TPOS;
 	
 struct size_struct
 {
@@ -138,6 +136,13 @@ struct size_struct
 	int h;
 };
 typedef struct size_struct SIZE;
+	
+struct rect_struct
+{
+	struct position_struct pos;
+	struct size_struct size;
+};
+typedef struct rect_struct RECT;
 
 #define VAR_SIZE 256
 // using individual bits
@@ -203,6 +208,9 @@ extern AGI_STATE state;
 enum protect_enum {P_NONE, LARRY, GR, KQ4, MH, MH2};
 enum palette_enum {PALPC, PALAMIGA, PALVAR};
 enum res_enum {RES_NONE=0, RES_V2=1, RES_V3_4=2, RES_V3=3, RES_V3_AMIGA=4};
+
+enum dir_enum {DIR_NONE=0, DIR_SEP=1, DIR_COMB=2, DIR_AMIGA=3};
+
 enum loop_enum {L_FOUR=1, L_ALL=2, L_FLAG=3};
 enum mouse_enum {M_NONE=0, M_SIERRA=1, M_BRIAN=10, M_NICK=11};
 enum system_enum {SYS_PC, SYS_APPLE, SYS_AMIGA, SYS_AGDS, SYS_TANDY};
@@ -412,12 +420,14 @@ extern CONF_STRING c_standard_v2_default;
 extern CONF_STRING c_standard_v3_default;
 extern CONF_STRING c_standard_sort;
 
-extern CONF_BOOL c_game_object_decrypt;
 extern CONF_STRING c_game_version_info;
 extern CONF_INT c_game_mouse;
 extern CONF_INT c_game_loop_update;
-extern CONF_INT c_game_res;
 extern CONF_STRING c_game_id;
+extern CONF_BOOL c_game_object_decrypt;
+extern CONF_BOOL c_game_object_packed;
+extern CONF_BOOL c_game_compression;
+extern CONF_INT c_game_dir_type;
 
 extern u8 c_game_file_id[ID_SIZE+1];
 extern VSTRING *c_game_location;

@@ -43,5 +43,5 @@ void game_id_test()
 // used for VERSION 3 games
 void game_id_copy()
 {
-	strcpy(dir_id, c_game_id);
+	//strcpy(dir_id, c_game_id);
 }

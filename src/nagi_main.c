@@ -98,7 +98,7 @@ void font_benchmark(void)
 {
 	int ticks=0;
 	int i = 0;
-	POS my_pos;
+	TPOS my_pos;
 	
 	u8 *wbuff;
 	

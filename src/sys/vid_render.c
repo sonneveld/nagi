@@ -179,7 +179,6 @@ void render_rect(u16 x, u16 y, u16 width, u16 height, u8 colour)
 	rstate.drv->func_rect(x, y, width, height, colour);
 	
 	gfx_update(x, y, width, height);
-	
 }
 
 

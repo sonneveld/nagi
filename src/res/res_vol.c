@@ -48,20 +48,10 @@ u8 *vol_res_load(u8 *dir_entry, u8 *buff)
 	
 	do
 	{
-		switch(c_game_res)
-		{
-			case RES_V3:
-			case RES_V3_4:
-			case RES_V3_AMIGA:
-				si = v3_res_load(dir_entry, buff);
-				break;
-			case RES_V2:
-				si = v2_res_load(dir_entry, buff);
-				break;
-			default:
-				printf("vol_res_load(): unknown resource type\n");
-				agi_exit();
-		}			
+		if (c_game_compression)
+			si = v3_res_load(dir_entry, buff);
+		else
+			si = v2_res_load(dir_entry, buff);
 	} while (  (si==0) && (volume_error != 5)  );
 	
 	return si;
@@ -266,7 +256,7 @@ void err_insert_disk(u16 num)
 
 void err_msg(u8 *msg, u16 num)
 {
-	if ((num == 0) || (((c_game_res==RES_V3)||(c_game_res==RES_V3_4)||(c_game_res==RES_V3_AMIGA)) && (num > 8)))
+	if ((num == 0) || (c_game_compression && (num > 8)) )
 		sprintf(msg, "Please insert disk %d\nand press ENTER.",
 				vol_disk_num);
 	else
@@ -302,8 +292,8 @@ void volumes_open()
 	
 	for (i=0 ; i<0x10 ; i++)
 	{
-		if ((c_game_res==RES_V3) ||(c_game_res==RES_V3_4))
-			sprintf(name, "%svol.%d", dir_id, i);
+		if (c_game_file_id[0] != '\0')
+			sprintf(name, "%svol.%d", c_game_file_id, i);
 		else
 			sprintf(name, "vol.%d", i);
 		//do

@@ -40,21 +40,19 @@ CONF_STRING c_standard_v2_default = 0;
 CONF_STRING c_standard_v3_default = 0;
 CONF_STRING c_standard_sort = 0;
 
-CONF_BOOL c_game_object_decrypt = 1;
 CONF_STRING c_game_version_info = 0;
 CONF_INT c_game_mouse = 0;
 CONF_INT c_game_loop_update = 0;
-CONF_INT c_game_res = 0;
-CONF_STRING c_game_id = 0;
+CONF_STRING c_game_id = 0;	// RES TYPE
+CONF_BOOL c_game_object_decrypt = 1;	// RES TYPE
+CONF_BOOL c_game_object_packed = 0;	// RES TYPE
+CONF_BOOL c_game_compression = 0;	// RES TYPE
+// 0, sep(1), comb(2), comb_amiga(3)
+CONF_INT c_game_dir_type = 1;	// RES TYPE
 
 // pre calc'd
-u8 c_game_file_id[ID_SIZE+1] = "";
+u8 c_game_file_id[ID_SIZE+1] = "";// RES TYPE
 VSTRING *c_game_location = 0;
-
-// dir_type (sep, comb, amiga)
-// file_id
-// object_packed
-// compression
 
 
 // for use in nagi.ini
@@ -106,11 +104,15 @@ CONF config_standard[] =
 // for use in standard.ini after a game section has been set.
 CONF config_game[] =
 {
-	{"object_decrypt", 0, CT_BOOL, {b:{&c_game_object_decrypt, 1}} },
 	{"version_info", 0, CT_STRING, {s:{&c_game_version_info, 0}} },
 	{"mouse", 0, CT_INT, {i:{&c_game_mouse, 0, 0, 5}} },
 	{"loop_update", 0, CT_INT, {i:{&c_game_loop_update, 0, 0, 4}} },
-	{"res", 0, CT_INT, {i:{&c_game_res, 0, 0, 10}} },
+	
 	{"id", 0, CT_STRING, {s:{&c_game_id, 0}} },
+	{"object_decrypt", 0, CT_BOOL, {b:{&c_game_object_decrypt, 1}} },
+	{"object_packed", 0, CT_BOOL, {b:{&c_game_object_packed, 0}} },
+	{"compression", 0, CT_BOOL, {b:{&c_game_compression, 0}} },
+	{"dir_type", 0, CT_INT, {i:{&c_game_dir_type, 1, 0, 3}} },
 	{key: 0}
+
 };

@@ -34,12 +34,12 @@ void ch_shutdown
 
 void ch_update
 
-void ch_pos_get(POS *pos)
-void ch_pos_set(POS *pos)
+void ch_pos_get(TPOS *pos)
+void ch_pos_set(TPOS *pos)
 void ch_attrib(u8 colour, u16 flags)
 void ch_put(u8 ch)
-void ch_scroll(POS *pos1, POS *pos2, u16 scroll, u8 attrib)
-void ch_clear(POS *pos1, POS *pos2, u8 attrib)
+void ch_scroll(TPOS *pos1, TPOS *pos2, u16 scroll, u8 attrib)
+void ch_clear(TPOS *pos1, TPOS *pos2, u8 attrib)
 */
 
 
@@ -47,7 +47,7 @@ void ch_clear(POS *pos1, POS *pos2, u8 attrib)
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 u8 chgen_textmode;
-POS chgen_textpos = {{0,0}};
+TPOS chgen_textpos = {0,0};
 
 u8 *font_list = "font_8x8.fnt,font_16x16.fnt";
 u8 *font_data = 0;
@@ -56,7 +56,7 @@ SIZE font_size = {0,0};
 u32 font_chsize = 0;
 u32 font_linesize = 0;
 
-POS update_pos= {{0,0}};
+POS update_pos= {0,0};
 SIZE update_size= {0,0};
 
 
@@ -227,13 +227,13 @@ void font_lazy_update(POS *pos, SIZE *size)
 	}
 }
 
-void ch_pos_get(POS *pos)
+void ch_pos_get(TPOS *pos)
 {
 	pos->row = chgen_textpos.row;
 	pos->col = chgen_textpos.col;
 }
 
-void ch_pos_set(POS *pos)
+void ch_pos_set(TPOS *pos)
 {
 	chgen_textpos.row = pos->row;
 	chgen_textpos.col = pos->col;
@@ -330,7 +330,7 @@ void ch_put(u8 ch)
 	font_lazy_update(&gfx_pos, &font_size);
 }
 
-void ch_scroll(POS *pos1, POS *pos2, u16 scroll, u8 attrib)
+void ch_scroll(TPOS *pos1, TPOS *pos2, u16 scroll, u8 attrib)
 {
 	/*SDL_Rect srcrect;
 	SDL_Rect dstrect;
@@ -355,7 +355,7 @@ void ch_scroll(POS *pos1, POS *pos2, u16 scroll, u8 attrib)
 
 
 
-void ch_clear(POS *pos1, POS *pos2, u8 attrib)
+void ch_clear(TPOS *pos1, TPOS *pos2, u8 attrib)
 {
 	POS fill_pos;
 	SIZE fill_size;

@@ -28,7 +28,7 @@ u8 window_row = 0;
 
 #define PA_MAX 5
 u8 pos_count = 0;
-POS pos_array[PA_MAX];
+TPOS pos_array[PA_MAX];
 
 u16 text_shade = 0;	// if set, text is shaded
 
@@ -38,7 +38,7 @@ u16 text_shade = 0;	// if set, text is shaded
 void window_put_char(u16 given_char)
 {
 	//u16 temp;
-	POS char_pos;
+	TPOS char_pos;
 	//u8 x,  y;	
 	u8 bl;
 	u8 conversion = 0;
@@ -110,7 +110,7 @@ void window_put_char(u16 given_char)
 
 void goto_row_col(u16 row, u16 col)
 {
-	POS da_pos = {row, col};
+	TPOS da_pos = {row, col};
 	ch_pos_set(&da_pos);
 }
 
@@ -147,9 +147,9 @@ void window_line_clear(u16 row, u16 attrib)
 
 void window_clear(u16 upper_row, u16 upper_col, u16 lower_row, u16 lower_col, u16 attrib)
 {
-	POS old_pos;
-	POS pos1 = {upper_row, upper_col};
-	POS pos2 = {lower_row, lower_col};
+	TPOS old_pos;
+	TPOS pos1 = {upper_row, upper_col};
+	TPOS pos2 = {lower_row, lower_col};
 	
 	ch_pos_get(&old_pos);
 	ch_clear(&pos1, &pos2, attrib);
@@ -160,8 +160,8 @@ void window_clear(u16 upper_row, u16 upper_col, u16 lower_row, u16 lower_col, u1
 // var8 = upper_row vara = upper_col   varc = lower_row   vare = lower_col  var10 attrib
 void window_scroll(u16 upper_row, u16 upper_col, u16 lower_row, u16 lower_col, u16 attrib)
 {
-	POS pos1 = {upper_row, upper_col};
-	POS pos2 = {lower_row, lower_col};
+	TPOS pos1 = {upper_row, upper_col};
+	TPOS pos2 = {lower_row, lower_col};
 	ch_scroll(&pos1, &pos2, 1, attrib);
 	pos1.row = lower_row;
 	ch_pos_set(&pos1);

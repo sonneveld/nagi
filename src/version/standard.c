@@ -28,9 +28,6 @@
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 //void test_function(void);
 
-#define DIR_SEP 1
-#define DIR_COMB 2
-#define DIR_AMIGA 3
 
 // two structs.. one for stuff i just need to help ident and
 // the other to help load up/print menu
@@ -503,39 +500,36 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 {
 	// set the defaults
 
-	// res type.. use detected as default.
-	switch(game->dir_type)
+	// obj_packed
+	if (game->dir_type == DIR_AMIGA)
 	{
-		case DIR_COMB:
-			config_game[4].i.def = RES_V3;
-			break;
-		case DIR_AMIGA:
-			config_game[4].i.def = RES_V3_AMIGA;
-			break;
-		
-		default:
-		case DIR_SEP:
-			if (game->file_id[0] == 0)
-				config_game[4].i.def = RES_V2;
-			else
-				config_game[4].i.def = RES_V3_4;
-			break;
+		config_game[5].b.def = 1;
+		AGI_TRACE
 	}
+	else
+		config_game[5].b.def = 0;
+	
+	// dir_type
+	config_game[7].i.def = game->dir_type;
 	
 	switch (game->ver_type)
 	{
 		case 3:
 			// version info
-			config_game[1].s.def = "v3.002.149";
+			config_game[0].s.def = "v3.002.149";
 			// loop update
-			config_game[3].i.def = L_FLAG;	//v3 loop default!!! FIXME
+			config_game[2].i.def = L_FLAG;
+			// compression
+			config_game[6].b.def = 1;
 			break;
 		case 2:
 		default:
 			// version info
-			config_game[1].s.def = "v2.917";
+			config_game[0].s.def = "v2.917";
 			// loop update
-			config_game[3].i.def = L_FOUR;	//v2 loop default!!!; FIXME
+			config_game[2].i.def = L_FOUR;
+			// compression
+			config_game[6].b.def = 0;
 			break;
 	}
 	
@@ -570,7 +564,7 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 	
 	// need to setup game.id if you want to load up savegames before agi is init'd
 	// standard.ini, or the file_id, or the default ""
-	config_game[5].s.def = c_game_file_id;
+	config_game[3].s.def = c_game_file_id;
 	
 	// use config_Read
 	config_load(config_game, ini);

@@ -1,6 +1,5 @@
 
 // res_dir.c
-extern u8 dir_id[10];
 extern void dir_load(void);
 extern u8 *dir_logic(u16 num);
 extern u8 *dir_view(u16 num);
