@@ -189,12 +189,17 @@ void sdl_palette_set(VSURFACE *vsurface, PCOLOUR *palette, u8 num)
 // can use library's fast blit's 'n stuff
 void sdl_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour)
 {
-	SDL_Rect rect;
-
-	rect.x = pos->x;
-	rect.y = pos->y;
-	rect.w = size->w;
-	rect.h = size->h;
-
-	SDL_FillRect(SDLPTR(vsurface), &rect, colour);
+	
+	if ( (pos->x|pos->y|size->w|size->h) == 0)
+		SDL_FillRect(SDLPTR(vsurface), 0, colour);
+	{
+		SDL_Rect rect;
+	
+		rect.x = pos->x;
+		rect.y = pos->y;
+		rect.w = size->w;
+		rect.h = size->h;
+	
+		SDL_FillRect(SDLPTR(vsurface), &rect, colour);
+	}
 }
