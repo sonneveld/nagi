@@ -118,8 +118,8 @@ void gfx_init(void)
 	// **************************
 
 	// do something to calc this from render/font
-	gfx_size.w = 320 * c_vid_scale;
-	gfx_size.h = 200 * c_vid_scale;
+	gfx_size.w = 40 * font_size.w;
+	gfx_size.h = 25 * font_size.h;
 	// **************************
 
 	// create a surface

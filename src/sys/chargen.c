@@ -65,51 +65,76 @@ SIZE update_size= {0,0};
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
+// returns scale of screen necessary
+// returns 0 if crap
+int font_check(SIZE *size)
+{
+	int render_w, render_h;
+	
+	render_w = rstate.drv->w;
+	render_h = rstate.drv->h;
+	
+	// make sure they're multiples of the render w/h
+	if ((size->w * 40) % render_w)
+		return 0;
+	if ((size->h * 21) % render_h)
+		return 0;
+	
+	// make sure the scale is the same vert and hor
+	if ((size->w * 40 / render_w) != (size->h * 21 / render_h) )
+		return 0;
+	
+	return size->w * 40 / render_w;
+}
+
 FILE *font_open(SIZE *needed)
 {
 	u8 *token, *running;
 	u8 *list;
-	FILE *file_font = 0;
-	SIZE file_size = {0,0};
+	SIZE size;
+	
+	FILE *pref_file = 0;
+	int pref_scale = 0;
 
-	FILE *cur_font;
-	SIZE cur_size;
+	FILE *cur_file;
+	int cur_scale;
 
 	list = strdupa(c_vid_fonts_bitmap);
 	token = strtok_r(list, ";", &running);
 	while (token != 0)
 	{
 		//check token
-		cur_font = fopen(token, "rb");
-		if (cur_font != 0)
+		cur_file = fopen(token, "rb");
+		if (cur_file != 0)
 		{
 			// FIXME .. doesn't check size
-			cur_size.w = fgetc(cur_font);
-			cur_size.h = fgetc(cur_font);
+			size.w = fgetc(cur_file);
+			size.h = fgetc(cur_file);
 
 			// if right size ratio
-			if ( ((needed->w % cur_size.w) == 0)
-				&& ((needed->h % cur_size.h) == 0) )
+			cur_scale = font_check(&size);
+			
+			if ( (cur_scale != 0) && (cur_scale > pref_scale)
+				&& (cur_scale <= c_vid_scale) )
 			{
-				if ( (cur_size.w >= file_size.w) &&
-					(cur_size.h >= file_size.h) )
-				{
-					if (file_font != 0)
-						fclose(file_font);
-					file_font = cur_font;
-					file_size.w = cur_size.w;
-					file_size.h = cur_size.h;
-					cur_font = 0;
-				}
+				if (pref_file != 0)
+					fclose(pref_file);
+				pref_file = cur_file;
+				pref_scale = cur_scale;
+				cur_file = 0;
 			}
+			
 			// there's a better font so close this one
-			if (cur_font != 0)
-				fclose(cur_font);
+			if (cur_file != 0)
+				fclose(cur_file);
 		}
 		token = strtok_r(0, ";", &running);
 	}
-
-	return file_font;
+	
+	// FIX ME
+	c_vid_scale = pref_scale;
+	
+	return pref_file;
 }
 
 void font_load(FILE *font_stream)
@@ -378,6 +403,7 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 	
 	if (scroll == 0)	// whoo.. all done :)
 		return;
+	copy_count = (pos2->row - pos1->row - scroll + 1) * font_size.h;
 	
 	if (copy_count <= 0)
 	{
@@ -387,7 +413,7 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 	else
 	{
 		copy_width = (pos2->col - pos1->col + 1) * font_size.w;
-		copy_count = (pos2->row - pos1->row - scroll + 1) * font_size.h;
+		
 		gfx_pos.x = pos1->col * font_size.w;
 		
 		// do SCROLLING MAGIC
