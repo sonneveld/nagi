@@ -1,0 +1,255 @@
+{\rtf1\ansi\deff0\deftab720{\fonttbl{\f0\fswiss MS Sans Serif;}{\f1\froman\fcharset2 Symbol;}{\f2\froman\fprq2 Times New Roman;}{\f3\froman Times New Roman;}{\f4\fswiss arial;}{\f5\froman Times New Roman;}}
+{\colortbl\red0\green0\blue0;}
+\deflang1033\pard\plain\f2\fs28\b TODO
+\par \plain\f2\fs20 
+\par fix windib support
+\par 
+\par don't compare case when comparing game ids
+\par 
+\par patching for bugs as well as copy protection
+\par 
+\par current todo: cga and multiple games
+\par stuff in excel
+\par 
+\par residence 44 sound is slow
+\par 
+\par old graphics code bugs:
+\par xmas
+\par space trek
+\par donald duck and the leaping nephews
+\par 
+\par 
+\par 
+\par bugs from \plain\lang3081\f5\fs20 Ccromer98@aol.com\plain\f2\fs20 
+\par \plain\lang3081\f4\fs20 Donald Ducks Playground has no sound 
+\par Mixed Up Mother Goose crashes 
+\par Space Quest 2 not recognized 
+\par King's Quest 2 not recognized 
+\par Manhunter not recognized 
+\par Demo Pack 5 not recognized 
+\par Gold Rush not recognized 
+\par Donald Ducks Playground not recognized\plain\lang3081\f4\fs24  \plain\lang3081\f5\fs24 
+\par \plain\f2\fs20 
+\par 
+\par savegames with menu data?
+\par 
+\par BUG!!!  look croc =- does not work..  **???
+\par 
+\par replace resources withs omething else (ie, mid for a snd) in the ini file
+\par 
+\par 
+\par 
+\par fix build
+\par 
+\par debug:
+\par show view, objects, pic, inverntory.. anything
+\par \tab memm layout?
+\par profiling
+\par detect memory bugs (discard discards other things)
+\par 
+\par tracing commands
+\par cmd <cmd name>
+\par run
+\par show <view, object>
+\par step
+\par stuff
+\par 
+\par 
+\par rewrite code that uses disassmebled source
+\par 
+\par sdl acknowledge ment
+\par GAME SELECTION CODE AT START OF NAGI!
+\par MOUSE SUPPORT!
+\par FIX WACKY INI FILES - Justin
+\par fix inis to be more inherited.
+\par different adventure types when score increases..(0/100.. novice.. stuff like that)
+\par 
+\par midi sound
+\par thin lines
+\par selecting different wave generators
+\par 
+\par 
+\par 
+\par 
+\par directory formats:
+\par .\tab (work)
+\par ..\tab (work)
+\par ...\tab (work)
+\par a:  \tab  (DOESN'T work)
+\par a:\\\tab (work)
+\par c:\\directory\\something (work)
+\par c:\\directory\\something\\\tab (DOESN'T work)
+\par ' '\tab (weird.. test this??)
+\par \\\tab (works)
+\par \\format\\stuff\tab (works)
+\par \\format\\stuff\\\tab (doesn't)
+\par blah\\blah\tab (works)
+\par blah\\blah\\\tab (DOESN'T)
+\par 
+\par c:coding\tab \tab (these do not work). (shoudl they?)
+\par c:coding\\
+\par a:coding\\blah
+\par a:coding\\blah\\
+\par 
+\par 
+\par 
+\par 
+\par 
+\par if sound disabled in nagi.ini.. should be reflected in status bar.
+\par 
+\par space trek bugs.. need 2.440 stuff
+\par justin's idea: converting sierra saves to nagi saves
+\par \tab opening source
+\par add mouse support for menus 'n stuff
+\par website: where to get agi games
+\par \tab games available
+\par for the standard.ini
+\par 
+\par windows on top of other windows..  fade the text?
+\par command history.. go up with arrow keys or something?
+\par 
+\par read original sierra agi savegames
+\par check keypad for original keyboards
+\par 
+\par menus mouse
+\par games in a excell list
+\par - eval_name offset (not done)
+\par add LOGIC NAME OFFSET!!
+\par varset
+\par if a setting doesn't exist?  check the default v2 or v3 section??
+\par what happens if there's one with no crc's?? does it automatically match it??
+\par 
+\par \plain\f2\fs20\b Bugs\plain\f2\fs20 
+\par ----------------------------------------------------
+\par 
+\par xmas.. a line is missing on the left of characters (sometimes)
+\par this is CONSISTANT behaviour of 2.917 .
+\par will have to check lower versions for difference
+\par 
+\par menus:
+\par at the moment, the uses set.mem.ptr after it sets up the menus
+\par this means that logic.160 is still in memory even AFTER it's been discarded.
+\par the only solution is to duplicate the strings at the moment.
+\par 
+\par investigate restore for mixed up goose (state select not available yet)
+\par 
+\par \plain\f2\fs20\b Different AGI Standards\plain\f2\fs20 
+\par ----------------------------------------------------
+\par \pard\li360\fi-360{\*\pn\pnlvlblt\pnf1\pnindent360{\pntxtb\'b7}}\plain\f2\fs20 {\pntext\f1\'b7\tab}read the default from the ini as well
+\par {\pntext\f1\'b7\tab}add a reason why there's different version support
+\par {\pntext\f1\'b7\tab}add homemade games to list
+\par {\pntext\f1\'b7\tab}all-level inheritance
+\par {\pntext\f1\'b7\tab}object padding
+\par {\pntext\f1\'b7\tab}cursors from amiga games
+\par {\pntext\f1\'b7\tab}add agi.standard to savegame
+\par {\pntext\f1\'b7\tab}mouse input type (buff_bri or controller mode)
+\par {\pntext\f1\'b7\tab}set max num commands
+\par {\pntext\f1\'b7\tab}gr/larry/kq4 cracks
+\par {\pntext\f1\'b7\tab}version control (ie.. kq4 .. uses v3.098)
+\par {\pntext\f1\'b7\tab}compare CRCs
+\par {\pntext\f1\'b7\tab}an ini file with the game that sets the standard
+\par \pard\plain\f2\fs20 
+\par 
+\par \plain\f2\fs20\b Game Select\plain\f2\fs20 
+\par ----------------------------------------------------
+\par \pard\li360\fi-360{\*\pn\pnlvlblt\pnf1\pnindent360{\pntxtb\'b7}}\plain\f2\fs20 {\pntext\f1\'b7\tab}add "read qa file" to game options
+\par {\pntext\f1\'b7\tab}menu to select the game
+\par {\pntext\f1\'b7\tab}new dialogs (progress, selector, message with several options)
+\par \pard\plain\f2\fs20 
+\par \plain\f2\fs20\b General
+\par \plain\f2\fs20 ----------------------------------------------------
+\par \pard\li360\fi-360{\*\pn\pnlvlblt\pnf1\pnindent360{\pntxtb\'b7}}\plain\f2\fs20 {\pntext\f1\'b7\tab}option to encrypt object file in save games
+\par {\pntext\f1\'b7\tab}have a dialogue box instead of at bottom of screen??
+\par {\pntext\f1\'b7\tab}flags with bits instead of bytes
+\par {\pntext\f1\'b7\tab}longer game.id
+\par {\pntext\f1\'b7\tab}transition screens (like amiga)
+\par {\pntext\f1\'b7\tab}scale clock to speed setting(for harder kq3 games)
+\par {\pntext\f1\'b7\tab}if file is missing.. don't keep on going"insert disk".. offer a quit command too
+\par {\pntext\f1\'b7\tab}save  old sdl driver environment variables
+\par {\pntext\f1\'b7\tab}default speed as well?  for apple and kq4 demo
+\par {\pntext\f1\'b7\tab}logging??
+\par {\pntext\f1\'b7\tab}investigate the different window open variables
+\par {\pntext\f1\'b7\tab}REWRITE EVENTS WITH JOYSTICK.. MISSING FUNCT
+\par {\pntext\f1\'b7\tab}size: flags(bit set), pack the structs.. reduce number of strings.. reduce the heap compile with size optimisations
+\par {\pntext\f1\'b7\tab}state select function
+\par {\pntext\f1\'b7\tab}FIX TIME.C  (tickcounter is wrong)
+\par {\pntext\f1\'b7\tab}run amiga/appleii/mac games
+\par {\pntext\f1\'b7\tab}
+\par {\pntext\f1\'b7\tab}the objects file.  some algorithm to see if it's 2.0 or 2.9
+\par {\pntext\f1\'b7\tab}debug (hah)
+\par {\pntext\f1\'b7\tab}various commands (see func.to.do.txt)
+\par {\pntext\f1\'b7\tab}random based on another timer?
+\par {\pntext\f1\'b7\tab}join up a bunch of similar include files
+\par {\pntext\f1\'b7\tab}check ida to make sure all functions from text and sound are called
+\par \pard\plain\f2\fs20 
+\par [09:43] <IRememberLarry> you could do one little thing.
+\par [09:44] <JayFive> have an option where the ego looks like larry all the time?
+\par [09:44] <JayFive> no matter what game yer playing?
+\par [09:45] <IRememberLarry> but i thought more along the lines of...
+\par [09:45] <IRememberLarry> rename it the "Larry Rulez AGI Interpreter"
+\par 
+\par \plain\f2\fs20\b Sound
+\par \plain\f2\fs20 ----------------------------------------------------
+\par \pard\li360\fi-360{\*\pn\pnlvlblt\pnf1\pnindent360{\pntxtb\'b7}}\plain\f2\fs20 {\pntext\f1\'b7\tab}REWRITE SOUND
+\par {\pntext\f1\'b7\tab}volume
+\par {\pntext\f1\'b7\tab}clipping noise
+\par {\pntext\f1\'b7\tab}pause music when losing focus
+\par {\pntext\f1\'b7\tab}noise
+\par \pard\plain\f2\fs20 
+\par \plain\f2\fs20\b View
+\par \plain\f2\fs20 ----------------------------------------------------
+\par 
+\par 
+\par \plain\f2\fs20\b UI\plain\f2\fs20 
+\par ---------------------------------------------------
+\par \pard\li360\fi-360{\*\pn\pnlvlblt\pnf1\pnindent360{\pntxtb\'b7}}\plain\f2\fs20 {\pntext\f1\'b7\tab}fix up sensitivity??
+\par {\pntext\f1\'b7\tab}test!
+\par \pard\plain\f2\fs20 
+\par \plain\f2\fs20\b Done
+\par \plain\f2\fs20 ----------------------------------------------------
+\par \pard\li360\fi-360{\*\pn\pnlvlblt\pnf1\pnindent360{\pntxtb\'b7}}\plain\f2\fs20 {\pntext\f1\'b7\tab}blit mirror is complete
+\par {\pntext\f1\'b7\tab}mysterious sticky line is fixed
+\par {\pntext\f1\'b7\tab}why does the view disappear below a certain point? fixed
+\par {\pntext\f1\'b7\tab}alternative walk mode .. done
+\par {\pntext\f1\'b7\tab}invert characters
+\par {\pntext\f1\'b7\tab}sprintf <-- use the libraries unless it uses some exotic thingy
+\par {\pntext\f1\'b7\tab}word loader <-- done
+\par {\pntext\f1\'b7\tab}error <-- done pretty much.. just need to clear the memory
+\par {\pntext\f1\'b7\tab}new room << ---- done.. 
+\par {\pntext\f1\'b7\tab}TIMER for SECONDS!!
+\par {\pntext\f1\'b7\tab}get key cmd
+\par {\pntext\f1\'b7\tab}malloc and free.. check them <-- all lists are properly free'd
+\par {\pntext\f1\'b7\tab}view:
+\par {\pntext\f1\'b7\tab}update_graph (objects more like) FIX
+\par {\pntext\f1\'b7\tab}views.s.. ugh
+\par {\pntext\f1\'b7\tab}test all viewcommands!
+\par {\pntext\f1\'b7\tab}agi error
+\par {\pntext\f1\'b7\tab}kb_watch
+\par {\pntext\f1\'b7\tab}sound
+\par {\pntext\f1\'b7\tab}get string
+\par {\pntext\f1\'b7\tab}control key map
+\par {\pntext\f1\'b7\tab}//res
+\par {\pntext\f1\'b7\tab}save/restore  < -DOOOONNEEEEE.. just need to be able to select games
+\par {\pntext\f1\'b7\tab}view obj
+\par {\pntext\f1\'b7\tab}compate strings
+\par {\pntext\f1\'b7\tab}follow ego
+\par {\pntext\f1\'b7\tab}standard.ini default for v2 v3
+\par {\pntext\f1\'b7\tab}need version.major
+\par {\pntext\f1\'b7\tab}version.minor
+\par {\pntext\f1\'b7\tab}force
+\par {\pntext\f1\'b7\tab}tracing
+\par {\pntext\f1\'b7\tab}scrolling
+\par {\pntext\f1\'b7\tab}v3 support
+\par {\pntext\f1\'b7\tab}MOUSE.. CAN'T GO LEFT!!
+\par {\pntext\f1\'b7\tab}replace view flags with constanst
+\par {\pntext\f1\'b7\tab}check bounds for mouse
+\par {\pntext\f1\'b7\tab}in savegames:
+\par {\pntext\f1\'b7\tab}need to be able to put in "A:\\" and stuff like that
+\par {\pntext\f1\'b7\tab}variable length filename/directory paths
+\par {\pntext\f1\'b7\tab}edit messagebox to fix long path bug
+\par {\pntext\f1\'b7\tab}edit string_Edit to enable longer strings
+\par {\pntext\f1\'b7\tab}edit getcwd to use variable strings
+\par \pard\plain\f2\fs20 sqtlc: ship goes OVER planet
+\par prints menu in intro??
+\par }
+ 
