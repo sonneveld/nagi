@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include <math.h>
+
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 #include "sound_base.h"
@@ -22,6 +22,8 @@
 #include "../list.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
+
+#define USE_SAMPLE 0
 
 /* Formulas for noise generator */
 /* bit0 = output */
@@ -40,17 +42,24 @@
 /* noise generator start preset (for periodic noise) */
 #define NG_PRESET 0x0f35
 
-
-#define M_PI 3.14159265358979323846264338327
-// 
 #define WAVE_HEIGHT  (0x7FFF)
 
+#if USE_SAMPLE
+
+#include <math.h>
+
+#define M_PI 3.14159265358979323846264338327
 struct sample_struct
 {
 	s16 *data;
 	int samples;
 	int freq;
 };typedef struct sample_struct SAMPLE;
+	
+int sample_fill(TONECHAN *t, s16 *buf, int len);
+void sample_free(SAMPLE *sample);
+SAMPLE *sample_sine_new(int freq, int samp_rate);
+#endif
 
 s16 vol_table[16];
 
@@ -71,6 +80,7 @@ struct tone_chan_struct
 	
 	union
 	{
+		#if USE_SAMPLE
 		struct 
 		{
 			int count;	// for scaling
@@ -78,6 +88,7 @@ struct tone_chan_struct
 			SAMPLE *samp;
 			u16 *samp_cur; // current sample point
 		} s;
+		#endif
 		
 		struct
 		{
@@ -93,20 +104,19 @@ struct tone_chan_struct
 typedef struct tone_chan_struct TONECHAN;
 
 int tone_pcm_callback(void *tpcm, u8 *stream, int len);
-void sample_free(SAMPLE *sample);
-SAMPLE *sample_sine_new(int freq, int samp_rate);
-
 int noise_fill(TONECHAN *t, s16 *buf, int len);
 int square_fill(TONECHAN *t, s16 *buf, int len);
-int sample_fill(TONECHAN *t, s16 *buf, int len);
+
 void vol_table_init(void);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
+#if USE_SAMPLE
 SAMPLE *sample_sine = 0;
 SAMPLE *sample_triangle = 0;
 SAMPLE *sample_square = 0;
 SAMPLE *sample_noise = 0;
+#endif
 
 LIST *list_ch =0;
 
@@ -119,7 +129,7 @@ void vol_table_init()
 
 	value = 0x7FFF;
 	
-	for (i=0; i<=16; i++)
+	for (i=0; i<0xF; i++)
 	{
 		vol_table[i] = (s16)value;
 		// 2dB = 20*log(a/b)
@@ -171,44 +181,54 @@ void tone_pcm_shutdown(void)
 		list_free(list_ch);
 	list_ch = 0;
 	
+#if USE_SAMPLE
 	// close all samples
 	if (sample_sine)
 	{
 		sample_free(sample_sine);
 		sample_sine = 0;
 	}
+#endif	
 	
 	// shutdown pcm out
 	pcm_out_shutdown();
 }
 
 // open
-int tone_pcm_open(int ch)
+// return 0 on error
+int tone_pcm_open(int agi_ch)
 {
+	TONECHAN ch;
 	TONECHAN *new_ch;
 	
 	if (list_ch==NULL)
 		list_ch = list_new(sizeof(TONECHAN));
 	
-	new_ch = list_add(list_ch);
-	new_ch->atten = 0xF;	// silence
-	new_ch->agi_ch = ch;
+	ch.atten = 0xF;	// silence
+	ch.agi_ch = agi_ch;
+	ch.freq_count = 250;
+	ch.freq_count_prev = -1;
+	ch.gen_type = GEN_TONE;
+	ch.gen_type_prev = -1;
+	ch.note_count = 0;
+	ch.avail = 1;
 	
-	new_ch->freq_count = 1000;
-	new_ch->freq_count_prev = -1;
-	new_ch->gen_type = GEN_TONE;
-	new_ch->gen_type_prev = -1;
-	
-	new_ch->note_count = 0;
-	
-	new_ch->avail = 1;
-	
+#if USE_SAMPLE
 	// init a sample for that specific type if it doesn't exist.
-
 	if (sample_sine==NULL)
 		sample_sine = sample_sine_new(50, 44100);
+#endif
+	
+	new_ch = list_add(list_ch);
+	memcpy(new_ch, &ch, sizeof(TONECHAN) );
 	
 	new_ch->handle = pcm_out_open(tone_pcm_callback, (void *)new_ch);
+	
+	if (new_ch->handle == 0)
+	{
+		list_remove(list_ch, new_ch);
+		return 0;
+	}
 	
 	return new_ch->handle;
 }
@@ -253,7 +273,8 @@ void tone_pcm_unlock(void)
 {
 	pcm_out_unlock();
 }
-int sample_fill(TONECHAN *t, s16 *buf, int len);
+
+
 #define FREQ_DIV 111844
 #define MULT FREQ_DIV
 
@@ -336,54 +357,6 @@ int tone_pcm_callback(void *userdata, u8 *stream, int len)
 
 
 
-int sample_fill(TONECHAN *t, s16 *buf, int len)
-{
-	s16 *samp_cur;
-	int count;
-	
-	if (t->gen_type != t->gen_type_prev)
-	{
-		// set the samples
-		t->s.samp = sample_sine;
-		t->s.samp_cur = sample_sine->data;
-		t->freq_count_prev = -1;
-		t->gen_type_prev = t->gen_type;
-	}
-	
-	if (t->freq_count != t->freq_count_prev)
-	{
-		//t->scale = (int)( (double)t->samp->freq*t->freq_count/FREQ_DIV * MULT + 0.5);
-		t->s.scale = t->s.samp->freq * t->freq_count;
-		t->s.count = t->s.scale;
-		t->freq_count_prev = t->freq_count;	
-	}
-
-	samp_cur = t->s.samp_cur;
-	count = len;
-	
-	while (count > 0)
-	{		
-		*(buf++) = *samp_cur;
-		count--;
-		
-		// get next sample
-		t->s.count -= MULT;
-		while (t->s.count <= 0)
-		{
-			samp_cur++;
-			t->s.count += t->s.scale;
-		}
-		// check sample bounds
-		while ((samp_cur - t->s.samp->data) >= t->s.samp->samples )
-			samp_cur -= t->s.samp->samples;
-	}
-	
-	t->s.samp_cur = samp_cur;
-	return len;
-}
-
-
-
 int square_fill(TONECHAN *t, s16 *buf, int len)
 {
 	int count;
@@ -430,7 +403,6 @@ int noise_fill(TONECHAN *t, s16 *buf, int len)
 	{
 		// make sure the freq_count is checked
 		t->freq_count_prev = -1;
-		//t->n.sign = 1;
 		t->gen_type_prev = t->gen_type;
 	}
 	
@@ -471,12 +443,56 @@ int noise_fill(TONECHAN *t, s16 *buf, int len)
 
 // ------------------------------------------------------------------------------------------
 
+#if USE_SAMPLE
 
 // in resampling.. if we have to skip through the wave file several times to get to the sample.. don't bother,
 // mod it a few times to scale it down.
 
+int sample_fill(TONECHAN *t, s16 *buf, int len)
+{
+	s16 *samp_cur;
+	int count;
+	
+	if (t->gen_type != t->gen_type_prev)
+	{
+		// set the samples
+		t->s.samp = sample_sine;
+		t->s.samp_cur = sample_sine->data;
+		t->freq_count_prev = -1;
+		t->gen_type_prev = t->gen_type;
+	}
+	
+	if (t->freq_count != t->freq_count_prev)
+	{
+		//t->scale = (int)( (double)t->samp->freq*t->freq_count/FREQ_DIV * MULT + 0.5);
+		t->s.scale = t->s.samp->freq * t->freq_count;
+		t->s.count = t->s.scale;
+		t->freq_count_prev = t->freq_count;	
+	}
 
-
+	samp_cur = t->s.samp_cur;
+	count = len;
+	
+	while (count > 0)
+	{		
+		*(buf++) = *samp_cur;
+		count--;
+		
+		// get next sample
+		t->s.count -= MULT;
+		while (t->s.count <= 0)
+		{
+			samp_cur++;
+			t->s.count += t->s.scale;
+		}
+		// check sample bounds
+		while ((samp_cur - t->s.samp->data) >= t->s.samp->samples )
+			samp_cur -= t->s.samp->samples;
+	}
+	
+	t->s.samp_cur = samp_cur;
+	return len;
+}
 
 // samp rate/.. samples per second
 SAMPLE *sample_sine_new(int freq, int samp_rate)
@@ -500,8 +516,7 @@ SAMPLE *sample_sine_new(int freq, int samp_rate)
 	s->data = wave;
 	s->samples = wave_len;
 	
-	return s;
-	
+	return s;	
 }
 
 void sample_free(SAMPLE *sample)
@@ -512,3 +527,5 @@ void sample_free(SAMPLE *sample)
 	a_free(sample->data);
 	a_free(sample);
 }
+
+#endif

@@ -28,10 +28,8 @@ void delay_init()
 
 void do_delay()
 {
-	SDL_PumpEvents();
+	SDL_PumpEvents();	// we have to poll at least once
 	input_poll();
-	
-	
 	SDL_Delay(1);	// so fastest speed doesn't run too fast
 	
 	while ( ( (state.var[V10_DELAY] * DELAY_MULT) > (SDL_GetTicks() - tick_prev) )
@@ -39,7 +37,7 @@ void do_delay()
 	{
 		SDL_PumpEvents();
 		input_poll();
-		sndgen_poll();
+		//sndgen_poll();
 		SDL_Delay(5);	// to prevent it taking 100% cpu
 	}
 

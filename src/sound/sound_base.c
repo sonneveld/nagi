@@ -32,14 +32,7 @@ _SoundStop                       cseg     0000516C 00000023
 #include <setjmp.h>
 #include "../sys/error.h"
 
-
-
-
-int sound_state = 0;
-
-
-
-u16 sound_playing = 0;
+volatile int sound_state = 0;  // 0=silence  1=playing
 u16 sound_flag = 0;		// the flag to set when the sound is finished
 
 LIST *sound_list = 0;
@@ -131,12 +124,8 @@ u8 *cmd_stop_sound(u8 *c)
 
 void sound_stop(void)
 {
-	if (sound_state != SS_CLOSED)
+	if (sound_state)
 	{
-		sound_state = SS_CLOSED;
-		flag_set(sound_flag);
 		sndgen_stop();
 	}
 }
-
-

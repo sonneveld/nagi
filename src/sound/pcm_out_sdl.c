@@ -41,7 +41,9 @@ struct sdl_channel_struct
 typedef struct sdl_channel_struct SDL_CHAN;
 
 /* VARIABLES	---	---	---	---	---	---	--- */
-int handle_next = 1;
+
+u8 handles_used = 0;
+
 LIST *chan_list = 0;
 
 
@@ -174,6 +176,39 @@ void pcm_out_sdl_avail(void)
 	// return 16bit, 8bit, 22khz, 41khz
 }
 
+// uses a char to store 8 bits.  each bit represents a used handle
+// easier to determine which handles are free.
+
+int handle_new(void)
+{
+	int handle = 1;
+	u8 mask = 0x80;
+	
+	while ( (mask) && (handles_used&mask) )
+	{
+		mask >>= 1;
+		handle++;
+	}
+	
+	// if mask == 0 then handles_uses is untouched.
+	handles_used |= mask;
+	
+	return (mask) ? handle : 0;
+}
+
+void handle_free(int handle)
+{
+	u8 mask = 0x80;
+	
+	assert(handle > 0);
+	assert(handle <= 8);
+    
+	mask >>= handle - 1;
+	mask ^= 0xFF;
+	
+	handles_used &= mask;
+}
+
 // returns 0 if failed
 // else returns handle
 int pcm_out_sdl_open( int (*callback)(void *userdata, Uint8 *stream, int len), void *userdata)
@@ -186,13 +221,15 @@ int pcm_out_sdl_open( int (*callback)(void *userdata, Uint8 *stream, int len), v
 	if (chan_list == 0)
 		chan_list = list_new(sizeof(SDL_CHAN));
 
-	chan.handle = handle_next++;
+	chan.handle = handle_new();
+	if (chan.handle == 0)
+		return 0;
+
 	chan.callback = callback;
 	chan.userdata = userdata;
 	chan.avail = 1;
 	
 	chan_new = list_add(chan_list);
-	
 	memcpy(chan_new, &chan, sizeof(SDL_CHAN) );
 	
 	pcm_out_sdl_unlock();
@@ -204,8 +241,6 @@ void pcm_out_sdl_close(int handle)
 	SDL_CHAN *ch;
 	(void) handle;
 	
-	pcm_out_sdl_lock();
-	
 	if (chan_list)
 	{
 		// find the one with a handle
@@ -215,10 +250,11 @@ void pcm_out_sdl_close(int handle)
 		
 		// kill it
 		if (ch)
+		{
+			handle_free(ch->handle);
 			list_remove(chan_list, ch);
+		}
 	}
-
-	pcm_out_sdl_unlock();
 }
 
 // 1 = playing
@@ -265,13 +301,13 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 	
 	assert(stream);
 	
-	if (chan_list != 0)
+	if (chan_list != NULL)
 	{
 		num_chan = list_length(chan_list);
 		ch = list_element_head(chan_list);
 		
 		stream_len = len / (int)sizeof(s16);
-		while (ch)
+		while (ch != NULL)
 		{
 			// get channel data(chan.userdata)
 			if (ch->avail)
@@ -306,8 +342,7 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 	
 	if (!output)
 	{
-		printf("feh!!!");
-		sndgen_stop();
+		sndgen_kill_thread();
 		// call shutdown routin
 	}
 	

@@ -13,9 +13,7 @@ struct sound_struct
 typedef struct sound_struct SOUND;
 
 /* VARIABLES	---	---	---	---	---	---	--- */
-#define SS_CLOSED 0
-#define SS_OPEN_PLAYING 1
-#define SS_OPEN_STOPPED 2
+
 extern int sound_state;
 extern u16 sound_flag;
 
