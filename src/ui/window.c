@@ -15,13 +15,13 @@ _Char0x80Read                    cseg     00002C55 00000025
 #include "../agi.h"
 
 // getpos, setpos, scroll, clear and putchar
-#include "../sys/video_text.h"
-#include "../sys/video.h"
 
 // state.text_bg, text_comb 
 #include "../ui/agi_text.h"
 
 #include "../ui/window.h"
+
+#include "../sys/chargen.h"
 
 u8 window_col = 0;	// set by messagebox so it wrap inside the window
 u8 window_row = 0;
@@ -43,7 +43,7 @@ void window_put_char(u16 given_char)
 	u8 bl;
 	u8 conversion = 0;
 
-	t_pos_get(&char_pos);
+	ch_pos_get(&char_pos);
 	
 	if (given_char == 0x08)	// backspace
 	{
@@ -55,22 +55,22 @@ void window_put_char(u16 given_char)
 			char_pos.row--;
 		}
 
-		t_clear(&char_pos, &char_pos, state.text_bg);	// one square
-		t_pos_set(&char_pos);
+		ch_clear(&char_pos, &char_pos, state.text_bg);	// one square
+		ch_pos_set(&char_pos);
 	}
 	else if (  (given_char == 0x0D) || (given_char == 0x0A)  )	// return/ linefeed ??
 	{
 		if (char_pos.row < 24)
 			char_pos.row++;
 		char_pos.col = window_col;
-		t_pos_set(&char_pos);
+		ch_pos_set(&char_pos);
 	}
 	else
 	{
 		// normal character
 		bl = state.text_comb;
 		
-		if (vstate.text_mode == 0)	// if not graphical
+		if (chgen_textmode == 0)	// if not graphical
 		{
 			if ((state.text_comb & 0x80) != 0)	// invert character
 				conversion = conversion | TEXT_INVERT;
@@ -92,12 +92,12 @@ void window_put_char(u16 given_char)
 		 2-0	foreground color (see #00015)
 		*/
 
-		t_char_attrib(state.text_comb, conversion);
-		t_char_put(given_char);
+		ch_attrib(state.text_comb, conversion);
+		ch_put(given_char);
 	
 		char_pos.col++;
 		if (char_pos.col <= 39)
-			t_pos_set(&char_pos);
+			ch_pos_set(&char_pos);
 		else
 			window_put_char(0xD);	// carriage return
 	
@@ -111,7 +111,7 @@ void window_put_char(u16 given_char)
 void goto_row_col(u16 row, u16 col)
 {
 	POS da_pos = {row, col};
-	t_pos_set(&da_pos);
+	ch_pos_set(&da_pos);
 }
 
 
@@ -119,7 +119,7 @@ void push_row_col()
 {
 	if ( pos_count < PA_MAX )
 	{
-		t_pos_get(&pos_array[pos_count]);
+		ch_pos_get(&pos_array[pos_count]);
 		pos_count++;
 	}
 }
@@ -129,7 +129,7 @@ void pop_row_col()
 	if ( pos_count > 0 )
 	{
 		pos_count--;
-		t_pos_set(&pos_array[pos_count]);
+		ch_pos_set(&pos_array[pos_count]);
 	}
 }
 
@@ -151,9 +151,9 @@ void window_clear(u16 upper_row, u16 upper_col, u16 lower_row, u16 lower_col, u1
 	POS pos1 = {upper_row, upper_col};
 	POS pos2 = {lower_row, lower_col};
 	
-	t_pos_get(&old_pos);
-	t_clear(&pos1, &pos2, attrib);
-	t_pos_set(&old_pos);
+	ch_pos_get(&old_pos);
+	ch_clear(&pos1, &pos2, attrib);
+	ch_pos_set(&old_pos);
 }
 
 // scroll up one 
@@ -162,9 +162,9 @@ void window_scroll(u16 upper_row, u16 upper_col, u16 lower_row, u16 lower_col, u
 {
 	POS pos1 = {upper_row, upper_col};
 	POS pos2 = {lower_row, lower_col};
-	t_scroll(&pos1, &pos2, 1, attrib);
+	ch_scroll(&pos1, &pos2, 1, attrib);
 	pos1.row = lower_row;
-	t_pos_set(&pos1);
+	ch_pos_set(&pos1);
 }
 
 /*
