@@ -56,6 +56,8 @@ _RoomInit                        cseg     000012DE 00000015
 #include "base.h"
 #include "sys/mem_wrap.h"
 
+#include "log.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 // reads ini file and inits nagi
 void nagi_init(void);
@@ -263,6 +265,8 @@ void agi_shutdown(void)
 	
 	// mouse shutdown
 	mouse_shutdown();
+	
+	log_close();
 }
 
 void nagi_shutdown(void)

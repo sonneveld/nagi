@@ -32,6 +32,7 @@ _FileLoad                        cseg     00003113 000000C5
 
 #include "../sys/sys_dir.h"
 
+#include "../log.h"
 
 
 u16 volume_error = 0;
@@ -324,8 +325,8 @@ void volumes_close()
 			vol_handle_table[i] = 0;
 		}
 	}
-	#warning LOGGING IS NOT COMPLETE YET
-	//log_file_close();
+	
+	log_close();
 }
 
 u8 *file_load(u8 *name, u8 *buff)

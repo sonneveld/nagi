@@ -2,7 +2,7 @@
 SRC := base.c debug.c decrypt.c flags.c nagi_main.c\
 initialise.c agi_string.c new_room.c objects.c state_io.c agi.c\
 state_info.c obj_show.c  game_id.c cmd_misc.c\
-trace.c config.c list.c
+trace.c config.c list.c log.c
 
 # version
 SRC +=  version/agi_crc.c \

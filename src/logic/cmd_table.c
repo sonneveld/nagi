@@ -73,6 +73,9 @@
 // tracing!
 #include "../trace.h"
 
+// logs!!!?!?!!!
+#include "../log.h"
+
 u8 cmd_ret_false()
 {
 	return 0;
@@ -293,7 +296,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.version", cmd_version, 0, 0},
 			{"cmd.script.size", cmd_script_size, 1, 0},
 			{"cmd.set.game.id", cmd_set_game_id, 1, 0},
-			{"cmd.log (incomplete)", cmd_do_nothing, 1, 0},
+			{"cmd.log", cmd_log, 1, 0},
 			{"cmd.set.scan.start", cmd_set_scan_start, 0, 0},
 			{"cmd.reset.scan.start", cmd_reset_scan_start, 0, 0},
 			
