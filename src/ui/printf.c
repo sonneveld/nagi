@@ -11,6 +11,7 @@ _FormatChar                      cseg     0000245E 00000014
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "../agi.h"
 
@@ -35,6 +36,25 @@ u8 format_to_string = 0;	// boolean value
 
 u8 *di;	// sprintf string
 
+int charCount(char *str)
+{
+  int count;
+
+  assert(str);
+
+  count = 0;
+  str = strchr(str, '%');
+
+  while (str != 0)
+    {
+      count++;
+      str++;
+      str = strchr(str, '%');
+    }
+
+  return count;
+}
+
 void agi_printf(u8 *var8, ...)
 {
 	va_list ap;
@@ -50,22 +70,23 @@ void agi_printf(u8 *var8, ...)
 	//bx = bp + 0xA;
 
 	al = *(si++);
-	
+
 	while (al != 0)
 	{
 		if ( al != '%')
 			format_char(al);
 		else
 		{
+    
 			switch (*(si++))
 			{
 				case 's':		// string
-					format_string_ax(va_arg (ap, u8 *));
+					format_string_ax(va_arg(ap, u8 *));
 					//bx += 2;
 					break;
 				
 				case 'd':		// decimal
-					bx = va_arg (ap, s16);
+					bx = (s16)va_arg(ap, int);
 					if (bx < 0)
 					{
 						format_char('-');
@@ -77,19 +98,19 @@ void agi_printf(u8 *var8, ...)
 					break;
 				
 				case 'u':		// unsigned decimal
-					format_string_ax(  int_to_string(va_arg (ap, u16))  );
+					format_string_ax(  int_to_string( (u16)va_arg(ap, int))  );
 					//bx += 2;
 					break;
 				
 				case 'x':		// hex number
-					format_string_ax(  int_to_hex_string(va_arg (ap, u16))  );
+					format_string_ax(  int_to_hex_string( (u16)va_arg (ap, int))  );
 					//bx += 2;
 					break;
 				
 				case 'c':		// character
 					//al = *bx;
 					//bx += 2;	// everything is pushed on as a word
-					format_char(va_arg (ap, u8));
+					format_char((u8)va_arg(ap, int));
 					break;
 				
 				default:		// not recognised
