@@ -82,14 +82,20 @@ int file_crc_gen(u8 *file_name, u32 *crc32)
 	u8 *buf;
 	
 	buf = file_to_buf(file_name);
+	
 	if (buf == 0)
+	{
+		*crc32 = 0;
 		return 1;
-	
-	// generate crc	
-	*crc32 = crc_generate(buf, file_buf_size);
-	
-	a_free(buf);
-	return 0;
+	}
+	else
+	{
+		// generate crc	
+		*crc32 = crc_generate(buf, file_buf_size);
+		
+		a_free(buf);
+		return 0;
+	}
 }
 
 
@@ -209,6 +215,56 @@ int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 }
 
 
+void crc_print(AGICRC *agicrc, GAMEINFO *info)
+{
+	u8 key_vol[20];	// twice as much needed
+	int i;
+	
+	// print object
+	if (agicrc->object)
+		printf("%s=0x%08X\n", "crc_object", agicrc->object);
+	
+	// print words
+	if (agicrc->words)
+		printf("%s=0x%08X\n", "crc_words", agicrc->words);
+	
+	// print vol[0] - vol[15]
+	for (i=0; i<16; i++)
+	{
+		sprintf(key_vol, "crc_vol_%d", i);
+		if (agicrc->vol[i])
+			printf("%s=0x%08X\n", key_vol, agicrc->vol[i]);
+	}
+	
+	switch (info->dir_type)
+	{
+		case DIR_COMB:
+		case DIR_AMIGA:
+			// print dir_comb
+			if (agicrc->dir_comb)
+				printf("%s=0x%08X\n", "crc_dir", agicrc->dir_comb);
+			break;
+		
+		default:
+		case DIR_SEP:
+			// print dir.log
+			if (agicrc->dir.log)
+				printf("%s=0x%08X\n", "crc_dir_log", agicrc->dir.log);
+			// print dir.pic
+			if (agicrc->dir.pic)
+				printf("%s=0x%08X\n", "crc_dir_pic", agicrc->dir.pic);
+			// print dir.view
+			if (agicrc->dir.view)
+				printf("%s=0x%08X\n", "crc_dir_view", agicrc->dir.view);
+			// print dir.snd
+			if (agicrc->dir.snd)
+				printf("%s=0x%08X\n", "crc_dir_snd", agicrc->dir.snd);
+			break;
+	}
+	return 0;
+}
+
+
 #define CRC_FUDGE(x, y, z) key=ini_key(ini, (x) ); key_touched |= (int)key; \
 					if ( (key!= 0) \
 					&& (agicrc->y != strtoul(key, 0, 16)) ) \
@@ -264,6 +320,7 @@ int crc_compare(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 		return 24;
 	return 0;
 }
+
 
 #undef CRC_FUDGE
 
@@ -340,6 +397,9 @@ GAMEINFO *gameinfo_new(u8 *dir, INI *ini)
 	
 	if (dir_get_info(&agicrc, &info_new) != 0)
 		return 0;	// fail
+	
+	if (c_nagi_crc_print)
+		crc_print(&agicrc, &info_new);
 	
 	if (ini != 0)
 		info_new.standard = crc_search(&agicrc, &info_new, ini);
