@@ -100,7 +100,7 @@ void dir_init(u8 *argv0)
 		// set preset
 		dir_preset_set(DIR_PRESET_NAGI, path_cpy);
 		
-		dir_preset_set(DIR_PRESET_NAGI, ".");
+		//dir_preset_set(DIR_PRESET_NAGI, ".");
 
 		printf("%s\n", path_cpy);
 	}
