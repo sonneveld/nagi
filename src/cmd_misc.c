@@ -14,20 +14,16 @@ CmdVersion                       cseg     00007670 00000016
 
 u8 *cmd_version(u8 *c)
 {
-	//message_box("New Adventure Game Interpreter (NAGI)\n        By Nick Sonneveld");
-	//message_box("Adventure Game Interpreter\n      Version 3.002.149");
-	message_box("      NAGI\nBy Nick Sonneveld");
-	//message_box("feh");
+	message_box("            NAGI\n" "     By Nick Sonneveld\n\n"
+		"A complete reimplementation of Sierra's AGI interpreter made "
+		"popular by games like Space Quest and Leisure Suit Larry.");	
+	message_box("Want to make your own AGI based game?\n\n" "Visit:\n"
+		"http://agidev.com/\n" "http://mega-tokyo.com/forum/\n");
 	
-	// nagi
-	// by nick sonneveld
-	// emulating version type..
-	
+#warning TODO: add interpreter version type.
 	
 	return c;
-	
 }
-
 
 u8 *cmd_shake_screen(u8 *c)
 {
