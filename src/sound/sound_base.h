@@ -14,7 +14,7 @@ typedef struct sound_struct SOUND;
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
-extern int sound_state;
+extern volatile int sound_state;
 extern u16 sound_flag;
 
 /* FUNCTIONS	---	---	---	---	---	---	--- */

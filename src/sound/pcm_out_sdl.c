@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #define WRITE_TO_DISK 0
 

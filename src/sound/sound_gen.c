@@ -331,4 +331,7 @@ int sndgen_callback(int ch, TONE *tone)
 		return -1;
 	}
 	
-	return 0;}
+	return 0;
+}
+	
+
