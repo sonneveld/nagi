@@ -707,6 +707,18 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 
 // ---------------------------------------- MAIN ----------------------------------------
 
+
+int gameinfo_compare(void *a, void *b)
+{
+	NODE **node_a;
+	NODE **node_b;
+	
+	node_a = (NODE **)a;
+	node_b = (NODE **)b;
+	
+	return strcasecmp( GI((*node_a))->name, GI((*node_b))->name);
+}
+
 // destory list
 void gi_list_free(LIST *list)
 {
@@ -722,6 +734,35 @@ void gi_list_free(LIST *list)
 	}
 }
 
+void text_init()
+{
+	state.window_row_min = 2;
+	state.window_row_max = 23;
+	state.status_line_row = 0;
+	
+	push_row_col();
+	text_attrib_push();
+
+	window_line_clear(0, 0xFF);
+	text_colour(0, 0x0F);
+	goto_row_col(0, 5);
+	agi_printf("New Adventure Game Interpreter");
+ 
+	text_attrib_pop();
+	pop_row_col();
+}
+
+void text_shutdown()
+{
+	// clear window
+	gfx_clear();
+	
+	state.window_row_min = 0;
+	state.window_row_max = 0;
+	state.status_line_row = 0x15;
+}
+
+
 void standard_select_ng(void)
 {
 	INI *ini_standard;
@@ -730,6 +771,7 @@ void standard_select_ng(void)
 	
 	dir_preset_change(DIR_PRESET_NAGI);
 	ini_standard = ini_open("standard.ini");
+	text_init();
 
 	// read in standard parameters
 	config_load(config_standard, ini_standard);
@@ -747,8 +789,9 @@ void standard_select_ng(void)
 	}
 	
 	// SORT THE LIST
-	// list_sort(list, gameinfo_compare);
+	list_sort(list_game, gameinfo_compare);
 	
+	// MENU
 	game_selected = gi_list_menu(list_game);
 	if (game_selected == 0)
 	{
@@ -765,6 +808,8 @@ void standard_select_ng(void)
 
 	gi_list_free(list_game);	// free up any alloc'd data
 	list_free(list_game);
+	
+	text_shutdown();
 }
 
 // TODO
