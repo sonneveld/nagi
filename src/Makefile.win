@@ -7,25 +7,26 @@ CFLAGS += -Wpointer-arith -Wcast-qual
 CFLAGS += -DNAGI_SDLENV
 
 MACH_WIN = -mwindows
-MACH_CONSOLE = -mwindows -mconsole
 LIB = -lmingw32 -lSDLmain -lSDL
 
-all: nagi nagi-console
+#NAGI_NORM = ../bin/n.exe
+NAGI_NORM = n.exe
 
-nagi: ../bin/n.exe
 
-nagi-console: ../bin/n-console.exe
 
-../bin/n.exe: $(OBJ)
+all: nagi 
+
+nagi: $(NAGI_NORM)
+
+
+
+$(NAGI_NORM): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIB) $(MACH_WIN) -o $@
-
-../bin/n-console.exe: $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIB) $(MACH_WIN) $(MACH_CONSOLE) -o $@
 
 cleanall: clean depclean
 
 clean:
-	$(RM) $(OBJ) ../bin/n.exe core ../bin/n-console.exe
+	$(RM) $(OBJ) $(NAGI_NORM) core 
 
 depclean:
 	$(RM) $(OBJ:.o=.d)
