@@ -36,7 +36,7 @@ int list_box (u8 **list, int size, int init);
 
 
 // i would like to apologise for this crappy crappy code.. but at least it checks for buffer overflows
-void list_print(u8 **list, TPOS *pos, SIZE *size, int up, int down)
+void list_print(u8 **list, TPOS *pos, SIZE *size, int status, int up, int down)
 {
 	int i;
 	
@@ -59,17 +59,20 @@ void list_print(u8 **list, TPOS *pos, SIZE *size, int up, int down)
 		}
 	}
 	
-	goto_row_col(pos->row, pos->col+size->w+1);
-	if (up)
-		agi_printf("U");
-	else
-		agi_printf(" ");
-	
-	goto_row_col(pos->row+size->h-1, pos->col+size->w+1);
-	if (down)
-		agi_printf("D");
-	else
-		agi_printf(" ");
+	if (status)
+	{
+		goto_row_col(pos->row, pos->col+size->w+1);
+		if (up)
+			agi_printf("U");
+		else
+			agi_printf(" ");
+		
+		goto_row_col(pos->row+size->h-1, pos->col+size->w+1);
+		if (down)
+			agi_printf("D");
+		else
+			agi_printf(" ");
+	}
 }
 
 void list_box_draw_arrow(u16 var8)
@@ -121,9 +124,16 @@ int list_box(u8 **list, int size, int init)
 	
 	// get size of remaining msgbox
 	list_size.h = msgstate.tpos_edge.row - msgstate.tpos.row - msgstate.printed_height;
+
 	list_size.w = msgstate.tsize.w;
 	if (size > list_size.h)
+	{
 		list_size.w -= 2;
+
+	}
+	if (size < list_size.h)
+		list_size.h = size;
+
 	list_pos.row = msgstate.tpos.row + msgstate.printed_height + 1;
 	list_pos.col = msgstate.tpos.col;
 	
@@ -140,7 +150,7 @@ int list_box(u8 **list, int size, int init)
 	
 	
 	list_print(list+1+item_top, &list_pos, &list_size, 
-			(item_top > 0), ((item_top + list_size.h) < size));
+			(size>list_size.h), (item_top > 0), ((item_top + list_size.h) < size));
 	
 	list_box_draw_arrow(list_pos.row + item_cur - item_top);
 
@@ -181,7 +191,7 @@ int list_box(u8 **list, int size, int init)
 									scroll = item_top;
 								item_top -= scroll;
 								list_print(list+1+item_top, &list_pos, &list_size, 
-										(item_top > 0), ((item_top + list_size.h) < size));
+										(size>list_size.h), (item_top > 0), ((item_top + list_size.h) < size));
 							}
 						}
 					
@@ -199,7 +209,7 @@ int list_box(u8 **list, int size, int init)
 									scroll = size - (item_top+list_size.h);
 								item_top += scroll;
 								list_print(list+1+item_top, &list_pos, &list_size, 
-										(item_top > 0), ((item_top + list_size.h) < size));
+									(size>list_size.h), (item_top > 0), ((item_top + list_size.h) < size));
 							}
 						}
 						break;
