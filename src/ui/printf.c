@@ -103,6 +103,7 @@ void agi_printf(u8 *var8, ...)
 	if ( (format_to_string & 0xFF) != 0)
 		*(di++) = 0;
 	va_end (ap);
+	ch_update();
 }
 
 
