@@ -23,13 +23,11 @@ CONF_STRING c_vid_pal_bw = 0;
 CONF_STRING c_vid_fonts_bitmap = 0;
 CONF_STRING c_vid_fonts_vector = 0;
 CONF_STRING c_snd_driver = 0;
-CONF_INT c_snd_channels = 4;
-CONF_INT c_snd_gen_tone = 0;
-CONF_INT c_snd_gen_noise0 = 0;
-CONF_INT c_snd_gen_noise1 = 0;
-CONF_BOOL c_snd_disable = 0;
-CONF_STRING c_snd_sample = 0;
-CONF_INT c_snd_sample_freq = 50;
+CONF_BOOL c_snd_enable = 1;
+CONF_BOOL c_snd_single = 0;
+CONF_INT c_snd_dissolve = 3;
+CONF_BOOL c_snd_read_var = 0;
+CONF_INT c_snd_volume = 0x7FFF;
 CONF_STRING c_sdl_drv_video = 0;
 CONF_STRING c_sdl_drv_sound = 0;
 
@@ -77,13 +75,11 @@ CONF config_nagi[] =
 	{"fonts_bitmap", 0, CT_STRING, {s:{&c_vid_fonts_bitmap, "font_4x8.nbf;font_8x8.nbf;font_16x16.nbf"}} },
 	{"fonts_vector", 0, CT_STRING, {s:{&c_vid_fonts_vector, "none.nvf"}} },
 	{"driver", "snd", CT_STRING, {s:{&c_snd_driver, "sdl"}} },
-	{"channels", 0, CT_INT, {i:{&c_snd_channels, 4, 1, 4}} },
-	{"gen_tone", 0, CT_INT, {i:{&c_snd_gen_tone, 0, 0, 5}} },
-	{"gen_noise0", 0, CT_INT, {i:{&c_snd_gen_noise0, 0, 0, 5}} },
-	{"gen_noise1", 0, CT_INT, {i:{&c_snd_gen_noise1, 0, 0, 5}} },
-	{"disable", 0, CT_BOOL, {b:{&c_snd_disable, 0}} },
-	{"sample", 0, CT_STRING, {s:{&c_snd_sample, "tone50.pcm"}} },
-	{"sample_freq", 0, CT_INT, {i:{&c_snd_sample_freq, 50, 0, -1}} },
+	{"enable", 0, CT_BOOL, {b:{&c_snd_enable, 1}} },
+	{"single", 0, CT_BOOL, {b:{&c_snd_single, 0}} },
+	{"dissolve", 0, CT_INT, {i:{&c_snd_dissolve, 3, 0, 3}} },
+	{"read_var", 0, CT_BOOL, {b:{&c_snd_read_var, 0}} },
+	{"volume", 0, CT_INT, {i:{&c_snd_volume, 0x7FFF, 0, 0x7FFF}} },
 	{"drv_video", "sdl", CT_STRING, {s:{&c_sdl_drv_video, "directx"}} },
 	{"drv_sound", 0, CT_STRING, {s:{&c_sdl_drv_sound, "waveout"}} },
 	{key: 0}

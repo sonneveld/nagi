@@ -36,8 +36,6 @@ DRVINIT pcm_out_init_list[] =
 	//{"directx", 0}
 };
 
-u8 c_snd_pcm_out_drv[] = "SDL";
-
 PCM_OUT_DRIVER pcm_out_drv;
 
 int pcm_out_init(int freq, int format)
@@ -47,7 +45,7 @@ int pcm_out_init(int freq, int format)
 	
 	drv_avail = drvpick_first(&initstate, pcm_out_init_list, 
 			sizeof(pcm_out_init_list) / sizeof(DRVINIT), 
-			c_snd_pcm_out_drv, &pcm_out_drv);
+			c_snd_driver, &pcm_out_drv);
 	
 	while (!drv_avail)
 	{

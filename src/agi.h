@@ -430,13 +430,11 @@ extern CONF_STRING c_vid_pal_bw;
 extern CONF_STRING c_vid_fonts_bitmap;
 extern CONF_STRING c_vid_fonts_vector;
 extern CONF_STRING c_snd_driver;
-extern CONF_INT c_snd_channels;
-extern CONF_INT c_snd_gen_tone;
-extern CONF_INT c_snd_gen_noise0;
-extern CONF_INT c_snd_gen_noise1;
-extern CONF_BOOL c_snd_disable;
-extern CONF_STRING c_snd_sample;
-extern CONF_INT c_snd_sample_freq;
+extern CONF_BOOL c_snd_enable;
+extern CONF_BOOL c_snd_single;
+extern CONF_INT c_snd_dissolve;
+extern CONF_BOOL c_snd_read_var;
+extern CONF_INT c_snd_volume;
 extern CONF_STRING c_sdl_drv_video;
 extern CONF_STRING c_sdl_drv_sound;
 

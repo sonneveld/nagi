@@ -60,7 +60,7 @@ void config_load(CONF *config, INI *ini)
 			case CT_INT: 
 				if (key_data != 0)
 				{
-					*conf_ptr->i.ptr = (CONF_INT)strtol(key_data, 0, 10);
+					*conf_ptr->i.ptr = (CONF_INT)strtol(key_data, 0, 0);
 					if (*conf_ptr->i.ptr < conf_ptr->i.min)
 						*conf_ptr->i.ptr = conf_ptr->i.min;
 					else if (conf_ptr->i.max != -1)

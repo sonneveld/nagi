@@ -42,7 +42,7 @@
 /* noise generator start preset (for periodic noise) */
 #define NG_PRESET 0x0f35
 
-#define WAVE_HEIGHT  (0x7FFF)
+//#define WAVE_HEIGHT  (0x7FFF)
 
 #if USE_SAMPLE
 
@@ -127,7 +127,7 @@ void vol_table_init()
 	double value;
 	int i;
 
-	value = 0x7FFF;
+	value = c_snd_volume;
 	
 	for (i=0; i<0xF; i++)
 	{
@@ -510,7 +510,7 @@ SAMPLE *sample_sine_new(int freq, int samp_rate)
 	mult =  (2.0*M_PI) / (wave_len);
 	
 	for (i=0; i<wave_len; i++)
-		wave[i] = (s16)(sin(i * mult)*WAVE_HEIGHT );
+		wave[i] = (s16)(sin(i * mult)*c_snd_volume );
 		
 	s->freq = freq;
 	s->data = wave;

@@ -45,7 +45,7 @@ typedef struct sndgen_channel_struct SNDGEN_CHAN;
 
 // "fade out" or possibly "dissolve"
 // v2.9xx
-s8 dissolve_data_v2[0x44] =
+s8 dissolve_data_v2[] =
 {
 	-2, -3, -2, -1, 0x00, 0x00, 0x01, 0x01, 0x01,
 	0x01, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
@@ -59,7 +59,7 @@ s8 dissolve_data_v2[0x44] =
 }; 
 
 // v3
-s8 dissolve_data[] =
+s8 dissolve_data_v3[] =
 {
 -2, -3, -2, -1,
 0, 0, 0, 0, 0, 
@@ -88,11 +88,11 @@ SNDGEN_CHAN channel[CHAN_MAX];
 
 void sndgen_init(void)
 {
-	if (!c_snd_disable)
+	if (c_snd_enable)
 	{
 		// init tone_gen
 		if (tone_init())
-			c_snd_disable = 1;
+			c_snd_enable = 0;
 		else
 			tone_state_set(0);
 	}
@@ -101,7 +101,7 @@ void sndgen_init(void)
 void sndgen_shutdown(void)
 {
 	// shutdown tone_gen
-	if (!c_snd_disable)
+	if (c_snd_enable)
 	{
 		sndgen_stop();
 		tone_shutdown();
@@ -114,9 +114,9 @@ void sndgen_play(SOUND *snd)
 	
 	assert(snd);
 	
-	if (!c_snd_disable)
+	if (c_snd_enable)
 	{
-		for (i=0; i<CHAN_MAX ; i++)
+		for (i=0; i<(c_snd_single?1:CHAN_MAX); i++)
 		{
 			channel[i].data = snd->channel[i];
 			channel[i].duration = 0;
@@ -129,7 +129,7 @@ void sndgen_play(SOUND *snd)
 			{
 				printf("%s(): error opening tone channel.\n", __PRETTY_FUNCTION__);
 				sndgen_shutdown();
-				c_snd_disable = 1;
+				c_snd_enable = 0;
 				return;
 			}
 		}
@@ -155,7 +155,7 @@ void sndgen_kill_thread(void)
 		
 	sound_state = 0;
 	tone_state_set(0);
-	for (i=0; i<CHAN_MAX ; i++)
+	for (i=0; i<(c_snd_single?1:CHAN_MAX) ; i++)
 	{
 		if (channel[i].tone_handle != 0)
 			tone_close(channel[i].tone_handle);
@@ -166,7 +166,7 @@ void sndgen_kill_thread(void)
 
 void sndgen_stop(void)
 {
-	if (!c_snd_disable)
+	if (c_snd_enable)
 	{
 		tone_lock();
 		sndgen_kill_thread();
@@ -178,7 +178,21 @@ void sndgen_stop(void)
 int volume_calc(SNDGEN_CHAN *chan)
 {
 	s8 al, dissolve_value;
-
+	
+	u8 *dissolve_data;
+	
+	
+	switch (c_snd_dissolve)
+	{
+		case 2:
+			dissolve_data = dissolve_data_v2;
+			break;
+		case 3:
+		default:
+			dissolve_data = dissolve_data_v3;
+			break;
+	}
+	
 	// blah
 	assert(chan);
 
@@ -205,8 +219,10 @@ int volume_calc(SNDGEN_CHAN *chan)
 					al = 0x0F;
 				
 				chan->attenuation_copy = al;
+				
 				al &= 0x0F;
-				//al += state.var[V23_SNDVOL];
+				if (c_snd_read_var)
+					al += state.var[V23_SNDVOL];
 				if (al > 0x0F)
 					al = 0x0F;
 			}
@@ -229,7 +245,7 @@ int sndgen_callback(int ch, TONE *tone)
 	void *data;
 
 	assert(tone);
-	assert(ch < CHAN_MAX);
+	assert(ch < (c_snd_single?1:CHAN_MAX));
 	
 	if ( !flag_test(F09_SOUND) )
 		return -1;
@@ -250,7 +266,7 @@ int sndgen_callback(int ch, TONE *tone)
 		if ( (chan->duration != 0) && (chan->duration != 0xFFFF))
 		{
 			// only tone channels dissolve
-			if (ch != 3)	// != noise??
+			if ((ch != 3) && (c_snd_dissolve != 0))	// != noise??
 				chan->dissolve_count = 0;
 			
 			// attenuation (volume)
