@@ -154,12 +154,6 @@ void ch_init(void)
 	// text pos = 0,0
 	chgen_textpos.row = 0;
 	chgen_textpos.col = 0;
-
-printf("font_list = %s\n", font_list);
-printf("font_size.w = %d\n", font_size.w);
-printf("font_size.h = %d\n", font_size.h);
-printf("font_chsize = %d\n", font_chsize);
-printf("font_linesize = %d\n", font_linesize);
 	
 }
 
