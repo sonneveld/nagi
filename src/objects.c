@@ -89,7 +89,7 @@ int object_file_load()
 			
 			case 5: // first go round... decrypt if necessary
 				// decrypt or not decrypt
-				if (c_game_object_packed != 0)
+				if (c_game_object_decrypt != 0)
 					decrypt_string(obj_data, obj_data + res_size);
 				
 				field_size = c_game_object_packed?4:3;
