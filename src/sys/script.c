@@ -58,6 +58,44 @@ u8 *script_new()
 
 void script_write(u16 var8, u16 vara)
 {
+	u8 *script_name = 0;
+	
+	switch (var8)
+	{
+		case 0:
+			script_name = "load.logic";
+			break;
+		case 1:
+			script_name = "load.view";
+			break;
+		case 2:
+			script_name = "load.pic";
+			break;
+		case 3:
+			script_name = "load.sound";
+			break;
+		case 4:
+			script_name = "draw.pic";
+			break;
+		case 5:
+			script_name = "add.to.pic";
+			break;
+		case 6:
+			script_name = "discard.pic";
+			break;
+		case 7:
+			script_name = "discard.view";
+			break;
+		case 8:
+			script_name = "overlay.pic";
+			break;
+		default:
+			script_name = "unknown";
+			break;
+	}
+	
+	//printf("script write %s - %d\n", script_name, vara);
+	
 	if (flag_test(0x07) == 0)
 	{
 		if (write_ok != 0)
@@ -70,7 +108,10 @@ void script_write(u16 var8, u16 vara)
 			state.script_count++;
 		}
 		if (  ((script_next - script_head) / 2)  > mem_script)
+		{
 			mem_script = (script_next - script_head) / 2;
+			//printf("mem_script = %d\n", mem_script);
+		}
 	}
 }
 
