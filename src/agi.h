@@ -139,7 +139,7 @@ typedef signed int		sint;
 // reversed cycle
 #define CY_REV		3
 
-#define NAGI_VERSION "pre v2.05"
+#define NAGI_VERSION "pre v2.06"
 
 
 struct position_struct
