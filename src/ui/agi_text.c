@@ -35,6 +35,7 @@ _PopTextAtt                      cseg     000078FC 0000003A
 // status
 #include "../ui/status.h"
 
+#include "../sys/glob_sys.h"
 
 
 
@@ -194,6 +195,18 @@ u8 *cmd_config_screen(u8 *c)
 
 u8 *cmd_toggle_monitor(u8 *c)
 {
+	if (state.var[V00_ROOM0] != 0)
+	{
+		logic_save_scan_start();
+		display_type ^= 1;
+		push_row_col();
+		AGI_TRACE
+		gfx_shutdown();
+		gfx_init();
+		AGI_TRACE
+		pop_row_col();
+		state_reload();
+	}
 	return c;
 }
 
