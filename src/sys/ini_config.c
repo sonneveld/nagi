@@ -287,40 +287,6 @@ u8 *ini_recursive(INI *ini, u8 *sect_name, u8 *key_name)
 }
 
 
-// calls recursive and converts to the appropriate thingy.
-
-int ini_int(INI *ini, u8 *key, int def)
-{
-	u8 *data;
-	data = ini_recursive(ini, 0, key);
-	
-	if (data != 0)
-		return (int)strtol(data, 0, 10);
-	else
-		return def;
-}
-
-int ini_boolean(INI *ini, u8 *key, int def)
-{
-	u8 *data;
-	data = ini_recursive(ini, 0, key);
-	
-	if (data != 0)
-		return (int)(strtol(data, 0, 10) != 0);
-	else
-		return (def!=0);
-}
-
-u8 *ini_string(INI *ini, u8 *key, u8 *def)
-{
-	u8 *data;
-	data = ini_recursive(ini, 0, key);
-	
-	if (data != 0)
-		return data;
-	else
-		return def;
-}
 
 
 
