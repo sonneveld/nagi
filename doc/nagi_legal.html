@@ -1,0 +1,602 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+     
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+     
+  <meta name="Generator" content="Microsoft Word 97">
+  <title>NAGI Legal Notes</title>
+</head>
+ <body>
+    
+<h3>NAGI Legal Notes </h3>
+ 
+<h3>By Nick Sonneveld and others  </h3>
+ NAGI was created with the purpose to help fan-game developers so they had 
+something to release along with their game.  The reason why they couldn't 
+package it with the original Sierra interpreter was because Sierra owns the 
+copyright to it and legal issues could arise.<br>
+  <br>
+ As some people know, NAGI was created by disassembling the AGI executable 
+and recoding it in C to act the same as the ASM source.  This wasn't as easy 
+as it sounds.  I had to implement a lot of my own code to interact with Windows, 
+converge v2 and v3 code, implement a crc system and other bits 'n pieces. 
+ The original sierra code also had to be debugged and the variable names had
+to be determined.  <br>
+ <br>
+ The issue here is that it's not exactly legal to do that with any code.
+ It's still Sierra's copyright, although in smaller pieces, throughout the 
+NAGI code.  This, along with other reasons, is why I'm not releasing the source
+just yet.  <br>
+ <br>
+ However, many fan games use Sierra's sprites or other logic code and Sarien 
+uses specs that were mostly derived from Russians who disassembled an old 
+v2.440 interpreter.  There are many examples of programs uses little bits 
+and pieces of Sierra's intellectual property.<br>
+    
+<h3>Digger</h3>
+   When I started, I was under the assumption that this was semi-legal because 
+another programmer used the exact same technique to re-create Digger which 
+is an old game, just like AGI.  However, this is an excerpt from the Digger 
+FAQ<br>
+ <br>
+ (http://www.digger.org)  <br>
+ <br>
+ Q: Is this legal?  <br>
+ A:Strictly speaking, no. According to intellectual property law, a work
+copyrighted by a company continues to be copyrighted for 75 years.  <br>
+ <br>
+ I have no moral objections to violating Windmill software's copyright by 
+re-releasing the game, and I feel you should have no moral objections to playing
+it (unless you're doing it when you should be doing something else). Copyright
+exists to protect intellectual rights, not to prevent people from having
+access to software. I can think of two reasons why Windmill software would
+want to protect their intellectual rights:     
+<ul>
+     
+  <li>To ensure that they are recognized as the true authors of Digger. </li>
+     
+  <li>To ensure that they make as much money as possible. </li>
+ 
+</ul>
+    I have retained the original copyright messages in the game and I take 
+pains to ensure that Windmill are credited properly whereever possible so 
+the first of these concerns is taken care of. As for the second - Windmill 
+hasn't made any money from Digger for a long time, and if they insist I will 
+relinquish all rights to Digger to them to do with as they wish. Having Digger 
+restored and working on modern computers, they would be in a much better position
+to make money from it than they would if I hadn't remastered it.   <br>
+ <br>
+ In conclusion, therefore, I think that Digger Remastered follows the spirit 
+of the law, if not the letter. And since laws, being so rigid, can never be
+perfect, the world works much better this way (as any Digger fan must concur.)
+  <br>
+ <br>
+ For more information about abandonwarez and the associated legal problems, 
+have a look at this essay. <br>
+    
+<h3>#SDL</h3>
+ I also had a nice chat to the SDL people in #SDL at irc.openprojects.net. 
+I was asking about SDL licenses and the discussion shifted to how I programmed 
+NAGI. They're not as nice as other coders but they managed to answer some 
+questions:  <br>
+<br>
+&lt;Note: bits and pieces not relevent to disassembling were removed&gt;
+  <br>
+ <br>
+ [05:21] &lt;EvilIdler&gt; J5:What license is your own program under? <br>
+ [05:22] &lt;J5&gt; none atm.. i wanted to make it closed source until it 
+was finished <br>
+ [05:23] &lt;J5&gt; i know some other people go release early, release often 
+but I subscribe to the "release it when it looks good" <br>
+ [05:23] &lt;Frapazoid&gt; same here <br>
+ [05:23] &lt;akawaka&gt; haha <br>
+ [05:23] &lt;Frapazoid&gt; it's bad to give people a really bad impression 
+before it's done.. <br>
+ [05:23] &lt;akawaka&gt; "release when it looks good" <br>
+ [05:23] &lt;akawaka&gt; how about "release when it works"? <br>
+ [05:23] &lt;akawaka&gt; hmm, yes <br>
+ [05:23] &lt;J5&gt; plus, I wrote a lot of the code by disassembling an old 
+game.. so I don't know the legalities of that and.. <br>
+ [05:24] &lt;Frapazoid&gt; they may not understand the pre-release concept, 
+as I know many people don't, and then never check back <br>
+ [05:24] &lt;J5&gt; there's a few goto replacing the mess of jmp's <br>
+ [05:24] &lt;hofi&gt; who wants working stuff ? it has to look good.... <br>
+ [05:24] &lt;Frapazoid&gt; whoa! <br>
+ [05:24] &lt;Frapazoid&gt; disassembling? <br>
+ [05:24] &lt;Frapazoid&gt; J5: what about dissambling? <br>
+ [05:24] &lt;Frapazoid&gt; what game? <br>
+ [05:25] &lt;J5&gt; I'm disassembling an old game interpreter (agi) and recoding 
+it all in C <br>
+ [05:25] &lt;J5&gt; like Sarien except it works kinda better atm <br>
+ [05:25] &lt;Frapazoid&gt; how old is it <br>
+ [05:25] &lt;Frapazoid&gt; ? <br>
+ [05:25] &lt;J5&gt; doesn't support as many os's atm <br>
+ [05:25] &lt;Frapazoid&gt; (Thats like cheating!) <br>
+ [05:25] &lt;EvilIdler&gt; J5:*How* did you go about using what you disassembled? 
+Did you rewrite from the way assembly looked? <br>
+ [05:25] &lt;J5&gt; umm.. late 1980's <br>
+ [05:26] &lt;Frapazoid&gt; to me that just doesn't seem right, still.. <br>
+ [05:26] &lt;J5&gt; evil: yeh.. some of the code yes..  others I had to guess 
+and others I wrote from scratch (like sdl's) <br>
+ [05:26] &lt;Frapazoid&gt; well, whatever <br>
+ [05:26] &lt;EvilIdler&gt; J5:Well, the way Norwegian reverse-engineering 
+laws work, you're safe. Check your own country ;) <br>
+ [05:26] &lt;J5&gt; frap: well.. i couldn't think of any way of getting my 
+version to work the same as the original <br>
+ [05:27] &lt;EvilIdler&gt; If you disassemble to see "how it works", then 
+code something that works the same way, especially in another language, it's 
+usually in the clear. Local laws apply ;) <br>
+ [05:27] &lt;Yorick&gt; I doubt norwegian laws are safe about reverse-engineering
+ <br>
+ [05:28] &lt;EvilIdler&gt; Yorick:They work. Like I said before, Norwegians 
+are nuts! <br>
+ [05:28] &lt;J5&gt; evil: i guess i'll have to..   <br>
+ <br>
+ &lt;Note: discussion moved to different editors so I decided to wrap things 
+up&gt;  <br>
+ <br>
+ [05:30] &lt;J5&gt; anyway.. thanks for the help <br>
+ [05:30] &lt;J5&gt; I'll put up the appropriate notices for sdl <br>
+ [05:30] &lt;Diablo-D3&gt; heh <br>
+ [05:30] &lt;Diablo-D3&gt; Vi!!! <br>
+ [05:30] &lt;J5&gt; and work on making my disassembled code more legal <br>
+ [05:30] &lt;J5&gt; (if it's not already) <br>
+ [05:31] &lt;EvilIdler&gt; J5:Do that, and let us know if any games work
+completely ;) <br>
+ [05:31] &lt;J5&gt; evil: they do already <br>
+ [05:31] &lt;Frapazoid&gt; J5: the developers may have to file a lawsuit
+<br>
+ [05:31] &lt;J5&gt; i don't think sierra cares anymore <br>
+ [05:31] &lt;EvilIdler&gt; J5:Are there any Spacequest based on agi? <br>
+ [05:31] &lt;J5&gt; http://members.dingoblue.net.au/~sonneveld/nagi <br>
+ [05:31] &lt;J5&gt; sq1 and 2 <br>
+ [05:31] &lt;EvilIdler&gt; Sierra *died* when they laid off their adventure-making 
+people. <br>
+ [05:32] &lt;Diablo-D3&gt; heh <br>
+ [05:32] &lt;Diablo-D3&gt; sierra is dead anyhow <br>
+ [05:32] &lt;Frapazoid&gt; it's knot only stupids, it's real <br>
+ [05:32] &lt;J5&gt; i only have builds for win32 atm though..  <br>
+ [05:33] &lt;Frapazoid&gt; hmm.. i have to go now.. <br>
+ [05:33] &lt;Frapazoid&gt; bye <br>
+ [05:33] &lt;EvilIdler&gt; J5:Get some SDL-based ones, and you can cross-compile 
+from Linux. <br>
+ [05:35] &lt;J5&gt; it's sdl based atm.. i've only compiled under mingw atm 
+though <br>
+ [05:35] &lt;Diablo-D3&gt; heh <br>
+ [05:35] &lt;Diablo-D3&gt; and any other gcc clone <br>
+ [05:35] &lt;Diablo-D3&gt; like <br>
+ [05:35] * aoiushi looks up. no, sierra died when they let roberta williams 
+make adventure games. ;) <br>
+ [05:35] &lt;Diablo-D3&gt; cygwin <br>
+ [05:35] &lt;Diablo-D3&gt; or... <br>
+ [05:35] &lt;Diablo-D3&gt; xming <br>
+ [05:35] &lt;Diablo-D3&gt; or... gcc ... <br>
+ [05:36] &lt;Diablo-D3&gt; heheh <br>
+ [05:36] &lt;J5&gt; diablo: I know.. but the only working version on my website 
+is a windows executable <br>
+ [05:36] &lt;Diablo-D3&gt; heh <br>
+ [05:36] &lt;Diablo-D3&gt; suckz0rs to be j00 <br>
+ [05:37] &lt;J5&gt; cheers diablo <br>
+ [05:38] &lt;J5&gt; anyway.. thanks again <br>
+ [05:38] &lt;J5&gt; cyas <br>
+ Session Close: Tue Jul 10 05:38:36 2001  <br>
+ <br>
+ I just wanted to point out that I don't think it was "like cheating".  If 
+it was it would be a lot easier to do.  Depends on your coding experience 
+I guess.  <br>
+  <br>
+   
+<h3>#Sarien</h3>
+   Here's another chat I had in #sarien.  These guys are friendlier at least. 
+:)  It's a bit lengthy but there's a lot of interesting information.  I was 
+tired and bummed out through most of this conversation because I was working 
+night shift before it and hadn't had any sleep.  But that's another story...
+  <br>
+<br>
+ [08:57] &lt;DopefishJustin&gt; on the plus side, you'll have more time for 
+nagi now ;) <br>
+ [08:58] &lt;JayFive&gt; heh.. true <br>
+ [08:59] &lt;JayFive&gt; I went on #sdl to ask about sdl packaging 'n stuff 
+ <br>
+ [08:59] &lt;JayFive&gt; and one person thought that the way i was making 
+nagi was cheating :) <br>
+ [08:59] &lt;JayFive&gt; then you've got the legalities of it as well <br>
+ [08:59] &lt;JayFive&gt; is it worth it? <br>
+ [09:00] &lt;DopefishJustin&gt; i like the sarien approach more, but nagi 
+is currently much more functional <br>
+ [09:00] &lt;JayFive&gt; currently.. what about when sarien is more functional? 
+ is everybody going to forget about nagi? <br>
+ [09:00] &lt;syke&gt; JayFive: if sierra ever decides to go after you, you 
+will definitely have quite a few problems <br>
+ [09:01] * syke shrugs <br>
+ [09:01] &lt;syke&gt; I never looked at NAGI or the source <br>
+ [09:01] &lt;syke&gt; sarien seems to be portable to the extreme <br>
+ [09:01] &lt;DopefishJustin&gt; some of the nagi-original modifications may 
+find a home in sarien someday <br>
+ [09:02] &lt;JayFive&gt; nagi gets to be a sarien patch <br>
+ [09:02] &lt;DopefishJustin&gt; i'm not sure about the legality of using
+spec information gleaned from it <br>
+ [09:03] &lt;JayFive&gt; but spec information from russian disassemblers
+is ok <br>
+ [09:04] &lt;syke&gt; JayFive: it can be very tricky. <br>
+ [09:05] &lt;syke&gt; For instance, someone can reverse engineer/disassemble 
+directly from the code <br>
+ [09:05] &lt;syke&gt; and write documentation <br>
+ [09:05] &lt;syke&gt; and then someone can implement from that documentation
+ <br>
+ [09:06] &lt;syke&gt; and there is precedent in the US for that being considered 
+"clean room" <br>
+ [09:06] &lt;syke&gt; however <br>
+ [09:06] &lt;syke&gt; reverse engineering to source code <br>
+ [09:06] &lt;syke&gt; and then copying or reimplenting that code into new 
+code <br>
+ [09:06] &lt;syke&gt; is highly suspect <br>
+ [09:07] &lt;JayFive&gt; so i've written something that no agi coder wants 
+to touch basically <br>
+ [09:07] &lt;syke&gt; mm <br>
+ [09:07] &lt;syke&gt; well <br>
+ [09:07] &lt;syke&gt; I wouldn't recommend anyone copy the code directly
+<br>
+ [09:08] &lt;JayFive&gt; nice... <br>
+ [09:08] &lt;syke&gt; but <br>
+ [09:08] &lt;syke&gt; if you re-implemented what you learned from the disassembly
+ <br>
+ [09:08] &lt;syke&gt; without directly copying that disassembly <br>
+ [09:08] &lt;syke&gt; that might be excusable <br>
+ [09:08] &lt;syke&gt; are you in teh US? <br>
+ [09:09] &lt;JayFive&gt; aus <br>
+ [09:09] &lt;syke&gt; ok <br>
+ [09:09] &lt;syke&gt; the laws there may be more lax <br>
+ [09:09] &lt;syke&gt; but yes, you've done a big no-no as far as free software 
+is concerned <br>
+ [09:09] &lt;syke&gt; have you contacted sierra in any way? <br>
+ [09:10] &lt;syke&gt; to ger permission, or to make them aware of the project, 
+or to request information? <br>
+ [09:10] &lt;JayFive&gt; no, i was under the assumption that they never replied 
+to any such thing <br>
+ [09:12] &lt;syke&gt; ask christoph from freesci about his experiences <br>
+ [09:12] &lt;syke&gt; he asked a number of hte original programmers, who
+all refused to give infromation fo course :) <br>
+ [09:12] &lt;syke&gt; (mostly fearing sierra's wrath) <br>
+ [09:12] &lt;syke&gt; on a side note <br>
+ [09:12] &lt;syke&gt; I think it would be awesome to unite the two projects, 
+tho <br>
+ [09:13] &lt;syke&gt; I'm all for pooling efforts :) <br>
+ [09:13] &lt;JayFive&gt; i dunno if you'd want to touch the bits *i* actually 
+wrote <br>
+ [09:13] &lt;syke&gt; in the same way I would love it if FreeSCI and Sarien 
+shared video driver code and graphics effects code <br>
+ [09:13] &lt;JayFive&gt; the rest would be untouchable <br>
+ [09:13] &lt;syke&gt; well, yea <br>
+ [09:13] &lt;syke&gt; but you could apply your knowledge to sarien <br>
+ [09:13] &lt;syke&gt; and not necessarily copy code <br>
+ [09:13] &lt;DopefishJustin&gt; nagi has some cool stuff, like the click-to-move 
+code <br>
+ [09:14] &lt;DopefishJustin&gt; and fullscreen under Win32 <br>
+ [09:14] &lt;syke&gt; DopefishJustin: if you want fullscreen under win32, 
+I can do that pretty quickly :) <br>
+ [09:14] &lt;syke&gt; f*** <br>
+ [09:14] &lt;syke&gt; i need to do some checkins for sarien and freesci <br>
+ [09:14] &lt;JayFive&gt; 1) move.obj without setting a flag and ignore player.control
+ <br>
+ [09:14] &lt;JayFive&gt; 2) like syke said <br>
+ [09:15] * JayFive doesn't like the idea of just being some agi tour-guide
+ <br>
+ [09:15] &lt;DopefishJustin&gt; ummm...nagi' sample based sound mixer? <br>
+ [09:15] &lt;JayFive&gt; whee <br>
+ [09:15] &lt;syke&gt; JayFive: Maybe you misunderstand -- <br>
+ [09:15] &lt;syke&gt; you can re-code things, that is probably safe <br>
+ [09:16] &lt;syke&gt; but directly copying code from the reverse engineered 
+binary isn't, I don't tihnk <br>
+ [09:16] &lt;JayFive&gt; yes but how far do I go until the re-coded stuff 
+is legal? <br>
+ [09:17] &lt;JayFive&gt; and in going through these hoops I have to make
+it work with the original agi  <br>
+ <br>
+ &lt;Note: stuff on watcom and graphics libraries.. not nagi/legal related&gt;
+  <br>
+ <br>
+ [09:45] &lt;JayFive&gt; i think i might drop nagi and start up another project
+ <br>
+ [09:45] &lt;JayFive&gt; too much wasted time already <br>
+ [09:45] &lt;DopefishJustin&gt; the agi studio thing? <br>
+ [09:45] &lt;JayFive&gt; maybe something totally unrelated to agi <br>
+ [09:46] &lt;JayFive&gt; this whole thing is getting me down.. i just wasted 
+my time <br>
+ [09:46] &lt;DopefishJustin&gt; hey now <br>
+ [09:46] &lt;DopefishJustin&gt; if nothing else, you got programming experience
+ <br>
+ [09:47] &lt;JayFive&gt; whee <br>
+ [09:47] &lt;DopefishJustin&gt; i've programmed all kinds of stuff that doesn't 
+work <br>
+ [09:47] &lt;DopefishJustin&gt; i don't care <br>
+ [09:47] &lt;DopefishJustin&gt; it's the fun of programming it that counts
+ <br>
+ [09:48] &lt;JayFive&gt; all this other stuff doesn't make it fun <br>
+ [09:48] &lt;syke&gt; JayFive: not at all <br>
+ [09:48] &lt;syke&gt; you definitely learned things about AGI no one else 
+could have figued out <br>
+ [09:49] &lt;syke&gt; like the mouse support stuff <br>
+ [09:49] &lt;syke&gt; and i'll bet you learned a lot of about how to disassemble 
+and rever engineer thinggs :) <br>
+ [09:49] &lt;DopefishJustin&gt; and it gets the award of the first fully
+functional fan-made agi interpreter <br>
+ [09:50] &lt;JayFive&gt; yeh, but what's the use of knowing how to do that 
+if all you're going to do is write specs so somebody else can code the thing?
+ <br>
+ [09:50] &lt;JayFive&gt; if i try and re-code it.. i'll always be accused 
+of using the original code <br>
+ [09:51] &lt;JayFive&gt; i spent a long time on this and it's just one big 
+bummer <br>
+ [09:52] &lt;syke&gt; JayFive: like I said, check out the laws in your country
+ <br>
+ [09:52] &lt;syke&gt; also <br>
+ [09:52] &lt;JayFive&gt; i did.. it's legal for certain things <br>
+ [09:52] &lt;syke&gt; you may end up getting permission from sierra <br>
+ [09:52] &lt;syke&gt; there are still many options here, should you choose 
+to take them <br>
+ [09:53] &lt;syke&gt; JayFive: the wonder of open source is that re-use of 
+proprietary IP can be easily disproven <br>
+ [09:53] &lt;syke&gt; since the source is public <br>
+ [09:53] &lt;DopefishJustin&gt; and what about that standard.ini idea you 
+had? that's something unique <br>
+ [09:53] &lt;syke&gt; all you have to watch out for is patented algorithms
+ <br>
+ [09:53] &lt;syke&gt; (I don't think ther eare any in AGI) <br>
+ [09:53] &lt;DopefishJustin&gt; LZW <br>
+ [09:53] &lt;JayFive&gt; nothing to do with patents.. it's copyright law
+<br>
+ [09:54] &lt;JayFive&gt;  despite the fact it's object code.. copyright law 
+still applies <br>
+ [09:54] &lt;JayFive&gt; and apparently reverseengineering is only "legal" 
+enough if it's for interoperability issues <br>
+ [09:54] &lt;syke&gt; yes <br>
+ [09:54] &lt;JayFive&gt; http://www.dcita.gov.au/cgi-bin/trap.pl?path=4189
+ <br>
+ [09:54] &lt;DopefishJustin&gt; and sierra had a patent on "3-d graphical 
+adventure games" but i think that got shot down in court <br>
+ [09:56] &lt;syke&gt; JayFive: before you get too discouraged, I would talk 
+to a lawyer perhaps <br>
+ [09:56] &lt;syke&gt; or contact Sierra <br>
+ [09:56] &lt;syke&gt; but <br>
+ [09:56] &lt;syke&gt; there is precendent in the US that should be looked 
+at, since Sierra is a US company <br>
+ [09:57] &lt;syke&gt; I am somehat farmiliar with this stuff because I follow 
+IP law caes <br>
+ [09:57] &lt;syke&gt; cases, rather <br>
+ [09:57] &lt;JayFive&gt; i'll try the sierra route but then i'll give up
+the nagi project <br>
+ [09:57] &lt;JayFive&gt; it's basically a rebadged sierra interpreter with 
+extra bits put in <br>
+ [09:58] &lt;syke&gt; I'm sorry you're down :/ <br>
+ [09:58] &lt;syke&gt; I think there is still neat stuff that can be done
+<br>
+ [09:58] &lt;DopefishJustin&gt; think of it as a port, not a rehash <br>
+ [09:59] &lt;syke&gt; bringing some of the best games ever made to open platforms 
+is a great accomplishment <br>
+ [09:59] &lt;JayFive&gt; i think that's sarien.. nagi was only built for
+windows (despite the sdl) <br>
+ [10:00] &lt;syke&gt; hm <br>
+ [10:00] &lt;syke&gt; are you just feeling you've taken it as far as it can 
+go? <br>
+ [10:00] &lt;syke&gt; are you bored with it? <br>
+ [10:00] &lt;syke&gt; you seem to just be down, in general <br>
+ [10:01] &lt;JayFive&gt; no, I'm feeling it's not worth it if people aren't 
+going to want to use it <br>
+ [10:01] &lt;JayFive&gt; people want a legal interpreter they can bundle
+with their games or they want an interpreter for another system <br>
+ [10:01] &lt;syke&gt; why not join forces with claudio and work on Sarien, 
+to help  accelerate the development <br>
+ [10:02] &lt;syke&gt; (or even freesci ;&gt;) <br>
+ [10:02] &lt;JayFive&gt; it's the same with nagi.. any recoding could be
+considered using the original code <br>
+ [10:02] &lt;syke&gt; I don't think that's tru under US precedent <br>
+ [10:03] &lt;syke&gt; is australian law says that, then asking sierra for 
+permission might be your only option <br>
+ [10:03] &lt;JayFive&gt; dunno exactly about aus law <br>
+ [10:04] &lt;syke&gt; btw, writing documentation is *very* helpful <br>
+ [10:04] &lt;syke&gt; has been for FreeSCI, anyways <br>
+ [10:04] &lt;JayFive&gt; but i don't know how i feel about working for sarien 
+and just giving up on nagi <br>
+ [10:04] * syke shrugs <br>
+ [10:04] &lt;DopefishJustin&gt; you said you were going to do that anyway
+<br>
+ [10:04] &lt;DopefishJustin&gt; give up nagi <br>
+ [10:05] &lt;syke&gt; if you're tired of AGI in general and just want to
+move onto something else, then go for it <br>
+ [10:05] &lt;syke&gt; if you still fidn it interesting, there are options
+<br>
+ [10:05] &lt;DopefishJustin&gt; and besides, AGI needs to be documented for 
+future generations when the systems it ran on originally aren't available 
+anymore <br>
+ [10:06] &lt;DopefishJustin&gt; gotta go, bbl <br>
+ [10:06] *** DopefishJustin is now known as JustinGone <br>
+ [10:06] &lt;JayFive&gt; cya later justin <br>
+ [10:06] &lt;syke&gt; JustinGone: documentation has been helpful in figuring 
+out algorithms. when you try to explain something in english instead of code, 
+sometimes inconsistencies jump out at you :) <br>
+ [10:07] &lt;JayFive&gt; i'm going to get some sleep and think about it <br>
+ [10:07] &lt;JayFive&gt; thanks for the suggestions <br>
+ [10:07] &lt;syke&gt; ok <br>
+ [10:07] &lt;syke&gt; uit would be cool to have you keep coding, you seem 
+like a very bright guy :) <br>
+ [10:07] &lt;syke&gt; nite :) <br>
+ [10:07] &lt;JayFive&gt; cheers :) <br>
+ [10:07] &lt;JayFive&gt; cya! <br>
+ Session Close: Wed Jul 11 10:08:01 2001  <br>
+   <br>
+ Session Start: Thu Jul 12 08:28:30 2001 <br>
+ [08:32] &lt;DopefishJustin&gt; so, decided what to do with nagi? <br>
+ [08:32] &lt;JayFive&gt; I'm thinking about sending a letter to sierra <br>
+ [08:32] &lt;JayFive&gt; but I don't know what to do in the meantime <br>
+ [08:33] &lt;DopefishJustin&gt; move zig for great justice? ;) <br>
+ [08:33] &lt;JayFive&gt; I could give up on nagi.. work on sarien or something 
+like that.. but I always think of cool things to add to nagi <br>
+ [08:33] &lt;JayFive&gt; like df said, he's just in it for it to work <br>
+ [08:33] &lt;JayFive&gt; I wanted to make nagi a free interpreter to help 
+people make their own new games as well as play the old ones <br>
+ [08:34] &lt;JayFive&gt; i think, like i said on the website, I mentioned 
+that this guy rewrote digger and he was my inspiration <br>
+ [08:34] &lt;JayFive&gt; I go to the site, read the faq and read the question 
+"is this legal?" <br>
+ [08:34] &lt;JayFive&gt; http://www.digger.org/faq.html <br>
+ [08:34] &lt;JayFive&gt; so until i get sierra's blessing.. i guess not <br>
+ [08:34] &lt;DopefishJustin&gt; i was just about to ask that <br>
+ [08:35] &lt;JayFive&gt; but this guy is willing to give up any copyright 
+to the original authors.. i could be willing to do the same.. but I wouldn't 
+be able to make nagi opensource then <br>
+ [08:35] &lt;DopefishJustin&gt; you start running into abandonware / emulation 
+type issues with this kinda stuff <br>
+ [08:36] &lt;JayFive&gt; yer, abandonware is cool.. but it's not legal unless 
+it's authorised <br>
+ [08:37] &lt;JayFive&gt; I mean, I could ignore the legal issues but then 
+that gets rid of one of the reasons why i wrote nagi <br>
+ [08:37] &lt;DopefishJustin&gt; right, if you wanna be illegal just use sierra
+ <br>
+ [08:37] &lt;DopefishJustin&gt; although i seem to recall them giving permission 
+for that <br>
+ [08:38] &lt;JayFive&gt; did they?  if you could find mention of that somewhere, 
+that would be interesting <br>
+ [08:38] &lt;JayFive&gt; on the sierra website they have a snail mail address 
+for general enquires <br>
+ [08:38] &lt;JayFive&gt; and a crappy feedback web interface <br>
+ [08:38] &lt;DopefishJustin&gt; i think it was only for one AGI site though, 
+not blanket <br>
+ [08:38] &lt;JayFive&gt; I think the snail mail is the way to go though <br>
+ [08:38] &lt;DopefishJustin&gt; yeah <br>
+ [08:39] &lt;DopefishJustin&gt; copyright laws are just fscked for computer 
+software <br>
+ [08:40] &lt;JayFive&gt; well no, they're fine <br>
+ [08:40] &lt;DopefishJustin&gt; they're way too long <br>
+ [08:40] &lt;JayFive&gt; but software companies have to clearly define what's 
+going on with software that's 15 years old <br>
+ [08:41] &lt;JayFive&gt; the gpl *needs* the copyright law for it to work
+<br>
+ [08:41] &lt;JayFive&gt; software patents.. that's another kettle of fish
+<br>
+ [08:41] &lt;DopefishJustin&gt; by the time it's legal to copy anything it'll 
+have physically rotted <br>
+ [08:48] &lt;JayFive&gt; well yer.. it depends ont he  <br>
+ [08:48] &lt;JayFive&gt; the copyright holder to back it up  <br>
+ [08:48] &lt;DopefishJustin&gt; fat chance <br>
+ [08:53] &lt;JayFive&gt; basically, you need a fair enough time for large 
+corporations to look after their copyright <br>
+ [08:53] &lt;JayFive&gt; a way for them to extend it if they wish <br>
+ [08:53] &lt;JayFive&gt; and some public backup system so that when the copyright 
+does expire, people can access the information <br>
+ [08:54] &lt;DopefishJustin&gt; yeah, renewal is good because that lets the 
+stuff they care about get protected while letting the old stuff expire and 
+get distributed <br>
+ [08:54] &lt;DopefishJustin&gt; if they've forgotten it exists, they can't 
+renew the copyright <br>
+ [08:54] &lt;JayFive&gt; perhaps if it's owned by one person, let the copyright 
+exist until they die <br>
+ [08:54] &lt;JayFive&gt; if it's a corporation.. 10 years or more if they 
+renew it <br>
+ [08:55] &lt;DopefishJustin&gt; but no, Disney's gotta increase the copyright 
+for EVERYTHING, just so mickey mouse won't expire <br>
+ [08:55] &lt;JayFive&gt; eventually, the copyright for mickey will last until 
+the sun blows up <br>
+ [08:55] &lt;DopefishJustin&gt; but what about the human colonies on alpha 
+centauri? <br>
+ [08:55] &lt;DopefishJustin&gt; they must pay to see mickey too!!!! <br>
+ [08:56] &lt;JayFive&gt; i think they'd be more worried about killing aliens
+ <br>
+ [08:57] &lt;JayFive&gt; I'd only move to alpha centauri if i could fight 
+aliens <br>
+ [08:57] &lt;JayFive&gt; bugger this whole population crisis thingy.. give 
+me death of aliens! <br>
+ [08:58] &lt;DopefishJustin&gt; plus, copyright is now nonenforceable in
+practice  <br>
+ [08:58] &lt;JayFive&gt; oh, they'd find a way to get somebody over to alpha 
+centauri <br>
+ [08:59] &lt;JayFive&gt; the law cases might take a while though <br>
+ [09:00] &lt;JayFive&gt; heh, i love saying "they <br>
+ [09:01] &lt;JayFive&gt; they'll find a way"   even if i don't know if they 
+can :) <br>
+ [09:02] &lt;JayFive&gt; if QT's gpl <br>
+ [09:02] &lt;JayFive&gt; why doesn't somebody port the linux version to windows?
+ <br>
+ [09:02] &lt;JayFive&gt; qt's linux port is qpl I mean <br>
+ [09:02] &lt;DopefishJustin&gt; that's a darn good question <br>
+ [09:02] &lt;JayFive&gt; arrgh.. gpl <br>
+ [09:02] &lt;DopefishJustin&gt; i dunno if it's gpl, it might be some other 
+license <br>
+ [09:03] &lt;JayFive&gt; i heard the words trolltech, gpl and qt in the same 
+sentence I'm sure! <br>
+ [09:05] &lt;DopefishJustin&gt; from their web page, it looks like it's free 
+but commercial <br>
+ [09:07] &lt;JayFive&gt; http://www.trolltech.com/products/download/freelicense/qtfree-dl.html
+ <br>
+ [09:08] &lt;DopefishJustin&gt; hmm <br>
+ [09:08] &lt;DopefishJustin&gt; maybe it's a lot of work and there are already 
+other free widget sets to use <br>
+ [09:09] &lt;JayFive&gt; i love how the free version for windows only supports 
+a non-free ide/compiler (visual c) <br>
+ [09:10] &lt;DopefishJustin&gt; I don't know whether to laugh or be angered 
+at the IDSA FAQ on their web page. They answer all the questions but completely 
+miss the point. <br>
+ [09:12] &lt;JayFive&gt; i think the correct emotion is frustrated.. anger 
+gets you nowhere apparently <br>
+ [09:12] &lt;DopefishJustin&gt; frustration is good <br>
+ [09:13] &lt;DopefishJustin&gt; unfortunately, it looks like Sierra is an 
+IDSA member <br>
+ [09:15] &lt;JayFive&gt; if they've got contact info on the idsa site. .that 
+could be good <br>
+ [09:15] &lt;DopefishJustin&gt; it only mentions Havas Interactive, their 
+parent company <br>
+ [09:22] &lt;JayFive&gt; oh no.. the original agi-studio is in pascal! :)
+<br>
+ [09:34] &lt;syke|gone&gt; hi <br>
+ [09:35] *** syke|gone is now known as syke <br>
+ [09:36] &lt;syke&gt; QT is dual-licensed. GPL and Commercial licenses <br>
+ [09:36] &lt;syke&gt; the win32 QT has an odd free license <br>
+ [09:36] &lt;syke&gt; but is still free <br>
+ [09:36] &lt;DopefishJustin&gt; free beer? <br>
+ [09:36] &lt;syke&gt; someone has a KDE on windows project that uses cygwin
+  <br>
+ ------  <br>
+ <br>
+ Heh, I'm talking about copyright issues and here I am, copying and pasting 
+information without asking for permission.  <br>
+ <br>
+ I'm in the process of writing letters to Sierra and other peoples if I can 
+get around to it.  The good news is that I'll be working on NAGI until I get
+a reply (if any).  I'm not as depressed about the situation as I was before.
+ (i've had time to sleep and think about it)  <br>
+ <br>
+ The ideas: <br>
+ 
+<ul>
+   
+  <li> write letters to Sierra </li>
+   
+  <li> release the source or specs for the disassmbled functions and let other
+people "rewrite them" </li>
+   
+  <li> ignore Sierra.  (not a good idea.. they could bite me on the ass later 
+on) </li>
+   
+  <li> trash NAGI and just release docs for Sarien to work on. </li>
+   
+  <li> contribute my original code and specs to Sarien. </li>
+   
+  <li> contribute to AGI Studio instead.  </li>
+ 
+</ul>
+ I don't really want to trash NAGI and I like the idea of working in a project 
+where I wrote most of the code.  So I'm going with the writing letters and 
+working on NAGI at the moment.  <br>
+ <br>
+ Thanks for reading all this if you actually did. :)  If you have any ideas 
+or suggestions, they would be VERY welcome!  <br>
+ <br>
+ - Nick  <br>
+ <br>
+ --&gt;   sonneveld@hotmail.com  <br>
+ --&gt;   #AGI channel on dalnet <br>
+ --&gt;   #Sarien channel on irc.openprojects.net <br>
+ --&gt;   Megatokyo Messageboard too (http://www.mega-tokyo.com/cgi-bin/yabb/YaBB.pl) 
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+                                         
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+                                         
+  <meta name="Generator" content="Microsoft Word 97">
+  <title>NAGI History</title>
+</head>
+ <body>
+                      
+<h3>NAGI History</h3>
+                      
+<p>??th July 2001 (Version 2.03)<br>
+         </p>
+                 
+<ul>
+                                   
+  <li>After you give the unicorn to that lotta witch and are flown back to 
+    the ground, the game crashes.  This is because a "previous cel frame" 
+for    an object is set to a view object that was discarded!!  This caused 
+NAGI   to crash.. the original doesn't because it's still lying in memory.. 
+but  it's not meant to be. so instead of storing a pointer to the previous 
+cel  like sierra did, I changed it to "cel's previous height and width" which
+  is all sierra needed the pointer for.  so I replaced a 32bit pointer with
+  two 8bit numbers.  However, it does break the savegames :(  which sucks
+for  me too.</li>
+                           
+  <li>Added palettes from Apple ][gs and Apple][.. they were from emulators 
+   though.  I might make it a bit more customisable from an ini file</li>
+                           
+  <li>tidying up animated obj code</li>
+                       
+  <li>more tidying.. whee</li>
+                       
+  <li>fixed a bug I introduced in SQ:TLC and others probably in the swirly
+   spaceship around planet scene.  force.update wasn't "reading" the parameter.
+    In actual truth.. the later agi's just updated them all and ignored the 
+ parameter but I forgot to read the parameter anyway in the code cleanup</li>
+                       
+  <li>fixed up the change loop cmd so it checks the bounds properly.  it
+didn't check it if the loop number was just one over the maximum.. this is
+a BUG in the ORIGINAL agi too!  sqtlc earlier versions will not run the intro
+though</li>
+                   
+  <li>urgh.. never do:   state.var[*(c++)] = objtable[*(c++)].loop_total; 
+   and expect reliable results</li>
+               
+  <li>profiling and trying to optimise lengthy code.. like lzw, picfill and
+  umm.. video scaling.. it's lotsa fun!</li>
+           
+  <li>replaced picfill's dynamic "stack" (ie a bunch of free's 'n mallocs) 
+ with a fixed buffer.. 3k but agi had 2.5k and that was to share with the 
+um.. function stack :)</li>
+       
+  <li>fixed so donald duck has sound</li>
+   
+  <li>disassmbled CGA driver with dithering.. just have to code it up in C</li>
+  <li>added CGA support to NAGI.. looks alright.. need to fix some bugs though..
+and make it less hard-coded<br>
+         <br>
+        <br>
+         </li>
+                 
+</ul>
+                 
+<p>16th July 2001 (Version 2.02)</p>
+                      
+<ul>
+                                         
+  <li>Changed name of Justin's Quest to Justin Quest</li>
+                                         
+  <li>disassembling savegame stuff</li>
+                                         
+  <li>fixed keys so you can use the keypad now</li>
+                                         
+  <li>fixed the keypad 5 when numlock is off.. or was it on?  thanks to Justin</li>
+                                         
+  <li>try saving a game when the total path size is longer than 32 chars
+in the original agi.. urgh</li>
+                                         
+  <li>fixed a parsing bug thanks to justin.  In justin quest typing 'ie'
+gets parsed as 'e'.  the problem was that it was incorrectly detecting single
+letter words like 'a' and 'i' (which sierra-agi skips by default)  "a " and
+"i " was being detected right but "a&lt;eol&gt;" wasn't	</li>
+                                         
+  <li>if sound cannot be init'd (ie, if sound is already in use) then it
+disables it (Justin suggested this)</li>
+                                         
+  <li>fixed cmd_log entry in cmd table.. i hadn't specified the 1 parameter
+     so kq3 crashed when it tried to log bad parsed cmds in debug mode because
+     cmd.log didn't exist but nagi didn't skip it's 1 parameter either</li>
+                                         
+  <li>tidied up some priority code (misc_graf.c)</li>
+                                         
+  <li>fixed up flags code so it only used bits for each flag.. not a whole
+     byte. reduces save games a bit (256 down to 32 bytes for flags) (so
+224    bytes)</li>
+                                         
+  <li>replaced all hardcoded animated object flags with #defines</li>
+                                         
+  <li>described all #defined animated flags :)</li>
+                                         
+  <li>fixed save games so they recognise "c:" or "c:\"  or "a:" or whatever</li>
+                                         
+  <li>added 'where to get games' and 'funny larry bug' to docs</li>
+                                         
+  <li>organised docs a bit</li>
+                   
+</ul>
+                       
+<p>note: save games are incompatible with older versions now due to several
+     changes (in viewtable and state structure)</p>
+                      
+<p>28th June 2001 (Version 2.01)</p>
+                      
+<ul>
+                                         
+  <li>fixed update.screen so SDL wouldn't ignore it if it went slightly offscreen</li>
+                                         
+  <li>played around with adding buffbri mouse support.. works but I want
+to make it more generic</li>
+                                         
+  <li>changed video mode to use 8bit colour depth.  does it fix anybody's
+     colour probs?</li>
+                                         
+  <li>added proper buff bri support.. access it through standard.ini</li>
+                                         
+  <li>added sliding puzzle game and Shifty demo to crc list</li>
+                                         
+  <li>changed some mouse support games in list</li>
+                                         
+  <li>automouse works! had to play around with sierra's implementation to
+     make it work but it works well now.</li>
+                                         
+  <li>shifted some bugs to games issues (not really bugs)</li>
+                   
+</ul>
+                       
+<p>26th June 2001 (Version 2.00)</p>
+                      
+<ul>
+                                         
+  <li>finally implemented all v3 differences.. this doesn't include saving
+     yet</li>
+                                         
+  <li>v1.04 was actually feature complete when it came to graphics</li>
+                                         
+  <li>cmd177, 173 and 181 are done</li>
+                                         
+  <li>some variables are set and unset.. but nothing actually checks it</li>
+                                         
+  <li>** some sort of mouse driver maybe checks it??  never actually released?</li>
+                                         
+  <li>cleaned up command table structure a bit</li>
+                                         
+  <li>implemented tracing ('+' actually skips to the next logic call)</li>
+                                         
+  <li>implemented text scrolling (for the tracing)</li>
+                                         
+  <li>sound fixed (stupid scaling bug).. still going for a rewrite one day</li>
+                                         
+  <li>trace.init() fixed.. calculating height incorrectly</li>
+                                         
+  <li>tracing fixed up (reading 16bit said numbers was askew and could have
+     caused a crash</li>
+                                         
+  <li>fixed sierra's tracing so it doesn't try and read a null pointer if
+     command name does not exist.</li>
+                                         
+  <li>added all the different tracing "hooks" throughout the code that I
+commented out</li>
+                                         
+  <li>added Schiller Demo to crc list</li>
+                                         
+  <li>display game title in window</li>
+                   
+</ul>
+                       
+<p>19th June 2001 (Version 1.04)</p>
+                      
+<ul>
+                                         
+  <li>compared other v2 and v3 functions (mostly just hgc removal)</li>
+                                         
+  <li>implemented v3 priority table </li>
+                                         
+  <li>mysterious movement type 4 which I suspect is for mouse support?</li>
+                                         
+  <li>kq4 works better now.. no weird priority errors now</li>
+                                         
+  <li>Set some milestones and gave previous snapshots a version number</li>
+                                         
+  <li>added Disco Nights and Donald Duck 1.0c to crc list</li>
+                   
+</ul>
+                       
+<p>17th June 2001 (Version 1.03)</p>
+                      
+<ul>
+                                         
+  <li>fixed a bunch o' warnings</li>
+                                         
+  <li>fixed pic fill in kq4</li>
+                   
+</ul>
+                       
+<p>12th June 2001 (Version 1.02)</p>
+                      
+<ul>
+                                         
+  <li>Can detect v2 and v3 resource types (not v3 with 4 dir's though)</li>
+                                         
+  <li>for defaults.. do not need standard.ini</li>
+                                         
+  <li>found bugs in SQ-Lost Chapter..thought they were in nagi..</li>
+                                         
+  <li>added a whole bunch of games to crc list</li>
+                                         
+  <li>touched up and cleaned up the version stuff.</li>
+                   
+</ul>
+                       
+<p>8th June 2001 (Version 1.01)</p>
+                      
+<ul>
+                                         
+  <li>version 3 support added!</li>
+                                         
+  <li>lzw compression</li>
+                                         
+  <li>don't decrypt logic msg if lzw compressed</li>
+                                         
+  <li>added a nice new section that detects game present</li>
+                                         
+  <li>crc checking</li>
+                                         
+  <li>update loop direction stuff depending on flag 20</li>
+                                         
+  <li>bunch o' stuff (i think)</li>
+                                         
+  <li>cmd.version() added :)..  might work on this a tiny bit more</li>
+                                         
+  <li>rearranged initialisation code so it's a tad cleaner and works for
+the new version detection code</li>
+                                         
+  <li>all games in my crc list work.. if you have a game version that isn't
+     on the list (which is a few) could you please show me a way I could
+obtain      it?</li>
+                                         
+  <li>BUGS... if the screen is updated on the far right.. it may not properly</li>
+                                         
+  <li>update. (evident in demo packs and a window in the MH demo in demo4)</li>
+                                         
+  <li>quick fix.. swap out of window and go back.. sdl should automatically
+     update</li>
+                                         
+  <li>initial beginnings of a game select menu (hence the NAGI status bar)
+     haven't finished it yet because i was working on version detection</li>
+                                         
+  <li>added some small utils (crc and bitz) that might be useful</li>
+                                         
+  <li>BUGS.. no default for agi atm.  </li>
+                                         
+  <li>read the standard.ini and standard_doc.rtf to see the new changes for
+     version recognition in NAGI.</li>
+                   
+</ul>
+                       
+<p>29th May 2001 (Version 1.00)</p>
+                      
+<ul>
+                                         
+  <li>add.to.pic is complete.  there should not be any graphics bugs now
+(i hope)</li>
+                                         
+  <li>compare strings (needed for larry phone numbers)</li>
+                                         
+  <li>show.obj (needed for larry time/wallet amount)</li>
+                                         
+  <li>inventory the same as the original now (maybe an option for dodgy quick
+     version?)</li>
+                                         
+  <li>follow.ego works (rewrote the function.. no idea what the prob was)</li>
+                                         
+  <li>priority bug in add.to.pic fixed :)</li>
+                                         
+  <li>LEISURE SUIT LARRY CAN NOW BE COMPLETED (finished on a dodgy slow 486
+     33mhz laptop since I had nothing better to do)</li>
+                   
+</ul>
+                       
+<p>24th May 2001 (Version 0.04)</p>
+                      
+<ul>
+                                         
+  <li>savegames (one game) work</li>
+                                         
+  <li>restart works</li>
+                                         
+  <li>text mode properly works (no palette support yet)</li>
+                                         
+  <li>special config file (no windows dll's used)</li>
+                                         
+  <li>video scaling (see config)</li>
+                                         
+  <li>select drivers through ini file.. no batch file needed now</li>
+                                         
+  <li>bug in saving the logic scan lists (reporting wrong size)</li>
+                                         
+  <li>can optionally select the decryption of object file (for older games)</li>
+                                         
+  <li>dodgy quick inventory to see what you've got (and test decrypted obj)</li>
+                   
+</ul>
+                       
+<p>11th May 2001 (Version 0.03)</p>
+                      
+<ul>
+                                         
+  <li>menus done.. text display fixed up a bit (help and pq newspaper looks
+     alright)</li>
+                                         
+  <li>clock should be working properly now too (wizard/pq meeting)</li>
+                                         
+  <li>n.exe is unoptimised... n-o2.exe is optimised.</li>
+                   
+</ul>
+                       
+<p>9th May 2001 (Version 0.02)</p>
+                      
+<ul>
+                                         
+  <li>stupid bug removed.. working on menus (not complete yet)</li>
+                   
+</ul>
+                       
+<p>6th May 2001 (Version 0.01)</p>
+                      
+<ul>
+                                         
+  <li>a couple o' comments.. compiled with optimisations on.</li>
+                                         
+  <li>just had birthday.. so no proper work on it yet.</li>
+                   
+</ul>
+                       
+<p>4th May 2001 (Version 0.00)</p>
+                      
+<ul>
+                                         
+  <li>first "release"</li>
+                   
+</ul>
+                     
+</body>
+</html>
