@@ -11,11 +11,6 @@ Xmas Demo
 ---------
 The sides of some of the scrolling text is missing.  This occurs on the original interpreter if you run 2.440 code on a 2.917 interpreter.
 
-Space Quest: Lost Chapter
--------------------------
-Crashes at intro.  Logic code was setting wrong loop number and clear lines has two reversed parameters 
-the cmd prompt is meant to be shown during intro.  NAGI needs to check for dodgy logic code
-
 kq1
 ---
 restore a game on the intro screen.. "press any key" is stuck on bottom
