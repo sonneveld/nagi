@@ -9,11 +9,13 @@ END picture render video related functions */
 
 #include "../agi.h"
 
-#include "../sys/video.h"
+
 #include "../picture/sbuf_util.h"
 //#include "../picture/pic_stack.h"
 #include "../picture/pic_render.h"
 
+#include "../sys/drv_video.h"
+#include "../sys/gfx.h"
 
 /*
 CGARelated135B
@@ -40,7 +42,7 @@ FinalPicX
 
 void sbuff_fill(u8 colour)
 {
-	memset(vstate.pic_buf, colour, 160*168);
+	memset(gfx_picbuff, colour, 160*168);
 }
 
 void sbuff_testpattern()
@@ -51,7 +53,7 @@ void sbuff_testpattern()
 	m=0;
 	n = 0;
 
-	b= vstate.pic_buf;
+	b= gfx_picbuff;
 	for (i=0; i<(160*168); i++)
 	{
 		if (m != 7)
@@ -93,7 +95,7 @@ void sbuff_xline()
 	}
 
 #warning replicated from sbuff_plot code
-	b = vstate.pic_buf + PBUF_MULT(pos_init_y) + pos_init_x;
+	b = gfx_picbuff + PBUF_MULT(pos_init_y) + pos_init_x;
 	if ((pos_init_y & 1) == 0)
 		colour = col_even;
 	else
@@ -135,7 +137,7 @@ void sbuff_yline()
 		pos_init_y = y1;
 	}
 	
-	b = vstate.pic_buf + PBUF_MULT(pos_init_y) + pos_init_x;
+	b = gfx_picbuff + PBUF_MULT(pos_init_y) + pos_init_x;
 	if ((pos_init_y & 1) == 0)
 		colour = col_even;
 	else
@@ -165,7 +167,7 @@ void sbuff_plot()
 	u8 *b;
 	u8 colour, pixel;
 	
-	b = vstate.pic_buf + PBUF_MULT(pos_init_y) + pos_init_x;
+	b = gfx_picbuff + PBUF_MULT(pos_init_y) + pos_init_x;
 	
 	if ((pos_init_y & 1) == 0)
 		colour = col_even;
@@ -199,7 +201,7 @@ void sbuff_picfill(u8 ypos, u8 xpos)
 	u16 counter;
 	u8 colour_new, colour_old;
 	
-	b = vstate.pic_buf + PBUF_MULT(ypos) + xpos;
+	b = gfx_picbuff + PBUF_MULT(ypos) + xpos;
 	mask_bh = sbuff_drawmask;
 	colour_bl = 0x4F;
 	stack_ptr = fill_stack;
@@ -340,7 +342,7 @@ locnext:
 		if (pos_init_y > 167)
 			goto loc5413;
 	loc53A8:
-		b = vstate.pic_buf + PBUF_MULT(pos_init_y) + pos_init_x;
+		b = gfx_picbuff + PBUF_MULT(pos_init_y) + pos_init_x;
 		if ((*b & mask_dl) == colour_bl) goto loc52ca;
 	
 		// redirected position isn't a fill colour??

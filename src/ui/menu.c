@@ -20,7 +20,8 @@ _MenuCalcSize                    cseg     000095C4 00000073
 #include <string.h>
 
 #include "../agi.h"
-#include "../sys/video_misc.h"
+#include "../sys/drv_video.h"
+#include "../sys/gfx.h"
 #include "../ui/menu.h"
 #include "../ui/msg.h"
 #include "../flags.h"
@@ -30,7 +31,6 @@ _MenuCalcSize                    cseg     000095C4 00000073
 #include "../ui/events.h"
 #include "../ui/printf.h"
 
-#include "../sys/video.h"
 
 u16 menu_next_input = 0;
 
@@ -366,7 +366,7 @@ void menu_draw(MENU *m)
 	
 	menu_name_invert(m);
 	menu_calc_size(m);
-	box_n_border(menu_pos_x, menu_pos_y, menu_size_width, menu_size_height, 0x0F , 0);
+	gfx_msgbox(menu_pos_x, menu_pos_y, menu_size_width, menu_size_height, 0x0F , 0);
 	di = m->head;
 	if ( di != 0 )
 	{

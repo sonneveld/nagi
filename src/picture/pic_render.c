@@ -38,11 +38,11 @@ _DrawLine                        cseg     0000661A 00000096
 #include <stdlib.h>
 #include "../agi.h"
 
-#include "../sys/video.h"
 #include "../picture/sbuf_util.h"
 
 #include "../picture/pic_res.h"
 #include "../picture/pic_render.h"
+#include "../sys/drv_video.h"
 
 u8 pos_init_y = 0;
 u8 pos_init_x = 0;

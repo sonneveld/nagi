@@ -14,8 +14,10 @@ _IBMBlitArea                     cseg     00009D75 000000D0
 
 #include "obj_blit.h"
 #include "obj_base.h"
-#include "../sys/video.h"
 #include "../view/obj_picbuff.h"
+
+#include "../sys/drv_video.h"
+#include "../sys/gfx.h"
 
 // some of these aren't good names for functions
 // ie.. blit_area could be more like sbuff_render_view  or something
@@ -26,7 +28,7 @@ void blit_save(BLIT *b)
 	u8 y_count;			// ah = y, al = x
 	u8 *pic_cur, *blit_cur;	// screen buff (si) and blit buf (di)
 	
-	pic_cur = vstate.pic_buf + PBUF_MULT(b->y) + b->x;	// calc_screen_off()
+	pic_cur = gfx_picbuff + PBUF_MULT(b->y) + b->x;	// calc_screen_off()
 	blit_cur = b->buffer;
 	y_count = b->y_size;
 	
@@ -45,7 +47,7 @@ void blit_restore(BLIT *b)
 	u8 y_count;			// ah = y, al = x
 	u8 *pic_cur, *blit_cur;	// screen buff (di) and blit buf (si)
 
-	pic_cur = vstate.pic_buf + PBUF_MULT(b->y) + b->x;	// calc_screen_off()
+	pic_cur = gfx_picbuff + PBUF_MULT(b->y) + b->x;	// calc_screen_off()
 	blit_cur = b->buffer;
 	y_count = b->y_size;
 	
@@ -78,7 +80,7 @@ void obj_blit(VIEW *v)
 	c++;					// skip width of cell
 	cel_height = *(c++);		// height
 	cel_tran = *(c++) & 0x0F;	// transparency info
-	pb = vstate.pic_buf + PBUF_MULT(v->y - cel_height+1) + v->x;
+	pb = gfx_picbuff + PBUF_MULT(v->y - cel_height+1) + v->x;
 	cel_invis = 1; 
 	view_pri = v->priority << 4;	// priority
 	init = pb;
@@ -103,13 +105,13 @@ void obj_blit(VIEW *v)
 			else
 				do
 				{
-					pb_pri = *pb & 0xF0;			// get priority from vstate.pic_buf
+					pb_pri = *pb & 0xF0;			// get priority from gfx_picbuff
 					
 					if (pb_pri <= 0x20)
 					{
 						temp = pb;
 						ch = 0;
-						while ( ((temp-vstate.pic_buf)<(0x6860)) && (ch<=0x20) )
+						while ( ((temp-gfx_picbuff)<(0x6860)) && (ch<=0x20) )
 						{
 							temp += 160;
 							ch = *temp & 0xF0;

@@ -22,7 +22,6 @@ _CheckBlockStat                  cseg     000006D9 000000CF
 #include "../agi.h"
 
 // for put block
-#include "../sys/video.h"
 
 #include "obj_blit.h"
 #include "obj_base.h"

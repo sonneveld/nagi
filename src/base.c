@@ -19,7 +19,7 @@
 
 #include "flags.h"
 #include "res/res.h"
-#include "sys/video.h"
+
 
 
 u8 *cmd_pause(u8 *c)

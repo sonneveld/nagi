@@ -12,7 +12,8 @@ _AddToPic                        cseg     00002D52 000000E0
 #include "../sys/script.h"
 #include "../view/obj_picbuff.h"
 #include "../ui/events.h"
-#include "../sys/video_misc.h"
+#include "../sys/drv_video.h"
+#include "../sys/gfx.h"
 
 u8 add_num = 0;
 u8 add_loop = 0;
@@ -83,10 +84,10 @@ void add_to_pic()
 
 u8 *cmd_show_pri(u8 *c)
 {
-	pic_buff_rotate = 1;
-	pic_buff_update();
+	gfx_picbuffrotate = 1;
+	gfx_picbuff_update();
 	user_bolean_poll();
-	pic_buff_update();
-	pic_buff_rotate =  0;
+	gfx_picbuff_update();
+	gfx_picbuffrotate =  0;
 	return c;
 }

@@ -236,7 +236,7 @@ void message_box_draw(u8 *str, u16 row, u16 w, u16 toggle)
 	msgstate.bgpos.y = (msgstate.tpos_edge.row - state.window_row_min + 1) * LINE_SIZE + 4; 
 	msgstate.bgpos.x = (msgstate.tpos.col * 4) - 5;
 	
-	box_n_border(msgstate.bgpos.x, msgstate.bgpos.y, msgstate.bgsize.w, msgstate.bgsize.h, 0x0F, 0x04);
+	gfx_msgbox(msgstate.bgpos.x, msgstate.bgpos.y, msgstate.bgsize.w, msgstate.bgsize.h, 0x0F, 0x04);
 	
 	msgstate.active = 1;
 	agi_printf(msg);

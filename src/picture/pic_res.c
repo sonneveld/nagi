@@ -16,9 +16,10 @@
 #include <stdlib.h>
 #include "../agi.h"
 
-#include "../sys/video.h"
+
 #include "../picture/sbuf_util.h"
-#include "../sys/video_misc.h"
+#include "../sys/drv_video.h"
+#include "../sys/gfx.h"
 
 #include "../ui/msg.h"
 
@@ -194,7 +195,7 @@ u8 *cmd_show_pic(u8 *c)
 {
 	flag_reset(F15_PRINTMODE);
 	cmd_close_window(0);
-	pic_buff_update();
+	gfx_picbuff_update();
 	pic_visible = 1;
 	return c;
 }
