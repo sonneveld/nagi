@@ -48,7 +48,7 @@ u8 *script_new()
 	if (  (state.script_size > 0) && (script_head == 0)  )
 	{
 		script_head = a_malloc(state.script_size << 1);
-		#warning set_mem_rm0() not implemented
+#warning set_mem_rm0() not implemented
 		//set_mem_rm0();
 	}
 	script_next = script_head;

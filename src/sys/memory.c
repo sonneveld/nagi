@@ -80,7 +80,7 @@ void *agi_malloc(u16 size)
 		_Print(temp);
 		agi_exit();	*/
 		exit(1);
-		#warning need to fix error statement
+#warning need to fix error statement
 	}
 	
 	return_ptr = mem_ptr;
