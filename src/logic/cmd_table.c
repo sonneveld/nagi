@@ -256,7 +256,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
                         // 108
 			{"cmd.set.cursor.char", cmd_set_cursor_char, 1, 0},
 			{"cmd.set.text.attrib", cmd_set_text_attribute, 2, 0},
-			{"cmd.shake.screen (incomplete)", cmd_do_nothing, 1, 0},
+			{"cmd.shake.screen", cmd_shake_screen, 1, 0},
 			{"cmd.config.screen", cmd_config_screen, 3, 0},
 			{"cmd.status.line.on", cmd_status_line_on, 0, 0},
 			{"cmd.status.line.off", cmd_status_line_off, 0, 0},

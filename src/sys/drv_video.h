@@ -66,6 +66,7 @@ struct video_driver_struct
 	void (*ptr_update)(VSURFACE *vsurface, POS *pos, SIZE *size);
 	void (*ptr_palette_set)(VSURFACE *vsurface, PCOLOUR *palette, u8 num);
 	void (*ptr_fill)(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour);
+	void (*ptr_shake)(VSURFACE *vsurface, int count);
 };
 typedef struct video_driver_struct VDRIVER;
 
@@ -89,3 +90,4 @@ extern void vid_unlock(VSURFACE *vsurface);
 extern void vid_update(VSURFACE *vsurface, POS *pos, SIZE *size);
 extern void vid_palette_set(VSURFACE *vsurface, PCOLOUR *palette, u8 num);
 extern void vid_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour);
+extern void vid_shake(VSURFACE *vsurface, int count);

@@ -32,7 +32,7 @@ extern int gfx_picbuffrotate;
 extern void gfx_init(void);
 extern void gfx_shutdown(void);
 extern void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h);
-extern void gfx_shake(u8 count);
+extern void gfx_shake(int count);
 extern void gfx_msgbox(int x, int y, int w, int h, u8 bg, u8 line);
 extern void gfx_palette_update(void);
 extern void gfx_clear(void);

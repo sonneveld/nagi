@@ -121,7 +121,7 @@ void gfx_init(void)
 	// do something to calc this from render/font
 	gfx_size.w = 40 * font_size.w;
 	gfx_size.h = 25 * font_size.h;
-
+	
 	gfx_surface = vid_display(0, &gfx_size, c_vid_full_screen);
 
 	// setup the palette
@@ -235,13 +235,9 @@ void gfx_update(u16 rect_x, u16 rect_y, u16 rect_w, u16 rect_h)
 }
 
 
-void gfx_shake(u8 count)
+void gfx_shake(int count)
 {
-	printf("dummy video shake\n");
-	// create a new surface
-	// copy screen onto surface
-	// shift into corner
-	// flip or something.. i dunno
+	vid_shake(gfx_surface, count);
 }
 
 

@@ -25,6 +25,8 @@ void dummy_unlock(VSURFACE *vsurface);
 void dummy_vid_update(VSURFACE *vsurface, POS *pos, SIZE *size);
 void dummy_palette_set(VSURFACE *vsurface, PCOLOUR *palette, u8 num);
 void dummy_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour);
+void dummy_shake(VSURFACE *vsurface, int count);
+
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
@@ -47,7 +49,8 @@ void dummy_driver_init(VDRIVER *drv)
 	drv->ptr_unlock = dummy_unlock;
 	drv->ptr_update = dummy_vid_update;
 	drv->ptr_palette_set = dummy_palette_set;
-	
+	drv->ptr_shake = dummy_shake;
+
 	drv->ptr_fill = dummy_fill;
 }
 
@@ -117,5 +120,12 @@ void dummy_palette_set(VSURFACE *vsurface, PCOLOUR *palette, u8 num)
 void dummy_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour)
 {
 	printf("dummy_fill() called.\n");
+}
+
+
+void dummy_shake(VSURFACE *vsurface, int count)
+{
+	
+	printf("dummy_shake() called.\n");
 }
 

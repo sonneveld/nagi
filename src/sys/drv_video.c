@@ -101,3 +101,9 @@ void vid_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour)
 }
 
 
+void vid_shake(VSURFACE *vsurface, int count)
+{
+	assert(vsurface != 0);
+	vdriver.ptr_shake(vsurface, count);
+}
+

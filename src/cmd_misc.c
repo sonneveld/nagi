@@ -9,6 +9,9 @@ CmdVersion                       cseg     00007670 00000016
 #include "agi.h"
 #include "ui/msg.h"
 
+#include "sys/drv_video.h"
+#include "sys/gfx.h"
+
 u8 *cmd_version(u8 *c)
 {
 	//message_box("New Adventure Game Interpreter (NAGI)\n        By Nick Sonneveld");
@@ -23,4 +26,11 @@ u8 *cmd_version(u8 *c)
 	
 	return c;
 	
+}
+
+
+u8 *cmd_shake_screen(u8 *c)
+{
+	gfx_shake(*(c++));
+	return c;
 }

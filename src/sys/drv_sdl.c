@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 /* OTHER headers	---	---	---	---	---	---	--- */
 
 #include "../base.h"
@@ -25,6 +26,7 @@ void sdl_unlock(VSURFACE *vsurface);
 void sdl_update(VSURFACE *vsurface, POS *pos, SIZE *size);
 void sdl_palette_set(VSURFACE *vsurface, PCOLOUR *palette, u8 num);
 void sdl_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour);
+void sdl_shake(VSURFACE *vsurface, int count);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
@@ -49,6 +51,7 @@ void sdl_driver_init(VDRIVER *drv)
 	drv->ptr_unlock = sdl_unlock;
 	drv->ptr_update = sdl_update;
 	drv->ptr_palette_set = sdl_palette_set;
+	drv->ptr_shake = sdl_shake;
 
 	drv->ptr_fill = sdl_fill;
 	
@@ -101,7 +104,7 @@ VSURFACE *sdl_display(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_stat
 		sdl_surface = SDL_SetVideoMode(vsurface->size.w,
 								vsurface->size.h,
 								8, sdl_flags);
-		
+				
 		prev_size.w = vsurface->size.w;
 		prev_size.h = vsurface->size.h;
 		prev_flags = sdl_flags;
@@ -211,4 +214,52 @@ void sdl_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour)
 	
 		SDL_FillRect(SDLPTR(vsurface), &rect, colour);
 	}
+}
+
+
+void sdl_shake(VSURFACE *vsurface, int count)
+{
+	u32 rmask,gmask,bmask,amask;
+	u8 bpp;
+	int width, height;
+	SDL_Surface *orig;
+	SDL_Rect dest = {25,25, 0, 0};
+	int ret;
+
+	//	get screen width, height, depth, ptic... etc etc
+	bpp = SDLPTR(vsurface)->format->BitsPerPixel;
+	rmask = SDLPTR(vsurface)->format->Rmask;
+	gmask = SDLPTR(vsurface)->format->Gmask;
+	bmask = SDLPTR(vsurface)->format->Bmask;
+	amask = SDLPTR(vsurface)->format->Amask;
+	width =  SDLPTR(vsurface)->w;
+	height =  SDLPTR(vsurface)->h;
+		
+	// 	create new surface
+	orig = SDL_CreateRGBSurface(0, width, height, bpp, rmask, gmask, bmask, amask);
+	assert(orig);
+
+	orig->format->palette->ncolors = SDLPTR(vsurface)->format->palette->ncolors ;
+	memcpy (orig->format->palette->colors, SDLPTR(vsurface)->format->palette->colors, orig->format->palette->ncolors * sizeof (SDL_Color)) ;
+	
+	// 	blit screen to new surface
+	SDL_BlitSurface(SDLPTR(vsurface), 0, orig, 0); 
+
+	count *= 4;
+	while (count--)
+	{
+		sdl_lock(vsurface);
+		SDL_FillRect(SDLPTR(vsurface), 0, 0);	// clear
+		sdl_unlock(vsurface);
+		SDL_BlitSurface(orig, 0, SDLPTR(vsurface), &dest); // blit to some offset  stretch*10 or something
+
+		SDL_UpdateRect(SDLPTR(vsurface), 0, 0, 0, 0);
+		SDL_Delay(50);
+		
+		ret =  SDL_BlitSurface(orig, 0, SDLPTR(vsurface), 0);// update the screen
+		SDL_UpdateRect(SDLPTR(vsurface), 0, 0, 0, 0);
+		SDL_Delay(50);
+	}
+	
+	SDL_FreeSurface(orig);
 }
