@@ -107,6 +107,8 @@ int gfx_picbuffrotate = 0;
 // gfx_init
 void gfx_init(void)
 {
+	int i; 
+	
 	// gfx drvr init
 	vid_init();
 
@@ -120,27 +122,11 @@ void gfx_init(void)
 	// do something to calc this from render/font
 	gfx_size.w = 40 * font_size.w;
 	gfx_size.h = 25 * font_size.h;
-	// **************************
 
-	// create a surface
-	gfx_surface = vid_display(&gfx_size, c_vid_full_screen);
+	gfx_surface = vid_display(0, &gfx_size, c_vid_full_screen);
 
 	// setup the palette
-	switch (gfx_paltype)
-	{
-		case PAL_16:
-			vid_palette_set(gfx_surface, ega_palette, 16);
-			break;
-		case PAL_TEXT:
-			vid_palette_set(gfx_surface, text_palette, 16);
-			break;
-		case PAL_CGA0:
-			vid_palette_set(gfx_surface, cga_0_palette, 4);
-			break;
-		case PAL_CGA1:
-			vid_palette_set(gfx_surface, cga_1_palette, 4);
-			break;
-	}
+	gfx_palette_update();
 
 	// init pic buffer
 	if (gfx_picbuff == 0)
@@ -157,8 +143,31 @@ void gfx_shutdown()
 	ch_shutdown();
 	render_shutdown();
 	if (gfx_surface != 0)
+	{
 		vid_free(gfx_surface);
+		gfx_surface = 0;
+	}
 	vid_shutdown();
+	if (gfx_picbuff != 0)
+	{
+		a_free(gfx_picbuff);
+		gfx_picbuff = 0;
+	}
+}
+
+// using available open resources.. refresh the gfx
+void gfx_reinit()
+{
+	ch_shutdown();
+	render_shutdown();
+	render_init();
+	ch_init();
+	
+	gfx_size.w = 40 * font_size.w;
+	gfx_size.h = 25 * font_size.h;
+	
+	gfx_surface = vid_display(gfx_surface, &gfx_size, c_vid_full_screen);
+	gfx_palette_update();
 }
 
 // update the render buffer onto the screen

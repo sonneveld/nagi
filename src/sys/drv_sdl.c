@@ -16,7 +16,7 @@
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 void sdl_driver_shutdown(void);
-VSURFACE *sdl_display(SIZE *screen_size, int fullscreen_state);
+VSURFACE *sdl_display(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_state);
 void sdl_free(VSURFACE *vsurface);
 void sdl_lock(VSURFACE *vsurface);
 void sdl_unlock(VSURFACE *vsurface);
@@ -34,12 +34,6 @@ void sdl_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour);
 
 // elemental
 //-----------------------------------------------------------
-
-
-
-
-
-VSURFACE sdl_vsurface = {0, {0,0}, 0,0,0};
 
 
 void sdl_driver_init(VDRIVER *drv)
@@ -70,62 +64,78 @@ void sdl_driver_shutdown()
 	//SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
+
+SIZE prev_size;
+u32 prev_flags;
+
 // create an 8bit window with such a size
 // clear it with colour 0
 // 1= fullscreen
 // 0 = window
-VSURFACE *sdl_display(SIZE *screen_size, int fullscreen_state)
+VSURFACE *sdl_display(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_state)
 {
 	u32 sdl_flags;
 	SDL_Surface *sdl_surface;
-
-	if (sdl_vsurface.system_surface != 0)
+	
+	if (vsurface == 0)
 	{
-		printf("SDL: video surface already created!\n");
-		agi_exit();
+		vsurface = (VSURFACE*)a_malloc(sizeof(VSURFACE));
+		memset(vsurface, 0, sizeof(VSURFACE));
 	}
-
+	
 	// SDL_HWSURFACE doesn't work too well for fullscreen
-	// or windibSDL_HWPALETTE
+	// or windibSDL_HWPALETTE 
 	sdl_flags = 0;
 	if (fullscreen_state)
 		sdl_flags |= SDL_FULLSCREEN;
 
-	sdl_vsurface.size.w = screen_size->w;
-	sdl_vsurface.size.h = screen_size->h;
-
-	sdl_surface = SDL_SetVideoMode(sdl_vsurface.size.w,
-							sdl_vsurface.size.h,
-							8, sdl_flags);
-
-	if (sdl_surface == 0)
+	if ( (prev_size.w !=  screen_size->w) || 
+		(prev_size.h != screen_size->h) ||
+		(prev_flags != sdl_flags) )
 	{
-		printf("Unable to create video surface: %s\n", SDL_GetError());
-		agi_exit();
+		vsurface->size.w = screen_size->w;
+		vsurface->size.h = screen_size->h;
+		
+		sdl_surface = SDL_SetVideoMode(vsurface->size.w,
+								vsurface->size.h,
+								8, sdl_flags);
+		
+		prev_size.w = vsurface->size.w;
+		prev_size.h = vsurface->size.h;
+		prev_flags = sdl_flags;
+		
+		if (sdl_surface == 0)
+		{
+			printf("Unable to create video surface: %s\n", SDL_GetError());
+			agi_exit();
+		}
+		
+		vsurface->pixels = sdl_surface->pixels;
+		vsurface->line_size = sdl_surface->pitch;
+		vsurface->pixel_size = sdl_surface->pitch / vsurface->size.w;
+		vsurface->system_surface = (void *)sdl_surface;
+	}
+	else
+		sdl_surface = vsurface->system_surface;
+	
+	// clear
+	if ( (SDL_MUSTLOCK(sdl_surface) && (!SDL_LockSurface(sdl_surface)) ) ||
+		(!SDL_MUSTLOCK(sdl_surface)) )
+	{
+		SDL_FillRect(sdl_surface, 0, 0);
+		SDL_UpdateRect(sdl_surface, 0,0,0,0);
+		if (SDL_MUSTLOCK(sdl_surface))
+			SDL_UnlockSurface(sdl_surface);
 	}
 
-	sdl_vsurface.pixels = sdl_surface->pixels;
-	sdl_vsurface.line_size = sdl_surface->pitch;
-	sdl_vsurface.pixel_size = sdl_surface->pitch / sdl_vsurface.size.w;
-	sdl_vsurface.system_surface = (void *)sdl_surface;
-
-	// clear
-	if ( SDL_MUSTLOCK(sdl_surface) )
-		if (SDL_LockSurface(sdl_surface) == 0)
-		{
-			SDL_FillRect(sdl_surface, 0, 0);
-			SDL_UpdateRect(sdl_surface, 0,0,0,0);
-			if (SDL_MUSTLOCK(sdl_surface))
-				SDL_UnlockSurface(sdl_surface);
-		}
-
-	return &sdl_vsurface;
+	return vsurface;
 }
 
 void sdl_free(VSURFACE *vsurface)
 {
-	SDL_FreeSurface( SDLPTR(vsurface) );
-	memset(&sdl_vsurface, 0, sizeof(VSURFACE) );
+	//SDL_FreeSurface( SDLPTR(vsurface) );
+	memset(vsurface, 0, sizeof(VSURFACE) );
+	a_free(vsurface);
 }
 
 // lock a surface

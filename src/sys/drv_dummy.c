@@ -17,7 +17,7 @@
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 void dummy_drv_shutdown(void);
-VSURFACE *dummy_display(SIZE *screen_size, int fullscreen_state);
+VSURFACE *dummy_display(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_state);
 void dummy_free(VSURFACE *vsurface);
 void dummy_lock(VSURFACE *vsurface);
 void dummy_unlock(VSURFACE *vsurface);
@@ -59,7 +59,7 @@ void dummy_drv_shutdown(void)
 // clear it with colour 0
 // 1= fullscreen
 // 0 = window
-VSURFACE *dummy_display(SIZE *screen_size, int fullscreen_state)
+VSURFACE *dummy_display(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_state)
 {
 	printf("dummy_display() called.\n");
 	

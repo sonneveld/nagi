@@ -32,10 +32,6 @@ int clock_thread(void *unused)
 	sdl_tick_prev = SDL_GetTicks();
 	while (clock_state != 2)
 	{
-		#warning pump events?
-		//poll_input()	// pump events
-		SDL_PumpEvents();
-
 		sdl_tick = SDL_GetTicks();
 		state.ticks += (sdl_tick - sdl_tick_prev) / SDL_TICK_SCALE;
 
@@ -44,6 +40,7 @@ int clock_thread(void *unused)
 			case 0:
 				// it's in 1/20's of seconds
 				time_counter += (sdl_tick - sdl_tick_prev) ;
+			
 				while (time_counter >= 20*SDL_TICK_SCALE)
 				{ 
 					time_counter -= 20*SDL_TICK_SCALE;
@@ -70,14 +67,11 @@ int clock_thread(void *unused)
 				sdl_tick_prev = sdl_tick;
 				break;
 		}
-		
-		//printf("wait..");
-		SDL_Delay(40);	// it won't update for a second anyways
+
+		SDL_Delay(500);	// it won't update for a second anyways
 					// a bit less though to account for overhead
-		//printf("nowait..");
 	}
-	//printf("end");
-	
+
 	return 0;
 }
 

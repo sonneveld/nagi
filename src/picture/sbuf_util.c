@@ -42,7 +42,7 @@ FinalPicX
 
 void sbuff_fill(u8 colour)
 {
-	memset(gfx_picbuff, colour, 160*168);
+	memset(gfx_picbuff, colour, PICBUFF_WIDTH*PICBUFF_HEIGHT);
 }
 
 void sbuff_testpattern()

@@ -59,7 +59,7 @@ struct video_driver_struct
 	u8 type;
 	
 	void (*ptr_shutdown)(void);
-	VSURFACE *(*ptr_display)(SIZE *screen_size, int fullscreen_state);
+	VSURFACE *(*ptr_display)(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_state);
 	void (*ptr_free)(VSURFACE *vsurface);
 	void (*ptr_lock)(VSURFACE *vsurface);
 	void (*ptr_unlock)(VSURFACE *vsurface);
@@ -82,7 +82,7 @@ typedef struct font_struct FONT;
 
 extern void vid_init(void);
 extern void vid_shutdown(void);
-extern VSURFACE *vid_display(SIZE *screen_size, int fullscreen_state);
+extern VSURFACE *vid_display(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_state);
 extern void vid_free(VSURFACE *vsurface);
 extern void vid_lock(VSURFACE *vsurface);
 extern void vid_unlock(VSURFACE *vsurface);

@@ -54,10 +54,10 @@ void vid_shutdown(void)
 	vdriver.ptr_shutdown();
 }
 
-VSURFACE *vid_display(SIZE *screen_size, int fullscreen_state)
+VSURFACE *vid_display(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_state)
 {
-	assert(screen_size != 0);
-	return vdriver.ptr_display(screen_size, fullscreen_state);
+	assert(screen_size != 0); 
+	return vdriver.ptr_display(vsurface, screen_size, fullscreen_state);
 }
 
 void vid_free(VSURFACE *vsurface)
