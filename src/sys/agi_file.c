@@ -54,7 +54,8 @@ u8 *find_next(FIND *token)
 
 void find_close(FIND *token)
 {
-	_findclose(token->handle);
+	if (token->handle != -1)
+		_findclose(token->handle);
 }
 
 
@@ -64,6 +65,8 @@ void find_close(FIND *token)
 // file close
 // file read
 // file size
+
+// open should use find_next 'n all that to find all lower and upper case of files
 
 u32 file_buf_size;
 
@@ -93,3 +96,41 @@ u8 *file_to_buf(u8 *file_name)
 	fclose(file_stream);
 	return buf;
 }
+
+
+/*
+// generate crc from first file that has that tail
+// characters before tail can be no more than 5 chars
+// no CASE RESTRICTIONS EITHER!!
+int filetail_crc_gen(u8 *file_tail, u32 *crc32, u8 *file_id)
+{
+	DIR *dp;
+	struct dirent *ep;
+	struct stat fs;
+	
+	dp = opendir (".");
+	if (dp != 0)
+	{
+		// find <FILEID>vol.0
+		// there's not guarantee that <FILEID>dir exists
+		
+		while ( (ep=readdir (dp)) != 0)
+			if (stat(ep->d_name, &fs) == 0)
+				if (S_ISREG(fs.st_mode))
+					// make sure it's got more than 3 chars
+					if (strlen(ep->d_name) > strlen(file_tail))
+						// check last 3 characters
+						if (strcasecmp (file_tail, ep->d_name+strlen(ep->d_name)-strlen(file_tail)) == 0)
+							if (strlen(ep->d_name) <= strlen(file_tail) + strlen(file_tail))
+								if (file_crc_gen(ep->d_name, crc32) == 0)
+								{
+									
+									// get file_id
+									// .........
+									return 0;
+								}
+	}
+
+	return 1;
+}
+*/
