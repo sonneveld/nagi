@@ -2,6 +2,12 @@
 
 */
 
+//~ RaDIaT1oN (2002-04-29):
+//~ include unistd.h
+
+#include <unistd.h>
+
+
 /* BASE headers	---	---	---	---	---	---	--- */
 //#include "agi.h"
 #include "../agi.h"
