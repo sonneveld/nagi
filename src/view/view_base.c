@@ -210,8 +210,13 @@ void obj_loop_set(VIEW *v, u16 loop_num)
 	if (v->view_data == 0)
 		set_agi_error(6, view_num);
 	#warning error in the agi ???
-	if (loop_num >= v->loop_total)
+	if (loop_num > v->loop_total)
 		set_agi_error(5, view_num);
+	if (loop_num == v->loop_total)
+	{
+		printf("obj_loop_set(): \"just out of range\" loop bug occured with anim obj %d.\n", view_num);
+		loop_num = v->loop_total - 1;
+	}
 
 	obj_loop_data(v, loop_num);
 	obj_cel_set(v, v->cel_cur);
