@@ -383,16 +383,17 @@ void state_reload(void)
 		v->num = di++;	// ahh.. back to normality
 		if ( view_find( v->view_cur) != 0)
 			obj_view_set(v, v->view_cur);
-		if ((temp4 & 0x40) != 0)		// 6
+		if ((temp4 & O_ANIMATE) != 0)		// 6
 		{
-			if ((temp4 & 0x01) != 0) 	// 0
+			if ((temp4 & O_DRAWN) != 0) 	// 0
 			{
 				obj_draw(v->num);
 				if ( v->motion == MT_FOLLOW)
 					v->follow.count = 0xFF;
 					//v->unknown29 = 0xFF;
 			}
-			if ( (temp4 & 0x11) == 1)	// 4 0
+			if ( (temp4 & (O_DRAWN & O_ANIMATE))
+					== O_DRAWN)	// 4 0
 				obj_stop_update(v);
 			v->flags = temp4;
 		}

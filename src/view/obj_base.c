@@ -49,6 +49,7 @@ _CheckBlockStat                  cseg     000006D9 000000CF
 #include "../sys/mem_wrap.h"
 
 #include <stdlib.h>
+#include <assert.h>
 
 VIEW *objtable = 0;
 VIEW *objtable_tail;
@@ -128,7 +129,7 @@ BLIT *blitlist_build( u16(*f)(VIEW *) , BLIT *head)	// function, spritelist
 	u16 i;
 	u16 num = 0;
 	u16 d;	
-	u16 next;
+	u16 next = 256;
 	
 	VIEW *s;
 	
@@ -157,6 +158,7 @@ BLIT *blitlist_build( u16(*f)(VIEW *) , BLIT *head)	// function, spritelist
 			}
 		
 		sort_order[next] = 255;
+		assert(next != 256);
 		blit_add( view[next], head );
 	}
 	return head;	// a passed parameter
