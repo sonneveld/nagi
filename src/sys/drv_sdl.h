@@ -6,3 +6,4 @@
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 extern void sdl_driver_init(VDRIVER *drv);
 #endif
+

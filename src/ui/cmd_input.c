@@ -15,6 +15,8 @@ CmdOpenDialogue                  cseg     00003939 00000012
 CmdCloseDialogu                  cseg     0000394B 00000012
 */
 
+#include <string.h>
+
 #include "../agi.h"
 
 #include "../ui/cmd_input.h"

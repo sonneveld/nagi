@@ -16,6 +16,8 @@ _StrToIntPtr                     cseg     00002316 00000038
 _DispNewLine                     cseg     0000234E 0000001F
 */
 
+#include <string.h>
+
 #include "../agi.h"
 #include "../ui/msg.h"
 

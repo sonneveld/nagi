@@ -127,3 +127,4 @@ void format_char(u8 ch)
 	else
 		window_put_char(ch);
 }
+

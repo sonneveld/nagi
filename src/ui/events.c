@@ -1,4 +1,6 @@
 
+#include <stdlib.h>
+
 #include "../agi.h"
 #include "events.h"
 

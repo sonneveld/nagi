@@ -3,6 +3,8 @@ _ClearKbWatch                    cseg     00004C23 0000001A
 CmdSetKey                        cseg     00004C3D 00000066
 */
 
+#include <string.h>
+
 #include "../agi.h"
 
 #include "../ui/events.h"

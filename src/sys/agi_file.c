@@ -26,6 +26,8 @@
 #include "mem_wrap.h"
 #include "agi_file.h"
 
+#include "../ui/string.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 //void test_function(void);
 
@@ -225,3 +227,4 @@ int filetail_crc_gen(u8 *file_tail, u32 *crc32, u8 *file_id)
 	return 1;
 }
 */
+

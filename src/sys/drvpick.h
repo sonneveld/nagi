@@ -27,3 +27,4 @@ extern int drvpick_first(DRVINITSTATE *, DRVINIT *init_list, int size, u8 *def, 
 extern int drvpick_next(DRVINITSTATE *);
 
 #endif
+

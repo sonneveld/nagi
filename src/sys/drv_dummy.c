@@ -8,6 +8,7 @@
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 
@@ -117,3 +118,4 @@ void dummy_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour)
 {
 	printf("dummy_fill() called.\n");
 }
+

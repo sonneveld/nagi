@@ -453,3 +453,4 @@ void cga_view_dither(u8 *view_data)	// dither view
 		loop_count--;
 	}
 }
+

@@ -845,3 +845,4 @@ void standard_select_ng(void)
 // if standard.ini doesn't exist.. where's dir_list come from? FROM THE CONFIG DEFAULT
 // what if ini_key is called without claling ini_section? WORK
 // instead of c_game_location.. use the dir_preset idea?  (nagi, user, game)  DONE BABY!!!
+

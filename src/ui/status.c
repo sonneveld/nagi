@@ -9,6 +9,8 @@ CmdStatusLineOn                  cseg     00003547 00000015
 CmdStatusLneOff                  cseg     0000355C 0000001F
 */
 
+#include <string.h>
+
 #include "../agi.h"
 #include "../ui/status.h"
 

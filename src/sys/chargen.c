@@ -494,7 +494,7 @@ void ch_clear(TPOS *pos1, TPOS *pos2, u8 attrib)
 			if (chgen_textmode == 0)
 				attrib = attrib & 0x3;	// textmode does not support bright backgrounds
 			break;
-		default:
+		default: ;
 	}
 
 	vid_lock(gfx_surface);

@@ -32,3 +32,4 @@ extern int ini_int(INI *ini, u8 *key, int def);
 extern int ini_boolean(INI *ini, u8 *key, int def);
 extern u8 *ini_string(INI *ini, u8 *key, u8 *def);
 #endif
+

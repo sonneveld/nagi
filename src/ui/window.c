@@ -207,3 +207,4 @@ void get_char_0x80()
 		si = 0xFa6e;
 		
 }*/
+
