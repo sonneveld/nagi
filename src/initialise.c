@@ -4,6 +4,12 @@ _GameInit                        cseg     000011B3 0000012B
 _RoomInit                        cseg     000012DE 00000015
 */
 
+//~ RaDIaT1oN (2002-04-29):
+//~ don't redirect console for linux
+//~ definately credit radiation for his fine linux porting
+//~ use setenv for setting environment under linux
+//~ warning placement
+
 /* BASE headers	---	---	---	---	---	---	--- */
 #include "agi.h"
 #include "initialise.h"
@@ -79,7 +85,9 @@ void room_init(void);
 
 void nagi_init()
 {	
+#ifndef RAD_LINUX
 	u8 env_value[50];
+#endif
 	INI *ini_nagi;
 
 	memset( &state, 0, sizeof(AGI_STATE) );
@@ -100,15 +108,18 @@ void nagi_init()
 	ini_close(ini_nagi);
 
 	// for the console window thingy
+#ifndef RAD_LINUX
 	if (c_nagi_console)
 	{
 		freopen("CON", "w", stdout);
 		freopen("CON", "w", stderr);
 	}
+#endif
 
 	printf("New Adventure Game Interpreter (NAGI) %s\n", NAGI_VERSION);
-	printf("Copyright (C) 2000-2001 Nick Sonneveld\n");
-	printf("Author: Nick Sonneveld\n\n");
+	printf("Copyright (C) 2000-2002 Nick Sonneveld & Gareth McMullin\n");
+	printf("Author: Nick Sonneveld (sonneveld@hotmail.com)\n");
+	printf("Linux port by RaDIaT1oN (g_mcm@mweb.co.za)\n\n");
 	
 	printf("Based upon the Adventure Game Interpreter (AGI) v2.917 and v3.002.149\n");
 	printf("Copyright (C) 1984-1988 Sierra On-Line, Inc.\n");
@@ -122,11 +133,20 @@ void nagi_init()
 		c_sdl_drv_video[30] = 0;
 	if (strlen(c_sdl_drv_sound) > 30)
 		c_sdl_drv_sound[30] = 0;
+
+#ifndef RAD_LINUX
 	sprintf(env_value, "SDL_VIDEODRIVER=%s", c_sdl_drv_video);
 	putenv(env_value);
 	// audio driver
 	sprintf(env_value, "SDL_AUDIODRIVER=%s", c_sdl_drv_sound);
-	putenv(env_value);
+	putenv(env_value);*/
+#else	
+	if(c_sdl_drv_video[0]) 
+		setenv("SDL_VIDEODRIVER", c_sdl_drv_video, 1);
+
+	if(c_sdl_drv_sound[0])
+		setenv("SDL_AUDIODRIVER", c_sdl_drv_sound, 1);
+#endif
 
 	//SDL_INIT_EVENTTHREAD SDL_INIT_AUDIO|
 	if ( SDL_Init(SDL_INIT_TIMER) < 0 )
@@ -141,7 +161,7 @@ void nagi_init()
 	
 	// clear keyboard input
 	//clear_input();
-	#warning keyboard needs a bit of cleanup
+#warning keyboard needs a bit of cleanup
 	events_init();
 	
 	//load_vectors();	// keyboard, timer, critical error
