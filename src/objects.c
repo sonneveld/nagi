@@ -8,7 +8,8 @@ CmdGetRoomV                      cseg     0000751B 0000002B
 _Get                             cseg     00007546 00000056
 _GetV                            cseg     0000759C 00000064
 */
-
+#include <string.h>
+#include <assert.h>
 #include "agi.h"
 
 #include "objects.h"
@@ -62,6 +63,7 @@ int object_file_load()
 	
 	dir_preset_change(DIR_PRESET_GAME);
 	obj_data = file_load("object", 0);
+	assert(obj_data);
 	
 	// 7 is an object with one item that has a name with no chars (nul) (3+3+1)
 	if (res_size < 7)
@@ -128,6 +130,7 @@ int object_file_load()
 		{
 			ptr = obj_data + field_size*(inv_obj_table_size);
 			inv_obj_table = (INV_OBJ *)a_malloc(inv_obj_table_size * sizeof(INV_OBJ));
+			assert(inv_obj_table);
 			i = inv_obj_table_size;
 			while (i)
 			{
@@ -157,6 +160,7 @@ int object_file_load()
 	{
 		printf("object_file_load(): warning! object string does not end in '\\0'.\n");
 		inv_obj_string = (u8 *)a_malloc(string_size + 1);
+		assert(inv_obj_string);
 		inv_obj_string_size = string_size + 1;
 		memcpy(inv_obj_string, string_ptr, string_size);
 		inv_obj_string[string_size] = '\0';				
@@ -164,6 +168,7 @@ int object_file_load()
 	else
 	{
 		inv_obj_string = (u8 *)a_malloc(string_size);
+		assert(inv_obj_string);
 		inv_obj_string_size = string_size;
 		memcpy(inv_obj_string, string_ptr, string_size);
 	}
