@@ -3,9 +3,6 @@ Donald Duck
 Graphics only look good in v2.272 interpreter!!  maybe it was packaged with one wrong
 sound isn't good either.. had to work around it in nagi.. does it do the same for other old ones?
 
-
-
-
 Demo Pack 4
 -----------
 If you run the pq demo right after the mother goose demo then the gun shots do not animate properly.  However, this is the same behaviour of the original interpreter.
@@ -19,20 +16,17 @@ Space Quest: Lost Chapter
 Crashes at intro.  Logic code was setting wrong loop number and clear lines has two reversed parameters 
 the cmd prompt is meant to be shown during intro.  NAGI needs to check for dodgy logic code
 
-
-
+kq1
+---
+restore a game on the intro screen.. "press any key" is stuck on bottom
 
 Escape Quest
 ------------
-The right side of the status is meant to be missing during the intro. NAGi does this faithfully.
+The right side of the status is meant to be missing during the intro. NAGI does this faithfully.
 
 Botz
 ----
 If you press Q AFTER the robots catch you and you're dead.. the thing hangs.  This happens in the original interpreter too.  'Q' works before you get caught though.
-
-KQ1
----
-Parsing error somewhere.. if you type "look croc" then it does something not like the orignal
 
 
 Funny Larry thing:
