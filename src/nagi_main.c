@@ -45,14 +45,12 @@ _Finish                          cseg     000002AE 00000015
 
 
 #include "sys/chargen.h"
-
 #include "ui/msg.h"
-
 #include "ui/window.h"
-
 #include "version/standard.h"
-
 #include "res/res.h"
+
+#include "sys/sys_dir.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 int main(int argc, char *argv[]);
@@ -66,17 +64,12 @@ u16 old_score = 0;
 int main(int argc, char *argv[])
 {
 	u16 snd_flag;
-	u8 *list[] = {"Use the arrow keys to select the game which you wish to play.\nPress ENTER to play the game, ESC to not play a game.", "blah", "blaaah2", "abc", "crap"};
 	
 	(void) argc;	// SDL won't let me use these anyway
 	(void) argv;	// i think
 
 	dir_init(argv[0]);
 	nagi_init();		// initialise NAGI
-	
-	list_box(list, 4, 1);
-	user_bolean_poll();
-	agi_exit();
 	
 	standard_select_ng();
 	agi_init();		// initialise AGI with version
