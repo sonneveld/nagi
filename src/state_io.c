@@ -60,7 +60,7 @@ u8 state_name_auto[0x32] = {0};
 
 u8 *cmd_restart_game(u8 *c)
 {
-	u16 sound_state;
+	u16 snd_state;
 	u16 user_result;
 	u16 input_state;
 	
@@ -76,12 +76,12 @@ u8 *cmd_restart_game(u8 *c)
 	if ( user_result != 0)
 	{
 		cmd_cancel_line(0);
-		sound_state = flag_test(F09_SOUND);
+		snd_state = flag_test(F09_SOUND);
 		//clear_memory();	// shouldn't be necessary
 		game_init();
 		volumes_close();
 		flag_set(F06_RESTART);
-		if ( sound_state != 0)
+		if ( snd_state != 0)
 			flag_set(F09_SOUND);
 		state.ticks = 0;
 		if (trace_logic != 0)

@@ -39,4 +39,6 @@ extern void sndgen_play(SOUND *snd);
 extern void sndgen_stop(void);
 extern void sndgen_callback(int ch, TONE *tone);
 
+extern void sndgen_poll(void);
+
 #endif

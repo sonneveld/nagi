@@ -399,7 +399,7 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 	u8 *copy_new;
 	TPOS tpos_other;
 	POS gfx_pos;
-	SIZE gfx_size; 
+	SIZE g_size; 
 	
 	if (scroll == 0)	// whoo.. all done :)
 		return;
@@ -434,8 +434,8 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 			copy_old = -(scroll * font_size.h * gfx_surface->line_size);
 		}
 		
-		gfx_size.w = copy_width;
-		gfx_size.h = copy_count;
+		g_size.w = copy_width;
+		g_size.h = copy_count;
 		
 		vid_lock(gfx_surface);
 		while (copy_count)
@@ -446,7 +446,7 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 		}
 		vid_unlock(gfx_surface);
 
-		font_lazy_update(&gfx_pos, &gfx_size);
+		font_lazy_update(&gfx_pos, &g_size);
 		
 		if (scroll > 0)	// scrolling up
 		{

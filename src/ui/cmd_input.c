@@ -22,7 +22,9 @@ CmdCloseDialogu                  cseg     0000394B 00000012
 
 // events
 #include "../ui/events.h"
+#include "../ui/mouse.h"
 
+#include "../flags.h"
 
 #include "../ui/menu.h"
 // line clear, goto pos

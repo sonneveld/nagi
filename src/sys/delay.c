@@ -7,6 +7,9 @@
 #include "../sound/sound_base.h"
 #include "../sound/sound_gen.h"
 
+#include "../ui/cmd_input.h"
+#include "../flags.h"
+
 u32 tick_prev = 0;
 // 1/20 sec intervals
 #define DELAY_MULT 50

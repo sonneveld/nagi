@@ -37,5 +37,6 @@ extern void gfx_msgbox(int x, int y, int w, int h, u8 bg, u8 line);
 extern void gfx_palette_update(void);
 extern void gfx_clear(void);
 extern void gfx_picbuff_update(void);
+extern void gfx_reinit(void);
 
 #endif

@@ -371,7 +371,6 @@ void joy_button_map(AGI_EVENT *agi_event)
 // it's to convert joystick buttons to their equivalant keys
 void mouse_button_map(AGI_EVENT *agi_event)
 {
-	u16 di;
 	if (agi_event->type == 10)
 	{
 		if (agi_event->data == 1)

@@ -95,6 +95,10 @@ void tone_pcm_callback(void *tpcm, u8 *stream, int len);
 void sample_free(SAMPLE *sample);
 SAMPLE *sample_sine_new(int freq, int samp_rate);
 
+int noise_fill(TONECHAN *t, s16 *buf, int len);
+int square_fill(TONECHAN *t, s16 *buf, int len);
+int sample_fill(TONECHAN *t, s16 *buf, int len);
+void vol_table_init(void);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
@@ -305,6 +309,7 @@ void tone_pcm_callback(void *userdata, u8 *stream, int len)
 		len -= fill_size;
 	}
 }
+
 
 
 int sample_fill(TONECHAN *t, s16 *buf, int len)

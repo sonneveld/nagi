@@ -5,6 +5,8 @@ struct inv_obj_struct
 };
 typedef struct inv_obj_struct INV_OBJ;
 
+extern int object_file_load(void);
+extern void object_file_unload(void);
 
 extern u8 *cmd_get(u8 *c);
 extern u8 *cmd_get_v(u8 *c);

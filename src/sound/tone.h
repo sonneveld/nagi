@@ -30,7 +30,7 @@ extern int tone_init(void);
 extern void tone_shutdown(void);
 extern int tone_open(int ch);
 extern void tone_close(int handle);
-extern void tone_state_set(int sound_state);
+extern void tone_state_set(int);
 extern int tone_state_get(void);
 extern void tone_lock(void);
 extern void tone_unlock(void);

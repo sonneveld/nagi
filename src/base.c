@@ -24,6 +24,8 @@
 
 #include "sys/drv_video.h"
 
+#include "initialise.h"
+
 u8 *cmd_pause(u8 *c)
 {
 	clock_state = 1;

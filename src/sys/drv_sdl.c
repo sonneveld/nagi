@@ -14,6 +14,8 @@
 #include "../base.h"
 #include "drv_video.h"
 
+#include "mem_wrap.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 void sdl_driver_shutdown(void);
 VSURFACE *sdl_display(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_state);

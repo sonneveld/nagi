@@ -8,6 +8,7 @@ typedef struct view_node_struct VIEW_NODE;
 
 
 extern void view_list_init(void);
+extern void view_list_free(void);
 extern void view_list_new_room(void);
 extern VIEW_NODE *view_find(u16 num);
 extern u8 *cmd_load_view(u8 *c);

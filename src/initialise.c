@@ -52,6 +52,10 @@ _RoomInit                        cseg     000012DE 00000015
 
 #include "sys/sys_dir.h"
 
+#include "sound/sound_gen.h"
+#include "base.h"
+#include "sys/mem_wrap.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 // reads ini file and inits nagi
 void nagi_init(void);

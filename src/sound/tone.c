@@ -69,9 +69,9 @@ void tone_shutdown(void)
 }
 
 // returns handle
-int tone_open(int ch, int type)
+int tone_open(int ch)
 {
-	return tone_drv.ptr_open(ch, type);
+	return tone_drv.ptr_open(ch);
 }
 
 void tone_close(int handle)
@@ -80,9 +80,9 @@ void tone_close(int handle)
 	tone_drv.ptr_close(handle);
 }
 
-void tone_state_set(int sound_state)
+void tone_state_set(int open_state)
 {
-	tone_drv.ptr_state_set(sound_state);
+	tone_drv.ptr_state_set(open_state);
 }
 
 int tone_state_get(void)

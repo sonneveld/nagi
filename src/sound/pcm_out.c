@@ -81,9 +81,9 @@ void pcm_out_close(int handle)
 	pcm_out_drv.ptr_close(handle);
 }
 
-void pcm_out_state_set(int sound_state)
+void pcm_out_state_set(int snd_state)
 {
-	pcm_out_drv.ptr_state_set(sound_state);
+	pcm_out_drv.ptr_state_set(snd_state);
 }
 
 int pcm_out_state_get(void)

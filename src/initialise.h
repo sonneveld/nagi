@@ -14,4 +14,8 @@ extern void game_init(void);
 // refresh lists for new room
 extern void room_init(void);
 
+extern void agi_shutdown(void);
+extern void nagi_shutdown(void);
+
+
 #endif

@@ -195,7 +195,7 @@ void object_file_unload()
 }
 
 
-void inv_obj_table_print()
+void inv_obj_table_print(void)
 {
 	int i;
 	

@@ -107,8 +107,6 @@ int gfx_picbuffrotate = 0;
 // gfx_init
 void gfx_init(void)
 {
-	int i; 
-	
 	// gfx drvr init
 	vid_init();
 

@@ -15,7 +15,6 @@
 #include <assert.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
-//#include "view/crap.h"
 #include "../sys/ini_config.h"
 #include "../config.h"
 #include "../ui/string.h"
@@ -29,6 +28,12 @@
 #include "../list.h"
 #include "../ui/list_box.h"
 #include "../ui/events.h"
+#include "../ui/window.h"
+#include "../ui/agi_text.h"
+#include "../ui/printf.h"
+
+#include "../sys/drv_video.h"
+#include "../sys/gfx.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 //void test_function(void);

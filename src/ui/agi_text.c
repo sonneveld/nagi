@@ -37,7 +37,8 @@ _PopTextAtt                      cseg     000078FC 0000003A
 
 #include "../sys/glob_sys.h"
 
-
+#include "../logic/logic_base.h"
+#include "../state_io.h"
 
 #define ATTRIB_MAX 5
 

@@ -33,7 +33,7 @@ extern void pcm_out_shutdown(void);
 extern void pcm_out_avail(void);
 extern int pcm_out_open( void (*callback)(void *userdata, Uint8 *stream, int len), void *userdata);
 extern void pcm_out_close(int handle);
-extern void pcm_out_state_set(int sound_state);
+extern void pcm_out_state_set(int);
 extern int pcm_out_state_get(void);
 extern void pcm_out_lock(void);
 extern void pcm_out_unlock(void);

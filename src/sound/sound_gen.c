@@ -224,7 +224,7 @@ void sndgen_callback(int ch, TONE *tone)
 
 
 
-void sndgen_poll()
+void sndgen_poll(void)
 {
 	if (sound_state==SS_OPEN_STOPPED)
 	{

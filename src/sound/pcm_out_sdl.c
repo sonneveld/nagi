@@ -220,9 +220,9 @@ void pcm_out_sdl_close(int handle)
 
 // 1 = playing
 // 0 = stopped
-void pcm_out_sdl_state_set(int sound_state)
+void pcm_out_sdl_state_set(int snd_state)
 {
-	SDL_PauseAudio(sound_state?0:1);
+	SDL_PauseAudio(snd_state?0:1);
 }
 
 int pcm_out_sdl_state_get(void)
