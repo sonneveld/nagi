@@ -35,7 +35,7 @@ _StateDrawBlank                  cseg     00008FB3 00000020
 #include "sys/sys_dir.h"
 
 
-u16 word_1755 = 1;
+u16 diskspace_available = 1;
 
 VSTRING *save_dir = 0;
 VSTRING *save_filename = 0;
@@ -290,7 +290,7 @@ u16 state_get_filename(u8 state_type)
 		return 0;
 	}
 	
-	if ( (state_name_auto[0]!=0) && (word_1755==0) )
+	if ( (state_name_auto[0]!=0) && (diskspace_available==0) )
 	{
 		strcpy(save_description, state_name_auto);
 		for (temp1f2=0; temp1f2<12; temp1f2++)
@@ -306,7 +306,7 @@ u16 state_get_filename(u8 state_type)
 			return 0;
 	}
 
-	//if ( (state_name_auto[0]!=0) && (word_1755!=0) )
+	//if ( (state_name_auto[0]!=0) && (diskspace_available!=0) )
 	//	save_drive = lib_get_disk();
 	
 	temp1fa = 5;
@@ -322,7 +322,7 @@ u16 state_get_filename(u8 state_type)
 			message_box_draw("Use the arrow keys to select the game which you wish to restore. Press ENTER to restore the game, ESC to not restore a game.",
 				temp1f8, 0x22, 1);
 	}
-	else if (word_1755 == 0)
+	else if (diskspace_available == 0)
 	{
 		// disk full
 		message_box_draw("   Sorry, this disk is full.\nPosition pointer and press ENTER\n    to overwrite a saved game\nor press ESC and try again \n    with another disk\n",
@@ -336,7 +336,7 @@ u16 state_get_filename(u8 state_type)
 	}
 	
 	temp1fa += msgstate.tpos.row;
-	word_1755 = 0;
+	diskspace_available = 0;
 	
 	for (temp1f2=0; temp1f2<temp1f4; temp1f2++)
 	{
