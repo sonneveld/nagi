@@ -94,7 +94,7 @@ u16 state_get_info(u8 state_type)
 	
 	word_1aad = 1;	// in savegame dialogue stuff
 	save_num = state_get_filename(state_type);	// game select
-	AGI_TRACE
+
 	if (save_num != 0)
 	{
 		if ( (state_type=='s') && (state_name_auto[0]==0) )
@@ -438,14 +438,11 @@ u16 state_get_diz(u16 s_num, SAVE *s_item, u32 *s_date)
 	}
 
 	*s_date = stream_get_date(state_stream);
-	AGI_TRACE
-	fread(s_item->diz, sizeof(u8), sizeof(s_item->diz), state_stream);	AGI_TRACE
-	fseek(state_stream, 2, SEEK_CUR);	AGI_TRACE
-	fread(state_id, sizeof(u8), sizeof(state.id), state_stream);
-		AGI_TRACE
-	
+	fread(s_item->diz, sizeof(u8), sizeof(s_item->diz), state_stream);
+	fseek(state_stream, 2, SEEK_CUR);	
+	fread(state_id, sizeof(u8), sizeof(state.id), state_stream);	
 	fclose(state_stream);
-	AGI_TRACE
+
 	if (strcmp(state_id, state.id) != 0)
 	{
 		s_item->diz[0] = 0;
