@@ -10,6 +10,7 @@ _CheckBlock                      cseg     00007B1F 00000032
 #include "../view/obj_blit.h"
 #include "../view/obj_base.h"
 
+#include <assert.h>
 
 
 u8 *cmd_block(u8 *c)
@@ -49,6 +50,7 @@ u8 *cmd_observe_blocks(u8 *c)
 
 u16 block_chk_pos(u16 x, u16 y)
 {
+	assert(state.block_state == 1);
 	return ( (state.block_x1 < x)&&(state.block_x2 > x)&&
 		(state.block_y1 < y)&&(state.block_y2 > y) );
 }
