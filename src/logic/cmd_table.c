@@ -333,7 +333,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.close.window", cmd_close_window, 0, 0},
 			
 			// 170
-			{"cmd.set.simple (incomplete)", cmd_do_nothing, 1, 0},
+			{"cmd.set.simple", cmd_unknown_170, 1, 0},
 			{"cmd.push.script", cmd_unknown_171, 0, 0},
 			{"cmd.pop.script", cmd_unknown_172, 0, 0},
 			{"cmd.hold.key", cmd_unknown_173, 0, 0},

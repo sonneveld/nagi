@@ -56,7 +56,7 @@ _StateWrite                      cseg     000028C6 00000074
 
 
 
-u8 state_name_auto[0x32] = "";
+u8 state_name_auto[0x32] = {0};
 
 u8 *cmd_restart_game(u8 *c)
 {
@@ -136,7 +136,7 @@ u8 *cmd_restore_game(u8 *c)
 		rest_stream = fopen(save_filename->data, "rb");
 		if ( rest_stream == 0)
 		{
-			sprintf(msg, "Can't open file:\n%s", save_filename->data);
+			sprintf(msg, "Can't open file:\n %s", save_filename->data);
 			message_box(msg);
 		}
 		else
