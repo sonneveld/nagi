@@ -12,6 +12,7 @@
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"
+#include "chargen.h"
 #include "../base.h"
 #include "drv_video.h"
 #include "gfx.h"
@@ -335,7 +336,13 @@ void ch_put(u8 ch)
 	font_lazy_update(&gfx_pos, &font_size);
 }
 
-void ch_scroll(TPOS *pos1, TPOS *pos2, u16 scroll, u8 attrib)
+
+// scrolled is signed
+// positive is up
+// negative is down
+ 
+
+void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 {
 	/*SDL_Rect srcrect;
 	SDL_Rect dstrect;
@@ -356,6 +363,83 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, u16 scroll, u8 attrib)
 	vid_update(gfx_surface, &pos, &size);
 */
 
+
+	
+	// ----------------------
+	
+	int copy_width;
+	int copy_next;
+	int copy_count;
+	int copy_old;
+	u8 *copy_new;
+	TPOS tpos_other;
+	POS gfx_pos;
+	SIZE gfx_size; 
+	
+	if (scroll == 0)	// whoo.. all done :)
+		return;
+	
+	if (copy_count <= 0)
+	{
+		// CLEAR THE ENTIRE WINDOW
+		ch_clear(pos1, pos2, attrib);
+	}
+	else
+	{
+		copy_width = (pos2->col - pos1->col + 1) * font_size.w;
+		copy_count = (pos2->row - pos1->row - scroll + 1) * font_size.h;
+		gfx_pos.x = pos1->col * font_size.w;
+		
+		// do SCROLLING MAGIC
+		if (scroll > 0)	// scrolling up
+		{
+			copy_next = gfx_surface->line_size;	// scan down the screen
+			gfx_pos.y = pos1->row * font_size.h;
+			copy_new = (u8 *)gfx_surface->pixels + gfx_pos.x +
+					gfx_pos.y*gfx_surface->line_size;
+			copy_old = scroll * font_size.h * gfx_surface->line_size;
+		}
+		else			// scrolling down
+		{
+			copy_next = -(gfx_surface->line_size);	// scan up the screen
+			gfx_pos.y = (pos1->row+scroll) * font_size.h;
+			copy_new = (u8 *)gfx_surface->pixels + gfx_pos.x +
+						(gfx_pos.y+font_size.h - 1)*gfx_surface->line_size;
+			copy_old = -(scroll * font_size.h * gfx_surface->line_size);
+		}
+		
+		gfx_size.w = copy_width;
+		gfx_size.h = copy_count;
+		
+		vid_lock(gfx_surface);
+		while (copy_count)
+		{
+			memcpy(copy_new, copy_new+copy_old, copy_width);
+			copy_new += copy_next;
+			copy_count--;
+		}
+		vid_unlock(gfx_surface);
+
+		font_lazy_update(&gfx_pos, &gfx_size);
+		
+		if (scroll > 0)	// scrolling up
+		{
+			// clear bottom bit of screen
+			tpos_other.col = pos1->col;
+			tpos_other.row = pos2->row - scroll + 1;
+			ch_clear(&tpos_other, pos2, attrib);
+		}
+		else			// scrolling down
+		{
+			// clear top bit of area
+			tpos_other.col = pos2->col;
+			tpos_other.row = pos1->row + scroll - 1;
+			ch_clear(pos1, &tpos_other, attrib);
+		}
+	}
+	
+	
+ 
 }
 
 
