@@ -6,6 +6,7 @@ _SBuffPlotPixel                  cseg     00005231 00000042
 _SBuffPicFill                    cseg     00005273 000001ED
 END picture render video related functions */
 
+#include <string.h>
 
 #include "../agi.h"
 
