@@ -11,7 +11,7 @@ END picture render video related functions */
 
 
 #include "../picture/sbuf_util.h"
-//#include "../picture/pic_stack.h"
+
 #include "../picture/pic_render.h"
 
 #include "../sys/drv_video.h"
