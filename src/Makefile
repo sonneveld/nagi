@@ -67,6 +67,7 @@ include $(OBJ:.o=.d)
 	sh depend.sh $(CFLAGS) $< > $@
 
 clean:
-	$(RM) $(OBJ) $(OBJ:.o=.d) ../bin/n.exe core
+	$(RM) $(OBJ) ../bin/n.exe core
 
-
+depclean:
+	$(OBJ:.o=.d)
