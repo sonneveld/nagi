@@ -113,19 +113,23 @@ int string_isolate(INI *ini, u8 ch)
 int line_isolate(INI *ini)
 {
 	u8 *cur;
-	cur = ini->cur_ptr;
-
-	// check for eof
-	while (cur <= ini->last) 
+	
+	if (ini != 0)
 	{
-		if ((*cur=='\n')||(*cur=='\r')) 	// eoln
+		cur = ini->cur_ptr;
+	
+		// check for eof
+		while (cur <= ini->last) 
 		{
-			ini->isol_ptr = cur;
-			ini->isol_ch = *cur;
-			*cur = 0;	// null at the end of string
-			return 0;  // alright!!  you better run string_rejoin later on matey
+			if ((*cur=='\n')||(*cur=='\r')) 	// eoln
+			{
+				ini->isol_ptr = cur;
+				ini->isol_ch = *cur;
+				*cur = 0;	// null at the end of string
+				return 0;  // alright!!  you better run string_rejoin later on matey
+			}
+			cur++;
 		}
-		cur++;
 	}
 	
 	return -1; // i failed.. nothing has been touched
@@ -133,7 +137,7 @@ int line_isolate(INI *ini)
 
 void string_rejoin(INI *ini)
 {
-	if (ini->isol_ptr != 0)
+	if ((ini!=0) && (ini->isol_ptr != 0) )
 	{
 		*(ini->isol_ptr) = ini->isol_ch;
 		ini->isol_ptr = 0;
@@ -169,6 +173,9 @@ void line_next(INI *ini)
 // returns 0 if found.. so we don't have to call key_get
 int ini_section(INI *ini, u8 *sect_name)
 {
+	if (ini == 0)
+		return -1;
+	
 	string_rejoin(ini);		// in case a key was read
 	
 	ini->cur_ptr = ini->data;
@@ -206,6 +213,8 @@ int ini_section(INI *ini, u8 *sect_name)
 
 u8 *ini_key(INI *ini, u8 *key_name)
 {
+	if (ini == 0)
+		return 0;
 	string_rejoin(ini);	// in case we're reading a new key
 	
 	// always search from start of section
