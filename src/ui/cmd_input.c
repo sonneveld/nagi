@@ -99,9 +99,9 @@ void input_poll(void)
 				break;
 			case 10:	// mouse
 				/*
-				if (standard.mouse == M_BRIAN)
+				if (c_game_mouse == M_BRIAN)
 					mstack_push(si->data, si->x, si->y);
-				else if (standard.mouse == M_SIERRA)
+				else if (c_game_mouse == M_SIERRA)
 				{
 					mouse_x = si->x / (vstate.scale*2);
 					mouse_y = (si->y/vstate.scale) - gfx_picbuff_row;

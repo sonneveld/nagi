@@ -64,14 +64,16 @@ SIZE update_size= {0,0};
 
 FILE *font_open(SIZE *needed)
 {
-	u8 *token;
+	u8 *token, *running;
+	u8 *list;
 	FILE *file_font = 0;
 	SIZE file_size = {0,0};
 
 	FILE *cur_font;
 	SIZE cur_size;
 
-	token = strtok(font_list, ",");
+	list = strdupa(font_list);
+	token = strtok_r(list, ",", &running);
 	while (token != 0)
 	{
 		//check token
@@ -101,7 +103,7 @@ FILE *font_open(SIZE *needed)
 			if (cur_font != 0)
 				fclose(cur_font);
 		}
-		token = strtok(0, ",");
+		token = strtok_r(0, ",", &running);
 	}
 
 	return file_font;

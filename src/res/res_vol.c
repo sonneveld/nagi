@@ -48,7 +48,7 @@ u8 *vol_res_load(u8 *dir_entry, u8 *buff)
 	
 	do
 	{
-		switch(standard.res_type)
+		switch(c_game_res)
 		{
 			case RES_V3:
 			case RES_V3_4:
@@ -265,7 +265,7 @@ void err_insert_disk(u16 num)
 
 void err_msg(u8 *msg, u16 num)
 {
-	if ((num == 0) || (((standard.res_type==RES_V3)||(standard.res_type==RES_V3_4)) && (num > 8)))
+	if ((num == 0) || (((c_game_res==RES_V3)||(c_game_res==RES_V3_4)) && (num > 8)))
 		sprintf(msg, "Please insert disk %d\nand press ENTER.",
 				vol_disk_num);
 	else
@@ -294,14 +294,14 @@ void volumes_open()
 	u16 vol_max;
 	u16 i;
 	
-	if ((standard.res_type==RES_V3) ||(standard.res_type==RES_V3_4))
+	if ((c_game_res==RES_V3) ||(c_game_res==RES_V3_4))
 		vol_max = 0x10;
 	else
 		vol_max = 0x5;
 	
 	for (i=0 ; i<vol_max ; i++)
 	{
-		if ((standard.res_type==RES_V3) ||(standard.res_type==RES_V3_4))
+		if ((c_game_res==RES_V3) ||(c_game_res==RES_V3_4))
 			sprintf(name, "%svol.%d", dir_id, i);
 		else
 			sprintf(name, "vol.%d", i);

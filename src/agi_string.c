@@ -168,7 +168,8 @@ u16 string_edit_old(u8 *str, u16 len)
 
 u8 *cmd_set_game_id(u8 *c)
 {
-	strncpy(state.id, logic_msg(*(c++)), 7);
+	strncpy(state.id, logic_msg(*(c++)), ID_SIZE);
+	state.id[ID_SIZE] = 0;	// end JUST IN CASE
 	game_id_test();	// oh.. I can't be bothered
 	return c;
 }

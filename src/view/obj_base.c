@@ -408,11 +408,11 @@ void objtable_update()
 					new_loop =  loop_small[v->direction];
 				else if (v->loop_total==4)
 					new_loop = loop_large[v->direction];
-				else if (standard.update_loop!=L_FOUR)
+				else if (c_game_loop_update!=L_FOUR)
 				{
-					if ((standard.update_loop==L_ALL)&&(v->loop_total>4))
+					if ((c_game_loop_update==L_ALL)&&(v->loop_total>4))
 						new_loop = loop_large[v->direction];
-					else if (standard.update_loop==L_FLAG)
+					else if (c_game_loop_update==L_FLAG)
 					{
 						if ((flag_test(0x14)!=0)&&(v->loop_total>4))
 							new_loop = loop_large[v->direction];

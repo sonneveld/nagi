@@ -144,6 +144,10 @@ typedef struct size_struct SIZE;
 #define FLAG_SIZE 32
 #define STRING_SIZE 40
 #define CONTROL_SIZE 50
+// number of chars
+#define ID_SIZE 20
+// 00 .. 182
+#define CMD_MAX 182
 
 struct cmap_struct
 {
@@ -154,7 +158,7 @@ typedef struct cmap_struct CMAP;
 	
 struct agi_state_struct
 {
-	u8 id[7];
+	u8 id[ID_SIZE+1];
 	u8 var[VAR_SIZE];
 	u8 flag[FLAG_SIZE];
 	
@@ -198,7 +202,7 @@ extern AGI_STATE state;
 
 enum protect_enum {P_NONE, LARRY, GR, KQ4, MH, MH2};
 enum palette_enum {PALPC, PALAMIGA, PALVAR};
-enum res_enum {RES_NONE=0, RES_V2=1, RES_V3_4=2, RES_V3=3};
+enum res_enum {RES_NONE=0, RES_V2=1, RES_V3_4=2, RES_V3=3, RES_V3_AMIGA=4};
 enum loop_enum {L_FOUR=1, L_ALL=2, L_FLAG=3};
 enum mouse_enum {M_NONE=0, M_SIERRA=1, M_BRIAN=10, M_NICK=11};
 enum system_enum {SYS_PC, SYS_APPLE, SYS_AMIGA, SYS_AGDS, SYS_TANDY};
@@ -206,7 +210,7 @@ enum system_enum {SYS_PC, SYS_APPLE, SYS_AMIGA, SYS_AGDS, SYS_TANDY};
 struct agi_standard_struct
 {
 	u8 *name;
-	u8 game_id[8];	// different from the state game_id
+	u8 game_id[ID_SIZE+1];	// different from the state game_id
 				// this is what the 'exe' is set to.. what the v3dir
 				// files are called
 	u8 game_id_honour;
@@ -227,7 +231,7 @@ struct agi_standard_struct
 };
 typedef struct agi_standard_struct AGI_STANDARD;
 
-extern AGI_STANDARD standard;
+//extern AGI_STANDARD standard;
 
 
 
@@ -315,11 +319,24 @@ struct view_struct
 typedef struct view_struct VIEW;
 
 
+struct vstring_struct
+{
+	u8 *data;
+	u32 size;	// allocated mem size
+	u32 min;	// minimum size
+};
+
+typedef struct vstring_struct VSTRING;
+
 #define PBUF_MULT(width) ((( (width)<<2) + (width)) << 5)
 #define SBUF_MULT(width) ((( (width)<<2) + (width)) << 6)
 
 
-#define AGI_TRACE printf("trace at: %s:%d\n", __FILE__,__LINE__);
+#define AGI_TRACE printf("trace at: file=%s, func=%s, line=%d\n", __FILE__,__PRETTY_FUNCTION__, __LINE__);
+
+#define strdupa(str_data) ({ u8 *blah = alloca(strlen(str_data + 1)); \
+					strcpy(blah, str_data); \
+					blah; })
 
 #define CT_INT (0)
 #define CT_BOOL (1)
@@ -394,7 +411,18 @@ extern CONF_STRING c_standard_v2_default;
 extern CONF_STRING c_standard_v3_default;
 extern CONF_STRING c_standard_sort;
 
+extern CONF_BOOL c_game_object_decrypt;
+extern CONF_STRING c_game_version_info;
+extern CONF_INT c_game_mouse;
+extern CONF_INT c_game_loop_update;
+extern CONF_INT c_game_res;
+extern CONF_STRING c_game_id;
+
+extern u8 c_game_file_id[ID_SIZE+1];
+extern VSTRING *c_game_location;
+
 extern CONF config_nagi[];
 extern CONF config_standard[];
+extern CONF config_game[];
 
 #endif

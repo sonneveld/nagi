@@ -98,8 +98,6 @@ GAMEINFO *game_list_new(u8 *search_dir)
 		}
 	}
 	
-	AGI_TRACE
-	printf("%s\n", g_info->standard);
 	// if match found, then store it's resource type
 	// duplicate the standard name
 	// set the match type = crc

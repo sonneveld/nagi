@@ -20,7 +20,7 @@ _Save5F6B                        cseg     00005F6B 000000CF
 void game_id_test()
 {
 	u8 *si, *di, al;
-	
+	/*
 	// have to check since v3 NEED the game id to be ok
 	if (standard.game_id_honour != 0) 
 	{
@@ -37,11 +37,11 @@ void game_id_test()
 			}
 			di++;
 		} while ( al != 0);
-	}
+	}*/
 }
 
 // used for VERSION 3 games
 void game_id_copy()
 {
-	strcpy(dir_id, standard.game_id);
+	strcpy(dir_id, c_game_id);
 }

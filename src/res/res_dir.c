@@ -71,7 +71,7 @@ void v3_dir_load(void)
 
 void dir_load(void)
 {
-	switch(standard.res_type)
+	switch(c_game_res)
 	{
 		case RES_V3:
 		case RES_V3_4:

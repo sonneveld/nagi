@@ -1,66 +1,83 @@
-u8 *dir_list[100] = 100 directories
-AGI_GAME =
+
+
+search_path=.;c:\nagi\games;
+; how many levels down does it search?
+levels=2
+
+make a list of games/paths/names that exist and are proper agi games
+
+algorithm for detection of games:
 {
-	conf_section_name
-	directory
+	find appropriate file arrangement first
+	if found, generate crc's
+	compare crc's
+	if equal.. standard = that
+	if not, determine if v2 or v3
+		if v2.. = v2_standard
+		if v3 = v3_standard
 }
 
-read ini file specific fornagi
-initialise that bit of nagi along with video 'n sound (halfway through agi_init())
 
-display "NEW ADVENTURE GAME INTERPRETER" in the status bar
-display NAGI version
-
-
-search for games (directorys/zips) from an option of lists
+file arrangement detection
 {
-	dir=0;
-	dir+= cur_dir
-	dir+= dirs in version.ini file
-	
-	for each directory in dirlist
-		add to dir
-}
+	look for object (same across all versions)
+	look for words.tok (same across all versions)
 
-for each directory in dirlist
-{
-	default = 2.936
-
-	checksums
-	if ?????dir file exists
-		checksum (object, ???dir, works.tok, ??.0, ???.1....)
-	else
-		checksum (object + log + pic + view + sound + words.tok + vol0123456)
-
+	look for vol.0
+	if exists
+	{ then v2 or amiga
 		
-	not found:
-		if ???dir
-			then v3default
-		else
-		if
-		{
-			default v2default
-			if the dir is setup as 7byte headers (diff between 1234 headers)
-				then v3
-			
-	if found
-		game = check_name
-		dir=cur_dir
-	if not found
-		print error
-		go with default 2.936
+	}
+	else
+	{
+		v3 pc
+	}
+	
+
 }
 
 
-detection what version they are
+struct agicrc_struct
+{
+	u32 crc_obj;
+	u32 crc_words;
+	
+	u32 crc_dircomb;
+	u32 crc_dirlog;
+	u32 crc_dirpic;
+	u32 crc_dirview;
+	u32 crc_dirsnd;
 
-display list
+	u32 vol[16];
+};
+typedef struct agicrc_struct AGICRC;
+
+structure for a found game:
+game list
+{
+	GAMELIST *next;
+	u8 diz[80];
+	u8 *standard;	// pointer to standard list in loaded ini file
+	DIR *path;	// path in whatever format it turns out to be
+	u8 flags;	// bit 0 = dir1,4  bit1=gameid in front of vol,dir
+};
+
+if only one game found.. 
+{
+	play it.. no menus
+}
+else
+{
+	display a menu
+	play,restore,quit,info,cheat,dump crc,last played
+	play game
+}
+
+return to menu or quit if one game
 
 
-play
-restore
-quit
-info
-cheat
-dump crc
-last played
+
+
+
+
+

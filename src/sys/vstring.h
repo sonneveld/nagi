@@ -2,14 +2,7 @@
 #define vstring_h_file
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
-struct vstring_struct
-{
-	u8 *data;
-	u32 size;	// allocated mem size
-	u32 min;	// minimum size
-};
 
-typedef struct vstring_struct VSTRING;
 	
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */

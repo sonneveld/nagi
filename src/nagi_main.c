@@ -51,6 +51,10 @@ _Finish                          cseg     000002AE 00000015
 
 #include "ui/window.h"
 
+#include "version/standard.h"
+
+#include "res/res.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 int main(int argc, char *argv[]);
 
@@ -60,7 +64,7 @@ u16 old_score = 0;
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
-u8 *window_title = 0;
+//u8 *window_title = 0;
 
 u8 *fb_buff;
 
@@ -161,35 +165,14 @@ int main(int argc, char *argv[])
 {
 	u16 snd_flag;
 	GAMEINFO *g_cur;
-
+	
 	(void) argc;	// SDL won't let me use these anyway
 	(void) argv;	// i think
 	
-	nagi_init();		// initiailise NAGI
-	ini_standard = ini_open("standard.ini");
-	g_cur = standard_select();
-	standard_init(g_cur);	// find the agi standard to emulate
-	
-	printf("%s\n", g_cur->name);
-	// version
-	printf("Game ID = \"%s\"\n", standard.game_id);
-	printf("v%d.%03d\n", standard.ver_major, standard.ver_minor);
-	printf("\n");
-	
-	if (g_cur->name != 0)
-	{
-		window_title = a_malloc(strlen(g_cur->name) + strlen("NAGI - ") + 10);
-		sprintf(window_title, "%s - NAGI", g_cur->name);
-	}
-	else
-		window_title = "NAGI";
-	SDL_WM_SetCaption(window_title, 0);
-
-	game_list_delete(g_cur);
-	ini_close(ini_standard);
-	
-	agi_init();		// initiailise AGI with version
-	delay_init();	// initiailise delay
+	nagi_init();		// initialise NAGI
+	standard_select_ng();
+	agi_init();		// initialise AGI with version
+	delay_init();	// initialise delay
 	
 	printf("\nEntering main AGI loop...\n");
 	for (;;)
