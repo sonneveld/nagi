@@ -9,6 +9,8 @@
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <assert.h>
 //#include <errno.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
@@ -40,138 +42,124 @@ LIST *list_new(int contents_size)
 
 void list_free(LIST *list)
 {
-	if (list != 0)
-	{
-		list_clear(list);
-		a_free(list);
-	}
+	assert(list != 0);
+	list_clear(list);
+	a_free(list);
 }
 
 // void list_clear(list *)
 void list_clear(LIST *list)
 {
-	if (list != 0)
+	NODE *c, *n;
+	
+	assert (list != 0);
+	
+	c = list->head;
+	while (c)
 	{
-		NODE *c, *n;
-		
-		c = list->head;
-		while (c)
-		{
-			n = c->next;
-			a_free(c);
-			c = n;
-		}
-		list->head = 0;
-		list->tail = 0;
+		n = c->next;
+		a_free(c);
+		c = n;
 	}
+	list->head = 0;
+	list->tail = 0;
 }
 
 // free all after a certain node
 void list_clear_past(LIST *list, NODE *node)
 {
-	if ((list != 0) && (node != 0))
+	NODE *c, *n;
+	
+	assert((list != 0) && (node != 0));
+	c = node->next;
+	while (c)
 	{
-		NODE *c, *n;
-		
-		c = node->next;
-		while (c)
-		{
-			n = c->next;
-			a_free(c);
-			c = n;
-		}
-		
-		list->tail = node;
-		node->next = 0;
+		n = c->next;
+		a_free(c);
+		c = n;
 	}
+	
+	list->tail = node;
+	node->next = 0;
 }
 
 // node *list_add (list *)
 // return a new node at the end of the list.
 NODE *list_add(LIST *list)
 {
-	if (list != 0)
-	{
-		NODE *n;
-		
-		n = a_malloc(sizeof(NODE) + list->contents_size);
-		
-		if (list->tail != 0)
-			list->tail->next = n;
-		n->next = 0;
-		n->prev = list->tail;
-		
-		list->tail = n;
-		if (list->head == 0)
-			list->head = n;
-		
-		return n;
-	}
-
-	return 0;}
+	NODE *n;
+	
+	assert(list != 0);
+	
+	n = a_malloc(sizeof(NODE) + list->contents_size);
+	
+	if (list->tail != 0)
+		list->tail->next = n;
+	n->next = 0;
+	n->prev = list->tail;
+	
+	list->tail = n;
+	if (list->head == 0)
+		list->head = n;
+	
+	return n;
+}
 
 
 // void list_remove (list *, node *)
 // hopefully node is in the list or strange things will happen
 void list_remove(LIST *list, NODE *node)
 {
-	if ( (list != 0) && (node != 0) )
-	{
-		if (list->tail == node)
-			list->tail = node->prev;
-		if (list->head == node)
-			list->head = node->next;
-		
-		if (node->prev != 0)
-			(node->prev)->next = node->next;
-		if (node->next != 0)
-			(node->next)->prev = node->prev;
-		
-	}
-	if (node != 0)
-		a_free(node);		
+	assert( (list != 0) && (node != 0) );
+	
+	if (list->tail == node)
+		list->tail = node->prev;
+	if (list->head == node)
+		list->head = node->next;
+	
+	if (node->prev != 0)
+		(node->prev)->next = node->next;
+	if (node->next != 0)
+		(node->next)->prev = node->prev;
+	
+	a_free(node);		
 }
 
 int list_length(LIST *list)
 {
-	if (list != 0)
+	NODE *c;
+	int length = 0;
+	
+	assert (list != 0);
+	c = list->head;
+	
+	while (c != 0)
 	{
-		NODE *c;
-		int length = 0;
-		
-		c = list->head;
-		
-		while (c != 0)
-		{
-			c = c->next;
-			length++;
-		}
-		
-		return length;
+		c = c->next;
+		length++;
 	}
-
-	return 0;
+	
+	return length;
 }
 
 NODE *list_element_at(LIST *list, int index)
 {
-	if (list != 0)
+	NODE *c;
+	
+	assert((list != 0));
+	
+	c = list->head;
+	
+	while ( (index) && (c != 0) )
 	{
-		NODE *c;
-		
-		c = list->head;
-		
-		while ( (index) && (c != 0) )
-		{
-			index--;
-			c = c->next;
-		}
-		
-		if (index == 0)
-			return c;
+		index--;
+		c = c->next;
 	}
-
-	return 0;
+	
+	if (index == 0)
+		return c;
+	else
+		return 0;
 }
 
 
@@ -206,3 +194,6 @@ NODE *stack_top(STACK *stack)
 {
 	return stack->tail;
 }
+
+
+
