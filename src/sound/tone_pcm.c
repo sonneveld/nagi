@@ -58,6 +58,7 @@ struct tone_chan_struct
 {
 	int handle;	// for removing chan
 	int agi_ch;	// for calling the agi soundgen callback
+	int avail;
 	
 	int note_count; // length of tone.. duration
 	
@@ -72,9 +73,9 @@ struct tone_chan_struct
 	{
 		struct 
 		{
-			SAMPLE *samp;
 			int count;	// for scaling
 			int scale;	// ""      ""
+			SAMPLE *samp;
 			u16 *samp_cur; // current sample point
 		} s;
 		
@@ -83,15 +84,15 @@ struct tone_chan_struct
 			int count;
 			int scale;
 			int sign;
-			unsigned int RNG;		/* noise generator      */
-			int NoiseFB;		/* noise feedback mask */
+			unsigned int noise_state;		/* noise generator      */
+			int feedback;		/* noise feedback mask */
 		} n;
 	};
 	
 };
 typedef struct tone_chan_struct TONECHAN;
 
-void tone_pcm_callback(void *tpcm, u8 *stream, int len);
+int tone_pcm_callback(void *tpcm, u8 *stream, int len);
 void sample_free(SAMPLE *sample);
 SAMPLE *sample_sine_new(int freq, int samp_rate);
 
@@ -200,6 +201,8 @@ int tone_pcm_open(int ch)
 	
 	new_ch->note_count = 0;
 	
+	new_ch->avail = 1;
+	
 	// init a sample for that specific type if it doesn't exist.
 
 	if (sample_sine==NULL)
@@ -255,17 +258,19 @@ int sample_fill(TONECHAN *t, s16 *buf, int len);
 #define MULT FREQ_DIV
 
 // fill buff
-void tone_pcm_callback(void *userdata, u8 *stream, int len)
+int tone_pcm_callback(void *userdata, u8 *stream, int len)
 {
 	TONECHAN *tpcm;
 	s16 *stream_cur;
 	TONE new_tone;
 	int fill_size;
+	int ret_val;
 	
 	tpcm = (TONECHAN*)userdata;
 	stream_cur = (s16 *)stream;
 
 	len /= 2;
+	ret_val = -1;
 	
 	while (len > 0)
 	{
@@ -275,15 +280,31 @@ void tone_pcm_callback(void *userdata, u8 *stream, int len)
 			new_tone.freq_count = 0;
 			new_tone.atten = 0xF;
 			new_tone.type = GEN_TONE;
-			sndgen_callback(tpcm->agi_ch, &new_tone);
-	
-			tpcm->atten = new_tone.atten;
-			tpcm->freq_count = new_tone.freq_count;
-			tpcm->gen_type = new_tone.type;
-			
-			// setup counters 'n stuff
-			// 44100 samples per sec.. tone changes 60 times per sec
-			tpcm->note_count = 44100 / 60;
+			if ( (tpcm->avail) &&
+				(sndgen_callback(tpcm->agi_ch, &new_tone) == 0))
+			{
+				tpcm->atten = new_tone.atten;
+				tpcm->freq_count = new_tone.freq_count;
+				tpcm->gen_type = new_tone.type;
+				
+				// setup counters 'n stuff
+				// 44100 samples per sec.. tone changes 60 times per sec
+				tpcm->note_count = 44100 / 60;
+				ret_val = 0;
+			}
+			else
+			{
+				// if it doesn't return an
+				tpcm->gen_type = GEN_SILENCE;
+				tpcm->note_count = len;
+				tpcm->avail = 0;
+			}
+		}
+		
+		// write nothing
+		if ((tpcm->freq_count == 0)||(tpcm->atten==0xF))
+		{
+			tpcm->gen_type = GEN_SILENCE;
 		}
 		
 		// find which is smaller.. the buffer or the 
@@ -298,6 +319,7 @@ void tone_pcm_callback(void *userdata, u8 *stream, int len)
 			case GEN_WHITE:
 				fill_size = noise_fill(tpcm, stream_cur, fill_size);
 				break;
+			case GEN_SILENCE:
 			default:
 				// fill with whitespace
 				memset(stream_cur, 0, fill_size * sizeof(s16));
@@ -308,6 +330,8 @@ void tone_pcm_callback(void *userdata, u8 *stream, int len)
 		stream_cur += fill_size;
 		len -= fill_size;
 	}
+	
+	return ret_val;
 }
 
 
@@ -339,29 +363,19 @@ int sample_fill(TONECHAN *t, s16 *buf, int len)
 	
 	while (count > 0)
 	{		
-		// write nothing
-		if ((t->freq_count == 0)||(t->atten==0xF))
+		*(buf++) = *samp_cur;
+		count--;
+		
+		// get next sample
+		t->s.count -= MULT;
+		while (t->s.count <= 0)
 		{
-			#warning use memset and skip past huge chunks
-			*(buf++) = 0;
-			count--;
+			samp_cur++;
+			t->s.count += t->s.scale;
 		}
-		else // write a sample to output device
-		{
-			*(buf++) = *samp_cur;
-			count--;
-			
-			// get next sample
-			t->s.count -= MULT;
-			while (t->s.count <= 0)
-			{
-				samp_cur++;
-				t->s.count += t->s.scale;
-			}
-			// check sample bounds
-			while ((samp_cur - t->s.samp->data) >= t->s.samp->samples )
-				samp_cur -= t->s.samp->samples;
-		}
+		// check sample bounds
+		while ((samp_cur - t->s.samp->data) >= t->s.samp->samples )
+			samp_cur -= t->s.samp->samples;
 	}
 	
 	t->s.samp_cur = samp_cur;
@@ -394,25 +408,15 @@ int square_fill(TONECHAN *t, s16 *buf, int len)
 	
 	while (count > 0)
 	{		
-		// write nothing
-		if ((t->freq_count == 0)||(t->atten==0xF))
+		*(buf++) = t->n.sign ? vol_table[t->atten] : -vol_table[t->atten];
+		count--;
+		
+		// get next sample
+		t->n.count -= MULT;
+		while (t->n.count <= 0)
 		{
-			#warning use memset and skip past huge chunks
-			*(buf++) = 0;
-			count--;
-		}
-		else // write a sample to output device
-		{
-			*(buf++) = t->n.sign ? vol_table[t->atten] : -vol_table[t->atten];
-			count--;
-			
-			// get next sample
-			t->n.count -= MULT;
-			while (t->n.count <= 0)
-			{
-				t->n.sign ^= 1;
-				t->n.count += t->n.scale;
-			}
+			t->n.sign ^= 1;
+			t->n.count += t->n.scale;
 		}
 	}
 	
@@ -437,38 +441,28 @@ int noise_fill(TONECHAN *t, s16 *buf, int len)
 		t->n.count = t->n.scale;
 		t->freq_count_prev = t->freq_count;	
 		
-		t->n.NoiseFB = (t->gen_type==GEN_WHITE) ? FB_WNOISE : FB_PNOISE;
+		t->n.feedback = (t->gen_type==GEN_WHITE) ? FB_WNOISE : FB_PNOISE;
 		/* reset noise shifter */
-		t->n.RNG = NG_PRESET;
-		t->n.sign = t->n.RNG & 1;
+		t->n.noise_state = NG_PRESET;
+		t->n.sign = t->n.noise_state & 1;
 	}
 
 	count = len;
 	
 	while (count > 0)
 	{		
-		// write nothing
-		if ((t->freq_count == 0)||(t->atten==0xF))
+		*(buf++) = t->n.sign ? vol_table[t->atten] : -vol_table[t->atten];
+		count--;
+		
+		// get next sample
+		t->n.count -= MULT;
+		while (t->n.count <= 0)
 		{
-			#warning use memset and skip past huge chunks
-			*(buf++) = 0;
-			count--;
-		}
-		else // write a sample to output device
-		{
-			*(buf++) = t->n.sign ? vol_table[t->atten] : -vol_table[t->atten];
-			count--;
-			
-			// get next sample
-			t->n.count -= MULT;
-			while (t->n.count <= 0)
-			{
-				if (t->n.RNG & 1)
-					t->n.RNG ^= t->n.NoiseFB;
-				t->n.RNG >>= 1;
-				t->n.sign = t->n.RNG & 1;
-				t->n.count += t->n.scale;
-			}
+			if (t->n.noise_state & 1)
+				t->n.noise_state ^= t->n.feedback;
+			t->n.noise_state >>= 1;
+			t->n.sign = t->n.noise_state & 1;
+			t->n.count += t->n.scale;
 		}
 	}
 	

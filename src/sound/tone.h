@@ -3,6 +3,7 @@
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 
+#define GEN_SILENCE 0
 #define GEN_TONE 1
 #define GEN_PERIOD 2
 #define GEN_WHITE 3

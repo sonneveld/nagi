@@ -33,8 +33,10 @@
 struct sdl_channel_struct
 {
 	int handle;
-	void (*callback)(void *userdata, u8 *stream, int len);
+	int (*callback)(void *userdata, u8 *stream, int len);
 	void *userdata;
+	
+	int avail;
 };
 typedef struct sdl_channel_struct SDL_CHAN;
 
@@ -174,7 +176,7 @@ void pcm_out_sdl_avail(void)
 
 // returns 0 if failed
 // else returns handle
-int pcm_out_sdl_open( void (*callback)(void *userdata, Uint8 *stream, int len), void *userdata)
+int pcm_out_sdl_open( int (*callback)(void *userdata, Uint8 *stream, int len), void *userdata)
 {
 	SDL_CHAN chan;
 	SDL_CHAN *chan_new;
@@ -187,6 +189,7 @@ int pcm_out_sdl_open( void (*callback)(void *userdata, Uint8 *stream, int len), 
 	chan.handle = handle_next++;
 	chan.callback = callback;
 	chan.userdata = userdata;
+	chan.avail = 1;
 	
 	chan_new = list_add(chan_list);
 	
@@ -252,6 +255,7 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 	
 	SDL_CHAN *ch;
 	int num_chan;
+	int output = 0;
 	
 	#if WRITE_TO_DISK
 	DATA *new_data;
@@ -266,33 +270,32 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 		num_chan = list_length(chan_list);
 		ch = list_element_head(chan_list);
 		
-		if (num_chan <= 1)
+		stream_len = len / (int)sizeof(s16);
+		while (ch)
 		{
-			ch->callback( ch->userdata, (u8 *)&chan_data, len );
-			memcpy(stream, chan_data, len);
-		}
-		else
-		{
-			stream_len = len / (int)sizeof(s16);
-			
-			while (ch)
+			// get channel data(chan.userdata)
+			if (ch->avail)
 			{
-				// get channel data(chan.userdata)
-				ch->callback( ch->userdata, (u8 *)&chan_data, len );
-				
-				// divide by number of channels then add to stream
-				stream_count = stream_len;
-				s_ptr = (s16*)stream;
-				c_ptr = (s16*)chan_data;
-				
-				while(stream_count--)
-					*(s_ptr++) += *(c_ptr++) / num_chan ;
-				
-				ch = node_next(ch);
+				if (ch->callback( ch->userdata, (u8 *)&chan_data, len) == 0)
+				{
+					// divide by number of channels then add to stream
+					stream_count = stream_len;
+					s_ptr = (s16*)stream;
+					c_ptr = (s16*)chan_data;
+					output = 1;
+					
+					while(stream_count--)
+						*(s_ptr++) += *(c_ptr++) / num_chan ;
+				}
+				else
+				{
+					ch->avail = 0;
+				}
 			}
+			
+			ch = node_next(ch);
 		}
 	}
-	
 	
 	#if WRITE_TO_DISK
 	new_data = list_add(list_data);
@@ -300,6 +303,13 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 	memcpy(new_data->data, stream, len);
 	new_data->len = len;
 	#endif
+	
+	if (!output)
+	{
+		printf("feh!!!");
+		sndgen_stop();
+		// call shutdown routin
+	}
 	
 }
 

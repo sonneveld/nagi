@@ -69,7 +69,7 @@ void pcm_out_avail(void)
 	pcm_out_drv.ptr_avail();
 }
 
-int pcm_out_open( void (*callback)(void *userdata, Uint8 *stream, int len), void *userdata)
+int pcm_out_open( int (*callback)(void *userdata, Uint8 *stream, int len), void *userdata)
 {
 	assert(callback);
 	return pcm_out_drv.ptr_open(callback, userdata);

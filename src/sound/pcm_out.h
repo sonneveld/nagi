@@ -18,7 +18,7 @@ struct pcm_out_driver_struct
 	int (*ptr_init)(int freq, int format);
 	void (*ptr_shutdown)(void);
 	void (*ptr_avail)(void);
-	int (*ptr_open)( void (*callback)(void *userdata, Uint8 *stream, int len), void *userdata);
+	int (*ptr_open)( int (*callback)(void *userdata, Uint8 *stream, int len), void *userdata);
 	void (*ptr_close)(int handle);
 	void (*ptr_state_set)(int );
 	int (*ptr_state_get)(void);
@@ -31,7 +31,7 @@ extern void pcm_out_drv_init(void);
 extern int pcm_out_init(int freq, int format);
 extern void pcm_out_shutdown(void);
 extern void pcm_out_avail(void);
-extern int pcm_out_open( void (*callback)(void *userdata, Uint8 *stream, int len), void *userdata);
+extern int pcm_out_open( int (*callback)(void *userdata, Uint8 *stream, int len), void *userdata);
 extern void pcm_out_close(int handle);
 extern void pcm_out_state_set(int);
 extern int pcm_out_state_get(void);

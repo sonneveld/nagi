@@ -21,6 +21,24 @@
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 
+struct sndgen_channel_struct
+{
+	u8 *data;
+	u16 duration;
+	u16 avail;	// turned on (1)  but when the channel's data runs out, it's set to (0)
+	u16 dissolve_count;
+	u8 attenuation;
+	u8 attenuation_copy;
+	
+	int tone_handle;
+	int gen_type;
+	
+	// for the sample mixer
+	int freq_count;
+
+};
+typedef struct sndgen_channel_struct SNDGEN_CHAN;
+
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 #define CHAN_MAX 4
@@ -105,7 +123,7 @@ void sndgen_play(SOUND *snd)
 			channel[i].data = snd->channel[i];
 			channel[i].duration = 0;
 			channel[i].dissolve_count = 0xFFFF;
-			channel[i].toggle = 0xFFFF;
+			channel[i].avail = 0xFFFF;
 			channel[i].freq_count = 0;
 			channel[i].tone_handle = tone_open(i);
 		}
@@ -127,6 +145,8 @@ void sndgen_play(SOUND *snd)
 void sndgen_stop(void)
 {
 	int i;
+	
+	printf("stop!");
 	
 	if (!c_snd_disable)
 	{
@@ -183,7 +203,9 @@ int volume_calc(SNDGEN_CHAN *chan)
 
 // read the next channel data.. fill it in *tone
 // if tone isn't touched.. it should be inited so it just plays silence
-void sndgen_callback(int ch, TONE *tone)
+// return 0 if it's passing more data
+// return -1 if it's passing nothing (end of data)
+int sndgen_callback(int ch, TONE *tone)
 {
 	SNDGEN_CHAN *chan;
 	void *data;
@@ -194,11 +216,12 @@ void sndgen_callback(int ch, TONE *tone)
 	if ( (!flag_test(F09_SOUND)) || (sound_state!=SS_OPEN_PLAYING) )
 	{
 		sound_state=SS_OPEN_STOPPED;
+		return -1;
 	}
 	else
 	{
 		chan = &channel[ch];
-		if (chan->toggle)
+		if (chan->avail)
 		{
 			while ( (chan->duration == 0) && (chan->duration != 0xFFFF) )
 			{
@@ -270,20 +293,22 @@ void sndgen_callback(int ch, TONE *tone)
 			else
 			{
 				// kill channel
-				channels_left --;
-				chan->toggle = 0;
+				//channels_left --;
+				chan->avail = 0;
 				chan->attenuation = 0x0F;	// silent
-				chan->attenuation_copy = 0;	// dunno really
+				chan->attenuation_copy = 0x0F;	// dunno really
+				return -1;
 			}
 		}
 		
-		if (channels_left == 0)
-		{
-			sound_state=SS_OPEN_STOPPED;
-		}
+		//if (channels_left == 0)
+		//{
+		//	sound_state=SS_OPEN_STOPPED;
+		//	return -1;
+		//}
 	}
 	
-}
+	return 0;}
 
 
 
