@@ -11,7 +11,7 @@ _LogicExecute                    cseg     0000293C 000000BA
 // data += *(data++) + *(data++) IS WORSE YOU IDIOT!!!
 // ahem
 
-//#define LOG_DEBUG 1
+#define LOG_DEBUG 0
 
 
 #include <stdio.h>
@@ -44,7 +44,7 @@ u8 *logic_execute(LOGIC *log)
 {
 	logic_data = log->scan_start;
 	
-	#ifdef LOG_DEBUG
+	#if LOG_DEBUG
 	//printf("logic code (40 bytes):  ");
 	//print_hex_array(logic_data, 40);
 	//printf("\n");
@@ -55,12 +55,12 @@ u8 *logic_execute(LOGIC *log)
 	op = *(logic_data++);
 	while (op != 0)
 	{	
-		#ifdef LOG_DEBUG
+		#if LOG_DEBUG
 		//printf("\n (0x%X) ", logic_data);
 		#endif
 		if (op == 0xFF)			// if
 		{
-			#ifdef LOG_DEBUG
+			#if LOG_DEBUG
 			printf("if: ");
 			#endif
 			execute_if();
@@ -68,7 +68,7 @@ u8 *logic_execute(LOGIC *log)
 		}
 		else if (op == 0xFE)		// else goto
 		{
-			#ifdef LOG_DEBUG
+			#if LOG_DEBUG
 			printf("goto: 0x%X\n", load_le_16(logic_data));
 			#endif
 			logic_data += (s16)load_le_16(logic_data) + 2;
@@ -76,7 +76,7 @@ u8 *logic_execute(LOGIC *log)
 		}
 		else					// cmd
 		{
-			#ifdef LOG_DEBUG
+			#if LOG_DEBUG
 			//printf("cmd: ");
 			#endif
 			logic_cmd();
@@ -86,7 +86,7 @@ u8 *logic_execute(LOGIC *log)
 		}
 		//printf("op=%d logic_data=%x\n", op, logic_data);
 	}
-	#ifdef LOG_DEBUG
+	#if LOG_DEBUG
 	printf("return! \n");
 	#endif
 	return logic_data;
@@ -112,7 +112,7 @@ void execute_if()
 				{	
 					or_mode = 0;
 					skip_false_and();
-					#ifdef LOG_DEBUG
+					#if LOG_DEBUG
 					printf("FALSE!\n");
 					#endif
 					break;		// !!! return
@@ -122,7 +122,7 @@ void execute_if()
 			else if ( op == 0xFF)		// end of "if" conditions (TRUE)
 			{
 				logic_data += 2;			// skip the word offset
-				#ifdef LOG_DEBUG
+				#if LOG_DEBUG
 				printf("TRUE!\n");
 				#endif
 				break;			// !!! return
@@ -141,7 +141,7 @@ void execute_if()
 			result = result ^ not_mode;
 			not_mode = 0;
 			
-			#ifdef LOG_DEBUG
+			#if LOG_DEBUG
 			//printf("result = %d   or_mode = %d   not_mode = %d", result, or_mode, not_mode);
 			#endif
 			if ( result != 0)
@@ -156,7 +156,7 @@ void execute_if()
 			{	
 				or_mode = 0;
 				skip_false_and();
-				#ifdef LOG_DEBUG
+				#if LOG_DEBUG
 				printf("FALSE!\n");
 				#endif
 				break;			// !!! return
@@ -217,7 +217,7 @@ void logic_cmd()
 		if ( trace_state == 1)
 			trace_cmd(op, logic_data);	// does not touch AX
 
-		#ifdef LOG_DEBUG
+		#if LOG_DEBUG
 		printf("%d:0x%X %s (", logic_cur->num, logic_data - logic_cur->data, cmd_table[op].func_name);
 		print_hex_array(logic_data, cmd_table[op].param_total);
 		printf(")\n");
@@ -250,7 +250,7 @@ u8 logic_eval()
 	if ( op > 19)
 		set_agi_error(0xF, op);
 	
-	#ifdef LOG_DEBUG
+	#if LOG_DEBUG
 	printf("%d:0x%X %s (", logic_cur->num, logic_data - logic_cur->data, eval_table[op].func_name);
 	print_hex_array(logic_data, eval_table[op].param_total);
 	printf(")   ");
