@@ -14,7 +14,7 @@ int main(void)
 {
 	fpos_t file_size;
 	FILE *file_stream;
-	u8 *buff;
+	u8 *buff=0;
 	int i;
 	
 	while (  (file_stream=fopen("agidata.ovl", "rb")) == 0  )
