@@ -261,6 +261,9 @@ u8 *ini_recursive(INI *ini, u8 *sect_name, u8 *key_name)
 	u8 *key_data;
 	u8 *inherits;
 	
+	if (ini == 0)
+		return 0;
+	
 	//remember old section
 	sect_orig = ini->sect_ptr;
 	
