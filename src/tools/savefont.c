@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
 		}
 		
 		// if not.. write char number and then data
-		if ( (ch_check != 0) && (i> 32) )
+		if ( (ch_check != 0) && ( (i==0x1a) || (i> 32) ) )
 		{
 			data = i;
 			fwrite(&data, sizeof(u8), 1, file);
