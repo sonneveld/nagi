@@ -2,7 +2,7 @@
 #define agi_h_file
 
 // the only include file i should include in an include file
-#include "SDL.h"
+#include <sdl/SDL.h>
 
 #ifndef list_h_struct
 #define list_h_struct
