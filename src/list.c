@@ -174,6 +174,60 @@ NODE *list_element_at(LIST *list, int index)
 
 
 
+void list_sort(LIST *list, int (*compare)(const void*, const void*))
+{
+	NODE **node_list, **node_list_ptr;
+	NODE *cur, *prev;
+	int len;
+	
+	len = list_length(list);
+	
+	if (len <= 1)
+		return;
+	
+	// create list of pointers
+	node_list = alloca( (len + 1) * sizeof(NODE *) );
+	
+	node_list_ptr = node_list;
+	cur = list->head;
+	
+	while (cur != 0)
+	{
+		*node_list_ptr = cur;
+		node_list_ptr++;
+		cur = cur->next;
+	}
+	
+	node_list[len] = 0;
+
+	// sort
+	qsort(node_list, len, sizeof(NODE *), compare);
+	
+	// put ptrs back into list
+	node_list_ptr = node_list;
+
+	cur = *(node_list_ptr++);
+	prev = 0;
+	list->head = cur;
+	
+	do
+	{
+		cur->prev = prev;
+		if (prev)
+			prev->next = cur;
+		prev = cur;
+		cur = *(node_list_ptr++);
+	} while (cur);
+	
+	if (prev)
+		list->tail = prev;
+	else
+		list->tail = list->head;
+	
+	list->tail->next = 0;
+}
+
+
 STACK *stack_new(int contents_size)
 {
 	return list_new(contents_size);
