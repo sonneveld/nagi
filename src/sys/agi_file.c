@@ -3,7 +3,7 @@
 */
 
 //~ RaDIaT1oN (2002-04-29):
-//~ very nice file search routine
+//~ lowercase file search routines for linux
 
 /* BASE headers	---	---	---	---	---	---	--- */
 //#include "agi.h"
@@ -119,6 +119,37 @@ void find_close(FIND *token)
 
 
 
+FILE *fopen_nocase(u8 *name)
+{
+#ifdef RAD_LINUX
+	DIR *dir;
+	struct dirent *fileent;
+	FILE *ret;
+	
+	dir = opendir(".");
+	string_lower(name);
+
+	while((fileent = readdir(dir))) {
+		char *testname;
+		
+		testname = strdupa(fileent->d_name);
+		string_lower(testname);
+		
+		if(!strcmp(testname, name)) {
+			ret = fopen(fileent->d_name, "rb");
+			closedir(dir);
+			return ret;
+		}
+	}
+	
+	closedir(dir);
+	return NULL;
+#else
+	return fopen(name, "rb");
+#endif
+}
+
+
 
 // file writen
 // file close
@@ -135,7 +166,8 @@ u8 *file_to_buf(u8 *file_name)
 	FILE *file_stream;
 	u8 *buf;
 	
-	file_stream=fopen(file_name, "rb");
+//	file_stream=fopen(file_name, "rb");
+	file_stream=fopen_nocase(file_name);
 	if (file_stream == 0)
 		return 0;
 

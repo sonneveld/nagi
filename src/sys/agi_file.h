@@ -2,7 +2,7 @@
 #define file_h_file
 
 //~ RaDIaT1oN (2002-04-29):
-//~ very nice file search routine
+//~ lowercase file search routines for linux
 
 #ifdef RAD_LINUX
 #include <sys/types.h>
@@ -20,7 +20,7 @@ struct find_struct
 #else
 	DIR *dir;	
 	struct dirent *file;
-	char name[50];
+	char name[NAME_MAX];
 #endif
 };
 typedef struct find_struct FIND;
@@ -35,5 +35,6 @@ extern u8 *find_first(FIND *token, u8 *name);
 extern u8 *find_next(FIND *token);
 extern void find_close(FIND *token);
 
+extern FILE *fopen_nocase(u8 *name);
 
 #endif

@@ -2,6 +2,9 @@
 
 */
 
+//~ RaDIaT1oN (2002-04-29):
+//~ lowercase file search routines for linux
+
 /* BASE headers	---	---	---	---	---	---	--- */
 //#include "agi.h"
 #include "../agi.h"
@@ -13,6 +16,7 @@
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"
+#include "agi_file.h"
 #include "mem_wrap.h"
 #include "ini_config.h"
 
@@ -36,7 +40,8 @@ INI *ini_open(u8 *ini_name)
 	INI *ini_new;
 	
 	// open file
-	if ( (file_stream=fopen(ini_name, "rb")) == 0)
+//	if ( (file_stream=fopen(ini_name, "rb")) == 0)
+	if ( (file_stream=fopen_nocase(ini_name)) == 0)
 		return 0;
 	
 	// malloc an INI
