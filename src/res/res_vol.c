@@ -9,6 +9,10 @@ _VolumesClose                    cseg     000030D6 0000003D
 _FileLoad                        cseg     00003113 000000C5
 */
 
+// RaDIaT1oN - dependancy for errno
+#include <errno.h>
+
+
 #define RES_HEAD_SIZE 5
 
 #include "../agi.h"
