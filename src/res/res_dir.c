@@ -27,7 +27,6 @@ u8 *dir_pic_data = 0;
 u8 *dir_view_data = 0;
 u8 *dir_snd_data = 0;
 
-u8 dir_id[10] = "";
 
 void v2_dir_load(void)
 {
@@ -43,9 +42,6 @@ void v3_dir_load(void)
 	FILE *dir_stream;
 	u8 *dir_data;
 	
-	if (dir_id[0] == 0)
-		game_id_copy();
-	
 	if (c_game_dir_type == DIR_AMIGA)
 	{
 		sprintf(dir_v3_name, "dirs");
@@ -53,7 +49,7 @@ void v3_dir_load(void)
 	}
 	else
 	{
-		sprintf(dir_v3_name, "%sdir", dir_id);
+		sprintf(dir_v3_name, "%sdir", c_game_file_id);
 		dir_stream = fopen(dir_v3_name, "rb");
 	}
 	if ( dir_stream != 0)
