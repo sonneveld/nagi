@@ -4,6 +4,8 @@
 // the only include file i should include in an include file
 #include <SDL/SDL.h>
 
+#define alloca __builtin_alloca
+
 // ok no warning here
 
 #ifndef list_h_struct
@@ -13,7 +15,7 @@ struct node_struct
 {
 	struct node_struct *next;
 	struct node_struct *prev;
-	unsigned char contents[0];
+	unsigned char contents[1];
 };
 typedef struct node_struct NODE;
 
@@ -166,14 +168,14 @@ struct size_struct
 	int w;
 	int h;
 };
-typedef struct size_struct SIZE;
+typedef struct size_struct AGISIZE;
 	
 struct rect_struct
 {
 	struct position_struct pos;
 	struct size_struct size;
 };
-typedef struct rect_struct RECT;
+typedef struct rect_struct AGIRECT;
 
 #define VAR_SIZE 256
 // using individual bits
