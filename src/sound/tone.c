@@ -2,6 +2,8 @@
 
 */
 
+//~ RaDIaT1oN: change local variable names to avoid conflict
+
 /* BASE headers	---	---	---	---	---	---	--- */
 //#include "agi.h"
 #include "../agi.h"
@@ -46,10 +48,10 @@ TONE_DRIVER tone_drv;
 
 int tone_init(void)
 {
-	DRVINITSTATE initstate;
+	DRVINITSTATE local_initstate;
 	int drv_avail;
 	
-	drv_avail = drvpick_first(&initstate, tone_init_list, 
+	drv_avail = drvpick_first(&local_initstate, tone_init_list, 
 			sizeof(tone_init_list) / sizeof(DRVINIT), 
 			c_snd_tone_drv, &tone_drv);
 	
@@ -57,7 +59,7 @@ int tone_init(void)
 	{
 		if (!tone_drv.ptr_init())
 			return 0;
-		drv_avail = drvpick_next(&initstate);
+		drv_avail = drvpick_next(&local_initstate);
 	}
 	return -1;
 }
