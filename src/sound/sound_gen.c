@@ -26,9 +26,10 @@
 #define CHAN_MAX 4
 
 // "fade out" or possibly "dissolve"
-u8 dissolve_data[0x44] =
+// v2.9xx
+s8 dissolve_data_v2[0x44] =
 {
-	0xFE, 0xFD, 0xFE, 0xFF, 0x00, 0x00, 0x01, 0x01, 0x01,
+	-2, -3, -2, -1, 0x00, 0x00, 0x01, 0x01, 0x01,
 	0x01, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
 	0x02, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
 	0x04, 0x04, 0x04, 0x04, 0x05, 0x05, 0x05, 0x05,
@@ -36,8 +37,30 @@ u8 dissolve_data[0x44] =
 	0x07, 0x08, 0x08, 0x08, 0x08, 0x09, 0x09, 0x09,
 	0x09, 0x0A, 0x0A, 0x0A, 0x0A, 0x0B, 0x0B, 0x0B,
 	0x0B, 0x0B, 0x0B, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-	0x0C, 0x0D, 0x80
+	0x0C, 0x0D, -100
 }; 
+
+// v3
+s8 dissolve_data[] =
+{
+-2, -3, -2, -1,
+0, 0, 0, 0, 0, 
+1, 1, 1, 1, 1, 1,
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+3, 3, 3, 3, 3, 3, 3, 3, 
+4, 4, 4, 4, 4,
+5, 5, 5, 5, 5, 
+6, 6, 6, 6, 6, 
+7, 7, 7, 7, 
+8, 8, 8, 8,
+9, 9, 9, 9,
+0xA, 0x0A, 0x0A, 0xA,
+0x0B, 0x0B, 0x0B, 0x0B, 0x0B, 0x0B,
+0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+0x0D,
+-100
+};
+
 
 u8 channels_left = 0;
 SNDGEN_CHAN channel[CHAN_MAX];
@@ -116,7 +139,7 @@ void sndgen_stop(void)
 
 int volume_calc(SNDGEN_CHAN *chan)
 {
-	u8 al, dissolve_value;
+	s8 al, dissolve_value;
 
 	// blah
 	assert(chan);
@@ -127,7 +150,7 @@ int volume_calc(SNDGEN_CHAN *chan)
 		if (chan->dissolve_count != 0xFFFF) 
 		{
 			dissolve_value = dissolve_data[chan->dissolve_count];
-			if (dissolve_value == 0x80)	// if at end of list
+			if (dissolve_value == -100)	// if at end of list
 			{
 				chan->dissolve_count = 0xFFFF;
 				chan->attenuation = chan->attenuation_copy;
@@ -137,16 +160,15 @@ int volume_calc(SNDGEN_CHAN *chan)
 			{
 				chan->dissolve_count++;
 				
-				if ((al+dissolve_value) > 0x7F)
+				al += dissolve_value;
+				if (al < 0)
 					al = 0;
-				else
-					al += dissolve_value;
 				if (al > 0x0F)
 					al = 0x0F;
 				
 				chan->attenuation_copy = al;
 				al &= 0x0F;
-				al += state.var[V23_SNDVOL];
+				//al += state.var[V23_SNDVOL];
 				if (al > 0x0F)
 					al = 0x0F;
 			}
@@ -170,7 +192,9 @@ void sndgen_callback(int ch, TONE *tone)
 	assert(ch < CHAN_MAX);
 	
 	if ( (!flag_test(F09_SOUND)) || (sound_state!=SS_OPEN_PLAYING) )
+	{
 		sound_state=SS_OPEN_STOPPED;
+	}
 	else
 	{
 		chan = &channel[ch];
@@ -254,7 +278,9 @@ void sndgen_callback(int ch, TONE *tone)
 		}
 		
 		if (channels_left == 0)
+		{
 			sound_state=SS_OPEN_STOPPED;
+		}
 	}
 	
 }
