@@ -3,6 +3,8 @@
 
 */
 
+//~ RaDIaT1oN: fix preprocessor tags, file open
+
 /* BASE headers	---	---	---	---	---	---	--- */
 //#include "agi.h"
 #include "../agi.h"
@@ -15,7 +17,13 @@
 #define WRITE_TO_DISK 0
 
 #if WRITE_TO_DISK
+
+#ifdef RAD_LINUX
+#include <unistd.h>
+#else
 #include <io.h>
+#endif
+
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -25,6 +33,7 @@
 /* OTHER headers	---	---	---	---	---	---	--- */
 #include "../list.h"
 
+#include "sound_gen.h"
 #include "pcm_out.h"
 #include "pcm_out_sdl.h"
 
@@ -118,9 +127,9 @@ int pcm_out_sdl_init(int freq, int format)
 	// pauses callback
 	pcm_out_sdl_state_set(0);
 	
-	#if WRITE_TO_DISK
+#if WRITE_TO_DISK
 	list_data = list_new(sizeof(DATA));
-	#endif
+#endif
 	
 	printf("done.\n");
 	
@@ -145,14 +154,18 @@ void pcm_out_sdl_shutdown(void)
 	
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	
-	#if WRITE_TO_DISK
+#if WRITE_TO_DISK
 	if (list_data)
 	{
 		DATA *cur;
 		int amount;
 		
 		cur = list_element_head(list_data);
+#ifndef RAD_LINUX
 		file_handle = open("sound.raw", O_BINARY|O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
+#else
+		file_handle = open("sound.raw", O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
+#endif
 		printf("handle = %d\n", file_handle);
 		while (cur)
 		{
@@ -167,7 +180,7 @@ void pcm_out_sdl_shutdown(void)
 		}
 		close(file_handle);
 	}
-	#endif
+#endif
 }
 
 // get available options
@@ -293,9 +306,9 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 	int num_chan;
 	int output = 0;
 	
-	#if WRITE_TO_DISK
+#if WRITE_TO_DISK
 	DATA *new_data;
-	#endif
+#endif
 	
 	(void) userdata;
 	
@@ -333,12 +346,12 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 		}
 	}
 	
-	#if WRITE_TO_DISK
+#if WRITE_TO_DISK
 	new_data = list_add(list_data);
 	new_data->data = (u8 *)a_malloc(len);
 	memcpy(new_data->data, stream, len);
 	new_data->len = len;
-	#endif
+#endif
 	
 	if (!output)
 	{
