@@ -282,7 +282,7 @@ u16 err_wrong_disk(u16 num)
 
 void volumes_open()
 {
-	u8 name[10];
+	u8 name[strlen("vol.XXXXXXX") + ID_SIZE + 1];
 	//u16 vol_max;
 	u16 i;
 	/*

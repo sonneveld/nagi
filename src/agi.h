@@ -446,6 +446,8 @@ extern CONF_STRING c_standard_force;
 extern CONF_STRING c_standard_v2_default;
 extern CONF_STRING c_standard_v3_default;
 extern CONF_STRING c_standard_sort;
+extern CONF_STRING c_standard_amiga_v2_default;
+extern CONF_STRING c_standard_amiga_v3_default;
 
 extern CONF_STRING c_game_version_info;
 extern CONF_INT c_game_mouse;

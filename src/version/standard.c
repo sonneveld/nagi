@@ -645,8 +645,19 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 			ini_section(ini, game->standard);
 			stand_rejoin();
 		}
+		else if (game->dir_type == DIR_AMIGA)
+			// I know it won't read amiga_v2_Default.. but it's a start
+			switch(game->ver_type)
+			{
+				case 3:
+					ini_section(ini, c_standard_amiga_v3_default);
+					break;
+				case 2:
+				default:
+					ini_section(ini, c_standard_amiga_v2_default);
+					break;
+			}
 		else
-		{
 			switch(game->ver_type)
 			{
 				case 3:
@@ -657,7 +668,6 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 					ini_section(ini, c_standard_v2_default);
 					break;
 			}
-		}
 	}
 	
 	// read in file_id

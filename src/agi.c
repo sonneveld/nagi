@@ -39,6 +39,8 @@ CONF_STRING c_standard_force = 0;
 CONF_STRING c_standard_v2_default = 0;
 CONF_STRING c_standard_v3_default = 0;
 CONF_STRING c_standard_sort = 0;
+CONF_STRING c_standard_amiga_v2_default = 0;
+CONF_STRING c_standard_amiga_v3_default = 0;
 
 CONF_STRING c_game_version_info = 0;
 CONF_INT c_game_mouse = 0;
@@ -90,14 +92,15 @@ CONF config_nagi[] =
 // for use in standard.ini
 CONF config_standard[] =
 {
-	{"crc_list", "standard", CT_STRING, {s:{&c_standard_crc_list, "lsl"}} },
-	{"agi_list", 0, CT_STRING, {s:{&c_standard_agi_list, "pc_2_936;pc_3_002_149"}} },
+	{"crc_list", "standard", CT_STRING, {s:{&c_standard_crc_list, "none"}} },
+	{"agi_list", 0, CT_STRING, {s:{&c_standard_agi_list, "pc_2_936;pc_3_002_149;amiga_2;amiga_3"}} },
 	{"dir_list", 0, CT_STRING, {s:{&c_standard_dir_list, "."}} },
 	{"force", 0, CT_STRING, {s:{&c_standard_force, "not defined"}} },
 	{"v2_default", 0, CT_STRING, {s:{&c_standard_v2_default, "pc_2_936"}} },
 	{"v3_default", 0, CT_STRING, {s:{&c_standard_v3_default, "pc_3_002_149"}} },
 	{"sort", 0, CT_STRING, {s:{&c_standard_sort, "alpha"}} },
-
+	{"amiga_v2_default", 0, CT_STRING, {s:{&c_standard_amiga_v2_default, "amiga_2"}} },
+	{"amiga_v3_default", 0, CT_STRING, {s:{&c_standard_amiga_v3_default, "amiga_3"}} },
 	{key: 0}
 };
 
