@@ -11,11 +11,8 @@ typedef struct node_struct NODE;
 
 struct list_struct
 {
-	// public to read
 	NODE *head;
 	NODE *tail;
-	
-	// private
 	int contents_size;
 };
 typedef struct list_struct LIST;
