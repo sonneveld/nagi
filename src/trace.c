@@ -24,11 +24,11 @@ _TraceScroll                     cseg     00008FAD 00000023
 #include "logic/cmd_table.h"
 #include "logic/logic_base.h"
 #include "flags.h"
-#include "sys/video_misc.h"
+#include "sys/drv_video.h"
+#include "sys/gfx.h"
 #include "ui/events.h"
 #include "sys/endian.h"
-#include "sys/video.h"
-
+ 
 #include "ui/printf.h"
 #include "ui/window.h"
 #include "ui/agi_text.h"
@@ -117,7 +117,7 @@ void trace_init(void)
 		trace_win_y = trace_bottom * 8 + 5;
 		trace_win_h = trace_height * 8 + 0xA;
 		trace_win_w = 0x9A;
-		box_n_border(trace_win_x,trace_win_y,trace_win_w,trace_win_h,0x0F,0x04);
+		gfx_msgbox(trace_win_x,trace_win_y,trace_win_w,trace_win_h,0x0F,0x04);
 	}
 }
 
@@ -289,6 +289,7 @@ void trace_var_print(FUNC *table, u8 *log_data)
 		}
 		window_put_char(')');
 	}
+	ch_update();
 }
 
 

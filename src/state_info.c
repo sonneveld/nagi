@@ -456,12 +456,14 @@ void state_draw_arrow(u16 var8)
 {
 	goto_row_col(var8, msgstate.tpos.col);
 	window_put_char(0x1A);
+	ch_update();
 }
 
 void state_draw_blank(u16 var8)
 {
 	goto_row_col(var8, msgstate.tpos.col);
 	window_put_char(' ');
+	ch_update();
 }
 
 

@@ -19,7 +19,8 @@ _StateWrite                      cseg     000028C6 00000074
 
 #include "ui/events.h"
 #include "ui/controller.h"
-#include "sys/video_misc.h"
+#include "sys/drv_video.h"
+#include "sys/gfx.h"
 #include "objects.h"
 #include "sys/glob_sys.h"
 
@@ -391,7 +392,7 @@ void state_reload(void)
 
 	input_edit_on();
 	cmd_cancel_line(0);
-	pic_buff_update();
+	gfx_picbuff_update();
 	pic_visible = 1;
 	status_line_write();
 	input_redraw();
