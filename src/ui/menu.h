@@ -32,6 +32,7 @@ struct menu_struct
 typedef struct menu_struct MENU;
 
 extern u16 menu_next_input;
+extern MENU *menu_head;
 
 extern u8 *cmd_set_menu(u8 *c);
 extern u8 *cmd_set_menu_item(u8 *c);

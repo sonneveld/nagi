@@ -149,6 +149,7 @@ int object_file_load()
 		
 		count = 0;
 	obj_continue:
+		;
 	}
 	
 	// bung in a '\0' at the end if one doesn't exist

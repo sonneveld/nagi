@@ -30,7 +30,8 @@ u8 *cmd_set_key(u8 *c)
 	c += 2;
 	cont_num = *(c++);	// controller number
 	
-	for (i=0; i<39; i++)
+	// controlsize originaly 39 here.. 
+	for (i=0; i<CONTROL_SIZE; i++)
 		if (state.control_map[i].key==0)
 		{
 			state.control_map[i].key = key;

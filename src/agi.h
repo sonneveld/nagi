@@ -179,6 +179,7 @@ typedef struct rect_struct RECT;
 // using individual bits
 #define FLAG_SIZE 32
 #define STRING_SIZE 40
+#define STRING_LIST_SIZE 24
 #define CONTROL_SIZE 50
 // number of chars
 #define ID_SIZE 20
@@ -214,8 +215,8 @@ struct agi_state_struct
 	u16 word_13f;			// unused
 	u16 script_size;
 	u16 script_count;			// number written in script
-	CMAP control_map[50];
-	u8 string[24][STRING_SIZE];
+	CMAP control_map[CONTROL_SIZE];
+	u8 string[STRING_LIST_SIZE][STRING_SIZE];
 	
 	u16 text_fg;
 	u16 text_bg;

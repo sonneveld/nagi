@@ -162,26 +162,26 @@ u8 *cmd_enable_item(u8 *c)
 // enable all items?  called by cmdrestart and restore
 void menu_enable_all(void)
 {
-	MENU *si;
-	MENU_ITEM *di;
+	MENU *m;
+	MENU_ITEM *mi;
 	
-	si = menu_head;
-	if ( si != 0)
+	m = menu_head;
+	if ( m != 0)
 	{
 		do
 		{
-			if ( si->status != 0)
+			if ( m->status != 0)
 			{
-				di = si->head;
+				mi = m->head;
 				do
 				{
-					di->status= 1;
-					di = di->next;
+					mi->status= 1;
+					mi = mi->next;
 				}
-				while ( si->head != di);
+				while ( m->head != mi);
 			}
-			si = si->next;
-		} while ( menu_head != si);
+			m = m->next;
+		} while ( menu_head != m);
 	}
 }
 
