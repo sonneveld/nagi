@@ -164,7 +164,7 @@ u32 file_buf_size;
 
 u8 *file_to_buf(u8 *file_name)
 {
-	fpos_t file_size;
+	int file_size;
 	FILE *file_stream;
 	u8 *buf;
 	
@@ -174,7 +174,8 @@ u8 *file_to_buf(u8 *file_name)
 		return 0;
 
 	fseek(file_stream, 0, SEEK_END);
-	fgetpos(file_stream, &file_size);
+	//fgetpos(file_stream, &file_size);
+	file_size = ftell(file_stream);
 	fseek(file_stream, 0, SEEK_SET);
 	file_buf_size = (u32)file_size;
 	

@@ -341,7 +341,7 @@ void volumes_close()
 u8 *file_load(u8 *name, u8 *buff)
 {
 	u8 msg[100];
-	fpos_t file_size;
+	int file_size;
 	FILE *file_stream;
 	u8 newline_orig;
 
@@ -360,7 +360,8 @@ u8 *file_load(u8 *name, u8 *buff)
 	msgstate.newline_char = newline_orig;
 	
 	fseek(file_stream, 0, SEEK_END);
-	fgetpos(file_stream, &file_size);
+	//fgetpos(file_stream, &file_size);
+	file_size = ftell(file_stream);
 	fseek(file_stream, 0, SEEK_SET);
 	res_size = (int)file_size;
 	if (buff == 0)

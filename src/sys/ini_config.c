@@ -37,7 +37,7 @@ void ini_close(INI *inistate);
 INI *ini_open(u8 *ini_name)
 {
 	FILE *file_stream;
-	fpos_t inifile_size;
+	int inifile_size;
 	INI *ini_new;
 	
 	// open file
@@ -50,7 +50,8 @@ INI *ini_open(u8 *ini_name)
 	
 	// get size
 	fseek(file_stream, 0, SEEK_END);
-	fgetpos(file_stream, &inifile_size);
+	inifile_size = ftell(file_stream);
+	//fgetpos(file_stream, &inifile_size);
 	fseek(file_stream, 0, SEEK_SET);
 	
 	ini_new->size = (int)inifile_size;
