@@ -19,8 +19,7 @@ CmdGetNum                        cseg     00007126 000000C8
 
 #include "agi_string.h"
 
-#include "sys/video.h"
-#include "sys/video_text.h"
+
 // msg
 #include "ui/msg.h"
 // input_edit
@@ -120,6 +119,7 @@ u16 string_edit_old(u8 *str, u16 len)
 	while (it_is_cold == 1)
 	{
 		input_edit_off();
+		ch_update();
 		di = char_wait();
 		input_edit_on();
 
@@ -145,10 +145,12 @@ u16 string_edit_old(u8 *str, u16 len)
 			case 0xD:	// enter
 				*str_cur = 0;
 				strcpy(str, buff);
+				ch_update();
 				return di;	// LEAVE!
 				break;
 			
 			case 0x1B:	// esc
+				ch_update();
 				return di;	// LEAVE!
 				break;
 			
@@ -160,6 +162,7 @@ u16 string_edit_old(u8 *str, u16 len)
 				}
 		}
 	}
+	ch_update();
 	return di;
 }
 
@@ -245,7 +248,9 @@ void stredit_disp2(u8 *port, u16 disp_size, u16 offset)
 	}
 	
 	while (*port != 0)
+	{
 		window_put_char(*(port++));
+	}
 }
 
 
@@ -286,13 +291,14 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 	str_tail = str_edit + strlen(str_edit);
 	str_end = str_edit + str_size - 1;
 	
-	t_pos_get(&stredit_pos);
+	ch_pos_get(&stredit_pos);
 	
 	str_disp = stredit_disp(str_edit, str_size, str_disp, disp_size, 75);
 	
 	for (;;)
 	{
 		input_edit_off();	// remove cursor
+		ch_update();
 		ch = char_wait();
 		input_edit_on();	// add cursor
 
@@ -310,7 +316,10 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 				if (str_edit < str_tail)
 					str_tail--;
 				if (str_tail > str_disp)
+				{
 					window_put_char(ch);
+
+				}
 				else
 				{
 					*str_tail = 0;
@@ -321,10 +330,12 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 			case 0xD:	// enter
 				*str_tail = 0;
 				strcpy(str, str_edit);
+				ch_update();
 				return ch;	// LEAVE!
 				break;
 			
 			case 0x1B:	// esc
+				ch_update();
 				return ch;	// LEAVE!
 				break;
 			
@@ -334,7 +345,9 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 					*(str_tail++) = ch;
 					
 					if ((str_tail - str_disp) < disp_size)
+					{
 						window_put_char(ch);
+					}
 					else
 					{
 						*str_tail = 0;
@@ -343,5 +356,6 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 				}
 		}
 	}
+	ch_update();
 	return ch;
 }

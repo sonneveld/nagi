@@ -24,9 +24,11 @@ _PopTextAtt                      cseg     000078FC 0000003A
 #include "../ui/window.h"
 // state.window_row_min, max
 #include "../ui/msg.h"
-// vstate.pic_buf_row
-#include "../sys/video.h"
+// gfx_picbuff_row
 // rstate
+#include "../sys/drv_video.h"
+#include "../sys/gfx.h"
+#include "../sys/chargen.h"
 #include "../sys/vid_render.h"
 // state.input_pos
 #include "../ui/cmd_input.h"
@@ -35,7 +37,6 @@ _PopTextAtt                      cseg     000078FC 0000003A
 
 
 
-//u8 vstate.text_mode = 0;	// 0x174b
 
 #define ATTRIB_MAX 5
 
@@ -53,9 +54,9 @@ u16 attrib_cur = 0;
 u8 *cmd_text_screen(u8 *c)
 {
 	input_edit_on();
-	vstate.text_mode = 1;
+	chgen_textmode = 1;
 	text_colour(state.text_fg, state.text_bg);
-	vid_clear();
+	gfx_clear();
 	window_portion_clear(0, 24, state.text_comb);
 	return c; 
 }
@@ -129,7 +130,7 @@ u16 text_combine(u16 fg, u16 bg)
 {
 	u16 comb;
 	
-	if ( vstate.text_mode == 1) 
+	if ( chgen_textmode == 1) 
 		comb = fg | (bg << 4);
 	else
 	{
@@ -163,7 +164,7 @@ u16 do_nothing(u16 nothin_but_crap)
 
 u16 calc_text_bg(u16 colour)
 {
-	if ( (vstate.text_mode == 0) && (colour != 0) )
+	if ( (chgen_textmode == 0) && (colour != 0) )
 		return 0xFF;
 	else
 		return 0;
@@ -171,10 +172,10 @@ u16 calc_text_bg(u16 colour)
 
 void screen_redraw()
 {
-	vstate.text_mode = 0;
+	chgen_textmode = 0;
 	text_colour(state.text_fg, state.text_bg);
-	vid_clear();
-	pic_buff_update();
+	gfx_clear();
+	gfx_picbuff_update();
 	status_line_write();
 	input_redraw();	// cmd_input stuff
 }
@@ -183,7 +184,7 @@ u8 *cmd_config_screen(u8 *c)
 {
 	state.window_row_min = *(c++);
 	state.window_row_max = state.window_row_min + 21;
-	//vstate.pic_buf_row = (state.window_row_min<<3); // * 8
+	//gfx_picbuff_row = (state.window_row_min<<3); // * 8
 	state.input_pos = *(c++);
 	state.status_line_row = *(c++);	// status.c 
 	return c;
