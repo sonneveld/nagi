@@ -11,6 +11,8 @@ _RoomInit                        cseg     000012DE 00000015
 //~ warning placement
 
 /* BASE headers	---	---	---	---	---	---	--- */
+#include <windows.h>
+#include <wincon.h>
 #include "agi.h"
 #include "initialise.h"
 
@@ -75,8 +77,6 @@ void game_init(void);
 void room_init(void);
 
 
-
-
 /* VARIABLES	---	---	---	---	---	---	--- */
 
 
@@ -111,6 +111,7 @@ void nagi_init()
 #ifndef RAD_LINUX
 	if (c_nagi_console)
 	{
+		AllocConsole();
 		freopen("CON", "w", stdout);
 		freopen("CON", "w", stderr);
 	}
@@ -153,7 +154,7 @@ void nagi_init()
 #endif
 
 	//SDL_INIT_EVENTTHREAD SDL_INIT_AUDIO|
-	if ( SDL_Init(SDL_INIT_TIMER) < 0 )
+	if ( SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0 )
 	{
 		printf("Unable to init SDL: %s\n", SDL_GetError());
 		exit(1);
@@ -169,11 +170,11 @@ void nagi_init()
 	events_init();
 	
 	//load_vectors();	// keyboard, timer, critical error
-	
+
 	// call do_clock at 20Hz.
 	clock_init();
 	sndgen_init();
-	
+
 	/*
 	input_init();	// inits joystick
 	*/
