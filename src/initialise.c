@@ -84,7 +84,7 @@ void nagi_init()
 	state.menu_state = 1;
 	computer_type = 0;	// ibm pc
 	drives_found = 1;	// yes, drives are known of
-	display_type = 3;		// ega
+	display_type = 0;		// ega
 	//text_mode = 0;
 
 	// read nagi.ini

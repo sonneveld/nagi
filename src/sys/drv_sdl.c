@@ -67,7 +67,7 @@ void sdl_driver_init(VDRIVER *drv)
 
 void sdl_driver_shutdown()
 {
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
+	//SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 // create an 8bit window with such a size
