@@ -7,7 +7,7 @@ _IBMRestoreArea                  cseg     00009D38 0000003D
 _IBMBlitArea                     cseg     00009D75 000000D0
 */
 
-
+#include <string.h>
 #include <stdlib.h>
 #include "../agi.h"
 #include "../flags.h"

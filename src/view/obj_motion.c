@@ -16,6 +16,8 @@ void obj_wander_update(VIEW *v)
 void obj_follow_update(VIEW *v)
 */
 
+#include <stdlib.h>
+
 #include "../agi.h"
 #include "../flags.h"
 #include "../sys/rand.h"
@@ -55,15 +57,15 @@ void obj_motion_update(VIEW *v)
 	switch(v->motion)
        	{
 	        case MT_WANDER:
-			obj_wander_update(v);
-                	break;
+				obj_wander_update(v);
+				break;
 	        case MT_FOLLOW:	
-			obj_follow_update(v);
-                	break;
-		case MT_EGO:
-		case MT_MOVE:
-			obj_move_update(v);
-                	break;
+				obj_follow_update(v);
+				break;
+			case MT_EGO:
+			case MT_MOVE:
+				obj_move_update(v);
+				break;
 	        default:
         }
 

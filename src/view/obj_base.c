@@ -16,6 +16,7 @@ _CheckBlockStat                  cseg     000006D9 000000CF
 
 // update graphics : a few functions incomplete
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 

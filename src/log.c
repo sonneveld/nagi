@@ -7,6 +7,7 @@
 //#include "../agi.h"
 
 /* LIBRARY headers	---	---	---	---	---	---	--- */
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 

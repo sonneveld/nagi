@@ -77,3 +77,4 @@ u8 *cmd_start_cycling(u8 *c)
 	objtable[*(c++)].flags |= O_CYCLE;
 	return c;
 }
+

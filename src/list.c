@@ -196,7 +196,7 @@ int list_length(LIST *list)
 	return length;
 }
 
-void *list_element_at(LIST *list, int index)
+void *list_element_at(LIST *list, int ind)
 {
 	NODE *c;
 	
@@ -204,13 +204,13 @@ void *list_element_at(LIST *list, int index)
 	
 	c = list->head;
 	
-	while ( (index) && (c != 0) )
+	while ( (ind) && (c != 0) )
 	{
-		index--;
+		ind--;
 		c = c->next;
 	}
 	
-	return (index ? 0: (void *)(c->contents));
+	return (ind ? 0: (void *)(c->contents));
 }
 
 void *list_element_head(LIST *list)

@@ -16,6 +16,8 @@ _TestFlagAL                      cseg     0000743B 0000000F
 _FlagMaskAL                      cseg     0000744A 00000019
 _ClearFlags                      cseg     00007463 0000000E
 */
+#include <string.h>
+
 #include "agi.h"
 #include "flags.h"
 

@@ -34,7 +34,7 @@ u8 *cmd_unblock(u8 *c)
 u8 *cmd_ignore_blocks(u8 *c)
 {
 	objtable[*(c++)].flags |= O_BLOCKIGNORE;
-        return(c);
+	return(c);
 }
 
 
@@ -42,7 +42,7 @@ u8 *cmd_ignore_blocks(u8 *c)
 u8 *cmd_observe_blocks(u8 *c)
 {
 	objtable[*(c++)].flags &= ~O_BLOCKIGNORE;
-        return c;
+	return c;
 }
 
 

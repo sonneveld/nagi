@@ -5,7 +5,7 @@ CmdObserveObjs                   cseg     000047C7 00000028
 CmdDistance                      cseg     000047EF 000000C0
 */
 
-#include <math.h>
+#include <stdlib.h>
 
 #include "../agi.h"
 

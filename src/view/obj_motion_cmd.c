@@ -189,3 +189,4 @@ u8 *cmd_player_control(u8 *c)
 		objtable->motion = MT_NORM;
 	return c;
 }
+

@@ -17,6 +17,7 @@ _VidMode_Get                     cseg     000059AC 00000015
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"
