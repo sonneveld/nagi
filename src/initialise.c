@@ -95,7 +95,10 @@ void nagi_init()
 
 	// for the console window thingy
 	if (c_nagi_console)
-		freopen( "CON", "w", stdout );	
+	{
+		freopen("CON", "w", stdout);
+		freopen("CON", "w", stderr);
+	}
 
 	printf("New Adventure Game Interpreter (NAGI) %s\n", NAGI_VERSION);
 	printf("Copyright (C) 2000-2001 Nick Sonneveld\n");
