@@ -6,6 +6,16 @@
 //#include "agi.h"
 #include "../agi.h"
 
+//~ RaDIaT1oN:
+//~ fix const declaration in compare func
+//~ cast in strtok_r
+//~ lower string for linux
+//~ unnamed union members
+
+#ifdef RAD_LINUX
+#include <unistd.h>
+#endif
+
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
@@ -60,8 +70,10 @@ struct agicrc_struct
 	u32 object;
 	u32 words;
 	
+#ifndef RAD_LINUX
 	union
 	{
+#endif
 		u32 dir_comb;
 		
 		struct
@@ -71,7 +83,9 @@ struct agicrc_struct
 			u32 view;
 			u32 snd;
 		} dir;
+#ifndef RAD_LINUX
 	};
+#endif
 
 	u32 vol[16];
 };
@@ -167,9 +181,12 @@ int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 		int ok = 0;
 		
 		fname = find_first(&find_vol, "*vol.0");
+//		printf("Found vol: %s\n", fname);
 		while (fname != 0)
 		{
+#ifndef RAD_LINUX
 			fname = string_lower(fname);	// to lower the name
+#endif
 			tail = strstr(fname, "vol.0");	// get id
 			
 			// check size of it
@@ -184,6 +201,7 @@ int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 				}
 			
 			fname = find_next(&find_vol);
+//			printf("Found vol: %s\n", fname);
 		}
 		find_close(&find_vol);
 		
@@ -360,7 +378,7 @@ u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 	
 	crc_list = strdupa(c_standard_crc_list);
 	
-	token = strtok_r(crc_list, ",", &running);
+	token = strtok_r(crc_list, ",", (char**)&running);
 	while (token != 0)
 	{
 		if (ini_section(ini, token) == 0)
@@ -368,7 +386,7 @@ u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 			if (crc_compare(agicrc, info, ini)== 0)
 				return c_standard_crc_list + (token - crc_list);
 		}
-		token = strtok_r(0, ",", &running);
+		token = strtok_r(0, ",", (char**)&running);
 	}
 
 	return 0;	
@@ -493,7 +511,7 @@ void gi_list_init(LIST *list, INI *ini)
 	// for each dir
 	
 	dir_list = strdupa(c_nagi_dir_list);
-	token = strtok_r(dir_list, ";", &running);
+	token = strtok_r(dir_list, ";", (char**)&running);
 	while (token != 0)
 	{
 		dir_preset_change(DIR_PRESET_ORIG);
@@ -517,7 +535,7 @@ void gi_list_init(LIST *list, INI *ini)
 			closedir(dp);
 		}
 		
-		token = strtok_r(0, ";", &running);
+		token = strtok_r(0, ";", (char**)&running);
 	}
 	
 	dir_preset_change(DIR_PRESET_ORIG);
@@ -716,7 +734,7 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 // ---------------------------------------- MAIN ----------------------------------------
 
 
-int gameinfo_compare(void *a, void *b)
+int gameinfo_compare(const void *a, const void *b)
 {
 	GAMEINFO *info_a;
 	GAMEINFO *info_b;
