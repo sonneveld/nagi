@@ -1,0 +1,21 @@
+20 - computer type
+0 is ibm
+1 for pcjr
+2 for tandy
+4 = ??
+5 for amiga
+7 = apple ii gs
+8 = ps2??
+?? = mac
+?? = apple ii
+0xFF = uninitialised
+
+22- sound generator (actuall number fo channels?)
+1=pc
+3= tandy/ amiga / apple iigs
+
+26 = monitor type
+0 = apple iigs
+0-1 cga types
+2- hercules
+3- ega / amiga (16 colours)

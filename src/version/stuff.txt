@@ -1,0 +1,66 @@
+u8 *dir_list[100] = 100 directories
+AGI_GAME =
+{
+	conf_section_name
+	directory
+}
+
+read ini file specific fornagi
+initialise that bit of nagi along with video 'n sound (halfway through agi_init())
+
+display "NEW ADVENTURE GAME INTERPRETER" in the status bar
+display NAGI version
+
+
+search for games (directorys/zips) from an option of lists
+{
+	dir=0;
+	dir+= cur_dir
+	dir+= dirs in version.ini file
+	
+	for each directory in dirlist
+		add to dir
+}
+
+for each directory in dirlist
+{
+	default = 2.936
+
+	checksums
+	if ?????dir file exists
+		checksum (object, ???dir, works.tok, ??.0, ???.1....)
+	else
+		checksum (object + log + pic + view + sound + words.tok + vol0123456)
+
+		
+	not found:
+		if ???dir
+			then v3default
+		else
+		if
+		{
+			default v2default
+			if the dir is setup as 7byte headers (diff between 1234 headers)
+				then v3
+			
+	if found
+		game = check_name
+		dir=cur_dir
+	if not found
+		print error
+		go with default 2.936
+}
+
+
+detection what version they are
+
+display list
+
+
+play
+restore
+quit
+info
+cheat
+dump crc
+last played
