@@ -5,6 +5,9 @@ _SetAGIError                     cseg     00003FE8 00000035
 _PrintErrCode                    cseg     0000401D 00000095
 */
 
+//~ RaDIaT1oN (2002-04-29):
+//~ snprintf wrap
+
 #include "../agi.h"
 // set jump
 #include <setjmp.h>
@@ -45,7 +48,7 @@ void beep_speaker()
 
 void set_agi_error(u16 err_type, u16 err_data)
 {
-	#warning set_agi_error() incomplete
+#warning set_agi_error() incomplete
 	sound_stop();
 	// clear_memory();
 	events_clear();
@@ -97,7 +100,11 @@ u16 print_err_code()
 	switch (errno)
 	{
 		default:
+#ifndef RAD_LINUX
 			_snprintf(str, sizeof(str), "Disk error:\n%s\n", strerror(errno) );
+#else
+			snprintf(str, sizeof(str), "Disk error:\n%s\n", strerror(errno) );
+#endif
 	}
 	strncat(str, "\nPress ENTER to try again.", sizeof(str)-strlen(str)-1);
 	strncat(str, "\nPress ESC to quit.", sizeof(str)-strlen(str)-1);
