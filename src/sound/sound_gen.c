@@ -281,7 +281,7 @@ int sndgen_callback(int ch, TONE *tone)
 				
 				chan->gen_type = GEN_TONE;
 				
-				#warning if chan 2.. change noise chan if appropriate
+#warning if chan 2.. change noise chan if appropriate
 			}
 			else
 			{
