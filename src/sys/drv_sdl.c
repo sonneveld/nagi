@@ -17,6 +17,8 @@
 
 #include "mem_wrap.h"
 
+#include "math.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 void sdl_driver_shutdown(void);
 VSURFACE *sdl_display(VSURFACE *vsurface, SIZE *screen_size, int fullscreen_state);
@@ -216,6 +218,7 @@ void sdl_fill(VSURFACE *vsurface, POS *pos, SIZE *size, u32 colour)
 	}
 }
 
+int shake_offset[] = {25, 0, -25};
 
 void sdl_shake(VSURFACE *vsurface, int count)
 {
@@ -223,8 +226,7 @@ void sdl_shake(VSURFACE *vsurface, int count)
 	u8 bpp;
 	int width, height;
 	SDL_Surface *orig;
-	SDL_Rect dest = {25,25, 0, 0};
-	int ret;
+	SDL_Rect dest = {0,0, 0, 0};
 
 	//	get screen width, height, depth, ptic... etc etc
 	bpp = SDLPTR(vsurface)->format->BitsPerPixel;
@@ -237,29 +239,38 @@ void sdl_shake(VSURFACE *vsurface, int count)
 		
 	// 	create new surface
 	orig = SDL_CreateRGBSurface(0, width, height, bpp, rmask, gmask, bmask, amask);
-	assert(orig);
+	if (!orig) return;
 
 	orig->format->palette->ncolors = SDLPTR(vsurface)->format->palette->ncolors ;
 	memcpy (orig->format->palette->colors, SDLPTR(vsurface)->format->palette->colors, orig->format->palette->ncolors * sizeof (SDL_Color)) ;
 	
 	// 	blit screen to new surface
-	SDL_BlitSurface(SDLPTR(vsurface), 0, orig, 0); 
+	if (SDL_BlitSurface(SDLPTR(vsurface), 0, orig, 0)) goto shake_error;
 
-	count *= 4;
+	count *= 8;
 	while (count--)
 	{
+		// clear entire window
 		sdl_lock(vsurface);
-		SDL_FillRect(SDLPTR(vsurface), 0, 0);	// clear
+		if (SDL_FillRect(SDLPTR(vsurface), 0, 0))
+			goto shake_error;	
 		sdl_unlock(vsurface);
-		SDL_BlitSurface(orig, 0, SDLPTR(vsurface), &dest); // blit to some offset  stretch*10 or something
-
-		SDL_UpdateRect(SDLPTR(vsurface), 0, 0, 0, 0);
-		SDL_Delay(50);
 		
-		ret =  SDL_BlitSurface(orig, 0, SDLPTR(vsurface), 0);// update the screen
+		// print the surface in some strange location
+		dest.x = shake_offset[rand()%3];
+		dest.y = shake_offset[rand()%3];
+		if (SDL_BlitSurface(orig, 0, SDLPTR(vsurface), &dest)) // blit to some offset  stretch*10 or something
+			goto shake_error; 
 		SDL_UpdateRect(SDLPTR(vsurface), 0, 0, 0, 0);
+		
 		SDL_Delay(50);
 	}
 	
+	// put the original screen back on
+	if (SDL_BlitSurface(orig, 0, SDLPTR(vsurface), 0)) // update the screen
+		goto shake_error; 
+	SDL_UpdateRect(SDLPTR(vsurface), 0, 0, 0, 0);
+	
+shake_error:
 	SDL_FreeSurface(orig);
 }
