@@ -63,5 +63,5 @@ CFLAGS += -fwritable-strings
 
 # Warnings
 CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes
-CFLAGS += -Wpointer-arith -Wcast-qual
+
 #CFLAGS += -Werror

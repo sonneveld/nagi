@@ -2,6 +2,8 @@ include Makefile.common
 
 OBJ += nagires.o
 
+#extra warnings for windows
+CFLAGS += -Wpointer-arith -Wcast-qual
 CFLAGS += -DNAGI_SDLENV
 
 MACH_WIN = -mwindows
