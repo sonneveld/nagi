@@ -58,7 +58,7 @@ extern void sound_stop(void);
 
 extern SAMPLE *sample[2];
 	
-extern void sample_init(void);
+extern int sample_init(void);
 extern void sample_denit(void);
 extern void mix_new(u8 *stream, CHANNEL *c, int len);
 extern void mix_add(u8 *stream, CHANNEL *c, int len);

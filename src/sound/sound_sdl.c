@@ -50,33 +50,32 @@ int snd_off;
 
 void sound_driver_init()
 {
-	SDL_AudioSpec *wanted;
-	
 	if (c_snd_disable != 1)
 	{
-		wanted = (SDL_AudioSpec *)a_malloc(sizeof(SDL_AudioSpec));
+		SDL_AudioSpec wanted;
 		
 		// turn on sdl driver
-		wanted->freq = CARD_FREQ;
-		wanted->format = AUDIO_S16LSB;
-		wanted->channels = 1;	// mono
-		wanted->samples =  512;  //Good low-latency value for callback 
-		wanted->callback = sound_fill_buff;
-		wanted->userdata = NULL;
+		wanted.freq = CARD_FREQ;
+		wanted.format = AUDIO_S16LSB;
+		wanted.channels = 1;	// mono
+		wanted.samples =  512;  //Good low-latency value for callback 
+		wanted.callback = sound_fill_buff;
+		wanted.userdata = NULL;
 	
 		// Open the audio device, forcing the desired format 
-		if ( SDL_OpenAudio(wanted, NULL) < 0 )
+		if ( SDL_OpenAudio(&wanted, 0) < 0 )
 		{
 			printf("Couldn't open audio: %s\n", SDL_GetError());
 			c_snd_disable = 1;
-			a_free(wanted);
 			return;
 		}
 		
-		a_free(wanted);
-		
 		// initialise samples
-		sample_init();
+		if (sample_init())
+		{
+			c_snd_disable = 1;
+			return;
+		}
 	}
 }
 

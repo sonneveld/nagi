@@ -26,7 +26,7 @@ mix_add
 
 SAMPLE *sample[2];
 
-void sample_init(void);
+int sample_init(void);
 void sample_denit(void);
 SAMPLE *sample_open(u8 *file_name, int freq_base);
 void sample_close(SAMPLE *s);
@@ -35,13 +35,16 @@ void mix_new(u8 *stream, CHANNEL *c, int len);
 void mix_add(u8 *stream, CHANNEL *c, int len);
 
 
-void sample_init()
+int sample_init()
 { 
 	// open up an array of two samples
 	dir_preset_change(DIR_PRESET_NAGI);
-	sample[0] = sample_open("tone50.pcm", 50);
-	sample[1] = sample_open("tone50.pcm", 50);
-
+	if ((sample[0] = sample_open("tone50.pcm", 50)) == 0)
+		return -1;
+	if ((sample[1] = sample_open("tone50.pcm", 50)) == 0)
+		return -1;
+	
+	return 0;
 }
 
 
@@ -65,14 +68,14 @@ SAMPLE *sample_open(u8 *file_name, int freq_base)
 	if ( (file = fopen(file_name, "rb")) == 0 )
 	{
 		printf("sample_open(): Can't find %s.\n", file_name);
-		exit(1);
+		return 0;
 	}
 	rewind(file);
 	
 	if ( fseek(file, 0, SEEK_END) != 0)
 	{
 		printf("sample_open(): Error seeking to end of %s\n", file_name);
-		exit(1);
+		return 0;
 	}
 	#warning will probably only work on gnu systems
 	// file size
@@ -84,7 +87,7 @@ SAMPLE *sample_open(u8 *file_name, int freq_base)
 	if (fread(s->data, sizeof(u8), s->size, file) != s->size)
 	{
 		printf("sample_open(): Error occured reading %s into memory\n", file_name);
-		exit(1);
+		return 0;
 	}
 	
 	// scale table
