@@ -205,6 +205,7 @@ int list_box(u8 **list, int size, int init)
 						break;
 						
 					default:
+						;
 				}
 				
 				if (item_cur < 0)

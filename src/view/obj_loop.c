@@ -63,6 +63,7 @@ void obj_loop_update(VIEW *v)
 					c = max;
 				break;
 			default:
+				;
 		}
 		
 		obj_cel_set(v, c);

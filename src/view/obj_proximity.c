@@ -40,6 +40,7 @@ u16 obj_chk_contact(VIEW *v)
 					return 1;
 			
 			loc472e:
+				;
 		}
 	}
 	return 0;

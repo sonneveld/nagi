@@ -67,6 +67,7 @@ void obj_motion_update(VIEW *v)
 				obj_move_update(v);
 				break;
 	        default:
+				;
         }
 
 	if (state.block_state == 0)

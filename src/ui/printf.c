@@ -12,6 +12,7 @@ _FormatChar                      cseg     0000245E 00000014
 #include <stdarg.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #include "../agi.h"
 

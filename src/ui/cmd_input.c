@@ -95,6 +95,7 @@ void input_poll(void)
 				mouse_event_handle(si);	
 				break;
 			default:	
+				;
 		}
 		si = control_key_map(  event_read()  );
 	}

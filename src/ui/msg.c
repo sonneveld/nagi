@@ -386,6 +386,7 @@ u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 							break;
 						
 						default:
+							;
 					}
 					break;
 					

@@ -315,6 +315,7 @@ AGI_EVENT *event_read(void)
 				break;
 			
 			default:
+				;
 		}
 	}
 

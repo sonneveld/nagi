@@ -358,6 +358,7 @@ menu_loop:
 					break;
 				
 				default:	// NONE?
+					;
 			}
 			break;
 	}
