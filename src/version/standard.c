@@ -573,8 +573,9 @@ GAMEINFO *gi_list_menu(LIST *list)
 	}
 	
 	// use list_box
+	selection = 0;
 top:
-	selection = list_box(str_list, list_size, 0);
+	selection = list_box(str_list, list_size, selection);
 	cmd_close_window(0);
 	
 	if (selection == -1)
@@ -586,12 +587,17 @@ top:
 	assert(n != 0);
 
 	// check user response.
-	msg = alloca(200 + strlen(GI(n)->name) + strlen(GI(n)->dir->data));
+	// uses malloc so I can free it again after.
+	// i free again after in case the user decides to pick and cancel a whole bunch of games
+	// i didn't want to fill up the stack
+	msg = a_malloc(200 + strlen(GI(n)->name) + strlen(GI(n)->dir->data));
 	newline_orig = msgstate.newline_char;
 	msgstate.newline_char = '@';
 	sprintf(msg, "About to execute the game\ndescribed as:\n\n%s\n\nfrom dir:\n %s\n\n%s",
 		GI(n)->name, GI(n)->dir->data, "Press ENTER to continue.\nPress ESC to cancel.");
 	message_box_draw(msg, 0, 0x23, 0);
+	a_free(msg);
+	msg = 0;
 	msgstate.newline_char = newline_orig;
 	if (user_bolean_poll() == 0)
 		goto top;
