@@ -174,7 +174,6 @@ void skip_true_or()
 		{
 			if ( op == 0xE)	// said command
 			{
-				#warning may be illegal (in 7 states or something)
 				logic_data += (*logic_data << 1) + 1;
 			}
 			else
@@ -207,10 +206,6 @@ void skip_false_and()
 
 	logic_data += load_le_16(logic_data) + 2;	// address
 }
-
-#warning FIX LOGIC_CMD and ALL THAT!!!
-
-
 
 void logic_cmd()
 {
@@ -250,13 +245,6 @@ u8 *data_orig;
 u8 logic_eval()
 {
 	u8 result;
-	
-
-	if (op > 19)
-	{
-		print_hex_array(logic_data, 10);
-		agi_exit();
-	}
 	
 	data_orig = logic_data - 1;
 	if ( op > 19)
