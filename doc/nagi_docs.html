@@ -1,1009 +1,1110 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><title>NAGI Documentation</title>
-  
-  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body><h1>NAGI Documentation<br>
-By Nick Sonneveld</h1>
-<br>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>NAGI Documentation</title>
+                    
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+</head>
+  <body>
+   
+<h1>NAGI Documentation<br>
+   By Nick Sonneveld</h1>
+   <br>
+      
 <h2>Contents</h2>
+     
 <ol>
-  <li>What is NAGI?</li>
-  <li>Installation</li>
-  <li>Identifying and Isolating an AGI Game</li>
-  <li>Running&nbsp;</li>
-  <li>Configuring</li>
-  <li>Adding a New Game to the CRC List</li>
-  <li>Submitting an Unknown Game's Details</li>
-  <li>Warnings</li>
-  <li>Bugs in Sierra's Interpreter</li><li>External Font Format (NBF)<br>
-  </li>
-
-  <li>Credits</li>
-  <li>Other Texts</li>
-</ol><br>
-
-
-  
-  
-  
-
+     <li>What is NAGI?</li>
+     <li>Installation</li>
+     <li>Identifying and Isolating an AGI Game</li>
+     <li>Running&nbsp;</li>
+     <li>Configuring</li>
+     <li>Adding a New Game to the CRC List</li>
+     <li>Submitting an Unknown Game's Details</li>
+     <li>Warnings</li>
+     <li>Bugs in Sierra's Interpreter</li>
+    <li>External Font Format (NBF)<br>
+     </li>
+      <li>Credits</li>
+     <li>Other Texts</li>
+     
+</ol>
+  <br>
+                 
 <h2>What is NAGI?</h2>
-       NAGI (New Adventure Game Interpreter) is a clone of Sierra's own 
-AGI     which   they created and used through the 80's to produce a whole
-bunch    of  great  adventure games like Space Quest, Leisure Suit Larry
-and Kings     Quest.   NAGI  was created by disassembling the original AGI
+          NAGI (New Adventure Game Interpreter) is a clone of Sierra's own
+  AGI     which   they created and used through the 80's to produce a whole 
+ bunch    of  great  adventure games like Space Quest, Leisure Suit Larry 
+and Kings     Quest.   NAGI  was created by disassembling the original AGI 
 executable   and  writing  equivalent C code that would run under <a href="http://www.libsdl.org/">
-      SDL which is a free generic  library</a>        for low-level  access 
-to graphics and audio.  It can read both v2 and    v3 game data for the PC.<br>
-<br>
-
-                  I started working on this (disassembling and learning stuff)
-   around    November   1999.  I didn't really do much work on it until the
-  start of  2001  when I  finished the picture rendering code.  So I started
-  with a program    that draws  agi pics to this...  I actually got the initial
-  idea from the    guy who <a href="http://www.digger.org/">    recreated
-an  old game called    Digger</a>          .  He did the same thing by disassembling 
-  the original game and  recoding    it all in C.<br>
-<br>
-
-       The original name for NAGI was GI-Jay.. like GI-Joe only different.&nbsp; 
-   It evolved from JayGI.&nbsp; NAGI sounds a bit more sophisticated anyway 
-   and can be confused with a <a href="http://www-personal.umich.edu/%7Etarinkim/nagi/">
-       whole bunch of things</a>!<br>
-<br>
-From the "3D Animated Adventure Game Reference Card For MS-DOS":<br>
-<br>
-<i>Sierra's 3D animated adventures represent a totally new approach to computer
-gaming -- a third generation in computer adventure.&nbsp; They feature colourful
-hi-res graphics, with animated characters moving through three dimensional
-background screens.&nbsp; The improved parser lets you talk to the computer in
-whole sentences.<br>
-<br>
-
-Sierra's new series of adventures are interactive, changing as you explore
-and solve the puzzles.&nbsp; New facets are revealed as you delved into the game.&nbsp;
-In fact, you can play the game many times over and never play the same game
-twice.</i><br>
-<br>
+         SDL which is a free generic  library</a>        for low-level  access
+  to graphics and audio.  It can read both v2 and    v3 game data for the
+PC.<br>
+   <br>
+                      I started working on this (disassembling and learning
+ stuff)    around    November   1999.  I didn't really do much work on it
+until the   start of  2001  when I  finished the picture rendering code.
+ So I started   with a program    that draws  agi pics to this...  I actually
+got the initial   idea from the    guy who <a href="http://www.digger.org/">
+     recreated an  old game called    Digger</a>          .  He did the same
+ thing by disassembling    the original game and  recoding    it all in C.<br>
+   <br>
+           The original name for NAGI was GI-Jay.. like GI-Joe only different.&nbsp;
+     It evolved from JayGI.&nbsp; NAGI sounds a bit more sophisticated anyway
+     and can be confused with a <a href="http://www-personal.umich.edu/%7Etarinkim/nagi/">
+          whole bunch of things</a>!<br>
+   <br>
+   From the "3D Animated Adventure Game Reference Card For MS-DOS":<br>
+   <br>
+   <i>Sierra's 3D animated adventures represent a totally new approach to 
+computer  gaming -- a third generation in computer adventure.&nbsp; They feature
+colourful  hi-res graphics, with animated characters moving through three
+dimensional  background screens.&nbsp; The improved parser lets you talk
+to the computer in whole sentences.<br>
+   <br>
+    Sierra's new series of adventures are interactive, changing as you explore 
+ and solve the puzzles.&nbsp; New facets are revealed as you delved into the
+game.&nbsp; In fact, you can play the game many times over and never play
+the same game twice.</i><br>
+   <br>
+     
 <h2>Installation</h2>
-Installing NAGI:<br>Download the SDL Windows DLL runtime from the <a href="http://www.libsdl.org/">SDL website</a>. &nbsp;Extract DLL into the Windows system directory.<br>
-Extract NAGI into any folder you wish.<br>
-<br>
-Installing games:<br>
-By default, NAGI will search one folder level up for games.. unless you change
-the defaults set in nagi.ini/[nagi]/dir_search_list<br>
-<br>
-Unzip your games into the NAGI folder in their own separate game folders.&nbsp;
-The name does not matter but a unique name will help you identify your game
-if it was not automatically recognised.<br>
-<br>
-Eg: <br>
-\NAGI<br>
-\NAGI\KQ<br>
-\NAGI\KQ2<br>
-\NAGI\SQ<br>
-\NAGI\V<br>
-<br>
-Executing NAGI:<br>
-To execute NAGI, run the &#8220;n.exe&#8221; executable.&nbsp; You do not need to be
-in the same directory for NAGI to find all it&#8217;s files.<br>
-<br>
+   Installing NAGI:<br>
+  Download the SDL Windows DLL runtime from the <a href="http://www.libsdl.org/">
+  SDL website</a>. &nbsp;Extract DLL into the Windows system directory.<br>
+   Extract NAGI into any folder you wish.<br>
+   <br>
+   Installing games:<br>
+   By default, NAGI will search one folder level up for games.. unless you
+ change the defaults set in nagi.ini/[nagi]/dir_search_list<br>
+   <br>
+   Unzip your games into the NAGI folder in their own separate game folders.&nbsp; 
+ The name does not matter but a unique name will help you identify your game 
+ if it was not automatically recognised.<br>
+   <br>
+   Eg: <br>
+   \NAGI<br>
+   \NAGI\KQ<br>
+   \NAGI\KQ2<br>
+   \NAGI\SQ<br>
+   \NAGI\V<br>
+   <br>
+   Executing NAGI:<br>
+   To execute NAGI, run the &#8220;n.exe&#8221; executable.&nbsp; You do not need to
+be  in the same directory for NAGI to find all it&#8217;s files.<br>
+   <br>
+     
 <h2>Identifying and Isolating an AGI Game</h2>
-Of all the AGI games I have encountered, they all follow a few basic file name arrangements.<br>
+   Of all the AGI games I have encountered, they all follow a few basic file
+ name arrangements.<br>
+     
 <ul>
-  <li>Version 2 - object, words.tok, logdir, picdir, viewdir, snddir, vol.X</li>
-  <li>Version 3 -&nbsp;object, words.tok, &lt;GAMEID&gt;dir, &lt;GAMEID&gt;vol.X</li>
-  <li>Amiga Version 3 - object, words.tok, dirs, vol.X</li>
-</ul>Where&nbsp;&lt;GAMEID&gt; is replaced by the game's
-actual  id (eg "KQ4" for Kings Quest 4).<br>
-<br>
-
-The original Sierra interpreter used these files and are not used by NAGI:<br>
-agi, sierra.com, agidata.ovl, cga_graf.ovl, ega_graf.ovl, hgc_font, hgc_graf.ovl,
-hgc_objs.ovl, ibm_objs.ovl, jr_graf.ovl, vg_graf.ovl<br>
-They can be safely deleted or moved to another directory to save space.<br>
-<br>
-Sierra also has a later interpreter called SCI. &nbsp;NAGI does not run these data files but <a href="http://freesci.linuxgames.com/">FreeSCI </a>does! &nbsp;You can pick out these files because they follow the format:<br>
-resource.XXX, resource.map<br>
-Very tidy.<br>
-<br>
-NAGI also runs Amiga games. &nbsp;They can be handily found at <a href="http://www.back2roots.org/">Back 2 the Roots</a>
-. &nbsp;Just search for "Sierra". &nbsp;The last I heard, they were given
-permission to distribute the old Amiga versions of the games. &nbsp;However,
-they first have to be extracted from the amiga disk image (ADF) first. There's
-a nice program called <a href="http://www.zipworld.com.au/%7Egharris/adfopus.html">ADF Opus</a>
- that does this work for you. &nbsp;Just extract all the files found in the
-"data" directory and NAGI should be able to run those files with no trouble
-at all.<br>
-<br>
-There are some slight differences between the Amiga games and the PC games.
-&nbsp;Some of the older games don't support the "ESC" key to access the menu,
-instead it just pauses the game. &nbsp;To access the menu you will have to
-click on the status bar with the mouse, just like the Amigians had to do.
-&nbsp;Older Amiga games accepted the "ESC" key properly.<br>
-<br>
-<h2></h2>
-
-<h2>Running</h2>Mostly from the "3D Animated Adventure Game Reference Card
-For MS-DOS" with some americanisms and irrelevant information removed. &nbsp;I've
-added NAGI and mouse information.<br>
-<br>
-<b>Startup</b><br>
-On startup, NAGI will search for games and display them in a list.&nbsp;
-You can select your game with the arrow keys and execute it by pressing &#8220;enter&#8221;.&nbsp;
-If you wish to leave the menu, press &#8220;ESC&#8221; any time in the menu.<br>
-<br>
-If only one game if found, NAGI will skip the menu and go straight into the
-game.<br>
-<br>
-<b>Commands for your Hero</b><br>
-A joystick or the number pad/arrow keys on your keyboard moves the main character
-north, south, east, west or diagnolly.&nbsp; To halt your character's steps
-with the keypad, press the last diection key again or the number 5.<br>
-<br>
-During the game you many change control modes by stopping the main character
-(see above) and resuming either joystick or keyboard control.&nbsp; (If you've
-never used the joystick before in the game, pres Control-J to activate it)<br>
-<br>
-Your mouse will be useful to you in mvoing your character. &nbsp;To move
-your character using the mouse, position the arrow to where you want the
-character to move, then click the left mouse button. &nbsp;If you click on
-the status bar, the pop-down menu will appear. &nbsp;Clicking any mouse button
+     <li>Version 2 - object, words.tok, logdir, picdir, viewdir, snddir,
+vol.X</li>
+     <li>Version 3 -&nbsp;object, words.tok, &lt;GAMEID&gt;dir, &lt;GAMEID&gt;vol.X</li>
+     <li>Amiga Version 3 - object, words.tok, dirs, vol.X</li>
+     
+</ul>
+  Where&nbsp;&lt;GAMEID&gt; is replaced by the game's actual  id (eg "KQ4"
+ for Kings Quest 4).<br>
+   <br>
+    The original Sierra interpreter used these files and are not used by
+NAGI:<br>
+   agi, sierra.com, agidata.ovl, cga_graf.ovl, ega_graf.ovl, hgc_font, hgc_graf.ovl, 
+ hgc_objs.ovl, ibm_objs.ovl, jr_graf.ovl, vg_graf.ovl<br>
+   They can be safely deleted or moved to another directory to save space.<br>
+   <br>
+   Sierra also has a later interpreter called SCI. &nbsp;NAGI does not run
+ these data files but <a href="http://freesci.linuxgames.com/">FreeSCI </a>
+  does! &nbsp;You can pick out these files because they follow the format:<br>
+   resource.XXX, resource.map<br>
+   Very tidy.<br>
+   <br>
+   NAGI also runs Amiga games. &nbsp;They can be handily found at <a href="http://www.back2roots.org/">
+  Back 2 the Roots</a> . &nbsp;Just search for "Sierra". &nbsp;The last I 
+heard, they were given permission to distribute the old Amiga versions of 
+the games. &nbsp;However, they first have to be extracted from the amiga disk
+image (ADF) first. There's a nice program called <a href="http://www.zipworld.com.au/%7Egharris/adfopus.html">
+  ADF Opus</a>  that does this work for you. &nbsp;Just extract all the files
+ found in the "data" directory and NAGI should be able to run those files
+with no trouble at all.<br>
+   <br>
+   There are some slight differences between the Amiga games and the PC games. 
+ &nbsp;Some of the older games don't support the "ESC" key to access the menu,
+ instead it just pauses the game. &nbsp;To access the menu you will have
+to  click on the status bar with the mouse, just like the Amigians had to
+do.  &nbsp;Older Amiga games accepted the "ESC" key properly.<br>
+   <br>
+           
+<h2>Running</h2>
+  Mostly from the "3D Animated Adventure Game Reference Card For MS-DOS"
+with  some americanisms and irrelevant information removed. &nbsp;I've added
+NAGI  and mouse information.<br>
+   <br>
+   <b>Startup</b><br>
+   On startup, NAGI will search for games and display them in a list.&nbsp; 
+ You can select your game with the arrow keys and execute it by pressing &#8220;enter&#8221;.&nbsp;
+ If you wish to leave the menu, press &#8220;ESC&#8221; any time in the menu.<br>
+   <br>
+   If only one game if found, NAGI will skip the menu and go straight into
+ the game.<br>
+   <br>
+   <b>Commands for your Hero</b><br>
+   A joystick or the number pad/arrow keys on your keyboard moves the main
+ character north, south, east, west or diagnolly.&nbsp; To halt your character's
+ steps with the keypad, press the last diection key again or the number 5.<br>
+   <br>
+   During the game you many change control modes by stopping the main character 
+ (see above) and resuming either joystick or keyboard control.&nbsp; (If you've
+ never used the joystick before in the game, pres Control-J to activate it)<br>
+   <br>
+   Your mouse will be useful to you in mvoing your character. &nbsp;To move 
+ your character using the mouse, position the arrow to where you want the 
+character to move, then click the left mouse button. &nbsp;If you click on 
+the status bar, the pop-down menu will appear. &nbsp;Clicking any mouse button 
 when a message box appears will clear it.<br>
-<br>
-Talk to your computer in commands of one or two words, or even simple sentences.&nbsp;
-Unless otherwise instructed, follow all commands with the ENTER key.<br>
-<br>
-You may meet others who have message for you.&nbsp; Command them to speak.&nbsp; Type:<br>
-TALK TO THE GNOME<br>
-<br>
-You may later need objects you see along the way.&nbsp; Type:<br>
-GET THE KEY<br>
-<br>
-Pay attention to details.&nbsp; To see an object closely, type:<br>
-LOOK AT THE SHIP<br>
-<br>
-Use the objects you find along the way.&nbsp; Type:<br>
-GIVE THE BASKET TO THE GIRL<br>
-<br>
-To fully savour a scene you enjoy watching or negotiate a narrow path, you
-can slow down the animation. &nbsp;Speed up the animation to make the main
-character walk faster. &nbsp;To change the speed, type "slow" or "fast" and
-press ENTER. &nbsp;To return to the original speed, type "normal" and press
-ENTER. &nbsp;Function and control keys shortcut these common commands:<br>
-<br>
+   <br>
+   Talk to your computer in commands of one or two words, or even simple
+sentences.&nbsp;  Unless otherwise instructed, follow all commands with the
+ENTER key.<br>
+   <br>
+   You may meet others who have message for you.&nbsp; Command them to speak.&nbsp;
+ Type:<br>
+   TALK TO THE GNOME<br>
+   <br>
+   You may later need objects you see along the way.&nbsp; Type:<br>
+   GET THE KEY<br>
+   <br>
+   Pay attention to details.&nbsp; To see an object closely, type:<br>
+   LOOK AT THE SHIP<br>
+   <br>
+   Use the objects you find along the way.&nbsp; Type:<br>
+   GIVE THE BASKET TO THE GIRL<br>
+   <br>
+   To fully savour a scene you enjoy watching or negotiate a narrow path, 
+you  can slow down the animation. &nbsp;Speed up the animation to make the 
+main  character walk faster. &nbsp;To change the speed, type "slow" or "fast" 
+and  press ENTER. &nbsp;To return to the original speed, type "normal" and 
+press  ENTER. &nbsp;Function and control keys shortcut these common commands:<br>
+   <br>
+     
 <table cellpadding="2" cellspacing="2" border="0">
-  <tbody>
-    <tr>
-      <td valign="top">F1<br>
-      </td>
-      <td valign="top">Help: shows list of control keys (including some specific to your game which may not be mentioned here)<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-F2<br>
-      </td>
-      <td valign="top">Toggle sound on/off<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-F3<br>
-      </td>
-      <td valign="top">Echo (repeat) previous command)<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-F5<br>
-      </td>
-      <td valign="top">Save game<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">F7<br>
-      </td>
-      <td valign="top">
-Restore game<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-F9<br>
-      </td>
-      <td valign="top">Restart game<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-CTRL-C<br>
-      </td>
-      <td valign="top">Cancel typed input<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-CTRL-J<br>
-      </td>
-      <td valign="top">Reset joystick<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-CTRL-R<br>
-      </td>
-      <td valign="top">Toggle RGB/composite graphics mode (most MS-DOS machines)<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-ALT-Z<br>
-      </td>
-      <td valign="top">Quit game<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-TAB<br>
-      </td>
-      <td valign="top">Inventory<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-CTRL-ALT-<br>
-right or left arrow<br>
-      </td>
-      <td valign="top">Shift display (right or left)<br>
-      </td>
-    </tr>
-  </tbody>
+     <tbody>
+       <tr>
+         <td valign="top">F1<br>
+         </td>
+         <td valign="top">Help: shows list of control keys (including some
+ specific to your game which may not be mentioned here)<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> F2<br>
+         </td>
+         <td valign="top">Toggle sound on/off<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> F3<br>
+         </td>
+         <td valign="top">Echo (repeat) previous command)<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> F5<br>
+         </td>
+         <td valign="top">Save game<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">F7<br>
+         </td>
+         <td valign="top"> Restore game<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> F9<br>
+         </td>
+         <td valign="top">Restart game<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> CTRL-C<br>
+         </td>
+         <td valign="top">Cancel typed input<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> CTRL-J<br>
+         </td>
+         <td valign="top">Reset joystick<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> CTRL-R<br>
+         </td>
+         <td valign="top">Toggle RGB/composite graphics mode (most MS-DOS 
+machines)<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> ALT-Z<br>
+         </td>
+         <td valign="top">Quit game<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> TAB<br>
+         </td>
+         <td valign="top">Inventory<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> CTRL-ALT-<br>
+   right or left arrow<br>
+         </td>
+         <td valign="top">Shift display (right or left)<br>
+         </td>
+       </tr>
+           
+  </tbody>   
 </table>
-<br>
-<b>Pop up Menus</b><br>
-Press ESC or click on the status bar with your mouse and a menu bar will
-appear at the top of your screen. &nbsp;Use the left or right arrow keys
-to choose a menu. &nbsp;Use the up or down arrow keys to highlight a menu
-item. &nbsp;Press ENTER to select a highlighted item or press ESC to go back
+   <br>
+   <b>Pop up Menus</b><br>
+   Press ESC or click on the status bar with your mouse and a menu bar will 
+ appear at the top of your screen. &nbsp;Use the left or right arrow keys 
+to choose a menu. &nbsp;Use the up or down arrow keys to highlight a menu 
+item. &nbsp;Press ENTER to select a highlighted item or press ESC to go back 
 to the game.<br>
-<br>
+   <br>
+     
 <table cellpadding="2" cellspacing="2" border="0">
-  <tbody>
-    <tr>
-      <td valign="top">ESC<br>
-      </td>
-      <td valign="top">Pops up menus<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">ARROW KEYS<br>
-      </td>
-      <td valign="top">Highlights menu/menu items<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">ENTER<br>
-      </td>
-      <td valign="top">Chooses highlighted item.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">HOME/END<br>
-      </td>
-      <td valign="top">Jump to first/last menu<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">PGUP/PGDN<br>
-      </td>
-      <td valign="top">Jump to first/last menu item<br>
-      </td>
-    </tr>
-  </tbody>
+     <tbody>
+       <tr>
+         <td valign="top">ESC<br>
+         </td>
+         <td valign="top">Pops up menus<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">ARROW KEYS<br>
+         </td>
+         <td valign="top">Highlights menu/menu items<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">ENTER<br>
+         </td>
+         <td valign="top">Chooses highlighted item.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">HOME/END<br>
+         </td>
+         <td valign="top">Jump to first/last menu<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">PGUP/PGDN<br>
+         </td>
+         <td valign="top">Jump to first/last menu item<br>
+         </td>
+       </tr>
+           
+  </tbody>   
 </table>
-<br>
-<b>Saving and Restoring The Game</b><br>
-To allow for errors in judgment, and also for some pretty creative exploration,
-we make it possible for you to save and restore the game. &nbsp;Before you
-try something that looks dangerous, or just because you've been playing awhile
-and you don't want to lose what progress you've made through some chance
+   <br>
+   <b>Saving and Restoring The Game</b><br>
+   To allow for errors in judgment, and also for some pretty creative exploration, 
+ we make it possible for you to save and restore the game. &nbsp;Before you 
+ try something that looks dangerous, or just because you've been playing awhile
+ and you don't want to lose what progress you've made through some chance
 encounter, save your game.<br>
-<br>
-<b>Saving a Game</b><br>
-Type "save game" and press ENTER, or press F5 to save your current game location.
-&nbsp;This can be done at any time during your game.<br>
-<br>
-You need only to press ENTER when prompted about the directory in which to
-save your game position. &nbsp;If you want to save more than 12 games, create
-additional saved game directories. &nbsp;Consult your DOS manual to make
-new directories on your hard disk.<br>
-<br>
-<b>In General</b><br>
-Although your game position is stored on disk as a normal DOS file, we do
-not require you to follow MS DOS file naming conventions in identifying your
-saved game position. &nbsp;If you are standing before a tree when you save
-a game, call your saved game "STANDING BEFORE A TREE" or whatever has meaning
-to you. &nbsp;You are permitted to save up to 12 different game locations
-per directory.<br>
-<br>
-If you "run out" of saved game positions (you want to save more than 12 games),
-just use a different saved game directory, save game disk, or reuse (save
-over) one of the 12 positions you've already saved. &nbsp;To change the name
-of a previously saved game, just enter Control-C and type a new name.<br>
-<br>
-<b>Restoring a Game</b><br>
-Type "restore game" and press ENTER. &nbsp;(You can also press F7.)<br>
-<br>
-You will be asked wheere you saved the game. &nbsp;To accept the default
-directory, press ENTER. &nbsp;Otherwise, clear the line with Control-C, type
-the drive or directory on which you saved the game (example: "b:"), and press
-ENTER. &nbsp;Now select the game you wish to restore by moving the pointer
-and pressing ENTER.<br>
-<br>
-<b>NOTE: If the game shows up on a colour system in black and white:</b><br>
-
-Inside your computer you can have a graphics card installed known as the
-Colour Graphics Adapter.&nbsp; With an RGB monitor, you will be unable to produce
-16 colour graphics.&nbsp; (a composite colour monitor will produce 16 colour graphics
-with a CGA card.)&nbsp; The most your CGA/RGB configuration can produce is 4 colour
-graphics.&nbsp; To toggle graphics modes enter CTRL-R at any point during play.&nbsp;
-An alternate graphics card, the Enhanced Graphics Adapter, is now available
-from many sources.&nbsp; this will upgrade your computer to 16 colour capability.&nbsp;
-This EGA card is definitely recommended for Sierra games and you will find
-it also has advantages with other software.<br>
-<br>
-From Space Quest 4, Quest For Glory 2 and Space Quest Manuals:<br>
-<br>
-<b>Tips and Advice</b><br>
-If you haven't played on of Sierra's 3D animated adventure games before,
-here are a few suggestions to help you get on the right track...<br>
-<br>
-LOOK everywhere. When you go somewhere you haven't been before, or where
-you think you may have missed something the first time, the first thing you
-should do is look around. &nbsp;When you type "look" on entering an area,
-you will receive a description of the general area. &nbsp;Read this description
-carefully -- often there is a clue to the game or an indication that something
-in the scene bears further investigation<br>
-<br>
-Thoroughly explore your surroundings. &nbsp;Open doors and drawers, look
-under things and behind things for valuable objects and clues. &nbsp;Look
-closely at all objects you encounter or you may miss important details. &nbsp;If
-you are standing close enough to a particular object you can take a close
-look at the specific thing. &nbsp;EXAMPLE: "look at spaceship." &nbsp;Press
-ENTER each time you type a command to enter that command.<br>
-<br>
-EXPLORE each area of the game very carefully, and DRAW A MAP as you progress
-through the game. &nbsp;Make a note of each area you visit, and include information
-about objects found there and dangerous areas nearby. &nbsp;If you miss an
-area, you may miss an important clue!<br>
-<br>
-TALK to almost everyone you meet, but use discretion! &nbsp;Some characters
-will be friendly and helpful. &nbsp;They will give you valuable information
-and advice. &nbsp;Others may mislead, capture, or even kill you. &nbsp;At
-times it maybe be necessary to fight at others, to run away, hide or try
+   <br>
+   <b>Saving a Game</b><br>
+   Type "save game" and press ENTER, or press F5 to save your current game
+ location. &nbsp;This can be done at any time during your game.<br>
+   <br>
+   You need only to press ENTER when prompted about the directory in which
+ to save your game position. &nbsp;If you want to save more than 12 games,
+ create additional saved game directories. &nbsp;Consult your DOS manual
+to  make new directories on your hard disk.<br>
+   <br>
+   <b>In General</b><br>
+   Although your game position is stored on disk as a normal DOS file, we 
+do  not require you to follow MS DOS file naming conventions in identifying 
+your  saved game position. &nbsp;If you are standing before a tree when you 
+save  a game, call your saved game "STANDING BEFORE A TREE" or whatever has 
+meaning  to you. &nbsp;You are permitted to save up to 12 different game locations
+ per directory.<br>
+   <br>
+   If you "run out" of saved game positions (you want to save more than 12
+ games), just use a different saved game directory, save game disk, or reuse
+ (save over) one of the 12 positions you've already saved. &nbsp;To change
+ the name of a previously saved game, just enter Control-C and type a new
+name.<br>
+   <br>
+   <b>Restoring a Game</b><br>
+   Type "restore game" and press ENTER. &nbsp;(You can also press F7.)<br>
+   <br>
+   You will be asked wheere you saved the game. &nbsp;To accept the default 
+ directory, press ENTER. &nbsp;Otherwise, clear the line with Control-C, type
+ the drive or directory on which you saved the game (example: "b:"), and
+press  ENTER. &nbsp;Now select the game you wish to restore by moving the
+pointer  and pressing ENTER.<br>
+   <br>
+   <b>NOTE: If the game shows up on a colour system in black and white:</b><br>
+    Inside your computer you can have a graphics card installed known as
+the  Colour Graphics Adapter.&nbsp; With an RGB monitor, you will be unable
+to  produce 16 colour graphics.&nbsp; (a composite colour monitor will produce
+ 16 colour graphics with a CGA card.)&nbsp; The most your CGA/RGB configuration
+ can produce is 4 colour graphics.&nbsp; To toggle graphics modes enter CTRL-R
+ at any point during play.&nbsp; An alternate graphics card, the Enhanced
+Graphics Adapter, is now available from many sources.&nbsp; this will upgrade
+your computer to 16 colour capability.&nbsp; This EGA card is definitely
+recommended for Sierra games and you will find it also has advantages with
+other software.<br>
+   <br>
+   From Space Quest 4, Quest For Glory 2 and Space Quest Manuals:<br>
+   <br>
+   <b>Tips and Advice</b><br>
+   If you haven't played on of Sierra's 3D animated adventure games before, 
+ here are a few suggestions to help you get on the right track...<br>
+   <br>
+   LOOK everywhere. When you go somewhere you haven't been before, or where 
+ you think you may have missed something the first time, the first thing you
+ should do is look around. &nbsp;When you type "look" on entering an area,
+ you will receive a description of the general area. &nbsp;Read this description
+ carefully -- often there is a clue to the game or an indication that something
+ in the scene bears further investigation<br>
+   <br>
+   Thoroughly explore your surroundings. &nbsp;Open doors and drawers, look 
+ under things and behind things for valuable objects and clues. &nbsp;Look 
+ closely at all objects you encounter or you may miss important details. &nbsp;If
+ you are standing close enough to a particular object you can take a close
+ look at the specific thing. &nbsp;EXAMPLE: "look at spaceship." &nbsp;Press
+ ENTER each time you type a command to enter that command.<br>
+   <br>
+   EXPLORE each area of the game very carefully, and DRAW A MAP as you progress 
+ through the game. &nbsp;Make a note of each area you visit, and include information
+ about objects found there and dangerous areas nearby. &nbsp;If you miss
+an  area, you may miss an important clue!<br>
+   <br>
+   TALK to almost everyone you meet, but use discretion! &nbsp;Some characters 
+ will be friendly and helpful. &nbsp;They will give you valuable information 
+ and advice. &nbsp;Others may mislead, capture, or even kill you. &nbsp;At 
+ times it maybe be necessary to fight at others, to run away, hide or try 
 to outwit your opponent.<br>
-<br>
-GET anything that isn't nailed down. &nbsp;You'll come across a number of
-objects that will be of use later in the game. &nbsp;Some of these can be
-picked up, other may have to be bought or traded for. &nbsp;You can see an
-inventory of items on hand by pressing the TAB key at any time.<br>
-<br>
-USE the items you have picked up to solve problems in the game, or to help
-you to make progress and discover more clues. &nbsp;Different approaches
-to a puzzle may bring about a different outcome. &nbsp;Some problems have
-obvious solutions; if you're thirsty, take a drink of water. &nbsp;To purchase
-an item, you'll need some money. &nbsp;Other problems require more imagination
-to solve.<br>
-<br>
-BE CAREFUL, and remain alert at all times - disaster may strike in the most unlikely of places!<br>
-<br>
-SAVE YOUR GAME OFTEN, especially when you are about to try something new
-or potentialy dangerous. &nbsp;This way, if the worst should happen, you
-won't have to start all over again from the beginning. &nbsp;Save games at
-different points, so you will always be able to return to a desired point
-in the game. &nbsp;In effect, this will enable you to travel backwards through
-time and do things differently if you wish. &nbsp;NOTE: You cannot save your
+   <br>
+   GET anything that isn't nailed down. &nbsp;You'll come across a number 
+of  objects that will be of use later in the game. &nbsp;Some of these can 
+be  picked up, other may have to be bought or traded for. &nbsp;You can see 
+an  inventory of items on hand by pressing the TAB key at any time.<br>
+   <br>
+   USE the items you have picked up to solve problems in the game, or to
+help  you to make progress and discover more clues. &nbsp;Different approaches 
+to a puzzle may bring about a different outcome. &nbsp;Some problems have 
+obvious solutions; if you're thirsty, take a drink of water. &nbsp;To purchase 
+an item, you'll need some money. &nbsp;Other problems require more imagination 
+ to solve.<br>
+   <br>
+   BE CAREFUL, and remain alert at all times - disaster may strike in the 
+most unlikely of places!<br>
+   <br>
+   SAVE YOUR GAME OFTEN, especially when you are about to try something new 
+ or potentialy dangerous. &nbsp;This way, if the worst should happen, you 
+won't have to start all over again from the beginning. &nbsp;Save games at 
+different points, so you will always be able to return to a desired point 
+in the game. &nbsp;In effect, this will enable you to travel backwards through 
+time and do things differently if you wish. &nbsp;NOTE: You cannot save your 
 game during certain critical times, so remember: SAVE EARLY, AND SAVE OFTEN!<br>
-<br>
-DON'T GET DISCOURAGED. &nbsp;If you come to an obstacle that seems insurmountable,
-don't despair. &nbsp;Spend some time exploring another area, and come back
-later. &nbsp;Every problem in the game has at least one solution, and some
-have more than one. &nbsp;Sometimes solving a problem one way will make it
-harder to solve the next, and sometimes it will make it easier. If you get
-stuck, you might try backtracking to an earlier point in the game, then choosing
-a different path.<br>
-<br>
-If all else fails, you can write to other players for hints. &nbsp;Try the <a href="http://www.mega-tokyo.com/cgi-bin/yabb/YaBB.pl">AGI Messageboard</a> or the <a href="http://wiw.org/%7Ejess/cgi-bin/YaBB/YaBB.cgi">Subspace Channel</a>
- and ask for help in the game you're playing. &nbsp;Please be polite and
-give enough information for other people to follow. &nbsp;Don't resort to
-using a walkthrough, this will ruin the enjoyment and puzzles of the game.<br>
-<br>
-BRING ALONG SOME HELP. &nbsp;You may find it helpful (and fun) to play the
-game with a friend. &nbsp;Two (or more) heads are better than one at interpreting
-clues and solving problems, and heroes throughout history have worked in
-teams.<br>
-<br>
+   <br>
+   DON'T GET DISCOURAGED. &nbsp;If you come to an obstacle that seems insurmountable, 
+ don't despair. &nbsp;Spend some time exploring another area, and come back 
+ later. &nbsp;Every problem in the game has at least one solution, and some 
+ have more than one. &nbsp;Sometimes solving a problem one way will make it
+ harder to solve the next, and sometimes it will make it easier. If you get
+ stuck, you might try backtracking to an earlier point in the game, then choosing
+ a different path.<br>
+   <br>
+   If all else fails, you can write to other players for hints. &nbsp;Try 
+the <a href="http://www.mega-tokyo.com/cgi-bin/yabb/YaBB.pl">AGI Messageboard</a>
+   or the <a href="http://wiw.org/%7Ejess/cgi-bin/YaBB/YaBB.cgi">Subspace 
+Channel</a>   and ask for help in the game you're playing. &nbsp;Please be 
+polite and  give enough information for other people to follow. &nbsp;Don't 
+resort to  using a walkthrough, this will ruin the enjoyment and puzzles of
+the game.<br>
+   <br>
+   BRING ALONG SOME HELP. &nbsp;You may find it helpful (and fun) to play 
+the  game with a friend. &nbsp;Two (or more) heads are better than one at 
+interpreting  clues and solving problems, and heroes throughout history have 
+worked in teams.<br>
+   <br>
+     
 <h2>Configuring</h2>
-There are two configuration files used by NAGI.&nbsp; Nagi.ini and standard.ini.<br>
+   There are two configuration files used by NAGI.&nbsp; Nagi.ini and standard.ini.<br>
+     
 <h3>nagi.ini</h3>
-Used to configured options related to NAGI only.&nbsp; Graphics, sound and
-input are the main things here<br>
-<br>
-Options in nagi.ini are:<br>
-<br>
-[nagi] Section<br>
+   Used to configured options related to NAGI only.&nbsp; Graphics, sound 
+and  input are the main things here<br>
+   <br>
+   Options in nagi.ini are:<br>
+   <br>
+   [nagi] Section<br>
+     
 <table cellpadding="2" cellspacing="2" border="0" width="100%">
-  <tbody>
-    <tr>
-      <td valign="top">console<br>
-      </td>
-      <td valign="top">Determines whether standard output and errors will go to the console
-window (console=1) or to two separate text files.&nbsp; Handy if you want
-to record debug messages that occur.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">crc_print<br>
-      </td>
-      <td valign="top">Prints the CRC of all games detected.&nbsp; Handy to add an unknown
-game to NAGI&#8217;s CRC list.&nbsp; Use with console=0 to save them to a file.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-dir_list<br>
-      </td>
-      <td valign="top">a list of directories, separated by &#8216;;&#8217; that NAGI will
-search to find AGI games.&nbsp; If it is not a full path, it will search
-from the folder N.EXE exists in.&nbsp; ie, if you define dir_Search_list
-to equal &#8220;.;games&#8221; it will search nagi&#8217;s main folder and a folder called
-games, also in nagi&#8217;s main folder.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-sort<br>
-      </td>
-      <td valign="top">when NAGI has a list of games.. this is what is used to sort it.&nbsp;
-0 = no sort.&nbsp; 1 = alpha sort&nbsp; 2= reverse alpha<br>
-      </td>
-    </tr>
-  </tbody>
+     <tbody>
+       <tr>
+         <td valign="top">console<br>
+         </td>
+         <td valign="top">Determines whether standard output and errors will
+ go to the console window (console=1) or to two separate text files.&nbsp;
+ Handy if you want to record debug messages that occur.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">crc_print<br>
+         </td>
+         <td valign="top">Prints the CRC of all games detected.&nbsp; Handy
+ to add an unknown game to NAGI&#8217;s CRC list.&nbsp; Use with console=0 to save
+ them to a file.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> dir_list<br>
+         </td>
+         <td valign="top">a list of directories, separated by &#8216;;&#8217; that NAGI
+ will search to find AGI games.&nbsp; If it is not a full path, it will search 
+ from the folder N.EXE exists in.&nbsp; ie, if you define dir_Search_list 
+to equal &#8220;.;games&#8221; it will search nagi&#8217;s main folder and a folder called games,
+also in nagi&#8217;s main folder.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> sort<br>
+         </td>
+         <td valign="top">when NAGI has a list of games.. this is what is 
+used to sort it.&nbsp; 0 = no sort.&nbsp; 1 = alpha sort&nbsp; 2= reverse 
+alpha<br>
+         </td>
+       </tr>
+           
+  </tbody>   
 </table>
-<br>
-[vid] Section<br>
+   <br>
+   [vid] Section<br>
+     
 <table cellpadding="2" cellspacing="2" border="0" width="100%">
-  <tbody>
-    <tr>
-      <td valign="top">driver<br>
-      </td>
-      <td valign="top">at the moment NAGI only supports SDL for it&#8217;s video driver but it
-will hopfully support other drivers in the future.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">scale<br>
-      </td>
-      <td valign="top">a multiplier used to define the screen.&nbsp; 320x200 is the resolution
-used when scale = 1.&nbsp;&nbsp;&nbsp; Depends on whether a font is available
-for a certain scale.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">full_screen<br>
-      </td>
-      <td valign="top"> display the game in full screen.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">renderer <br>
-      </td>
-      <td valign="top">supports cga0, cga1 and ega.&nbsp; You can now emulate what your
-games used to look like on your old pc that only had a CGA adapter.&nbsp;
-Set renderer to cga0 or cga1 to see them.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">fonts_bitmap<br>
-      </td>
-      <td valign="top"> files with extensions .nbf are used to define external fonts
-for nagi. This will be a list of filenames separated by &#8216;;&#8217;<br>
-      </td>
-    </tr>
-  </tbody>
+     <tbody>
+       <tr>
+         <td valign="top">driver<br>
+         </td>
+         <td valign="top">at the moment NAGI only supports SDL for it&#8217;s video
+ driver but it will hopfully support other drivers in the future.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">scale<br>
+         </td>
+         <td valign="top">a multiplier used to define the screen.&nbsp; 320x200
+ is the resolution used when scale = 1.&nbsp;&nbsp;&nbsp; Depends on whether
+ a font is available for a certain scale.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">full_screen<br>
+         </td>
+         <td valign="top"> display the game in full screen.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">renderer <br>
+         </td>
+         <td valign="top">supports cga0, cga1 and ega.&nbsp; You can now
+emulate  what your games used to look like on your old pc that only had a
+CGA adapter.&nbsp;  Set renderer to cga0 or cga1 to see them.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">fonts_bitmap<br>
+         </td>
+         <td valign="top"> files with extensions .nbf are used to define
+external  fonts for nagi. This will be a list of filenames separated by &#8216;;&#8217;<br>
+         </td>
+       </tr>
+           
+  </tbody>   
 </table>
-<br>[snd] section<br>
-The sound has no modular support and is hard coded for SDL at the moment.<br>
+   <br>
+  [snd] section<br>
+     
 <table cellpadding="2" cellspacing="2" border="0">
-  <tbody>
-    <tr>
-      <td valign="top">disable <br>
-      </td>
-      <td valign="top">Disable all sound effects.&nbsp;&nbsp; It will not even initialise
-the sound card<br>
-      </td>
-    </tr>
-  </tbody>
+     <tbody>
+       <tr>
+         <td valign="top">driver</td>
+        <td valign="top">set this to "sdl" for NAGI to use SDL's sound drivers.
+ &nbsp;SDL is currently only supported.<br>
+         </td>
+       </tr>
+      <tr>
+        <td valign="top">enable<br>
+        </td>
+        <td valign="top">enable sound.. might speed up for some systems if
+ disabled<br>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">single<br>
+        </td>
+        <td valign="top">do you wish for the single channel days of the PC?
+ &nbsp;if "single" is set, then NAGI will only play the first channel of
+sound  resources. Might be a bit loud too.. turn the volume down a bit if
+your ears  are bleeding<br>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">dissolve<br>
+        </td>
+        <td valign="top">AGI fades notes away to give them more impact. &nbsp;The
+ data used to fade notes varies between interpreter versions. &nbsp;It's
+probably  an envelope.. but I don't know what either is really... not into
+music<br>
+  0 = no dissolve.. just play for as long as it's meant to be played. &nbsp;This
+ was used in older v2.4xx (and older) games I THINK<br>
+  1 = not used<br>
+  2 = v2.9xx games used a shorter dissolve<br>
+  3 (default) = v3 games used this dissolve pattern.. slightly longer<br>
+  Note: dissolve does not affect the noise channel in the original interpreter
+ and NAGI follows this faithfully.<br>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">read_var<br>
+        </td>
+        <td valign="top">AGI will read a variable (23) which will contribute
+ to the volume calculations. &nbsp;The problem is 0=max volume, 0xF=silence.
+ &nbsp;Guess which games don't set this correctly. &nbsp;Yup... almost every
+ single game that uses the AGI template. &nbsp;To Chris Cromer's credit:
+ he's fixed it in his version of the template.<br>
+  Set this to 1 if you run sierra games (or fan games that have this set
+correctly)<br>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">volume<br>
+        </td>
+        <td valign="top">volume for square wave. &nbsp;The maximum is 0x7FFF
+ (max for a signed word) (around 32000). &nbsp;Set this lower if you want
+a quieter game. &nbsp;Remember, the actual volume will be this variable divided
+ by the number of channels. <br>
+        </td>
+      </tr>
+           
+  </tbody>   
 </table>
-<br>[sdl] section<br>
-If a sound or video section is defined to use SDL.. it will read some options
-from this section.<br>
+   <br>
+  [sdl] section<br>
+   If a sound or video section is defined to use SDL.. it will read some
+options  from this section.<br>
+     
 <table cellpadding="2" cellspacing="2" border="0">
-  <tbody>
-    <tr>
-      <td valign="top">
-drv_video<br>
-      </td>
-      <td valign="top">supports directx and windib<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-drv_sound<br>
-      </td>
-      <td valign="top">supports directx and waveout.&nbsp; Waveout sounds a lot better
-on my PC.<br>
-      </td>
-    </tr>
-  </tbody>
+     <tbody>
+       <tr>
+         <td valign="top"> drv_video<br>
+         </td>
+         <td valign="top">supports directx and windib<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> drv_sound<br>
+         </td>
+         <td valign="top">supports directx and waveout.&nbsp; Waveout sounds
+ a lot better on my PC.<br>
+         </td>
+       </tr>
+           
+  </tbody>   
 </table>
-<br>
+   <br>
+     
 <h3>standard.ini</h3>
-Used to define different agi standards.&nbsp; There are many different versions
-of AGI and they all differ slightly.&nbsp; Standard.ini defines some known
-PC and Amiga standards and also provides a CRC system to help identify games
-and associate them with the correct agi standard.<br>
-<br>
-This config file has been designed to be helpful for any interpreter.. not
-just NAGI.&nbsp; Only game related information should be in this section.<br>
-<br>
-It has two types of sections defined in it.&nbsp; The first is [standard]
-which is the core of standard.ini.&nbsp; it defines all the sections that
-will contain crc&#8217;s to match known games and other options.&nbsp; There is
-only one [standard].&nbsp; The second type are sections defining games or
-standard default interpreters.&nbsp;&nbsp; It is designed so sections that
-inherit other sections.&nbsp; So if you define a game section called [donald],
-you can let it inherit an interpreter called [pc_v2_440] instead of having
-to define all of the options to emulate a v2.440 interpreter.<br>
-<br>
-CRC_LIST -&gt; GAME -&gt; INTERPRETER <br>
-<br>
-<br>
-Options for [standard]<br><br>
+   Used to define different agi standards.&nbsp; There are many different 
+versions  of AGI and they all differ slightly.&nbsp; Standard.ini defines 
+some known  PC and Amiga standards and also provides a CRC system to help 
+identify games  and associate them with the correct agi standard.<br>
+   <br>
+   This config file has been designed to be helpful for any interpreter.. 
+not  just NAGI.&nbsp; Only game related information should be in this section.<br>
+   <br>
+   It has two types of sections defined in it.&nbsp; The first is [standard] 
+ which is the core of standard.ini.&nbsp; it defines all the sections that 
+ will contain crc&#8217;s to match known games and other options.&nbsp; There is 
+ only one [standard].&nbsp; The second type are sections defining games or 
+ standard default interpreters.&nbsp;&nbsp; It is designed so sections that 
+ inherit other sections.&nbsp; So if you define a game section called [donald], 
+ you can let it inherit an interpreter called [pc_v2_440] instead of having 
+ to define all of the options to emulate a v2.440 interpreter.<br>
+   <br>
+   CRC_LIST -&gt; GAME -&gt; INTERPRETER <br>
+   <br>
+   <br>
+   Options for [standard]<br>
+  <br>
+     
 <table cellpadding="2" cellspacing="2" border="0">
-  <tbody>
-    <tr>
-      <td valign="top">
-crc_list<br>
-      </td>
-      <td valign="top">list of all sections that contain game crc matching information.
-&nbsp;Each section is separated by a ';'.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-agi_list<br>
-      </td>
-      <td valign="top">list of all sections that default a default interpreter. &nbsp;Each
-section is separated by a ';'.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-force<br>
-      </td>
-      <td valign="top">force nagi to not search for games but just use a specific game standard
-in the main working folder.&nbsp; Useful for fan games.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-v2_default<br>
-      </td>
-      <td valign="top">if there are no crc matches and it has been determined to be
-a v2 game.. use this standard<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-v3_default<br>
-      </td>
-      <td valign="top">if there are no crc matches and it has been determined to be
-a v3 game.. use this standard<br>
-      </td>
-    </tr><tr>
-      <td valign="top">amiga_v2_default<br>
-      </td>
-      <td valign="top">if game has been determined to be an Amiga v2 game, use this standard<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">amiga_v3_default<br>
-      </td>
-      <td valign="top">if game has been determined to be an Amiga v3 game, use this standard<br>
-      </td>
-    </tr>
-
-  </tbody>
+     <tbody>
+       <tr>
+         <td valign="top"> crc_list<br>
+         </td>
+         <td valign="top">list of all sections that contain game crc matching
+ information. &nbsp;Each section is separated by a ';'.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> agi_list<br>
+         </td>
+         <td valign="top">list of all sections that default a default interpreter.
+ &nbsp;Each section is separated by a ';'.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> force<br>
+         </td>
+         <td valign="top">force nagi to not search for games but just use 
+a specific game standard in the main working folder.&nbsp; Useful for fan 
+games.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> v2_default<br>
+         </td>
+         <td valign="top">if there are no crc matches and it has been determined
+ to be a v2 game.. use this standard<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> v3_default<br>
+         </td>
+         <td valign="top">if there are no crc matches and it has been determined
+ to be a v3 game.. use this standard<br>
+         </td>
+       </tr>
+      <tr>
+         <td valign="top">amiga_v2_default<br>
+         </td>
+         <td valign="top">if game has been determined to be an Amiga v2 game,
+ use this standard<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">amiga_v3_default<br>
+         </td>
+         <td valign="top">if game has been determined to be an Amiga v3 game,
+ use this standard<br>
+         </td>
+       </tr>
+            
+  </tbody>   
 </table>
-<br>
-Options for games [game_name]<br>
-<br>
+   <br>
+   Options for games [game_name]<br>
+   <br>
+     
 <table cellpadding="2" cellspacing="2" border="0">
-  <tbody>
-    <tr>
-      <td valign="top">
-name<br>
-      </td>
-      <td valign="top"> the name used in the game selection menus and the window title bar.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-inherits<br>
-      </td>
-      <td valign="top">if a key in not found in this section.. it will check the section
-defined in inherits.&nbsp; You can use inherits for as many sections as you
-want. &nbsp;<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-id<br>
-      </td>
-      <td valign="top">used for save games.&nbsp; Not used for copy protection anymore<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">protection <br>
-      </td>
-      <td valign="top">protection hacks.. not implemented but will bypass tests and
-copy protection later on<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top"><br>
-      </td>
-      <td valign="top"><br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">version_info<br>
-      </td>
-      <td valign="top">used for when a user requests the interpereter version.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">mouse </td>
-      <td valign="top">There are different variations of interfaces to access the mouse.&nbsp;
-0=no mouse 1=sierra v2 automouse 2=sierra v3 extra mouse commands 10=brian
-buff&#8217;s mouse support<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-loop_update<br>
-      </td>
-      <td valign="top">if you let the interpreter automatically pick the loop of an
-animated moving object, it will only do it if it has under 4 loops maximum
-in version 2 interpreters, any number of loops in early v3 interpreters and
-only if a flag is set for any number for later v3. 1=four, 2=all, 3=flag<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-object_decrypt</td>
-      <td valign="top"> if set to 1, nagi will try and decrypt the object file before
-trying to read it.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-object_packed</td>
-      <td valign="top"> determines whether the object is word packed (amiga) or not
-(pc)</td>
-    </tr>
-    <tr>
-      <td valign="top">
-compression</td>
-      <td valign="top"> determines whether the interpreter will try and use decompression
-on the volume files or not.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-dir_type<br>
-      </td>
-      <td valign="top"> are the dir files separated or joined up into one. 0=none 1=separated
-2=combined 3=combined amiga style<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
-crc_vol_X<br>
-      </td>
-      <td valign="top"> a 32 bit crc of a volume file.&nbsp; Use winzip&#8217;s crcs or nagi&#8217;s
-crc_print to determine the crc&#8217;s. &nbsp;Will try crc_vol_0 to crc_vol_15.<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">crc_dir<br>
-      </td>
-      <td valign="top"> for version 3 interpreter files.. crc of the combined dir file<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">crc_dir_log<br>
-      </td>
-      <td valign="top"> crc of a log dir<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
- crc_dir_view<br>
-      </td>
-      <td valign="top"> crc of a view dir<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
- crc_dir_pic<br>
-      </td>
-      <td valign="top"> crc of a pic dir<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
- crc_dir_snd<br>
-      </td>
-      <td valign="top"> crc of a snd dir<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
- crc_object<br>
-      </td>
-      <td valign="top"> crc of an objects file<br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">
- crc_words<br>
-      </td>
-      <td valign="top"> crc of a token file<br>
-      </td>
-    </tr>
-  </tbody>
+     <tbody>
+       <tr>
+         <td valign="top"> name<br>
+         </td>
+         <td valign="top"> the name used in the game selection menus and
+the  window title bar.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> inherits<br>
+         </td>
+         <td valign="top">if a key in not found in this section.. it will 
+check the section defined in inherits.&nbsp; You can use inherits for as many
+sections as you want. &nbsp;<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> id<br>
+         </td>
+         <td valign="top">used for save games.&nbsp; Not used for copy protection
+ anymore<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">protection <br>
+         </td>
+         <td valign="top">protection hacks.. not implemented but will bypass
+ tests and copy protection later on<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"><br>
+         </td>
+         <td valign="top"><br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">version_info<br>
+         </td>
+         <td valign="top">used for when a user requests the interpereter
+version.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">mouse </td>
+         <td valign="top">There are different variations of interfaces to 
+access the mouse.&nbsp; 0=no mouse 1=sierra v2 automouse 2=sierra v3 extra 
+mouse commands 10=brian buff&#8217;s mouse support<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> loop_update<br>
+         </td>
+         <td valign="top">if you let the interpreter automatically pick the
+ loop of an animated moving object, it will only do it if it has under 4
+loops  maximum in version 2 interpreters, any number of loops in early v3
+interpreters  and only if a flag is set for any number for later v3. 1=four,
+2=all, 3=flag<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> object_decrypt</td>
+         <td valign="top"> if set to 1, nagi will try and decrypt the object
+ file before trying to read it.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> object_packed</td>
+         <td valign="top"> determines whether the object is word packed (amiga)
+ or not (pc)</td>
+       </tr>
+       <tr>
+         <td valign="top"> compression</td>
+         <td valign="top"> determines whether the interpreter will try and
+ use decompression on the volume files or not.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> dir_type<br>
+         </td>
+         <td valign="top"> are the dir files separated or joined up into
+one.  0=none 1=separated 2=combined 3=combined amiga style<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top"> crc_vol_X<br>
+         </td>
+         <td valign="top"> a 32 bit crc of a volume file.&nbsp; Use winzip&#8217;s
+ crcs or nagi&#8217;s crc_print to determine the crc&#8217;s. &nbsp;Will try crc_vol_0
+ to crc_vol_15.<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">crc_dir<br>
+         </td>
+         <td valign="top"> for version 3 interpreter files.. crc of the combined
+ dir file<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">crc_dir_log<br>
+         </td>
+         <td valign="top"> crc of a log dir<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">  crc_dir_view<br>
+         </td>
+         <td valign="top"> crc of a view dir<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">  crc_dir_pic<br>
+         </td>
+         <td valign="top"> crc of a pic dir<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">  crc_dir_snd<br>
+         </td>
+         <td valign="top"> crc of a snd dir<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">  crc_object<br>
+         </td>
+         <td valign="top"> crc of an objects file<br>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">  crc_words<br>
+         </td>
+         <td valign="top"> crc of a token file<br>
+         </td>
+       </tr>
+           
+  </tbody>   
 </table>
-<br>
+   <br>
+     
 <h2>Adding a New Game to the CRC List</h2>
-The point of adding a new game to the list is to correctly identify the game.&nbsp;
-If you correctly identify it, you can specify the name and the interpreter
-to use.<br>
-<br>
-A good example for this is Kings Quest 4.&nbsp; It uses a version 3 interpreter
-that requires slightly different operations or else Rosella will moon walk
-all over the screen.&nbsp; All over v3 games don&#8217;t need this however.<br>
-<br>
-Normally if you were adding a new game would you just have this defined in
-standard.ini<br>
-<br>
-[new_game]<br>
-name=My new Game v1.0 2001-10-12<br>
-inherits=pc_v2_939<br>
-crc_vol_0=0xE6CBCDAE<br>
-crc_dir=0xAC18F6EA<br>
-crc_object=0x6F8E1901<br>
-crc_words=0x6F42A9A1<br>
-<br>
-and then add &#8220;new_game&#8221; to the crc_list at the top of the standard.ini. <br>
-<br>
-Now when NAGI searches directories and finds this game.. it will be corrrectly
-named instead of using a default best-guess naming scheme.<br>
-<br>
-The &#8220;pc_v2_939&#8221; will have the other options such as compresion or directory/object
-structure.<br>
-<br>
-I have tried to have a common naming scheme in the order of: name, version,
-date (YYYY-MM-DD).<br>
-The CRC values for a particular game can be determined by using WinZip&#8217;s
-CRC checksums (they are the same) or by using the &#8220;crc_print&#8221; option in nagi.ini<br>
-<br>
-<h2>Submitting an Unknown Game's Details</h2> The information I need is included
-in this list in order of necessity (ie, if you can't get the file sizes or
-interpreter version.. that's ok) <ul>
-  <li><i>Name </i>- the name of the game. &nbsp;"Police Quest" or "Space Quest: The Lost Chapter" would suffice here.<br>
-</li>
-  <li><i>Checksums </i>- edit nagi.ini and set the option "crc_print"
-to 1 and "console" to 0. &nbsp;NAGI will print a checksum for each game it
-finds and will output it's contents to stdout.txt. &nbsp;Open stdout.txt
-and copy the checksums for the game you wish to submit.</li>
-  <li><i>Interpreter version</i> - You can determine which version of interpreter the game uses by running a program called <a href="http://www.if-legends.org/%7Epdd/">AGInfo</a>
-. &nbsp;Just run it in the same directory as the game. &nbsp;If you can't
-find the interpreter or it's version, there are other methods to try. &nbsp;Version
-2 interpreters have four directory files (logdir,snddir, viewdir, picdir)
-whilst version 3 interpreters will only have one directory. &nbsp;Older version
-2 games will have an unencrypted object file so if you open the file"object"
-in notepad and can easily read the object names then you have an older version
-2 interpreter.</li>
-  <li><i>Game version</i> - This is the version of the
-game data. &nbsp;You can check out the About messagebox from the menu for
-any information. &nbsp;Also, try going into debug mode (usually alt-D) and
-it will print out a version message sometimes. &nbsp;Finally, try and find
-a file that has an extension ".QA". &nbsp;These ".QA" usually contain version
-or bugfix info.</li>
-  <li><i>Date </i>- Sometimes the publication date
-will be inside the game data files. &nbsp;However, most of the time you will
-have to look at the dates of the files yourself. &nbsp;Sierra AGI games were
-published between 1986 and 1989. &nbsp;You have to watch out because some
-people add readme's and other files a year or two after the game was released.
-&nbsp;Just pick the date that the majority of the files have.. or just the
-later date.</li>
-  <li><i>Platform intended</i> - The AGI games were designed
-to run on a bunch of different systems but there were some differences for
-each platform. &nbsp;The platforms I know about are PC, Tandy, PCjr, PS/2
-30, Amiga, Macintosh, Atari ST,&nbsp; Apple II and Apple IIgs.</li>
-  <li><i>Disk type</i>
- - Later versions of games came in two versions.. 3.5" and 5.25" editions.
-&nbsp;If you know which disk arrangement it came in, this could be useful.
-&nbsp;In 3.5" the sizes are around 500k and 5.25" they're around 100-300k.
-&nbsp;Fan made games don't take this into account at all and you can get
-games that take up a meg or two in one volume.</li>
-  <li><i>File sizes</i> - Useful to determine disktype or just to compare with other game versions.</li><li><i>Bugs/side effects</i>
- - Does the game work in NAGI or the normal Sierra interpreter? &nbsp;Are
-there any side effects that occur because of that? &nbsp;Can you finish the
-game?<br>
-  </li>
-
-</ul>
-There can be slight differences between games versions and I think that some
-of these differences can be attributed to copy protection removal. I believe
-the games that have copy protection are: Kings Quest 4, Gold Rush, Man Hunter
-1/2 and Kings Quest 3. &nbsp;If your game has copy protection or protection
-removed, that would be useful to note as well.<br>
-<br>
-Once you have all or some of this information, please send an email with
-this information to sonneveld@hotmail.com and i'll add it to the next version
-of NAGI that's released. &nbsp;If you include your name and email address,
-I'll add you to the credits too.<br>
-<br>
-<h2>NAGI Warnings</h2>
-The original Sierra interpeter let a lot of things slide whenever the logic
-programmer makes a mistake. &nbsp;While this is nice when you're playing
-a game and you don't want to be hassled by warnings, it's not so useful when
-you're the logic programmer. &nbsp;NAGI is slowly adding warnings to it's
-code to help programmers prevent easy mistakes.<br>
-<br>
-<b>Object Loading Warnings</b><br>
-<i>"object_file_load(): and the baby bear said, "this object is too small!""</i><br>
-Object files have to be a certain size or else they're no longer object file. &nbsp;This is just a quick sanity check.<br>
-<br>
-<i>"object_file_load(): default options invalid. &nbsp;Attempting alternative decryption/packing methods..."</i><br>
-
-There are several different types of object files available (encryption,
-word packing) so NAGI tries the default option first. &nbsp;If this option does
-not work this means it probably is under the wrong agi standard in standard.ini
-but it will try different methods anyway.<br>
-<br>
-<i>"object_file_load(): invalid object file"</i><br>
-After trying different methods to open the object file, if it doesn't look
-correct then NAGI will assume it's an invalid object file and stop loading.<br>
-<br>
-<i>"object_file_load(): number of animated object's defined = XXX"</i><br>
-This is just a handy way of comparing the number of animated objects defined between games.<br>
-<br>
-<i>"object_file_load(): warning! object string does not end in '\0'.</i>"<br>
-
-This means that the last string in the object file does not end with an EOL
-character. &nbsp;Usually nothing points to the last string in the object
-file but this is just in case because if something does and a function tries
-to read it, it won't stop and will keep on reading into unknown memory.<br>
-<br>
-<b>Directory Warnings</b><br>
-<i>"dir_load(): original dir option failed.&nbsp; Trying alternative dir options."</i><br>
-
-If the original dir option does not work, NAGI will print this message and then try other dir names/methods to load it up.<br>
-<br>
-<i>"dir_load(): unable to load an AGI directory."</i><br>
-After trying different directory names, NAGI will give up and print this error<br>
-<br>
-<b>Other Warnings</b><br>
-<i>"obj_loop_set(): "just out of range" loop bug occured with anim obj XXX"</i><br>
-A warning to the bug mentioned in the "Bugs in Sierra's Interpreter" section.
-&nbsp;NAGI will then silently set the loop to the last loop available in
-the view object<br>
-<br>
-<i>"mstack max = XXX"</i><br>
-The Brian Buff mouse support uses a stack so if two button presses occur
-between a game loop, it won't lose any data. &nbsp;This is just a reminder
-of what the largest size of the stack is for debugging purposes. (ie, if
-it keeps on getting bigger then you're not checking it often enough)<br>
-<br>
-<i>"no cmd=CMD NAME"<br>
-"no eval=EVAL NAME"</i><br>
-Prints this warning if a command was not implemented in NAGI and it had to
-ignore it. &nbsp;There are a handful of commands and evaluations that NAGI
-does not support. &nbsp;Namely the Amiga specific ones and some debugging
-commands.<br>
-<br>
-<i>"cmd_clear_lines(): warning, upper and lower in wrong order."</i><br>
-Some games try and reverse the upper and lower bounds but it's not correct
-and it used to crash NAGI until it checked it. &nbsp;If this error occurs,
-NAGI will only clear the first line at upper to prevent screen clearage in
-some games.<br>
-<br>
-
-
-<h2></h2>
-
-
-
-<h2>Bugs in Sierra&#8217;s Interpreter</h2>If you do not define a logic for debug tracing command names.. it is meant
-to just print out the command numbers.&nbsp; But because of a bug, it does
-not do this and prints garbage.<br>
-<br>
-When using set.loop or set.loop.v the allowed loop range should be 0&#8230;(LOOP_TOTAL
-&#8211; 1).. but because of a missing equals sign somewhere in their code.. if
-you set the loop to be equal to loop_total (or one above the maximum), it
-will not cause an error and keep on going.&nbsp; However, the animated object
-have a loop data pointing to a random location.&nbsp; Real life example:
-bow before the king in KQ1<br>
-<br> The command set.pri.base goes through an array but goes past it a bit
-and starts reading other bits of the stack I believe.&nbsp; Through sheer
-luck, it doesn't do anything strangely in the original interpreter. &nbsp;It
-crashed NAGI in it&#8217;s original form.&nbsp; Real life example: KQ4<br>
-<br> The message box function barfs if there's a very long string placed
-just after a control code or new line. &nbsp;It won't properly wrap unless
-you make sure there's a space just before the very long string.<br>
-<br> The animated object code differs between versions.&nbsp; If you run
-the XMAS demo on a real v2.9 interpreter there will be bits missing on the
-scrolling text.&nbsp; The bits reappear in earlier interpreters.&nbsp; Some
-other differences show in the old Donald Duck game too. In other games, sprites
-can go missing in newer versions of AGI, and then reappear in older versions.
-<br>
-<br>
-<h2>External Font Format (NBF)</h2> NAGI uses external fonts to help reduce
-executable size and to save memory. &nbsp;Also, users can create their own
-fonts and use them for higher or lower resolutions.<br>
-<br>
-When choosing the correct font to display, NAGI looks at all the available
-fonts and picks the best one that will represent the current renderer standard
-in the selected scale. &nbsp;If there isn't a font large enough for the renderer/scale
-then it will try smaller scales until one fits.<br>
-<br>
-When the format of the format has stabalised, it will be documented.<br>
-<br>
-<h2>Credits</h2>
-
-Justin Kerk - suggesting bug fixes and new features for NAGI.<br>
-Charles Irwin - comments and CRC submissions for some games I did not have<br>
-AGI Messageboard - interesting conversations, comments and a place to announce new versions of NAGI.<br>
-#agi at dalnet<br>
-#sarien at opennet<br>Tim Pitman - testing out earlier versions of NAGI for a stupid malloc size bug.<br>
-Dark Fiber - helpful comments and testing.<br>
-<br>
-NAGI uses SDL which is a cross-platform media library that supports video and sound amongst other things.<br>
-<br>
-Here's their blurb:<br>
-The Simple DirectMedia Layer (SDL for short) is a cross-platfrom library
-designed to make it easy to write multi-media software, such as games and
-emulators.<br>
-<br>
-The Simple DirectMedia Layer library source code is available from:<br>
-http://www.libsdl.org/<br>
-This library is distributed under the terms of the GNU LGPL license:http://www.gnu.org/copyleft/lesser.html<br>
-<br>
-<h2>Other Texts <br>
-</h2>
-<ul>
-  <li>nagi_history.html - a list of all the changes from one version to another</li>
-
-  <li>nagi_issues.txt - a list of issues that make occurs from certain games
-due to bugs in the logic or differences between interpreter versions</li>
-  <li>nagi_legal.html - legal issues brought up during the development of
-NAGI</li>
-  <li>nagi_notes.html - other notes for NAGI.. ripped from homepage of NAGI</li>
+   The point of adding a new game to the list is to correctly identify the
+ game.&nbsp; If you correctly identify it, you can specify the name and the
+ interpreter to use.<br>
+   <br>
+   A good example for this is Kings Quest 4.&nbsp; It uses a version 3 interpreter 
+ that requires slightly different operations or else Rosella will moon walk 
+ all over the screen.&nbsp; All over v3 games don&#8217;t need this however.<br>
+   <br>
+   Normally if you were adding a new game would you just have this defined
+ in standard.ini<br>
+   <br>
+   [new_game]<br>
+   name=My new Game v1.0 2001-10-12<br>
+   inherits=pc_v2_939<br>
+   crc_vol_0=0xE6CBCDAE<br>
+   crc_dir=0xAC18F6EA<br>
+   crc_object=0x6F8E1901<br>
+   crc_words=0x6F42A9A1<br>
+   <br>
+   and then add &#8220;new_game&#8221; to the crc_list at the top of the standard.ini.
+ <br>
+   <br>
+   Now when NAGI searches directories and finds this game.. it will be corrrectly 
+ named instead of using a default best-guess naming scheme.<br>
+   <br>
+   The &#8220;pc_v2_939&#8221; will have the other options such as compresion or directory/object 
+ structure.<br>
+   <br>
+   I have tried to have a common naming scheme in the order of: name, version, 
+ date (YYYY-MM-DD).<br>
+   The CRC values for a particular game can be determined by using WinZip&#8217;s 
+ CRC checksums (they are the same) or by using the &#8220;crc_print&#8221; option in nagi.ini<br>
+   <br>
+     
+<h2>Submitting an Unknown Game's Details</h2>
+   The information I need is included in this list in order of necessity
+(ie,  if you can't get the file sizes or interpreter version.. that's ok)
   
+<ul>
+     <li><i>Name </i>- the name of the game. &nbsp;"Police Quest" or "Space
+ Quest: The Lost Chapter" would suffice here.<br>
+   </li>
+     <li><i>Checksums </i>- edit nagi.ini and set the option "crc_print"
+to  1 and "console" to 0. &nbsp;NAGI will print a checksum for each game
+it finds  and will output it's contents to stdout.txt. &nbsp;Open stdout.txt
+and copy  the checksums for the game you wish to submit.</li>
+     <li><i>Interpreter version</i> - You can determine which version of
+interpreter  the game uses by running a program called <a href="http://www.if-legends.org/%7Epdd/">
+  AGInfo</a> . &nbsp;Just run it in the same directory as the game. &nbsp;If
+ you can't find the interpreter or it's version, there are other methods
+to  try. &nbsp;Version 2 interpreters have four directory files (logdir,snddir,
+ viewdir, picdir) whilst version 3 interpreters will only have one directory.
+ &nbsp;Older version 2 games will have an unencrypted object file so if you
+ open the file"object" in notepad and can easily read the object names then
+ you have an older version 2 interpreter.</li>
+     <li><i>Game version</i> - This is the version of the game data. &nbsp;You
+ can check out the About messagebox from the menu for any information. &nbsp;Also,
+ try going into debug mode (usually alt-D) and it will print out a version
+ message sometimes. &nbsp;Finally, try and find a file that has an extension
+ ".QA". &nbsp;These ".QA" usually contain version or bugfix info.</li>
+     <li><i>Date </i>- Sometimes the publication date will be inside the
+game  data files. &nbsp;However, most of the time you will have to look at
+the dates of the files yourself. &nbsp;Sierra AGI games were published between
+1986 and 1989. &nbsp;You have to watch out because some people add readme's
+and other files a year or two after the game was released. &nbsp;Just pick
+the date that the majority of the files have.. or just the later date.</li>
+     <li><i>Platform intended</i> - The AGI games were designed to run on 
+a bunch of different systems but there were some differences for each platform.
+ &nbsp;The platforms I know about are PC, Tandy, PCjr, PS/2 30, Amiga, Macintosh,
+ Atari ST,&nbsp; Apple II and Apple IIgs.</li>
+     <li><i>Disk type</i>  - Later versions of games came in two versions..
+ 3.5" and 5.25" editions. &nbsp;If you know which disk arrangement it came
+ in, this could be useful. &nbsp;In 3.5" the sizes are around 500k and 5.25"
+ they're around 100-300k. &nbsp;Fan made games don't take this into account
+ at all and you can get games that take up a meg or two in one volume.</li>
+     <li><i>File sizes</i> - Useful to determine disktype or just to compare
+ with other game versions.</li>
+    <li><i>Bugs/side effects</i>  - Does the game work in NAGI or the normal
+ Sierra interpreter? &nbsp;Are there any side effects that occur because
+of  that? &nbsp;Can you finish the game?<br>
+     </li>
+      
 </ul>
-
-</body></html>
+   There can be slight differences between games versions and I think that
+ some of these differences can be attributed to copy protection removal.
+I  believe the games that have copy protection are: Kings Quest 4, Gold Rush,
+ Man Hunter 1/2 and Kings Quest 3. &nbsp;If your game has copy protection
+or protection removed, that would be useful to note as well.<br>
+   <br>
+   Once you have all or some of this information, please send an email with 
+ this information to sonneveld@hotmail.com and i'll add it to the next version 
+ of NAGI that's released. &nbsp;If you include your name and email address, 
+ I'll add you to the credits too.<br>
+   <br>
+     
+<h2>NAGI Warnings</h2>
+   The original Sierra interpeter let a lot of things slide whenever the
+logic  programmer makes a mistake. &nbsp;While this is nice when you're playing 
+a game and you don't want to be hassled by warnings, it's not so useful when 
+ you're the logic programmer. &nbsp;NAGI is slowly adding warnings to it's 
+ code to help programmers prevent easy mistakes.<br>
+   <br>
+   <b>Object Loading Warnings</b><br>
+   <i>"object_file_load(): and the baby bear said, "this object is too small!""</i><br>
+   Object files have to be a certain size or else they're no longer object
+ file. &nbsp;This is just a quick sanity check.<br>
+   <br>
+   <i>"object_file_load(): default options invalid. &nbsp;Attempting alternative
+ decryption/packing methods..."</i><br>
+    There are several different types of object files available (encryption, 
+ word packing) so NAGI tries the default option first. &nbsp;If this option
+ does not work this means it probably is under the wrong agi standard in
+standard.ini  but it will try different methods anyway.<br>
+   <br>
+   <i>"object_file_load(): invalid object file"</i><br>
+   After trying different methods to open the object file, if it doesn't
+look  correct then NAGI will assume it's an invalid object file and stop
+loading.<br>
+   <br>
+   <i>"object_file_load(): number of animated object's defined = XXX"</i><br>
+   This is just a handy way of comparing the number of animated objects defined
+ between games.<br>
+   <br>
+   <i>"object_file_load(): warning! object string does not end in '\0'.</i>
+  "<br>
+    This means that the last string in the object file does not end with
+an  EOL character. &nbsp;Usually nothing points to the last string in the
+object  file but this is just in case because if something does and a function
+tries  to read it, it won't stop and will keep on reading into unknown memory.<br>
+   <br>
+   <b>Directory Warnings</b><br>
+   <i>"dir_load(): original dir option failed.&nbsp; Trying alternative dir
+ options."</i><br>
+    If the original dir option does not work, NAGI will print this message
+ and then try other dir names/methods to load it up.<br>
+   <br>
+   <i>"dir_load(): unable to load an AGI directory."</i><br>
+   After trying different directory names, NAGI will give up and print this
+ error<br>
+   <br>
+   <b>Other Warnings</b><br>
+   <i>"obj_loop_set(): "just out of range" loop bug occured with anim obj 
+XXX"</i><br>
+   A warning to the bug mentioned in the "Bugs in Sierra's Interpreter" section. 
+ &nbsp;NAGI will then silently set the loop to the last loop available in 
+the view object<br>
+   <br>
+   <i>"mstack max = XXX"</i><br>
+   The Brian Buff mouse support uses a stack so if two button presses occur 
+ between a game loop, it won't lose any data. &nbsp;This is just a reminder 
+ of what the largest size of the stack is for debugging purposes. (ie, if 
+it keeps on getting bigger then you're not checking it often enough)<br>
+   <br>
+   <i>"no cmd=CMD NAME"<br>
+   "no eval=EVAL NAME"</i><br>
+   Prints this warning if a command was not implemented in NAGI and it had
+ to ignore it. &nbsp;There are a handful of commands and evaluations that
+NAGI does not support. &nbsp;Namely the Amiga specific ones and some debugging 
+ commands.<br>
+   <br>
+   <i>"cmd_clear_lines(): warning, upper and lower in wrong order."</i><br>
+   Some games try and reverse the upper and lower bounds but it's not correct 
+ and it used to crash NAGI until it checked it. &nbsp;If this error occurs, 
+ NAGI will only clear the first line at upper to prevent screen clearage in
+ some games.<br>
+   <br>
+               
+<h2>Bugs in Sierra&#8217;s Interpreter</h2>
+  If you do not define a logic for debug tracing command names.. it is meant 
+ to just print out the command numbers.&nbsp; But because of a bug, it does 
+ not do this and prints garbage.<br>
+   <br>
+   When using set.loop or set.loop.v the allowed loop range should be 0&#8230;(LOOP_TOTAL 
+ &#8211; 1).. but because of a missing equals sign somewhere in their code.. if 
+you set the loop to be equal to loop_total (or one above the maximum), it 
+will not cause an error and keep on going.&nbsp; However, the animated object 
+have a loop data pointing to a random location.&nbsp; Real life example: bow
+before the king in KQ1<br>
+   <br>
+   The command set.pri.base goes through an array but goes past it a bit
+and  starts reading other bits of the stack I believe.&nbsp; Through sheer
+luck,  it doesn't do anything strangely in the original interpreter. &nbsp;It
+crashed  NAGI in it&#8217;s original form.&nbsp; Real life example: KQ4<br>
+   <br>
+   The message box function barfs if there's a very long string placed just
+ after a control code or new line. &nbsp;It won't properly wrap unless you
+ make sure there's a space just before the very long string.<br>
+   <br>
+   The animated object code differs between versions.&nbsp; If you run the
+ XMAS demo on a real v2.9 interpreter there will be bits missing on the scrolling
+ text.&nbsp; The bits reappear in earlier interpreters.&nbsp; Some other
+differences  show in the old Donald Duck game too. In other games, sprites
+can go missing  in newer versions of AGI, and then reappear in older versions.
+<br>
+ <br>
+ You should only call restore.game from logic.0. &nbsp;If you call restore 
+from a called logic function, it may cause problems because it will be returning 
+back through logics that have been unloaded and loaded again. &nbsp;The logic 
+may not be in the exact place as before. <br>
+   <br>
+     
+<h2>External Font Format (NBF)</h2>
+   NAGI uses external fonts to help reduce executable size and to save memory.
+ &nbsp;Also, users can create their own fonts and use them for higher or
+lower  resolutions.<br>
+   <br>
+   When choosing the correct font to display, NAGI looks at all the available 
+ fonts and picks the best one that will represent the current renderer standard 
+ in the selected scale. &nbsp;If there isn't a font large enough for the renderer/scale
+ then it will try smaller scales until one fits.<br>
+   <br>
+   When the format of the format has stabalised, it will be documented.<br>
+   <br>
+     
+<h2>Credits</h2>
+    Justin Kerk - suggesting bug fixes and new features for NAGI.<br>
+   Charles Irwin - comments and CRC submissions for some games I did not
+have<br>
+   Chris Cromer - For testing NAGI with a LOT of games.<br>
+   AGI Messageboard - interesting conversations, comments and a place to
+announce  new versions of NAGI.<br>
+   #agi at dalnet<br>
+   #sarien at opennet<br>
+  Tim Pitman - testing out earlier versions of NAGI for a stupid malloc size
+ bug.<br>
+   Dark Fiber - helpful comments and testing.<br>
+   <br>
+   NAGI uses SDL which is a cross-platform media library that supports video
+ and sound amongst other things.<br>
+   <br>
+   Here's their blurb:<br>
+   The Simple DirectMedia Layer (SDL for short) is a cross-platfrom library 
+ designed to make it easy to write multi-media software, such as games and 
+ emulators.<br>
+   <br>
+   The Simple DirectMedia Layer library source code is available from:<br>
+   http://www.libsdl.org/<br>
+   This library is distributed under the terms of the GNU LGPL license:http://www.gnu.org/copyleft/lesser.html<br>
+   <br>
+     
+<h2>Other Texts <br>
+   </h2>
+     
+<ul>
+     <li>nagi_history.html - a list of all the changes from one version to
+ another</li>
+      <li>nagi_issues.txt - a list of issues that make occurs from certain
+ games due to bugs in the logic or differences between interpreter versions</li>
+     <li>nagi_legal.html - legal issues brought up during the development 
+of  NAGI</li>
+     <li>nagi_notes.html - other notes for NAGI.. ripped from homepage of 
+NAGI</li>
+        
+</ul>
+      
+</body>
+</html>

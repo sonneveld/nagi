@@ -1,6 +1,6 @@
 Donald Duck
 -----------
-Graphics only look good in v2.272 interpreter!!  maybe it was packaged with one wrong
+Graphics only look good in v2.272 interpreter!!  maybe it was packaged with wrong one 
 sound isn't good either.. had to work around it in nagi.. does it do the same for other old ones?
 
 Demo Pack 4
