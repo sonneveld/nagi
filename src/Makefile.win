@@ -2,6 +2,8 @@ include Makefile.common
 
 OBJ += nagires.o
 
+CFLAGS += -DNAGI_SDLENV
+
 MACH_WIN = -mwindows
 MACH_CONSOLE = -mwindows -mconsole
 LIB = -lmingw32 -lSDLmain -lSDL

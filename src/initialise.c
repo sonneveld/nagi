@@ -128,6 +128,8 @@ void nagi_init()
 	// initialise SDL
 	printf("Initialising Simple DirectMedia Layer (SDL)...");
 
+	// setting environment vars is touchy...
+#ifdef NAGI_SDLENV
 	// video_dirver
 	if (strlen(c_sdl_drv_video) > 30)
 		c_sdl_drv_video[30] = 0;
@@ -146,6 +148,8 @@ void nagi_init()
 
 	if(c_sdl_drv_sound[0])
 		setenv("SDL_AUDIODRIVER", c_sdl_drv_sound, 1);
+#endif
+	
 #endif
 
 	//SDL_INIT_EVENTTHREAD SDL_INIT_AUDIO|

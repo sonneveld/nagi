@@ -1,3 +1,8 @@
+# PREPROC DEFS
+# -DRAD_LINUX - compiling for linux
+# -DRAD_WARN - show warnings for code that Graham has touched
+# -DNAGI_SDLENV - set environment vars for SDL (defaults are for windows anyway)
+
 # add base files
 SRC := base.c debug.c decrypt.c flags.c nagi_main.c\
 initialise.c agi_string.c new_room.c objects.c state_io.c agi.c\
