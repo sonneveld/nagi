@@ -99,7 +99,7 @@ u8 *cmd_set_menu_item(u8 *c)
 	MENU_ITEM *mi;
 	u8 cont;
 	u8 *name;
-	
+
 	name = strdup(logic_msg(*(c++)));
 	cont = *(c++);
 	
@@ -148,6 +148,7 @@ u8 *cmd_submit_menu(u8 *c)
 	menu_cur = menu_head;
 	menu_item_cur = menu_cur->head;
 	menu_submit = 1;
+	
 	return c;
 }
 
@@ -241,6 +242,8 @@ void menu_input()
 	MENU_ITEM *di;
 	
 	if (state.menu_state == 0)
+		return;
+	if (menu_head == 0)
 		return;
 	
 	push_row_col();
