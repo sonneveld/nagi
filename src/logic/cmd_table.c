@@ -330,28 +330,21 @@ FUNC cmd_table[] = {
 
                         // 169
 			{"cmd.close.window", cmd_close_window, 0, 0},
-			// cmd.set.game.name(u8)
-			{"cmd.unknown.170 (*savegame* incomplete)", cmd_do_nothing, 1, 0},
-			// cmd.save.script(void)
-			{"cmd.unknown.171", cmd_unknown_171, 0, 0},
-			// cmd.restore.script(void)
-			{"cmd.unknown.172", cmd_unknown_172, 0, 0},
-			// cmd.alt.walk.on(void)
-			{"cmd.unknown.173", cmd_unknown_173, 0, 0},
-			// cmd.set.priority.table(u8)
-			{"cmd.unknown.174", cmd_unknown_174, 1, 0},
 			
-			{"cmd.unknown.175 (*unknown*)", cmd_do_nothing, 1, 0},
-			{"cmd.unknown.176 (*unknown*)", cmd_do_nothing, 0, 0},
-			
-			// cmd.set.menu.access(u8)
-			{"cmd.unknown.177", cmd_unknown_177, 1, 0},
-			
-			{"cmd.unknown.178 (*unknown*)", cmd_do_nothing, 0, 0},
-			{"cmd.unknown.179 (*unknown*)", cmd_do_nothing, 4, 0},
-			{"cmd.unknown.180 (*unknown*)", cmd_do_nothing, 2, 0xC0},
-			
-			// cmd.alt.walk.off(void)
-			{"cmd.unknown.181", cmd_unknown_181, 0, 0}
+			// 170
+			{"cmd.set.simple (incomplete)", cmd_do_nothing, 1, 0},
+			{"cmd.push.script", cmd_unknown_171, 0, 0},
+			{"cmd.pop.script", cmd_unknown_172, 0, 0},
+			{"cmd.hold.key", cmd_unknown_173, 0, 0},
+			{"cmd.set.pri.base", cmd_unknown_174, 1, 0},
+			{"cmd.discard.sound (incomplete)", cmd_do_nothing, 1, 0},
+			{"cmd.hide.mouse (incomplete)", cmd_do_nothing, 0, 0},
+			{"cmd.allow.menu", cmd_unknown_177, 1, 0},
+			{"cmd.show.mouse (incomplete)", cmd_do_nothing, 0, 0},
+			{"cmd.fence.mouse (incomplete)", cmd_do_nothing, 4, 0},
+			// 180
+			{"cmd.mouse.posn (incomplete)", cmd_do_nothing, 2, 0xC0},
+			{"cmd.unknown.181", cmd_unknown_181, 0, 0},
+			{"cmd.adj.ego.move.to.x.y (incomplete)", cmd_do_nothing, 0, 0}
 	   	};
 
