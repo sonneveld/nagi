@@ -46,8 +46,16 @@ void v3_dir_load(void)
 	if (dir_id[0] == 0)
 		game_id_copy();
 	
-	sprintf(dir_v3_name, "%sdir", dir_id);
-	dir_stream = fopen(dir_v3_name, "rb");
+	if (c_game_res == RES_V3_AMIGA)
+	{
+		sprintf(dir_v3_name, "dirs");
+		dir_stream = fopen(dir_v3_name, "rb");
+	}
+	else
+	{
+		sprintf(dir_v3_name, "%sdir", dir_id);
+		dir_stream = fopen(dir_v3_name, "rb");
+	}
 	if ( dir_stream != 0)
 	{
 		fclose(dir_stream);
@@ -75,6 +83,7 @@ void dir_load(void)
 	{
 		case RES_V3:
 		case RES_V3_4:
+		case RES_V3_AMIGA:
 			v3_dir_load();
 			break;
 		case RES_V2:

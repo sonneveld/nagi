@@ -162,7 +162,7 @@ LOGIC *logic_load_2(u16 logic_num)
 		msg++;	// skip the number of messages
 		log->msg = msg;
 
-		if ((c_game_res==RES_V2) || (not_compressed != 0))
+		if ((c_game_res==RES_V2) || not_compressed)
 		{
 			if ( log->msg_total != 0)
 			{
