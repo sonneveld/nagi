@@ -55,7 +55,7 @@ CFLAGS += -IC:/mingw/mingw32/include/SDL
 
 LIB = -lmingw32 -lSDLmain -lSDL -mwindows -mconsole
 
-n.exe: $(OBJ)
+../bin/n.exe: $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LIB) 
 
 #%.o: %.c
@@ -67,6 +67,6 @@ include $(OBJ:.o=.d)
 	sh depend.sh $(CFLAGS) $< > $@
 
 clean:
-	$(RM) $(OBJ) n.exe core
+	$(RM) $(OBJ) ../bin/n.exe core
 
 
