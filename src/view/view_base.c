@@ -383,5 +383,5 @@ void view_discard(u16 num)
 	//set_mem_ptr(si);
 	
 	blists_draw();
-	update_var8();
+	//update_var8();
 }

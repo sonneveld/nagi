@@ -228,7 +228,7 @@ void pic_discard(u16 pic_num)
 	a_free(cur);
 	
 	blists_draw();
-	update_var8();
+	//update_var8();
 }
 
 

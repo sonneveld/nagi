@@ -89,6 +89,8 @@ u8 *new_room(u16 room_num)
 	state.var[V04_OBJECT] = 0;
 	state.var[V16_EGOVIEWRES] = objtable->view_cur;
 
+	state.var[V08_FREEMEM] = 10;
+	
 	// not in v2.936 and later
 	//volumes_close();
 

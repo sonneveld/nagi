@@ -207,6 +207,8 @@ void game_init(void)
 	state.var[V20_COMPUTER] = computer_type;
 	state.var[V26_MONITORTYPE] = display_type;
 	state.var[V24_INPUTLEN] = 0x29;
+	state.var[V08_FREEMEM] = 10;
+	
 	flag_set(F05_NEWROOM);			// first time in room.
 
 	state.ego_control_state = 1;
@@ -277,7 +279,6 @@ void nagi_shutdown(void)
 
 	//sound_shutdown
 	sndgen_shutdown();
-	
 	// clock_shutdown
 	clock_denit();
 

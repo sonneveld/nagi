@@ -164,6 +164,8 @@ u8 *cmd_restore_game(u8 *c)
 			decrypt_string(inv_obj_string, inv_obj_string+inv_obj_string_size);
 			state.var[V20_COMPUTER] = computer_type;
 			state.var[V26_MONITORTYPE] = display_type;
+			state.var[V08_FREEMEM] = 10;
+			
 			if (computer_type == 0)
 				state.var[V22_SNDTYPE] = 1;
 			else
