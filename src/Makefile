@@ -55,8 +55,7 @@ OBJ = $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS := -fwritable-strings
-CFLAGS += -g
+CFLAGS := -g
 #CFLAGS += -g -pg  -O2
 #CFLAGS += -O2
 #CFLAGS += -finline-functions
@@ -65,7 +64,7 @@ CFLAGS += -g
 DEPFLAGS := $(CFLAGS)
 
 # add warnings
-
+CFLAGS += -fwritable-strings
 CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual
 #CFLAGS += -Werror
 
