@@ -39,7 +39,6 @@ set areas on the screen
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"
-#include "../sys/video.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 //void test_function(void);
@@ -105,6 +104,7 @@ int mstack_pop(int *button, int *x, int *y)
 
 u8 *cmd_brian_poll_mouse(u8 *c)
 {
+	/*
 	int get_butt, get_x, get_y;
 	
 	if (mstack_pop(&get_butt, &get_x, &get_y) != 0)
@@ -117,5 +117,5 @@ u8 *cmd_brian_poll_mouse(u8 *c)
 	state.var[27] = get_butt;
 	state.var[28] = get_x/vstate.scale/2;
 	state.var[29] = get_y/vstate.scale;
-	return c;
+	return c;*/
 }
