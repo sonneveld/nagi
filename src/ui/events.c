@@ -35,7 +35,7 @@ void events_init()
 	
 	events_clear();
 	
-	#warning needs cmd_init_joy ??
+#warning needs cmd_init_joy ??
 }
 
 
@@ -325,8 +325,8 @@ void events_clear()
 	SDL_Event event; 
 	int one_count = 0;
 	int x;
-	#warning perhaps another time we could check for non-input events and use them
-	#warning doesnt matter for the time being since i dont check for them anyways
+#warning perhaps another time we could check for non-input events and use them
+#warning doesnt matter for the time being since i dont check for them anyways
 	
 	while ( (x=SDL_PollEvent(&event)) != 0)
 	{
@@ -334,13 +334,13 @@ void events_clear()
 			one_count++;
 		if (one_count > 10)
 		{
-			#warning this is because sometimes poll_event always returns 1 event left
+#warning this is because sometimes poll_event always returns 1 event left
 			printf("events_clear(): ONE EVENT LEFT ERROR!");
 			break;
 		}
 	}
 	
-	#warning a bit missing for joystick
+#warning a bit missing for joystick
 	/*
 	clear_bios_buff;
 	reset_joy
@@ -472,7 +472,7 @@ u8 *cmd_unknown_181(u8 *c)
 AGI_EVENT *event_wait()
 {
 	AGI_EVENT *si;
-	#warning SHEDLOADS MISSING FOR JOYSTICK SUPPORT
+#warning SHEDLOADS MISSING FOR JOYSTICK SUPPORT
 	do
 	{
 		si = event_read();
