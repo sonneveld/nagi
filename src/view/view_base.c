@@ -64,7 +64,7 @@ LIST *view_list = 0;
 
 
 void obj_loop_data(VIEW *v, u16 loop_num);
-void obj_cel_data(VIEW *v, u16 loop_num);
+void obj_cel_data(VIEW *v, u16 cel_num);
 
 void view_list_init()
 {
@@ -276,7 +276,7 @@ u8 *cmd_set_cel_v(u8 *c)
 }
 
 
-void obj_cel_set(VIEW *v, u16 loop_num)
+void obj_cel_set(VIEW *v, u16 cel_num)
 {
 	u16 view_num;
 	
@@ -284,10 +284,10 @@ void obj_cel_set(VIEW *v, u16 loop_num)
 	if (v->view_data == 0)
 		set_agi_error(0xA, view_num);
 
-	if (v->cel_total <= loop_num)
+	if (v->cel_total <= cel_num)
 		set_agi_error(8, view_num);
 
-	obj_cel_data(v, loop_num);
+	obj_cel_data(v, cel_num);
 
 	if ((v->x + v->x_size) > 160 )
 	{
