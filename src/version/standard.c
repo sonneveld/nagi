@@ -377,11 +377,13 @@ u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 // 12 34 00 2F 00 2F 00
 
 // generate a name for the game info from standard.ini or just from other available resrouces
-void gameinfo_namegen(GAMEINFO *info, INI *ini)
+void gameinfo_namegen(GAMEINFO *info, INI *ini, u8 *dir_sub, u8 *dir)
 {
 	u8 *name = 0;
-	
+
 	assert(info != 0);
+	assert(dir != 0);
+	assert(dir_sub != 0);
 	
 	// standard separate
 	if ( (info->standard != 0) && (ini != 0) )
@@ -393,24 +395,41 @@ void gameinfo_namegen(GAMEINFO *info, INI *ini)
 		name = ini_key(ini, "name");
 	}
 	
-	if (name != 0)
+	if (name == 0)
 	{
-		strncpy(info->name, name, 80);
-		if (strlen(name) >= 80)
-			info->name[80] = 0;
+		int str_size;
+		
+		if (info->file_id[0] == 0)
+		{
+			// "v3_kq4/games - AGI v2"
+			str_size = strlen(dir_sub) + strlen(dir) + 10 + strlen("/ - AGI v");
+			name = alloca(str_size);
+			sprintf(name, "%s/%s - AGI v%d", dir_sub, dir, info->ver_type);
+		}
 		else
-			info->name[strlen(name)] = 0;
+		{
+			// "KQ4 @ v3_kq4/games - AGI v2"
+			str_size = strlen(info->file_id) + strlen(dir_sub) + strlen(dir) + 10 + strlen(" @ / - AGI v");
+			name = alloca(str_size);
+			sprintf(name, "%s @ %s/%s - AGI v%d", info->file_id, dir_sub, dir, info->ver_type);
+		}
 	}
-	else
-		sprintf(info->name, "AGI v%d - %s", info->ver_type, info->file_id);
 	
+	assert(name != 0);
+	
+	strncpy(info->name, name, 80);
+	if (strlen(name) >= 80)
+		info->name[80] = 0;
+	else
+		info->name[strlen(name)] = 0;
+
 	stand_rejoin();
 }
 
 
 // create a new gameinfo struct for a given directory if a game exists in it.. 
 // called on for each dir
-void gameinfo_add(LIST *list, INI *ini)
+void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 {
 	AGICRC agicrc;
 	GAMEINFO info_new;
@@ -436,7 +455,7 @@ void gameinfo_add(LIST *list, INI *ini)
 		vstring_getcwd(info_new.dir);
 		
 		// get name
-		gameinfo_namegen(&info_new, ini);
+		gameinfo_namegen(&info_new, ini, dir_sub, dir);
 
 		// if everything ok
 		// ADD TO LIST
@@ -478,7 +497,7 @@ void gi_list_init(LIST *list, INI *ini)
 					(chdir(ep->d_name) != -1) )
 				{
 					//printf("trying %s\\%s...\n", token, ep->d_name);
-					gameinfo_add(list, ini);
+					gameinfo_add(list, ini, ep->d_name, token);
 				}
 			}
 			closedir(dp);
