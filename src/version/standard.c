@@ -441,9 +441,6 @@ void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 	
 	if (dir_get_info(&agicrc, &info_new) == 0)
 	{
-		if (c_nagi_crc_print)
-			crc_print(&agicrc, &info_new);
-		
 		if (ini != 0)
 			info_new.standard = crc_search(&agicrc, &info_new, ini);
 		
@@ -457,6 +454,13 @@ void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 		// get name
 		gameinfo_namegen(&info_new, ini, dir_sub, dir);
 
+		if (c_nagi_crc_print)
+		{
+			printf("%s\n-----------------------------------------\n", info_new.name);
+			crc_print(&agicrc, &info_new);
+			printf("\n");
+		}
+		
 		// if everything ok
 		// ADD TO LIST
 		n = list_add(list);
