@@ -2,6 +2,8 @@
 
 */
 
+//~ RaDIaT1oN: changed initstate to local_initstate to prevent scope errors
+
 /* BASE headers	---	---	---	---	---	---	--- */
 //#include "agi.h"
 #include "../agi.h"
@@ -40,10 +42,10 @@ PCM_OUT_DRIVER pcm_out_drv;
 
 int pcm_out_init(int freq, int format)
 {
-	DRVINITSTATE initstate;
+	DRVINITSTATE local_initstate;
 	int drv_avail;
 	
-	drv_avail = drvpick_first(&initstate, pcm_out_init_list, 
+	drv_avail = drvpick_first(&local_initstate, pcm_out_init_list, 
 			sizeof(pcm_out_init_list) / sizeof(DRVINIT), 
 			c_snd_driver, &pcm_out_drv);
 	
@@ -51,7 +53,7 @@ int pcm_out_init(int freq, int format)
 	{
 		if (!pcm_out_drv.ptr_init(freq, format))
 			return 0;
-		drv_avail = drvpick_next(&initstate);
+		drv_avail = drvpick_next(&local_initstate);
 	}
 	return -1;
 }
