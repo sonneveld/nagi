@@ -4,6 +4,32 @@
 // the only include file i should include in an include file
 #include "SDL.h"
 
+#ifndef list_h_struct
+#define list_h_struct
+/* STRUCTURES	---	---	---	---	---	---	--- */
+struct node_struct
+{
+	struct node_struct *next;
+	struct node_struct *prev;
+	unsigned char contents[0];
+};
+typedef struct node_struct NODE;
+
+struct list_struct
+{
+	// public to read
+	NODE *head;
+	NODE *tail;
+	
+	// private
+	int contents_size;
+};
+typedef struct list_struct LIST;
+typedef struct list_struct STACK;
+#endif
+
+
+
 typedef unsigned char	u8;
 typedef unsigned short	u16;
 typedef unsigned long	u32;

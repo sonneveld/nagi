@@ -37,6 +37,8 @@ _DiscardView                     cseg     00003F0D 0000004A
 #include <stdlib.h>
 
 #include "../agi.h"
+#include "../list.h"
+
 #include <setjmp.h>
 #include "../sys/error.h"
 #include "../sys/memory.h"
@@ -58,28 +60,18 @@ _DiscardView                     cseg     00003F0D 0000004A
 #include "../sys/drv_video.h"
 #include "../sys/vid_render.h"
 
-VIEW_NODE view_list_head = {0,0,0};
-VIEW_NODE *prev_view = 0;
+LIST *view_list = 0;
+
 
 void obj_loop_data(VIEW *v, u16 loop_num);
 void obj_cel_data(VIEW *v, u16 loop_num);
 
 void view_list_init()
 {
-	VIEW_NODE *cur, *next;
-	
-	cur = view_list_head.next;
-	
-	while (cur != 0)
-	{
-		next = cur->next;
-		if (cur->data != 0)
-			a_free(cur->data);
-		a_free(cur);
-		cur = next;
-	}
-	
-	view_list_head.next = 0;
+	if (view_list == 0)
+		view_list = list_new(sizeof(VIEW_NODE));
+	else
+		list_clear(view_list);
 }
 
 void view_list_new_room()
@@ -87,21 +79,15 @@ void view_list_new_room()
 	view_list_init();
 }
 
-VIEW_NODE *view_find(u16 num)
+NODE *view_find(u16 num)
 {
-	VIEW_NODE *prev, *cur;
+	NODE *node;
 	
-	cur = view_list_head.next;
-	prev = &view_list_head;
-
-	while (  (cur!=0) && ( num!=(cur->num))  )
-	{
-		prev = cur;
-		cur = cur->next;
-	}
-
-	prev_view = prev;	// find, load and discard
-	return cur;
+	node = view_list->head;
+	while ( (node != 0) && (num != VN(node)->num) )
+		node = node->next;
+	
+	return node;
 }
 	
 	
@@ -120,33 +106,30 @@ u8 *cmd_load_view_v(u8 *c)
 
 VIEW_NODE *view_load(u16 num, u16 force_load)
 {
-	VIEW_NODE *v;
-	v = view_find(num);
+	NODE *n;
 	
-	if ( (v != 0) && (force_load == 0) ) return v;
+	n = view_find(num);
+	if ( (n != 0) && (force_load == 0) )
+		return VN(n);
 
 	blists_erase();
 
-	if (v == 0)
+	if (n == 0)
 	{
 		script_write(1, num);
-		v = a_malloc(sizeof(VIEW_NODE));
-		prev_view->next = v;
-		v->next = 0;
-		v->num = num;
-		v->data = 0;
+		n = list_add(view_list);
+		VN(n)->num = num;
+		VN(n)->data = 0;
 	}
 
-	v->data = vol_res_load(dir_view(v->num), v->data);
+	VN(n)->data = vol_res_load(dir_view(VN(n)->num), VN(n)->data);
 
-	if (v->data == 0) return 0;
+	if (VN(n)->data == 0)
+		return 0;
 
-	render_view_dither(v->data);
-	//sub5857(v->data);	cga_thing
-	
+	render_view_dither(VN(n)->data);
 	blists_draw();
-
-	return v;
+	return VN(n);
 }
 
 u8 *cmd_set_view(u8 *c)
@@ -175,13 +158,13 @@ u8 *cmd_set_view_v(u8 *c)
 // need set loop, set cel
 void obj_view_set(VIEW *v, u16 num)
 {
-	VIEW_NODE *vn;
+	NODE *vn;
 
 	vn = view_find(num);
 	if (vn == 0)
 		set_agi_error(0x3, num);
 	
-	v->view_data = vn->data;
+	v->view_data = VN(vn)->data;
 	v->view_cur = num;
 	v->loop_total = (v->view_data)[2];
 	
@@ -372,18 +355,19 @@ u8 *cmd_discard_view_v(u8 *c)
 
 void view_discard(u16 num)
 {
-	VIEW_NODE *vn;
+	NODE *n;
 	
-	vn = view_find(num);
-	if (vn == 0)
+	n = view_find(num);
+	if (n == 0)
 		set_agi_error(1, num);
+	
 	script_write(7, num);
-	prev_view->next = 0;
 	blists_erase();
-	if (vn->data != 0)
-		a_free(vn->data);
-	a_free(vn);
+	
+	list_clear_past(view_list, n);	// standard behaviour for pc agi
+	list_remove(view_list, n);
 	//set_mem_ptr(si);
+	
 	blists_draw();
 	update_var8();
 }

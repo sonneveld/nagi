@@ -1,6 +1,5 @@
-#ifndef list_h_file
-#define list_h_file
-
+#ifndef list_h_struct
+#define list_h_struct
 /* STRUCTURES	---	---	---	---	---	---	--- */
 struct node_struct
 {
@@ -21,7 +20,10 @@ struct list_struct
 };
 typedef struct list_struct LIST;
 typedef struct list_struct STACK;
-	
+#endif
+
+#ifndef list_h_file
+#define list_h_file
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 LIST *list_new(int contents_size);

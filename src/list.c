@@ -121,6 +121,12 @@ void list_remove(LIST *list, NODE *node)
 			list->tail = node->prev;
 		if (list->head == node)
 			list->head = node->next;
+		
+		if (node->prev != 0)
+			(node->prev)->next = node->next;
+		if (node->next != 0)
+			(node->next)->prev = node->prev;
+		
 	}
 	if (node != 0)
 		a_free(node);		

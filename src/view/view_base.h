@@ -1,14 +1,16 @@
 struct view_node_struct
 {
-	struct view_node_struct *next;	// 0
+	//struct view_node_struct *next;	// 0
 	u8 num;					// 2 view_num
 	u8 *data;				// 3 data
 };
 typedef struct view_node_struct VIEW_NODE;
 
+#define VN(x)  ((VIEW_NODE *)x->contents)
+
 extern void view_list_init(void);
 extern void view_list_new_room(void);
-extern VIEW_NODE *view_find(u16 num);
+extern NODE *view_find(u16 num);
 extern u8 *cmd_load_view(u8 *c);
 extern u8 *cmd_load_view_v(u8 *c);
 extern VIEW_NODE *view_load(u16 num, u16 force_load);
