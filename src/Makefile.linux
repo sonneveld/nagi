@@ -1,0 +1,29 @@
+include Makefile.common
+
+CFLAGS += -DRAD_LINUX -DRAD_WARN
+
+LIB = -lSDLmain -lSDL -lpthread
+
+all:	nagi
+
+nagi:	../bin/nagi
+
+../bin/nagi: $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $@
+
+#cleanall: clean depclean
+
+clean:
+	$(RM) $(OBJ) ../bin/nagi core
+
+#depclean:
+#	$(RM) $(OBJ:.o=.d)
+
+#%.d: %.c
+#	$(CC) -M -MG $(DEPFLAGS) $< | sed -e 's@ /[^ ]*@@g' -e 's@^\(.*\)\.o:@\1.d \1.o:@' > $@
+#sh depend.sh $(DEPFLAGS) $< > $@
+
+#include $(SRC:.c=.d)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@

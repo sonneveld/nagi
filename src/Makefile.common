@@ -47,57 +47,16 @@ SRC += ui/msg.c ui/events.c  ui/cmd_input.c ui/controller.c ui/status.c\
 ui/menu.c ui/mouse.c ui/list_box.c
 
 OBJ = $(SRC:.c=.o)
-OBJ += nagires.o
 
 CC = gcc
 
-#CFLAGS := -g
-#CFLAGS += -g -pg  -O2
-CFLAGS += -O2
+#CFLAGS += -g
+#CFLAGS += -pg
+CFLAGS += -O2 
 #CFLAGS += -finline-functions
-#CFLAGS += -IC:/mingw/mingw32/include/SDL
-
-DEPFLAGS := $(CFLAGS)
-
 CFLAGS += -fwritable-strings
-# add warnings
-CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual
+
+# Warnings
+CFLAGS += -Wall -Winline -Wshadow -Wstrict-prototypes
+CFLAGS += -Wpointer-arith -Wcast-qual
 #CFLAGS += -Werror
-
-MACH_WIN = -mwindows
-MACH_CONSOLE = -mwindows -mconsole
-LIB = -lmingw32 -lSDLmain -lSDL
-
-all: nagi nagi-console
-
-nagi: ../bin/n.exe
-
-nagi-console: ../bin/n-console.exe
-
-../bin/n.exe: $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIB) $(MACH_WIN) -o $@
-
-../bin/n-console.exe: $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIB) $(MACH_WIN) $(MACH_CONSOLE) -o $@
-
-cleanall: clean depclean
-
-clean:
-	$(RM) $(OBJ) ../bin/n.exe core ../bin/n-console.exe
-
-depclean:
-	$(RM) $(OBJ:.o=.d)
-
-%.d: %.c
-	$(CC) -M -MG $(DEPFLAGS) $< | sed -e 's@ /[^ ]*@@g' -e 's@^\(.*\)\.o:@\1.d \1.o:@' > $@
-#sh depend.sh $(DEPFLAGS) $< > $@
-
-include $(SRC:.c=.d)
-
-nagires.o: nagi.rc nagi.ico
-	windres -v $< -O coff -o $@
-	
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-	
-

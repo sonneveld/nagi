@@ -1,0 +1,41 @@
+include Makefile.common
+
+OBJ += nagires.o
+
+MACH_WIN = -mwindows
+MACH_CONSOLE = -mwindows -mconsole
+LIB = -lmingw32 -lSDLmain -lSDL
+
+all: nagi nagi-console
+
+nagi: ../bin/n.exe
+
+nagi-console: ../bin/n-console.exe
+
+../bin/n.exe: $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) $(MACH_WIN) -o $@
+
+../bin/n-console.exe: $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) $(MACH_WIN) $(MACH_CONSOLE) -o $@
+
+cleanall: clean depclean
+
+clean:
+	$(RM) $(OBJ) ../bin/n.exe core ../bin/n-console.exe
+
+depclean:
+	$(RM) $(OBJ:.o=.d)
+
+%.d: %.c
+	$(CC) -M -MG $(DEPFLAGS) $< | sed -e 's@ /[^ ]*@@g' -e 's@^\(.*\)\.o:@\1.d \1.o:@' > $@
+#sh depend.sh $(DEPFLAGS) $< > $@
+
+include $(SRC:.c=.d)
+
+nagires.o: nagi.rc nagi.ico
+	windres -v $< -O coff -o $@
+	
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+	
+
