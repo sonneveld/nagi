@@ -5,4 +5,7 @@
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 
+
+extern int list_box(u8 **list, int size, int init);
+
 #endif
