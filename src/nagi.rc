@@ -1,2 +1,1 @@
-#include "resource.h"
-IDI_ICON1               ICON    DISCARDABLE     "nagi.ico"
+NAGI ICON "nagi.ico"
