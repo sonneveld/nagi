@@ -88,6 +88,7 @@ void dir_init(u8 *argv0)
 		u8 *end;
 		
 		path_cpy = strdupa(argv0);
+				printf("%s\n", path_cpy);
 		// strip file name
 		
 		// '/' if win32
@@ -98,6 +99,10 @@ void dir_init(u8 *argv0)
 		
 		// set preset
 		dir_preset_set(DIR_PRESET_NAGI, path_cpy);
+		
+		dir_preset_set(DIR_PRESET_NAGI, ".");
+
+		printf("%s\n", path_cpy);
 	}
 	else
 	{
