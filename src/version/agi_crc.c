@@ -85,44 +85,6 @@ u32 crc_generate(u8 *data, int size)
 	return crc ^ CRC_XOROT;
 }
 
-u8 *crc_file_load(u8 *name)
-{
-	fpos_t file_size;
-	u8 *buff;
-	FILE *file_stream;
-	
-	if (  (file_stream=fopen(name, "rb")) == 0  )
-		return 0;
-	
-	fseek(file_stream, 0, SEEK_END);
-	fgetpos(file_stream, &file_size);
-	fseek(file_stream, 0, SEEK_SET);
-	crc_file_size = file_size;
-	buff = (u8 *)malloc(file_size);
-	
-	if ( fread(buff, sizeof(u8), file_size, file_stream) != file_size)
-		return 0;
-		
-	fclose(file_stream);
-	return buff;
-}
 
-
-int file_crc_compare(u8 *file_name, u32 crc_correct)
-{
-	u8 *test_file;
-	u32 crc;
-
-	test_file = crc_file_load(file_name);
-	if (test_file != 0)
-	{
-		crc = crc_generate(test_file, crc_file_size);
-		free(test_file);
-		if (crc == crc_correct)
-			return 1;
-	}
-
-	return 0;
-}
 
 
