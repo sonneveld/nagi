@@ -15,6 +15,7 @@
 #include "../base.h"
 #include "drv_video.h"
 #include "gfx.h"
+#include "../ui/string.h"
 
 
 

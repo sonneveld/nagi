@@ -18,6 +18,11 @@ _GetV                            cseg     0000759C 00000064
 #include <setjmp.h>
 #include "sys/error.h"
 
+#include "sys/mem_wrap.h"
+#include "sys/endian.h"
+#include "view/obj_base.h"
+#include "decrypt.h"
+
 /*
 old:
 u8 *object_ptr = 0;

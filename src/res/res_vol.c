@@ -87,10 +87,9 @@ u8 *v2_res_load(u8 *dir_entry, u8 *buff)
 	}
 	else
 	{
-		#warning check this later
 		vol_pos = dir_entry[2];
-		vol_pos += dir_entry[1] << 8;
-		vol_pos += (dir_entry[0] & 0x0F) << 16;
+		vol_pos |= dir_entry[1] << 8;
+		vol_pos |= (dir_entry[0] & 0x0F) << 16;
 	
 		fseek(vol_stream, vol_pos, SEEK_SET);
 		if ( fread(res_head, sizeof(u8), RES_HEAD_SIZE, vol_stream) == RES_HEAD_SIZE)

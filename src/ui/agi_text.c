@@ -74,7 +74,6 @@ u8 *cmd_clear_lines(u8 *c)
 	u16 upper;
 	u16 lower;
 	u16 attrib;
-	u16 temp;
 
 	upper = *(c++);
 	lower = *(c++);

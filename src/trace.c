@@ -26,6 +26,8 @@ _TraceScroll                     cseg     00008FAD 00000023
 #include "flags.h"
 #include "sys/drv_video.h"
 #include "sys/gfx.h"
+#include "sys/vid_render.h"
+#include "sys/chargen.h"
 #include "ui/events.h"
 #include "sys/endian.h"
  
@@ -33,6 +35,8 @@ _TraceScroll                     cseg     00008FAD 00000023
 #include "ui/window.h"
 #include "ui/agi_text.h"
 #include "ui/msg.h"
+
+
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 u8 *cmd_trace_on(u8 *c);

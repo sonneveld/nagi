@@ -30,7 +30,8 @@ _MenuCalcSize                    cseg     000095C4 00000073
 #include "../ui/status.h"
 #include "../ui/events.h"
 #include "../ui/printf.h"
-
+#include "../sys/chargen.h"
+#include "../sys/vid_render.h"
 
 u16 menu_next_input = 0;
 

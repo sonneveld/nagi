@@ -24,6 +24,7 @@
 #include "../sys/mem_wrap.h"
 #include "../sys/vstring.h"
 #include "../sys/sys_dir.h"
+#include "../base.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 //void test_function(void);
@@ -258,7 +259,6 @@ void crc_print(AGICRC *agicrc, GAMEINFO *info)
 				printf("%s=0x%08X\n", "crc_dir_snd", agicrc->dir.snd);
 			break;
 	}
-	return 0;
 }
 
 

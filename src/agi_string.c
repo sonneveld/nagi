@@ -39,6 +39,8 @@ CmdGetNum                        cseg     00007126 000000C8
 #include "ui/string.h"
 #include "game_id.h"
 
+#include "sys/chargen.h"
+
 // the size is probably related to the text resolution
 
 

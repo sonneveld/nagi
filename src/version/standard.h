@@ -5,7 +5,6 @@
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 
-extern void gi_list_menu(void);
-extern void gi_list_init(void);
+extern void standard_select_ng(void);
 
 #endif

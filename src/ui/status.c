@@ -22,7 +22,7 @@ CmdStatusLneOff                  cseg     0000355C 0000001F
 #include "../ui/printf.h"
 
 #include "../sys/endian.h"
-
+#include "../sys/chargen.h"
 u16 invent_state = 0;
 
 /*

@@ -28,6 +28,7 @@ _VidMode_Get                     cseg     000059AC 00000015
 #include "../picture/pic_res.h"
 #include "../sys/drv_video.h"
 #include "../sys/gfx.h"
+#include "../sys/vid_render.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 u16 obj_chk_walk_area(VIEW *v);

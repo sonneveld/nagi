@@ -115,9 +115,6 @@ void sbuff_xline()
 }
 
 
-// yline needs a bit o' work
-#warning fix yline
-#warning pos_init needs to equal the final.. bug!
 void sbuff_yline()
 {
 	u8 y1, y2, y_orig, len;

@@ -53,9 +53,10 @@ _DiscardView                     cseg     00003F0D 0000004A
 // byte-order support
 #include "../sys/endian.h"
 
-#include <assert.h>
 
 #include "../sys/mem_wrap.h"
+#include "../sys/drv_video.h"
+#include "../sys/vid_render.h"
 
 VIEW_NODE view_list_head = {0,0,0};
 VIEW_NODE *prev_view = 0;

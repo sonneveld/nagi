@@ -34,6 +34,8 @@ _StateDrawBlank                  cseg     00008FB3 00000020
 #include "sys/mem_wrap.h"
 #include "sys/sys_dir.h"
 
+#include "sys/chargen.h"
+
 
 u16 diskspace_available = 1;
 
@@ -150,7 +152,7 @@ u16 save_disk_check(u8 state_type)
 
 u16 state_get_path(u8 state_type)
 {
-	u8 user_msg[160];
+	//u8 user_msg[160];
 	VSTRING *msg = 0;
 	
 	if ( (save_dir->data==0) || (save_dir->data[0]==0) )

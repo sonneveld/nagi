@@ -36,6 +36,16 @@ _DispNewLine                     cseg     0000234E 0000001F
 // string zero pad
 #include "../ui/string.h"
 
+#include "../sys/drv_video.h"
+#include "../sys/vid_render.h"
+#include "../sys/gfx.h"
+#include "../sys/endian.h"
+#include "events.h"
+#include "../sys/delay.h"
+#include <setjmp.h>
+#include "../sys/error.h"
+
+
 //u16 word_dseg_D09 = 20;	// row related ..   the MAX WIDTH???
 #define HEIGHT_MAX 20
 // size of a line in vertical pixels
@@ -283,7 +293,7 @@ u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 	u8 *log_msg;	// logic msg data
 	u8 *source;
 	u8 *msg;
-	u8 *bx;
+
 	
 	source = given_source;
 	msg = given_msg;

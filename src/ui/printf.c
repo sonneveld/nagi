@@ -19,6 +19,7 @@ _FormatChar                      cseg     0000245E 00000014
 
 // window_put_char
 #include "../ui/window.h"
+#include "../sys/chargen.h"
 
 // void *format_ip = 0;
 u8 *format_strbuff = 0;

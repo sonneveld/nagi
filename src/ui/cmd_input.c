@@ -47,7 +47,7 @@ CmdCloseDialogu                  cseg     0000394B 00000012
 
 #include "../ui/mouse.h"
 #include "../view/obj_motion.h"
-
+#include "../sys/chargen.h"
 
 
 u16 input_edit_disabled = 0;
