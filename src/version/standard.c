@@ -184,9 +184,7 @@ int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 //		printf("Found vol: %s\n", fname);
 		while (fname != 0)
 		{
-#ifndef RAD_LINUX
 			fname = string_lower(fname);	// to lower the name
-#endif
 			tail = strstr(fname, "vol.0");	// get id
 			
 			// check size of it
