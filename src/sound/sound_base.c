@@ -32,38 +32,19 @@ _SoundStop                       cseg     0000516C 00000023
 
 #include "../sys/mem_wrap.h"
 
+#include "../list.h"
+
 u16 sound_playing = 0;
-SOUND sound_head = {0, 0, 0, {0,0,0,0}};
-SOUND *sound_last = 0;
 u16 sound_flag = 0;		// the flag to set when the sound is finished
 
-void sound_list_init(void);
-void sound_list_new_room(void);
-SOUND *sound_find(u16 snd_num);
-u8 *cmd_load_sound(u8 *c);
-SOUND *sound_load(u16 snd_num);
-u8 *cmd_sound(u8 *c);
-u8 *cmd_stop_sound(u8 *c);
-void sound_stop(void);
-
+LIST *sound_list = 0;
 
 void sound_list_init()
 {
-	SOUND *cur;
-	SOUND *next;
-	
-	cur = sound_head.next;
-	
-	while (cur != 0)
-	{
-		next = cur->next;
-		if (cur->data != 0)
-			a_free(cur->data);
-		a_free(cur);
-		cur = next;
-	}
-	
-	sound_head.next = 0;
+	if (sound_list)
+		list_clear(sound_list);
+	else
+		sound_list = list_new(sizeof(SOUND));	
 }
 
 void sound_list_new_room()
@@ -73,21 +54,14 @@ void sound_list_new_room()
 
 SOUND *sound_find(u16 snd_num)
 {
-	SOUND *cur, *prev;
+	SOUND *s;
 	
-	cur = sound_head.next;
-	prev = &sound_head;
-	goto loc502b;
-loc5026:
-	prev = cur;
-	cur = cur->next;
-loc502b:
-	if ( cur == 0) goto loc5034;
-	if ( snd_num == cur->num) goto loc5034;
-	goto loc5026;
-loc5034:
-	sound_last = prev;
-	return cur;
+	s = list_element_head(sound_list);
+	
+	while ( (s) && (snd_num != s->num) )
+		s = node_next(s);
+	
+	return s;
 }
 
 u8 *cmd_load_sound(u8 *c)
@@ -98,35 +72,26 @@ u8 *cmd_load_sound(u8 *c)
 
 SOUND *sound_load(u16 snd_num)
 {
-	u16 c;
-	u8 *di;
 	SOUND *snd;
 	
 	snd = sound_find(snd_num);
-	if ( snd == 0) 
+	if (snd==0) 
 	{
+		u16 c;
+		u8 *dptr;
+
 		blists_erase();
 		
-		if ( sound_last == 0)
-			snd = &sound_head;
-		else
-		{
-			snd = (SOUND *)a_malloc(sizeof(SOUND));
-			sound_last->next = snd;
-			snd->next = 0;
-		}
-		
+		snd = (SOUND*)list_add(sound_list);
 		script_write(3, snd_num);
 		snd->num = snd_num;
 		snd->data = vol_res_load(dir_sound(snd_num), 0);
 		
-		c = 0;
-		di = snd->data;
-		while (c < 4)
+		dptr = snd->data;
+		for (c=0; c<4; c++)
 		{
-			snd->channel[c] = snd->data + load_le_16(di);
-			c++;
-			di += 2;	// word.. dude
+			snd->channel[c] = snd->data + load_le_16(dptr);
+			dptr += sizeof(u16);	// word.. dude
 		}
 		
 		blists_draw();
