@@ -7,9 +7,10 @@ AGI_STATE state;
 
 CONF_BOOL c_nagi_log_debug = 0;
 CONF_BOOL c_nagi_console = 1;
-CONF_BOOL c_nagi_run_correctly = 1;
 CONF_BOOL c_nagi_font_benchmark = 0;
 CONF_BOOL c_nagi_crc_print = 0;
+CONF_STRING c_nagi_dir_list = 0;
+CONF_STRING c_nagi_sort = 0;
 CONF_STRING c_vid_driver = 0;
 CONF_INT c_vid_scale = 2;
 CONF_BOOL c_vid_full_screen = 0;
@@ -34,11 +35,9 @@ CONF_STRING c_sdl_drv_sound = 0;
 
 CONF_STRING c_standard_crc_list = 0;
 CONF_STRING c_standard_agi_list = 0;
-CONF_STRING c_standard_dir_list = 0;
 CONF_STRING c_standard_force = 0;
 CONF_STRING c_standard_v2_default = 0;
 CONF_STRING c_standard_v3_default = 0;
-CONF_STRING c_standard_sort = 0;
 CONF_STRING c_standard_amiga_v2_default = 0;
 CONF_STRING c_standard_amiga_v3_default = 0;
 
@@ -62,9 +61,10 @@ CONF config_nagi[] =
 {
 	{"log_debug", "nagi", CT_BOOL, {b:{&c_nagi_log_debug, 0}} },
 	{"console", 0, CT_BOOL, {b:{&c_nagi_console, 1}} },
-	{"run_correctly", 0, CT_BOOL, {b:{&c_nagi_run_correctly, 1}} },
 	{"font_benchmark", 0, CT_BOOL, {b:{&c_nagi_font_benchmark, 0}} },
 	{"crc_print", 0, CT_BOOL, {b:{&c_nagi_crc_print, 0}} },
+	{"dir_list", 0, CT_STRING, {s:{&c_nagi_dir_list, "."}} },
+	{"sort", 0, CT_STRING, {s:{&c_nagi_sort, "alpha"}} },
 	{"driver", "vid", CT_STRING, {s:{&c_vid_driver, "sdl"}} },
 	{"scale", 0, CT_INT, {i:{&c_vid_scale, 2, 1, -1}} },
 	{"full_screen", 0, CT_BOOL, {b:{&c_vid_full_screen, 0}} },
@@ -94,11 +94,9 @@ CONF config_standard[] =
 {
 	{"crc_list", "standard", CT_STRING, {s:{&c_standard_crc_list, "none"}} },
 	{"agi_list", 0, CT_STRING, {s:{&c_standard_agi_list, "pc_2_936;pc_3_002_149;amiga_2;amiga_3"}} },
-	{"dir_list", 0, CT_STRING, {s:{&c_standard_dir_list, "."}} },
 	{"force", 0, CT_STRING, {s:{&c_standard_force, "not defined"}} },
 	{"v2_default", 0, CT_STRING, {s:{&c_standard_v2_default, "pc_2_936"}} },
 	{"v3_default", 0, CT_STRING, {s:{&c_standard_v3_default, "pc_3_002_149"}} },
-	{"sort", 0, CT_STRING, {s:{&c_standard_sort, "alpha"}} },
 	{"amiga_v2_default", 0, CT_STRING, {s:{&c_standard_amiga_v2_default, "amiga_2"}} },
 	{"amiga_v3_default", 0, CT_STRING, {s:{&c_standard_amiga_v3_default, "amiga_3"}} },
 	{key: 0}

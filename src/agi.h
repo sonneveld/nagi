@@ -414,9 +414,10 @@ typedef struct conf_struct CONF;
 
 extern CONF_BOOL c_nagi_log_debug;
 extern CONF_BOOL c_nagi_console;
-extern CONF_BOOL c_nagi_run_correctly;
 extern CONF_BOOL c_nagi_font_benchmark;
 extern CONF_BOOL c_nagi_crc_print;
+extern CONF_STRING c_nagi_dir_list;
+extern CONF_STRING c_nagi_sort;
 extern CONF_STRING c_vid_driver;
 extern CONF_INT c_vid_scale;
 extern CONF_BOOL c_vid_full_screen;
@@ -441,11 +442,9 @@ extern CONF_STRING c_sdl_drv_sound;
 
 extern CONF_STRING c_standard_crc_list;
 extern CONF_STRING c_standard_agi_list;
-extern CONF_STRING c_standard_dir_list;
 extern CONF_STRING c_standard_force;
 extern CONF_STRING c_standard_v2_default;
 extern CONF_STRING c_standard_v3_default;
-extern CONF_STRING c_standard_sort;
 extern CONF_STRING c_standard_amiga_v2_default;
 extern CONF_STRING c_standard_amiga_v3_default;
 

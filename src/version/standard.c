@@ -490,7 +490,7 @@ void gi_list_init(LIST *list, INI *ini)
 	
 	// for each dir
 	
-	dir_list = strdupa(c_standard_dir_list);
+	dir_list = strdupa(c_nagi_dir_list);
 	token = strtok_r(dir_list, ";", &running);
 	while (token != 0)
 	{
