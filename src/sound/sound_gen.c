@@ -116,9 +116,47 @@ void sndgen_stop(void)
 
 int volume_calc(SNDGEN_CHAN *chan)
 {
+	u8 al, dissolve_value;
+
 	// blah
 	assert(chan);
-	return chan->attenuation;
+
+	al = chan->attenuation;
+	if (al != 0x0F)		// != silence
+	{
+		if (chan->dissolve_count != 0xFFFF) 
+		{
+			dissolve_value = dissolve_data[chan->dissolve_count];
+			if (dissolve_value == 0x80)	// if at end of list
+			{
+				chan->dissolve_count = 0xFFFF;
+				chan->attenuation = chan->attenuation_copy;
+				al = chan->attenuation;
+			}
+			else
+			{
+				chan->dissolve_count++;
+				
+				if ((al+dissolve_value) > 0x7F)
+					al = 0;
+				else
+					al += dissolve_value;
+				if (al > 0x0F)
+					al = 0x0F;
+				
+				chan->attenuation_copy = al;
+				al &= 0x0F;
+				al += state.var[V23_SNDVOL];
+				if (al > 0x0F)
+					al = 0x0F;
+			}
+		}
+		//if (computer_type == 2) && (al < 8)
+		if (al < 8)
+			al += 2;
+	}
+
+	return al;
 }
 
 // read the next channel data.. fill it in *tone
@@ -153,9 +191,8 @@ void sndgen_callback(int ch, TONE *tone)
 					if (ch != 3)	// != noise??
 						chan->dissolve_count = 0;
 					
-										// attenuation (volume)
+					// attenuation (volume)
 					chan->attenuation = ((u8*)data)[4] & 0xF;	
-					
 					
 					// frequency
 					if (ch < (CHAN_MAX-1))
