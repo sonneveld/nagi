@@ -42,8 +42,7 @@ _Finish                          cseg     000002AE 00000015
 #include "sys/mem_wrap.h"
 
 // extra
-#include "version/gamelist.h"
-#include "version/ver_init.h"
+
 
 #include "sys/chargen.h"
 
@@ -164,7 +163,6 @@ wbuff = fb_buff;
 int main(int argc, char *argv[])
 {
 	u16 snd_flag;
-	GAMEINFO *g_cur;
 	
 	(void) argc;	// SDL won't let me use these anyway
 	(void) argv;	// i think
