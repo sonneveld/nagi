@@ -28,7 +28,6 @@ void vstring_shift(VSTRING *, shift_size)
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-//#include <errno.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"

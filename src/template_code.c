@@ -9,7 +9,8 @@
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
-//#include <errno.h>
+
+#include <assert.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"

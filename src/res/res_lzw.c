@@ -48,6 +48,8 @@ u16 lzw_decompress(FILE *cfile, u8 *cbuff, u16 fsize, u8 *lzw_uncomp_buff, u16 c
 	u8 code_string[2048];
 	u8 *str_ptr;
 	
+	errno = 0;  // reset file errors that may have occured from vol opening
+	
 	lzw_res_stream = cfile;
 	lzw_buff = cbuff;
 	lzw_res_size = fsize;
@@ -139,7 +141,6 @@ void lzw_buff_fill(u16 cur_byte)	// cur point?
 	
 	if ( temp2 != 0)
 	{
-		errno=0;
 		fread(lzw_buff+cur_byte, sizeof(u8), temp2, lzw_res_stream);
 		//lib_read(lzw_res_stream, lzw_buff+cur_byte, temp2);
 	}

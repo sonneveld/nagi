@@ -179,8 +179,8 @@ u8 *v3_res_load(u8 *dir_entry, u8 *buff)
 	else
 	{
 		res_pos = dir_entry[2];
-		res_pos += dir_entry[1] << 8;
-		res_pos += (dir_entry[0] & 0x0F) << 16;
+		res_pos |= dir_entry[1] << 8;
+		res_pos |= (dir_entry[0] & 0x0F) << 16;
 		fseek(vol_stream, res_pos, SEEK_SET);
 		if (fread(&res_header, sizeof(u8), 7, vol_stream) != 7)
 			goto res_error;
@@ -300,7 +300,7 @@ void volumes_open()
 			sprintf(name, "vol.%d", i);
 		//do
 		//{
-			errno = 0;
+			//errno = 0;
 			vol_handle_table[i] = fopen(name, "rb");
 			/*
 			if ( (errno != 0) && (errno != ENOENT)  )
@@ -309,6 +309,7 @@ void volumes_open()
 			*/
 		//} while (errno != 0);
 	}
+	errno=0;
 }
 
 void volumes_close()
@@ -333,8 +334,6 @@ u8 *file_load(u8 *name, u8 *buff)
 	fpos_t file_size;
 	FILE *file_stream;
 	u8 newline_orig;
-	
-	
 
 	newline_orig = msgstate.newline_char;
 	msgstate.newline_char = '@';

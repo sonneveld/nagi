@@ -17,7 +17,6 @@ _TraceScroll                     cseg     00008FAD 00000023
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
-//#include <errno.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 

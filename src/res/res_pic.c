@@ -28,6 +28,8 @@ u16 pic_decompress(FILE *cfile, u8 *cbuff, u16 cfile_size, u8 *buff, u16 cbuff_s
 	u8 *di, *si;
 	u8 pic_code;
 	
+	errno = 0; // reset from prev file errors
+	
 	pd_stream = cfile;
 	pd_buff = cbuff;
 	pd_stream_size = cfile_size;

@@ -35,7 +35,6 @@ set areas on the screen
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
-//#include <errno.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"
