@@ -25,6 +25,7 @@
 #include "../sys/vstring.h"
 #include "../sys/sys_dir.h"
 #include "../base.h"
+#include "../ui/msg.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 //void test_function(void);
@@ -461,26 +462,79 @@ int gi_list_init(INI *ini)
 	return 0;
 }
 
-// display nice menu of games and allow user to select game to play
-GAMEINFO *gi_list_menu(void)
+
+int gi_list_size(GAMEINFO *item)
 {
-	// if number of games == 1
-	// selectedgame = that one
-	// else
-	// display menu
-	// selectedgame = menu()
+	int count;
+	count = 0;
 	
-	// init game stuff
-	
-	GAMEINFO *info_cur;
-	info_cur = gameinfo_head;
-	while (info_cur != 0)
+	while (item != 0)
 	{
-		printf("%s\n", info_cur->name);
-		info_cur = info_cur->next;
+		count++;
+		item = item->next;
 	}
 	
-	return gameinfo_head;
+	return count;
+}
+
+// display nice menu of games and allow user to select game to play
+// returns 0 on error
+GAMEINFO *gi_list_menu(void)
+{
+	int list_size, i, selection;
+	GAMEINFO *game_item;
+	u8 **str_list, **str_cur;
+	u8 *msg;
+	u8 newline_orig;	// d0d orig
+	
+	// get the size of the list
+	list_size = gi_list_size(gameinfo_head);
+
+	// check for errors
+	if (list_size == 0)
+		return 0;
+	if (list_size == 1)
+		return gameinfo_head;
+	
+	// allocate list
+	str_list = alloca(sizeof(u8 *) * (list_size+1) );
+	// set the first item to instruction string
+	str_list[0] = "Use the arrow keys to select the game which you wish to play.\nPress ENTER to play the game, ESC to not play a game.";
+	// get the rest of the strings
+	game_item = gameinfo_head;
+	str_cur = str_list;
+	while(game_item != 0)
+	{
+		str_cur++;
+		*str_cur = game_item->name;
+		game_item = game_item->next;
+	}
+	
+	// use list_box
+top:
+	selection = list_box(str_list, list_size, 0);
+	cmd_close_window(0);
+	
+	if (selection == -1)
+		return 0;
+	
+	// convert number to required info struct
+	game_item = gameinfo_head;
+	for (i=selection; i!=0; i--)
+		game_item = game_item->next;
+
+	// check user response.
+	msg = alloca(200 + strlen(game_item->name) + strlen(game_item->dir->data));
+	newline_orig = msgstate.newline_char;
+	msgstate.newline_char = '@';
+	sprintf(msg, "About to execute the game\ndescribed as:\n\n%s\n\nfrom dir:\n %s\n\n%s",
+		game_item->name, game_item->dir->data, "Press ENTER to continue.\nPress ESC to cancel.");
+	message_box_draw(msg, 0, 0x23, 0);
+	msgstate.newline_char = newline_orig;
+	if (user_bolean_poll() == 0)
+		goto top;
+
+	return game_item;
 }
 
 // destory list
@@ -600,7 +654,13 @@ void standard_select_ng(void)
 		agi_exit();
 	}
 	game_selected = gi_list_menu();
-
+	
+	if (game_selected == 0)
+	{
+		printf("user exits.\n");
+		agi_exit();
+	}
+	
 	// init game
 	standard_init_ng(game_selected, ini_standard);
 
