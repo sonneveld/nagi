@@ -242,7 +242,7 @@ TPOS stredit_pos = {0,0};
 // display an end portion of the str
 void stredit_disp2(u8 *port, u16 disp_size, u16 offset)
 {
-	window_clear(stredit_pos.row, stredit_pos.col+offset, stredit_pos.row, stredit_pos.col+disp_size-1, 0);
+	window_clear(stredit_pos.row, stredit_pos.col+offset, stredit_pos.row, stredit_pos.col+disp_size-1, state.text_bg);
 	
 	while ( (*port != 0) && (offset != 0)  )
 	{
@@ -257,8 +257,9 @@ void stredit_disp2(u8 *port, u16 disp_size, u16 offset)
 }
 
 
-u8 *stredit_disp(u8 *str_edit, u16 str_size, u8 *str_disp, u16 disp_size, u16 percent)
+u8 *stredit_disp(u8 *str_edit, u16 str_size,u16 disp_size, u16 percent)
 {
+	u8 *str_disp;
 	// display string
 	if ((str_size<=disp_size)||(strlen(str_edit) < disp_size))
 		str_disp = str_edit;
@@ -296,7 +297,7 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 	
 	ch_pos_get(&stredit_pos);
 	
-	str_disp = stredit_disp(str_edit, str_size, str_disp, disp_size, 75);
+	str_disp = stredit_disp(str_edit, str_size, disp_size, 75);
 	
 	for (;;)
 	{
@@ -312,7 +313,7 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 				str_tail = str_edit;
 				str_disp = str_edit;
 				*str_tail = 0;
-				stredit_disp(str_edit, str_size, str_disp, disp_size, 0);
+				stredit_disp(str_edit, str_size, disp_size, 0);
 				break;
 			
 			case 0x8:	// bs
@@ -326,7 +327,7 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 				else
 				{
 					*str_tail = 0;
-					str_disp = stredit_disp(str_edit, str_size, str_disp, disp_size, 90);
+					str_disp = stredit_disp(str_edit, str_size, disp_size, 90);
 				}
 				break;
 
@@ -354,7 +355,7 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 					else
 					{
 						*str_tail = 0;
-						str_disp = stredit_disp(str_edit, str_size, str_disp, disp_size, 20);
+						str_disp = stredit_disp(str_edit, str_size, disp_size, 20);
 					}
 				}
 		}
