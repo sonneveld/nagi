@@ -376,7 +376,7 @@ void gameinfo_namegen(GAMEINFO *info, INI *ini)
 			info->name[strlen(name)] = 0;
 	}
 	else
-		sprintf(info->name, "AGI version %d - %s", info->ver_type, info->file_id);
+		sprintf(info->name, "AGI v%d - %s", info->ver_type, info->file_id);
 	
 	stand_rejoin();
 }
@@ -384,18 +384,18 @@ void gameinfo_namegen(GAMEINFO *info, INI *ini)
 
 // create a new gameinfo struct for a given directory if a game exists in it.. 
 // called on for each dir
-GAMEINFO *gameinfo_new(u8 *dir, INI *ini)
+GAMEINFO *gameinfo_new(INI *ini)
 {
 	AGICRC agicrc;
 	GAMEINFO info_new;
 	
 	memset(&info_new, 0, sizeof(GAMEINFO) );
 	
-	dir_preset_change(DIR_PRESET_ORIG);
+	//dir_preset_change(DIR_PRESET_ORIG);
 	
 	// change directory
-	if (chdir(dir) == -1)
-		return 0;	// fail
+	//if (chdir(dir) == -1)
+	//	return 0;	// fail
 	
 	if (dir_get_info(&agicrc, &info_new) != 0)
 		return 0;	// fail
@@ -419,7 +419,7 @@ GAMEINFO *gameinfo_new(u8 *dir, INI *ini)
 	gameinfo_namegen(&info_new, ini);
 	
 	// restore old directory
-	dir_preset_change(DIR_PRESET_ORIG);
+	//dir_preset_change(DIR_PRESET_ORIG);
 	
 	// if everything ok
 	// ADD TO LIST
@@ -443,19 +443,45 @@ int gi_list_init(INI *ini)
 	{
 		// for EACH DIRECTORY IN THAT DIR
 		// {
-			info_cur = gameinfo_new(token, ini);
-			if (info_cur != 0)
+		
+		DIR *dp;
+		struct dirent *ep;
+		struct stat fs;
+		
+		dir_preset_change(DIR_PRESET_ORIG);
+		dp = opendir(token);
+		if (dp != 0)
+		{
+			while ((ep = readdir(dp))!= 0)
 			{
-				if (gameinfo_head == 0)
-					gameinfo_head = info_cur;
-				if (info_prev != 0)
-					info_prev->next = info_cur;
-				info_prev = info_cur;
+				dir_preset_change(DIR_PRESET_ORIG);
+				if ( (chdir(token) != -1) &&
+					(stat(ep->d_name, &fs) == 0) &&
+					(S_ISDIR(fs.st_mode)) &&
+					(strcmp(ep->d_name, "..") != 0) &&
+					(chdir(ep->d_name) != -1) )
+				{
+					// DO STUFF
+					info_cur = gameinfo_new(ini);
+					if (info_cur != 0)
+					{
+						if (gameinfo_head == 0)
+							gameinfo_head = info_cur;
+						if (info_prev != 0)
+							info_prev->next = info_cur;
+						info_prev = info_cur;
+					}
+					
+				}
 			}
+			closedir(dp);
+		}
 		// }
 		token = strtok_r(0, ";", &running);
 	}
 	
+	dir_preset_change(DIR_PRESET_ORIG);
+
 	if (gameinfo_head == 0)
 		return 1;
 	
@@ -654,6 +680,7 @@ void standard_select_ng(void)
 		printf("no games detected\n");
 		agi_exit();
 	}
+	
 	game_selected = gi_list_menu();
 	
 	if (game_selected == 0)
