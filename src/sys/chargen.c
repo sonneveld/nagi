@@ -1,6 +1,8 @@
 /* FUNCTION list 	---	---	---	---	---	---	---
 
 */
+//~ RaDIaT1oN (2002-04-29):
+//~ cast for strtok
 
 /* BASE headers	---	---	---	---	---	---	--- */
 #include "../agi.h"
@@ -100,7 +102,7 @@ FILE *font_open(SIZE *needed)
 	int cur_scale;
 
 	list = strdupa(c_vid_fonts_bitmap);
-	token = strtok_r(list, ";", &running);
+	token = strtok_r(list, ";", (char**)&running);
 	while (token != 0)
 	{
 		//check token
@@ -128,7 +130,7 @@ FILE *font_open(SIZE *needed)
 			if (cur_file != 0)
 				fclose(cur_file);
 		}
-		token = strtok_r(0, ";", &running);
+		token = strtok_r(0, ";", (char**)&running);
 	}
 	
 	// FIX ME
