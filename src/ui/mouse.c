@@ -198,13 +198,13 @@ u8 *cmd_brian_poll_mouse(u8 *c)
 	if (mstack_pop(&get_butt, &get_x, &get_y) != 0)
 	{
 		// if a button press isn't on stack then it's just a polled position
-		get_butt=0;
-		SDL_GetMouseState(&get_x, &get_y);
+		// get button state when polling as well.. for held down buttons
+		get_butt = SDL_GetMouseState(&get_x, &get_y);
+		
 	}
-	
+
 	state.var[27] = get_butt;
 	state.var[28] = get_x / c_vid_scale / rend_drv->scale_x;
-
 	state.var[29] = get_y / c_vid_scale / rend_drv->scale_y;
 	
 	return c;
