@@ -21,7 +21,7 @@
 #include "../ui/string.h"
 
 
-
+#include "sdl_vid.h"
 #include "vid_render.h"
 
 #include "mem_wrap.h"
@@ -57,19 +57,19 @@ TPOS chgen_textpos = {0,0};
 //u8 *font_list = "font_8x8.fnt,font_16x16.fnt";
 u8 *font_data = 0;
 u8 *font_work = 0;
-SIZE font_size = {0,0};
+AGISIZE font_size = {0,0};
 u32 font_chsize = 0;
 u32 font_linesize = 0;
 
 POS update_pos= {0,0};
-SIZE update_size= {0,0};
+AGISIZE update_size= {0,0};
 
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
 // returns scale of screen necessary
 // returns 0 if crap
-int font_check(SIZE *size)
+int font_check(AGISIZE *size)
 {
 	int render_w, render_h;
 	
@@ -89,11 +89,11 @@ int font_check(SIZE *size)
 	return size->w * 40 / render_w;
 }
 
-FILE *font_open(SIZE *needed)
+FILE *font_open(AGISIZE *needed)
 {
 	u8 *token, *running;
 	u8 *list;
-	SIZE size;
+	AGISIZE size;
 	
 	FILE *pref_file = 0;
 	int pref_scale = 0;
@@ -171,7 +171,7 @@ void font_load(FILE *font_stream)
 
 void ch_init(void)
 {
-	SIZE needed;
+	AGISIZE needed;
 
 	needed.w = rend_drv->w * c_vid_scale / 40;
 	needed.h = rend_drv->h * c_vid_scale / 21;
@@ -186,7 +186,6 @@ void ch_init(void)
 	// text pos = 0,0
 	chgen_textpos.row = 0;
 	chgen_textpos.col = 0;
-	
 }
 
 void ch_shutdown(void)
@@ -200,7 +199,7 @@ void ch_shutdown(void)
 	font_data = 0;
 	font_work = 0;
 
-	memset (&font_size, 0, sizeof(SIZE));
+	memset (&font_size, 0, sizeof(AGISIZE));
 	font_chsize = 0;
 	font_linesize = 0;
 }
@@ -211,15 +210,15 @@ void ch_shutdown(void)
 
 void ch_update(void)
 {
-	vid_update(gfx_surface, &update_pos, &update_size);
+	vid_update(&update_pos, &update_size);
 	update_size.w = 0;
 	update_size.h = 0;
 }
 
-void font_lazy_update(POS *pos, SIZE *size)
+void font_lazy_update(POS *pos, AGISIZE *size)
 {
 	POS p1, p2;
-	
+
 	if ((update_size.w | update_size.h) != 0)
 	{
 		//upper y
@@ -298,7 +297,7 @@ void ch_put(u8 ch)
 	gfx_pos.x = font_size.w * chgen_textpos.col;
 	gfx_pos.y = font_size.h * chgen_textpos.row;
 
-	pixels = (u8 *)gfx_surface->pixels + gfx_pos.y*gfx_surface->line_size + gfx_pos.x;
+	pixels = (u8 *)vid_getbuf() + gfx_pos.y*vid_getlinesize() + gfx_pos.x;
 
 	if (   ((given_flags&TEXT_INVERT)!=0) ||
 		(((given_colour & 0x80)!=0) && (chgen_textmode==0))    )
@@ -332,7 +331,7 @@ void ch_put(u8 ch)
 		fontp = font_data + (font_chsize*ch);
 	}
 
-	vid_lock(gfx_surface);
+	vid_lock();
 
 	for (h_count=0;h_count<font_size.h; h_count++)
 	{
@@ -356,10 +355,10 @@ void ch_put(u8 ch)
 			b >>= 1;
 			w_count--;
 		}
-		pixels += gfx_surface->line_size - font_size.w;
+		pixels += vid_getlinesize() - font_size.w;
 	}
 
-	vid_unlock(gfx_surface);
+	vid_unlock();
 	font_lazy_update(&gfx_pos, &font_size);
 }
 
@@ -401,7 +400,7 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 	u8 *copy_new;
 	TPOS tpos_other;
 	POS gfx_pos;
-	SIZE g_size; 
+	AGISIZE g_size; 
 	
 	if (scroll == 0)	// whoo.. all done :)
 		return;
@@ -421,32 +420,32 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 		// do SCROLLING MAGIC
 		if (scroll > 0)	// scrolling up
 		{
-			copy_next = gfx_surface->line_size;	// scan down the screen
+			copy_next = vid_getlinesize();	// scan down the screen
 			gfx_pos.y = pos1->row * font_size.h;
-			copy_new = (u8 *)gfx_surface->pixels + gfx_pos.x +
-					gfx_pos.y*gfx_surface->line_size;
-			copy_old = scroll * font_size.h * gfx_surface->line_size;
+			copy_new = (u8 *)vid_getbuf() + gfx_pos.x +
+					gfx_pos.y*vid_getlinesize();
+			copy_old = scroll * font_size.h * vid_getlinesize();
 		}
 		else			// scrolling down
 		{
-			copy_next = -(gfx_surface->line_size);	// scan up the screen
+			copy_next = -(vid_getlinesize());	// scan up the screen
 			gfx_pos.y = (pos1->row+scroll) * font_size.h;
-			copy_new = (u8 *)gfx_surface->pixels + gfx_pos.x +
-						(gfx_pos.y+font_size.h - 1)*gfx_surface->line_size;
-			copy_old = -(scroll * font_size.h * gfx_surface->line_size);
+			copy_new = (u8 *)vid_getbuf() + gfx_pos.x +
+						(gfx_pos.y+font_size.h - 1)*vid_getlinesize();
+			copy_old = -(scroll * font_size.h * vid_getlinesize());
 		}
 		
 		g_size.w = copy_width;
 		g_size.h = copy_count;
 		
-		vid_lock(gfx_surface);
+		vid_lock();
 		while (copy_count)
 		{
 			memcpy(copy_new, copy_new+copy_old, copy_width);
 			copy_new += copy_next;
 			copy_count--;
 		}
-		vid_unlock(gfx_surface);
+		vid_unlock();
 
 		font_lazy_update(&gfx_pos, &g_size);
 		
@@ -475,7 +474,7 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 void ch_clear(TPOS *pos1, TPOS *pos2, u8 attrib)
 {
 	POS fill_pos;
-	SIZE fill_size;
+	AGISIZE fill_size;
 
 	// position
 	fill_pos.x = pos1->col * font_size.w;
@@ -497,9 +496,7 @@ void ch_clear(TPOS *pos1, TPOS *pos2, u8 attrib)
 		default: ;
 	}
 
-	vid_lock(gfx_surface);
-	vid_fill(gfx_surface, &fill_pos, &fill_size, attrib&0x0F);
-	vid_unlock(gfx_surface);
+	vid_fill(&fill_pos, &fill_size, attrib&0x0F);
 	font_lazy_update(&fill_pos, &fill_size);
 }
 

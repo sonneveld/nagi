@@ -4,7 +4,7 @@
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
 extern u8 chgen_textmode;
-extern SIZE font_size;
+extern AGISIZE font_size;
 //extern FONT *agi_font;
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 extern void ch_init(void);
