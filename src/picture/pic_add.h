@@ -10,3 +10,4 @@ extern u8 *cmd_add_to_pic_v(u8 *c);
 extern void add_to_pic(void);
 
 extern u8 *cmd_show_pri(u8 *c);
+

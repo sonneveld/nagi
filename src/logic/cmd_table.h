@@ -33,3 +33,4 @@ FUNC cmd_table[CMD_MAX + 1];
 
 extern u8 *cmd_do_nothing(u8 *code);
 extern u8 cmd_ret_false(void);
+

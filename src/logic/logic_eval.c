@@ -272,3 +272,4 @@ u8 cmd_compare_strings()
 	bx = *(logic_data++);
 	return agi_string_compare(*(logic_data++), bx);
 }
+

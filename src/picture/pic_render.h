@@ -30,3 +30,4 @@ void draw_y_corner(void);
 void draw_x_corner(void);
 void relative_line(void);
 void draw_corner(u8 type);
+
