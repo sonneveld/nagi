@@ -11,6 +11,7 @@ _WordNext                        cseg     00001BE4 00000020
 #include <ctype.h>
 // for strchr()
 #include <string.h>
+#include <assert.h>
 
 #include "../agi.h"
 
@@ -23,248 +24,232 @@ _WordNext                        cseg     00001BE4 00000020
 // byte-order support
 #include "../sys/endian.h"
 
+
+#define WORD_IGNORE 0
+#define WORD_ROL 9999
+#define WORD_ANY 1
+
+#define WORD_BUF_SIZE 10
+
 void parse(u8 *string);
 u8 *cmd_parse(u8 *c);
 void parse_read(u8 *s);
 u16 word_find(void);
-void word_isolate(void);
-u8 *word_next(u8 *si);
+void playerWordIsolate(void);
+u8 *dictWordNext(u8 *si);
 
 u8 *char_separators = " ,.?!();:[]{}";
 u8 *char_illegal = "'`-\"";	// 0x27 is '
 
-u16 word_num[10];
-u8 *word_string[10];
+u16 word_num[WORD_BUF_SIZE];
+u8 *word_string[WORD_BUF_SIZE];
 
 u16 word_total = 0;	// bad word
 u8 *words_tok_data = 0;
 
 // work area
 u8 parse_string[42];
-u8 *str_ptr;
+u8 *strPtr;
 
-
- 
 void parse(u8 *string)
 {
-	s16 di;
-	u8 *si;
-	int i;
-	u16 temp2;
-	u8 *temp4;
+	u16 wordNumber;
+	u8 *wordString;	// the string data of the word
+
+	memset(word_string, 0, sizeof(word_string));
+	memset(word_num, 0, sizeof(word_num));
+
+	parse_read(string);
+	word_total = 0;
+	strPtr = parse_string;
 	
-	si = string;
-	
-	for (i=0; i<10; i++)
+	while ((*strPtr != 0) && (word_total < WORD_BUF_SIZE))
 	{
-		word_string[i] = 0;
-		word_num[i] = 0;
+		wordString = strPtr;
+		wordNumber = word_find();
+	
+		if (wordNumber == 0xFFFF)	// bad
+		{
+			word_string[word_total] = strPtr;
+			state.var[V09_BADWORD] = word_total + 1;	// bad word
+			word_total++;
+			assert(word_total > 0); // we need flag 2 set
+			break;
+		}
+
+		if (wordNumber != WORD_IGNORE)	// good
+		{
+			word_num[word_total] = wordNumber;
+			word_string[word_total] = wordString;
+			word_total++;
+		}
+		// if WORD_IGNORE then skip it
 	}
-	//printf("\nparse=%s\n", si);
-	parse_read(si);
-	//printf("\nparse=%s\n", parse_string);
-	di = 0;
-	str_ptr = parse_string;
 	
-loc18e8:
-	temp4 = str_ptr;
-	if ( *str_ptr == 0) goto loc1940;
-	if ( di >= 10) goto loc1940;
-	temp2 = word_find();
-	goto loc1932;
-	
-	
-loc1901:	// bad
-	word_string[di] = str_ptr;
-	state.var[V09_BADWORD] = di + 1;	// bad word
-	word_total = (u8)(di + 1);	// 16bit stripped down to 8
-	goto loc1948;
-	
-loc1919:	// normal
-	//printf("%s - %d ", temp4, temp2);
-	word_num[di] = temp2;
-	word_string[di] = temp4;
-	di++;
-	goto loc193b;
-	
-	
-loc1932:
-	if ( temp2 == 0xFFFF) goto loc1901;	// bad
-	if ( temp2 != 0) goto loc1919;	// good
-loc193b:
-	// if 0 then skip it
-	goto loc18e8;
-	
-loc1940:
-	if ( di <= 0) goto loc1952;
-	word_total = di;
-loc1948:
-	flag_set(F02_PLAYERCMD);
-loc1952:
+	if (word_total > 0)
+		flag_set(F02_PLAYERCMD);
 }
 
 
 u8 *cmd_parse(u8 *c)
 {
-	u8 al;
 	flag_reset(F02_PLAYERCMD);
 	flag_reset(F04_SAIDACCEPT);
-	al = *(c++);
-	if ( al < 12)
-		parse(state.string[al]);
+	if (*c < 12)
+		parse(state.string[*c]);
+	c++;
 	return c;
 }
 
 
 // cleans the word.. separates good words by ' '
 // puts in it parse_string[]
-void parse_read(u8 *s)
+void parse_read(u8 *str)
 {
-	u8 temp1;
-	u8 *temp3;
-	u8 *si;
+	u8 *buf;
+
+	buf = parse_string;	
+
+	while (*str)
+	{
+		// skip excess separators at start and inbetween words
+		if ( (strchr(char_separators, *str) != 0) ||
+			(strchr(char_illegal, *str) != 0) )
+		{
+			str++;
+		}
+		else
+		{
+			assert(*str);
+			do
+			{
+				if (strchr(char_separators, *str) != 0)
+				{
+					*(buf++) = 0x20;	// space
+					break;
+				}
+				
+				// if not an illegal character add to buffer
+				if (strchr(char_illegal, *str) == 0)
+					*(buf++) = *str;
+				str++;
+			} while (*str != 0);
+		}
+	}
 	
-	//printf("user input = %s\n", s);
-	si = s;
-	temp3 = parse_string;
-loc19ad:
-	temp1 = *si;
-	if ( temp1 != 0) goto loc19b9;
-	goto loc1a4c;
-loc19b9:
-	if ( temp1 == 0) goto loc19f1;
-	if ( strchr(char_separators, temp1) != 0) goto loc19e7;
-	if ( strchr(char_illegal, temp1) == 0) goto loc19f1;
-loc19e7:
-	si++;
-	temp1 = *si;
-	goto loc19b9;
-	
-loc19f1:
-	if ( temp1 == 0) goto loc1a4c;
-loc19f7:
-	if ( temp1 == 0) goto loc1a3a;
-	if ( strchr(char_separators, temp1) != 0) goto loc1a3a;
-	if ( strchr(char_illegal, temp1) == 0)
-		*(temp3++) = temp1;
-	
-	si++;
-	temp1 = *si;
-	goto loc19f7;
-	
-loc1a3a:
-	if ( temp1 == 0) goto loc1a4c;
-	*(temp3++) = 0x20;	// space
-	goto loc19ad;
-	
-loc1a4c:
-	if ( (temp3 > parse_string) && (*(temp3-1) == 0x20) )
-		temp3--;
-	*temp3 = 0;
-	
-	//printf("pre-parsed version = %s\n", parse_string);
+	if ((buf > parse_string) &&	// if buffer has been modified
+		(*(buf-1) == 0x20))		// and the last character is a space
+		buf--;							// then remove space
+	*buf = 0;
 }
+
 
 // accesses the words.tok file
 u16 word_find()
 {
-	u16 tempc;	// offset to data for that letter
-	u16 tempa;
-	u16 temp8;	// character from user input?
-	u16 temp6;	// ptr to the letter array at top of words.tok
-	u16 w_num;
-	u8 *temp2;	// str_ptr related
+	u16 indexOffset;	// offset to data for that letter
+	u16 chCount;		// count of characters already matched
+	u16 chFirst;		// lowercase version of the first character in the word.
+	u16 wordNum;
+	u8 *wordNext;		// the next word after the current on
+	u8 *wordData;
+	u8 *playerInput;
 	
-	u8 *word_data;
-	u8 *user_data;
-	//u8 *bx;
-	u16 ax, cx;
+	wordNum = 0xFFFF;
+	wordNext = 0;
+	chFirst = tolower(strPtr[0]);
 	
-	w_num = 0xFFFF;
-	temp2 = 0;
-	temp8 = tolower(str_ptr[0]);
-	if ( ( temp8 < 'a')  || ( temp8 > 'z') )
-		word_isolate();
+	if ((chFirst<'a') || (chFirst>'z'))	// will not search for words not beginning with letter
+		playerWordIsolate();
 	else
 	{
-		if (  (str_ptr[1] == ' ') || ( str_ptr[1] == 0)  )
-			if (  ( temp8 == 'a') || ( temp8 == 'i')  )	// automatically skip 'a' and 'i'
+		if ( (strPtr[1]==' ') || ( strPtr[1]==0) )
+			if ( (chFirst=='a') || (chFirst == 'i') )	// automatically skip 'a' and 'i' as words
 			{
-				w_num = 0;
-				temp2 = (u8 *)str_ptr + 1;
-				if ( str_ptr[1] == ' ')
-					temp2 ++;
+				wordNum = WORD_IGNORE;	// words are ignored
+				wordNext = (u8 *)strPtr + 1;
+				if (strPtr[1] == ' ')
+					wordNext++;
 			}
-		temp6 = (temp8 - 'a') << 1;
 
-		tempc = load_be_16(words_tok_data + temp6);
-		if ( tempc == 0)
-			word_isolate();
+		// bug?.. shouldn't we jump?
+		// or do we check for words like "a bird" in the dictionary first?
+			
+		// lookup the first letter in the index
+		indexOffset = load_be_16(words_tok_data + (chFirst - 'a')*sizeof(u16));
+			
+		if (indexOffset == 0)	// if no words exist with that first letter..
+			playerWordIsolate();
 		else
 		{
-			word_data = words_tok_data + tempc;
-			user_data = str_ptr;
-			tempa = 0;
-			while (  (*word_data >= tempa) && (word_data != 0)  )
+			wordData = words_tok_data + indexOffset;
+			playerInput = strPtr;
+			chCount = 0;
+			while ((wordData != 0) && (*wordData >= chCount))
 			{
-				if ( *(word_data++) == tempa)
+				if (*(wordData++) == chCount)
 				{
-					goto loc1b4b;
-				loc1b4a:
-					word_data++;
-				loc1b4b:
-					cx = tolower(*user_data) ^ 0x7F;
-					ax = *word_data & 0x7F;
-					if ( ax != cx) goto loc1b9a;
-					user_data++;
-					tempa++;
-					if ( (*word_data & 0x80) == 0) goto loc1b4a;
-						
-					if (  (*user_data == 0) || ( *user_data == ' ')  )
+					// this shows bits are inverted in the dictionary?
+					while ((*wordData&0x7F) == (tolower(*playerInput)^0x7F))
 					{
-						w_num = load_be_16(word_data+1);
-						temp2 = user_data;
-						if (*user_data != 0)
-							temp2++;
-					}
-				loc1b9a:
+						playerInput++;
+						chCount++;
+						
+						if (*wordData & 0x80)	// if msb set
+						{
+							// if we're at the end of the player's word anyway
+							if ((*playerInput==0)||(*playerInput==' '))
+							{
+								wordNum = load_be_16(wordData+1);
+								wordNext = playerInput;
+								if (*playerInput != 0)	// skip past space
+									wordNext++;
+							}
+							break;
+						}
+						
+						wordData++;
+					}					
 				}
-				if ( *user_data == 0) 
+				// find longest match.
+				// we don't check for " " since it may appear in the word??
+				if (*playerInput == 0) 
 					break;
-				word_data = word_next(word_data);	// next word??
+				wordData = dictWordNext(wordData);	// next word??
 			}
 		
-			
-			if ( temp2 == 0) 
-				word_isolate();
+			// if we haven't defined wordNext, that means there's an error with the current one
+			if (wordNext == 0) 
+				playerWordIsolate();
 			else
 			{
-				str_ptr = temp2;
-				if ( *str_ptr != 0)
-					*(str_ptr-1) = 0;
+				strPtr = wordNext;
+				if (*strPtr)
+					*(strPtr-1) = 0;
 			}
 		}
 	}
-	return w_num;
+	return wordNum;
 }
 
-void word_isolate()
+// go through str until we reach a space or zero
+// then set it to zero.
+void playerWordIsolate()
 {
-	u8 *s;
-	
-	s = (u8 *)str_ptr;
-	while ( (*s!=' ') && (*s!=0) )
-		s++;
-	*s = 0;
+	u8 *str;
+	for (str=(u8*)strPtr; (*str!=' ')&&(*str); str++) {};
+	*str = 0;
 }
 
-u8 *word_next(u8 *si)
+// skip past current word in dictionary
+// return pointer to next word
+// return 0 if no word exists
+u8 *dictWordNext(u8 *str)
 {
-	while ((*si & 0x80) == 0)	// 1000 0000
-		si++;
-	if (*si == 0)
-		return 0;
-	else
-		return si + 3;
+	while ((*str & 0x80) == 0)	// msb
+		str++;
+	// this is how it is implemented in agi.. 
+	// but it will never return zero.  how can it?  the first bit is set!
+	return (*str)?(str+3):(0);
 }
 
