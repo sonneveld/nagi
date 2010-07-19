@@ -84,7 +84,7 @@ void *agi_malloc(u16 size)
 	}
 	
 	return_ptr = mem_ptr;
-	(u8 *)mem_ptr += size;
+	mem_ptr = (u8 *)mem_ptr + size;
 	update_var8();
 	if (mem_ptr > mem_max)
 		mem_max = mem_ptr;

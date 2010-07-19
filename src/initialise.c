@@ -11,8 +11,11 @@ _RoomInit                        cseg     000012DE 00000015
 //~ warning placement
 
 /* BASE headers	---	---	---	---	---	---	--- */
+#ifndef RAD_LINUX
 #include <windows.h>
 #include <wincon.h>
+#endif
+
 #include "agi.h"
 #include "initialise.h"
 
@@ -299,7 +302,8 @@ void agi_shutdown(void)
 void nagi_shutdown(void)
 {
 	// lzw dict
-	free(lzw_dict);
+	if (lzw_dict != 0)
+		free(lzw_dict);
 	lzw_dict = 0;
 
 	//sound_shutdown

@@ -153,9 +153,9 @@ void pcm_out_sdl_shutdown(void)
 	}
 	
 	// shutdown audio subsystem
-	SDL_CloseAudio();
+	//SDL_CloseAudio();
 	
-	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+	//SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	
 #if WRITE_TO_DISK
 	if (list_data)

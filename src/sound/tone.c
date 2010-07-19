@@ -44,7 +44,7 @@ DRVINIT tone_init_list[] =
 
 u8 c_snd_tone_drv[] = "pcm_16bit";
 
-TONE_DRIVER tone_drv;
+TONE_DRIVER tone_drv={0};
 
 int tone_init(void)
 {

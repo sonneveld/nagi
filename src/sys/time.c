@@ -1,5 +1,5 @@
 #include "../agi.h"
-#include <SDL/SDL_thread.h>
+#include <SDL_thread.h>
 
 // print
 #include "../ui/msg.h"

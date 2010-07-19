@@ -11,6 +11,8 @@
 #include <io.h>
 #endif
 
+#define NAME_MAX 300
+
 /* STRUCTURES	---	---	---	---	---	---	--- */
 struct find_struct
 {

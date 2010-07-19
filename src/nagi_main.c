@@ -22,8 +22,8 @@ _Finish                          cseg     000002AE 00000015
 #include "agi.h"
 
 /* LIBRARY headers	---	---	---	---	---	---	--- */
-//#include <stdlib.h>
-//#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <setjmp.h>
 
 /* OTHER headers	---	---	---	---	---	---	--- */
@@ -52,6 +52,8 @@ _Finish                          cseg     000002AE 00000015
 
 #include "sys/sys_dir.h"
 
+#include "list.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 int main(int argc, char *argv[]);
 
@@ -72,6 +74,14 @@ int main(int argc, char *argv[])
 	nagi_init();		// initialise NAGI
 	
 	standard_select_ng();
+
+    #if 0
+    if (argc > 1)
+        dir_preset_set(DIR_PRESET_GAME, argv[1]);
+    else
+        dir_preset_set_cwd(DIR_PRESET_GAME);
+    #endif
+
 	agi_init();		// initialise AGI with version
 	delay_init();	// initialise delay
 	

@@ -2,9 +2,9 @@
 #define agi_h_file
 
 // the only include file i should include in an include file
-#include <SDL/SDL.h>
+#include <SDL.h>
 
-#define alloca __builtin_alloca
+//#define alloca __builtin_alloca
 
 // ok no warning here
 

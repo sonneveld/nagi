@@ -127,9 +127,11 @@ FILE *fopen_nocase(u8 *name)
 	DIR *dir;
 	struct dirent *fileent;
 	FILE *ret;
+    u8 *name_copy;
 	
 	dir = opendir(".");
-	string_lower(name);
+    name_copy = strdupa(name);
+	string_lower( name_copy );
 
 	while((fileent = readdir(dir))) {
 		char *testname;
@@ -137,7 +139,7 @@ FILE *fopen_nocase(u8 *name)
 		testname = strdupa(fileent->d_name);
 		string_lower(testname);
 		
-		if(!strcmp(testname, name)) {
+		if(!strcmp(testname, name_copy)) {
 			ret = fopen(fileent->d_name, "rb");
 			closedir(dir);
 			return ret;
