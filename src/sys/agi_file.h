@@ -31,12 +31,12 @@ typedef struct find_struct FIND;
 extern u32 file_buf_size;
 
 /* FUNCTIONS	---	---	---	---	---	---	--- */
-extern u8 *file_to_buf(u8 *file_name);
+extern u8 *file_to_buf(const u8 *file_name);
 
-extern u8 *find_first(FIND *token, u8 *name);
+extern u8 *find_first(FIND *token, const u8 *name);
 extern u8 *find_next(FIND *token);
 extern void find_close(FIND *token);
 
-extern FILE *fopen_nocase(u8 *name);
+extern FILE *fopen_nocase(const u8 *name);
 
 #endif

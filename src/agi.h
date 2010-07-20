@@ -382,9 +382,11 @@ typedef struct vstring_struct VSTRING;
 
 #define AGI_TRACE printf("trace at: file=%s, func=%s, line=%d\n", __FILE__,__PRETTY_FUNCTION__, __LINE__);
 
+#ifndef strdupa
 #define strdupa(str_data) ({ u8 *blah = alloca(strlen(str_data)+1); \
 					strcpy(blah, str_data); \
 					blah; })
+#endif
 
 #define CT_INT (0)
 #define CT_BOOL (1)

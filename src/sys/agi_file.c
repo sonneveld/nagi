@@ -46,7 +46,7 @@
 
 // todo later on  .. ignore directories.. case.. 
 
-u8 *find_first(FIND *token, u8 *name)
+u8 *find_first(FIND *token, const u8 *name_const)
 {
 #ifndef RAD_LINUX
 	token->handle = _findfirst(name, &token->winfile_info);
@@ -55,6 +55,7 @@ u8 *find_first(FIND *token, u8 *name)
 	else 
 		return 0;
 #else
+	u8 *name = strdupa(name_const);
 	token->dir = opendir(".");
 	strcpy(token->name, name);
 
@@ -121,7 +122,7 @@ void find_close(FIND *token)
 
 
 
-FILE *fopen_nocase(u8 *name)
+FILE *fopen_nocase(const u8 *name)
 {
 #ifdef RAD_LINUX
 	DIR *dir;
@@ -164,7 +165,7 @@ FILE *fopen_nocase(u8 *name)
 
 u32 file_buf_size;
 
-u8 *file_to_buf(u8 *file_name)
+u8 *file_to_buf(const u8 *file_name)
 {
 	int file_size;
 	FILE *file_stream;

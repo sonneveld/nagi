@@ -288,6 +288,7 @@ void tone_pcm_unlock(void)
 #define MULT FREQ_DIV
 
 // fill buff
+// return -1 if channel is complete.
 int tone_pcm_callback(void *userdata, u8 *stream, int len)
 {
 	TONECHAN *tpcm;
@@ -300,7 +301,7 @@ int tone_pcm_callback(void *userdata, u8 *stream, int len)
 	stream_cur = (s16 *)stream;
 
 	len /= 2;
-	ret_val = -1;
+	ret_val = 0;    // assume channel is okay and still going
 	
 	while (len > 0)
 	{
@@ -320,7 +321,6 @@ int tone_pcm_callback(void *userdata, u8 *stream, int len)
 				// setup counters 'n stuff
 				// 44100 samples per sec.. tone changes 60 times per sec
 				tpcm->note_count = 44100 / 60;
-				ret_val = 0;
 			}
 			else
 			{
@@ -328,6 +328,7 @@ int tone_pcm_callback(void *userdata, u8 *stream, int len)
 				tpcm->gen_type = GEN_SILENCE;
 				tpcm->note_count = len;
 				tpcm->avail = 0;
+				ret_val = -1;
 			}
 		}
 		
