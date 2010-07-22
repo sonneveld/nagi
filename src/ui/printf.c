@@ -56,6 +56,9 @@ int charCount(char *str)
   return count;
 }
 
+// the size of the buffer previously in ui/string.c
+#define TMPBUF_SIZE (0xC)
+
 void agi_printf(u8 *var8, ...)
 {
 	va_list ap;
@@ -63,7 +66,9 @@ void agi_printf(u8 *var8, ...)
 	u8 *si;
 	s16 bx;
 	u8 al;
-	
+
+    char tmpbuf[TMPBUF_SIZE];
+
 	va_start(ap, var8);
 	
 	si = var8;
@@ -91,20 +96,20 @@ void agi_printf(u8 *var8, ...)
 					if (bx < 0)
 					{
 						format_char('-');
-						format_string_ax(  int_to_string(bx * -1)  );
+						format_string_ax( u16_to_str(tmpbuf, TMPBUF_SIZE, bx * -1)  );
 					}
 					else
-						format_string_ax(  int_to_string(bx)  );
+						format_string_ax( u16_to_str(tmpbuf, TMPBUF_SIZE, bx)  );
 					//bx += 2;
 					break;
 				
 				case 'u':		// unsigned decimal
-					format_string_ax(  int_to_string( (u16)va_arg(ap, int))  );
+					format_string_ax( u16_to_str(tmpbuf, TMPBUF_SIZE, (u16)va_arg(ap, int))  );
 					//bx += 2;
 					break;
 				
 				case 'x':		// hex number
-					format_string_ax(  int_to_hex_string( (u16)va_arg (ap, int))  );
+					format_string_ax(  u16_to_hex( tmpbuf, TMPBUF_SIZE, (u16)va_arg (ap, int))  );
 					//bx += 2;
 					break;
 				

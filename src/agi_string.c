@@ -228,7 +228,7 @@ u8 *cmd_get_num(u8 *c)
 	string_edit(temp4, 4, 4);
 	input_redraw();
 
-	state.var[*(c++)] = string_to_int(temp4);
+	state.var[*(c++)] = str_to_u16(temp4);
 	return c;
 }
 

@@ -1,11 +1,11 @@
 
-extern u16 string_to_int(u8 *string);
-extern u8 *int_to_string(u16 num);
-extern u8 *string_zero_pad(u8 *str, u16 pad_size);
-extern u8 *int_to_hex_string(u16 num);
-extern u8 *string_reverse(u8 *str);
-extern u8 *string_lower(u8 *str);
+extern u16 str_to_u16(const char *string);
+extern char *u16_to_str(char *out, int outlen, u16 num);
+extern char *string_zero_pad(char *out, int outlen, const char *str, u16 pad_size);
+extern char *u16_to_hex(char *out, int outlen, u16 num);
+extern char *string_reverse(char *str);
+extern char *string_lower(char *str);
 
-#ifndef RAD_LINUX
-extern u8 *strtok_r(char *newstring, char *delimiters, char **save_ptr);
+#ifdef __MINGW32__
+extern char *strtok_r(char *newstring, const char *delimiters, char **save_ptr);
 #endif

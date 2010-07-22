@@ -2,6 +2,7 @@
 #define agi_h_file
 
 // the only include file i should include in an include file
+#include <stdint.h>
 #include <SDL.h>
 
 //#define alloca __builtin_alloca
@@ -32,19 +33,12 @@ typedef struct list_struct LIST;
 typedef struct list_struct STACK;
 #endif
 
-
-
-typedef unsigned char	u8;
-typedef unsigned short	u16;
-typedef unsigned long	u32;
-typedef signed char		s8;
-typedef signed short		s16;
-typedef signed long		s32;
-
-#ifndef RAD_LINUX
-typedef unsigned int		uint;
-typedef signed int		sint;
-#endif
+typedef uint8_t     u8;
+typedef uint16_t    u16;
+typedef uint32_t    u32;
+typedef int8_t      s8;
+typedef int16_t     s16;
+typedef int32_t     s32;
 
 #define V00_ROOM0		0
 #define V01_OLDROOM		1

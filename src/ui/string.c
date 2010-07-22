@@ -44,12 +44,10 @@ These are implemented in the gnu library:
 
 #include "string.h"
 
-u8 string_buff[0xC];
-
 // atoi
-u16 string_to_int(u8 *string)
+u16 str_to_u16(const char *string)
 {
-	u8 *s;
+	char *s;
 	u16 num;
 	s = string;
 	while (*s == ' ')
@@ -60,57 +58,69 @@ u16 string_to_int(u8 *string)
 	return num;
 }
 
-u8 *int_to_string(u16 num)
+char *u16_to_str(char *out, int outlen, u16 num)
 {
 	u16 si;
-	u8 *di;
+	char *di;
 	
 	si = num;
-	di = string_buff;
+	di = out;
 	do
 	{
+        assert (di < (out+outlen));
 		*(di++) = (si % 10) + '0';
 		si = si / 10;
 	}
 	while (si != 0);
 	
+    assert (di < (out+outlen));
 	*di = 0;
-	return string_reverse(string_buff);
+	return string_reverse(out);
 }
 
 // eg "123" = "000000123" or something
-u8 *string_zero_pad(u8 *str, u16 pad_size)
+char *string_zero_pad(char *out, int outlen, const char *str, u16 pad_size)
 {
 	u16 size, str_size;
-	u8 temp[0xB];
-	
-	size = pad_size;
-	str_size = strlen(strcpy(temp, str));	// var8 into temp.. returns var8;
-	memset(string_buff, 0x30, 0xA);	// '0'
-	if (str_size > size)
+
+    assert (strlen(str) <= (outlen -1) );
+    assert (pad_size <= (outlen -1) );
+
+	memset(out, '0', outlen);	// '0'
+    // we ignore null byte cause we are copying
+    // the str verbatim
+
+	str_size = strlen(str);	// var8 into temp.. returns var8;
+
+	if (str_size > pad_size)
 		size = str_size;
-	strcpy(string_buff + size - str_size, temp);
-	return string_buff;
+    else
+        size = pad_size;
+    
+	strcpy(out + size - str_size, str);
+	return out;
 }
 
-u8 *hex_conv = "0123456789ABCDEF";
+char *hex_conv = "0123456789ABCDEF";
 
-u8 *int_to_hex_string(u16 num)
+char *u16_to_hex(char *out, int outlen, u16 num)
 {
-	u8 *si;
-	si = string_buff;
+	char *si = out;
 	
 	do
 	{
+        assert(si < (out+outlen));
 		*(si++) = hex_conv[num & 0xF];
 		num >>= 4;
 	} while (num != 0);
+
+    assert(si < (out+outlen));
 	*si = 0;
 	
-	return string_reverse(string_buff);
+	return string_reverse(out);
 }
 
-
+#if 0
 u8 *int_to_hex_string_v2(u16 num)
 {
 	u8 temp;
@@ -134,10 +144,11 @@ u8 *int_to_hex_string_v2(u16 num)
 	*si = 0;
 	return string_reverse(string_buff);
 }
+#endif
 
-u8 *string_reverse(u8 *str)
+char *string_reverse(char *str)
 {
-	u8 *si, *di;
+	u8 *si, *di;  
 	u8 temp;
 	
 	si = str;
@@ -150,11 +161,11 @@ u8 *string_reverse(u8 *str)
 		si++;
 		di--;
 	}
-	return str;
+    return str;
 }
 
 // this requires writable string constants maybe for some bits 'n pieces
-u8 *string_lower(u8 *str)
+char *string_lower(char *str)
 {
 	u8 *di;
 	di = str;
@@ -166,7 +177,7 @@ u8 *string_lower(u8 *str)
 	return str;
 }
 
-
+#if 0
 // find character
 // u8 *strchr
 u8 *sub4f96(u8 *given_string, u16 ch)
@@ -179,9 +190,11 @@ u8 *sub4f96(u8 *given_string, u16 ch)
 	else
 		return s;
 }
+#endif
 
-#ifndef RAD_LINUX
-u8 *strtok_r(char *newstring, char *delimiters, char **save_ptr)
+#ifdef __MINGW32__
+/* mingw32 does not define strtok_r */
+char *strtok_r(char *newstring, const char *delimiters, char **save_ptr)
 {
 	u8 *token_cur;
 	u8 *token_cur_end;

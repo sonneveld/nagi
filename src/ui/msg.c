@@ -287,6 +287,9 @@ u8 *str_wordwrap(u8 *msg, u8 *str, u16 w)
 
 //u16 stuff[] = {0, 0x0A, 0x20, 0x25};
 
+#define INTBUF_SIZE (0xC)
+#define ZEROBUF_SIZE (0xC)
+
 // add str to msg
 u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 {
@@ -298,6 +301,8 @@ u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 	u8 *source;
 	u8 *msg;
 
+    char intbuf[INTBUF_SIZE];
+    char zerobuf[ZEROBUF_SIZE];
 	
 	source = given_source;
 	msg = given_msg;
@@ -368,12 +373,12 @@ u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 						case 'v':	// variable
 							var_pad = 0;
 							source = str_to_int_ptr(source, &my_num);
-							my_str = int_to_string(state.var[my_num]);
+							my_str = u16_to_str(intbuf, INTBUF_SIZE, state.var[my_num]);
 							if (*source == '|')
 							{
 								source++;
 								source = str_to_int_ptr(source, &var_pad);
-								my_str = string_zero_pad(my_str, var_pad);
+								my_str = string_zero_pad(zerobuf, ZEROBUF_SIZE, my_str, var_pad);
 							}
 							msg = r_display1f93(my_str, msg);
 							break;
