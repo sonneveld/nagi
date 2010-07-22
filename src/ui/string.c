@@ -47,7 +47,7 @@ These are implemented in the gnu library:
 // atoi
 u16 str_to_u16(const char *string)
 {
-	char *s;
+	const char *s;
 	u16 num;
 	s = string;
 	while (*s == ' ')
@@ -58,7 +58,7 @@ u16 str_to_u16(const char *string)
 	return num;
 }
 
-char *u16_to_str(char *out, int outlen, u16 num)
+char *u16_to_str(char *out, size_t outlen, u16 num)
 {
 	u16 si;
 	char *di;
@@ -79,7 +79,7 @@ char *u16_to_str(char *out, int outlen, u16 num)
 }
 
 // eg "123" = "000000123" or something
-char *string_zero_pad(char *out, int outlen, const char *str, u16 pad_size)
+char *string_zero_pad(char *out, size_t outlen, const char *str, u16 pad_size)
 {
 	u16 size, str_size;
 
@@ -103,7 +103,7 @@ char *string_zero_pad(char *out, int outlen, const char *str, u16 pad_size)
 
 char *hex_conv = "0123456789ABCDEF";
 
-char *u16_to_hex(char *out, int outlen, u16 num)
+char *u16_to_hex(char *out, size_t outlen, u16 num)
 {
 	char *si = out;
 	
@@ -148,8 +148,8 @@ u8 *int_to_hex_string_v2(u16 num)
 
 char *string_reverse(char *str)
 {
-	u8 *si, *di;  
-	u8 temp;
+	char *si, *di;  
+	char temp;
 	
 	si = str;
 	di = str + strlen(si) - 1;
@@ -167,7 +167,7 @@ char *string_reverse(char *str)
 // this requires writable string constants maybe for some bits 'n pieces
 char *string_lower(char *str)
 {
-	u8 *di;
+    char *di;
 	di = str;
 	while (*di != 0)
 	{
