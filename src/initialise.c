@@ -124,6 +124,7 @@ void nagi_init()
 	printf("Copyright (C) 2000-2002 Nick Sonneveld & Gareth McMullin\n");
 	printf("Author: Nick Sonneveld (sonneveld@hotmail.com)\n");
 	printf("Linux port by RaDIaT1oN (g_mcm@mweb.co.za)\n\n");
+	printf("SDL 2.0 port by Ritchie Swann (ritchieswann@gmail.com)\n");
 	
 	printf("Based upon the Adventure Game Interpreter (AGI) v2.917 and v3.002.149\n");
 	printf("Copyright (C) 1984-1988 Sierra On-Line, Inc.\n");

@@ -5,11 +5,11 @@ OBJ += nagires.o
 #extra warnings for windows
 CFLAGS += -Wpointer-arith -Wcast-qual
 CFLAGS += -DNAGI_SDLENV
-CFLAGS += $(shell sdl-config --cflags) 
+CFLAGS += $(shell sdl2-config --cflags) 
 
 #MACH_WIN = -mwindows
 #LIB = -lmingw32 -lSDLmain -lSDL
-LIB = $(shell sdl-config --libs) -mno-cygwin
+LIB = $(shell sdl2-config --libs) -mno-cygwin
 
 #NAGI_NORM = ../bin/n.exe
 NAGI_NORM = n.exe

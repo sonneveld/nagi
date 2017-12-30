@@ -20,14 +20,14 @@ typedef struct agi_event_struct AGI_EVENT;
 
 struct key_struct
 {
-	SDLKey symbol;
+	SDL_Keycode symbol;
 	u16 value;
 };
 typedef struct key_struct KEY;
 
 
-u16 dir_keymap(SDL_keysym *keysym);
-AGI_EVENT *key_parse(SDL_keysym *keysym);
+u16 dir_keymap(SDL_Keysym *keysym);
+AGI_EVENT *key_parse(SDL_Keysym *keysym);
 extern AGI_EVENT *event_read(void);
 extern void events_init(void);
 extern u8 *cmd_unknown_173(u8 *c);

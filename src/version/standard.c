@@ -33,6 +33,8 @@
 #include "../sys/mem_wrap.h"
 #include "../sys/vstring.h"
 #include "../sys/sys_dir.h"
+#include "../sys/drv_video.h"
+#include "../sys/sdl_vid.h"
 #include "../base.h"
 #include "../ui/msg.h"
 #include "../list.h"
@@ -725,7 +727,9 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 	}
 	else
 		window_caption = "NAGI";
-	SDL_WM_SetCaption(window_caption, 0);
+	SDL_Window* window = vid_get_main_window();
+	if(window)
+		SDL_SetWindowTitle(window,window_caption);
 }
 
 

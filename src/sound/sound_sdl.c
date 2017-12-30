@@ -146,6 +146,8 @@ u32 tickz = 0;
 void sound_fill_buff(void *udata, Uint8 *stream, int len)
 {
 	int cur=0;
+
+	SDL_memset(stream,0,len);
 	
 	(void) udata;
 	while (cur < len)

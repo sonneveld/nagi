@@ -231,7 +231,7 @@ int pcm_out_sdl_open( int (*callback)(void *userdata, Uint8 *stream, int len), v
 {
 	SDL_CHAN chan;
 	SDL_CHAN *chan_new;
-	
+
 	pcm_out_sdl_lock();
 	
 	if (chan_list == 0)
@@ -312,6 +312,8 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 #if WRITE_TO_DISK
 	DATA *new_data;
 #endif
+
+	SDL_memset(stream,0,len);
 	
 	(void) userdata;
 	

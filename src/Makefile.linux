@@ -1,9 +1,9 @@
 include Makefile.common
 
 CFLAGS += -DRAD_LINUX -DRAD_WARN -Wno-pointer-sign -Wno-gnu-designator
-CFLAGS += $(shell sdl-config --cflags)
+CFLAGS += $(shell sdl2-config --cflags)
 
-LIB = $(shell sdl-config --libs)
+LIB = $(shell sdl2-config --libs)
 
 NAGI_NORM = ../bin/nagi
 
