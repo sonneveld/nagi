@@ -390,9 +390,13 @@ menu_loop:
 							return;
 						}
 						if( diTemp->next == si->head ) {
-							break;
+							menu_leave(si,di);
+							return;
 						}
 					}
+				} else {
+					menu_leave(si,di);
+					return;
 				}
 			}
 			break;
