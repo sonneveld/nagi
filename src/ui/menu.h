@@ -47,6 +47,7 @@ extern u8 *cmd_unknown_177(u8 *c);
 extern void menu_input(void);
 extern void menu_draw(MENU *var8);
 extern void menu_clear(MENU *var8, MENU_ITEM *vara);
+extern void menu_leave(MENU *si, MENU_ITEM *di);
 
 extern void menu_item_name_invert(MENU_ITEM *mi);
 extern void menu_name_invert(MENU *m);

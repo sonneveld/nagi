@@ -1,13 +1,11 @@
 include Makefile.common
 
-CFLAGS += -DRAD_LINUX -DRAD_WARN
+CFLAGS += -DRAD_LINUX -DRAD_WARN -Wno-pointer-sign -Wno-gnu-designator
 CFLAGS += $(shell sdl-config --cflags)
 
-#LIB = -lSDLmain -lSDL -lpthread
 LIB = $(shell sdl-config --libs)
 
-NAGI_NORM = ../bin/n.exe
-#NAGI_NORM = n.exe
+NAGI_NORM = ../bin/nagi
 
 all:	nagi
 
@@ -16,19 +14,8 @@ nagi:	$(NAGI_NORM)
 $(NAGI_NORM): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $@
 
-#cleanall: clean depclean
-
 clean:
 	$(RM) $(OBJ) $(NAGI_NORM) core
-
-#depclean:
-#	$(RM) $(OBJ:.o=.d)
-
-#%.d: %.c
-#	$(CC) -M -MG $(DEPFLAGS) $< | sed -e 's@ /[^ ]*@@g' -e 's@^\(.*\)\.o:@\1.d \1.o:@' > $@
-#sh depend.sh $(DEPFLAGS) $< > $@
-
-#include $(SRC:.c=.d)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

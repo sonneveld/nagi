@@ -17,7 +17,7 @@ R_Logic1364                      cseg     00001364 00000041
 R_Logic13A5                      cseg     000013A5 0000002F
 */
 
-#include <malloc.h>
+#include <stdlib.h>
 
 #include "../agi.h"
 
