@@ -14,6 +14,7 @@ extern void vid_free(void);
 extern void vid_lock(void);
 extern void vid_unlock(void);
 extern void vid_update(POS *pos, AGISIZE *size);
+extern void vid_resize(s32 x, s32 y);
 extern void vid_render(SDL_Surface* surface, const u32 x, const u32 y, const u32 w, const u32 h);
 extern void vid_palette_set(PCOLOUR *palette, u8 num);
 extern void vid_fill(POS *pos, AGISIZE *size, u32 colour);

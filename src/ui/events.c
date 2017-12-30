@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "../agi.h"
+#include "../base.h"
 #include "events.h"
 
 #include "../sys/mem_wrap.h"
@@ -280,6 +281,7 @@ AGI_EVENT *event_read(void)
 {
 	SDL_Event event;
 	AGI_EVENT *agi_event;
+	SDL_Window* window;
 	u8 c;
 	
 	agi_event = 0;
@@ -310,12 +312,18 @@ AGI_EVENT *event_read(void)
 				break;
 
 			case SDL_WINDOWEVENT:
-				if(SDL_WINDOWEVENT_CLOSE == event.window.event)
+				switch( event.window.event)
 				{
-					SDL_Window *main_window = vid_get_main_window();
-					if(SDL_GetWindowID(main_window) == event.window.windowID){
-						cmd_quit(&c);
-					}
+					case SDL_WINDOWEVENT_RESIZED:
+						vid_resize(event.window.data1,
+							event.window.data2);
+						break;
+					case SDL_WINDOWEVENT_CLOSE:
+						window = vid_get_main_window();
+						if(SDL_GetWindowID(window) == event.window.windowID){
+							cmd_quit(&c);
+						}
+						break;
 				}
 			
 				break;

@@ -77,11 +77,11 @@ void vid_display(AGISIZE *screen_size, int fullscreen_state)
 	
 	// SDL_HWSURFACE doesn't work too well for fullscreen
 	// or windibSDL_HWPALETTE 
-	sdl_flags = SDL_SWSURFACE;
+	sdl_flags = SDL_SWSURFACE | SDL_WINDOW_RESIZABLE;
 	if (fullscreen_state)
 		sdl_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
-	result = SDL_CreateWindowAndRenderer(screen_size->w, screen_size->h,
+	result = SDL_CreateWindowAndRenderer( screen_size->w, screen_size->h,
 		sdl_flags, &video_data.window, &video_data.renderer);
 
 	if(result < 0)
@@ -158,7 +158,6 @@ void vid_unlock()
 	SDL_UnlockSurface(video_data.surface);
 }
 
-
 // update a surface
 void vid_update(POS *pos, AGISIZE *size)
 {
@@ -175,6 +174,26 @@ void vid_update(POS *pos, AGISIZE *size)
 	
 	vid_render(surface, pos->x, pos->y, size->w, size->h);
 
+}
+
+// when resizing a window, make sure the aspect ratio is preserved
+void vid_resize(s32 x, s32 y)
+{
+	Uint32 format;
+	int access, texture_width, texture_height, window_width, window_height;
+	double ratio;
+
+	window_width = (int) x;
+	window_height = (int) y;
+	if(0 == SDL_QueryTexture(video_data.texture, &format, &access,
+		&texture_width, &texture_height))
+	{
+		SDL_Window *window = vid_get_main_window();
+		ratio = (double)texture_height / (double)texture_width;
+		window_height = window_width * ratio;
+		SDL_SetWindowSize(window, window_width, window_height);
+		vid_render(video_data.surface, 0, 0, texture_width, texture_height);
+	}
 }
 
 void vid_render(SDL_Surface *surface, const u32 x, const u32 y, const u32 w, const u32 h)
