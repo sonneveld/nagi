@@ -13,7 +13,6 @@
 /* OTHER headers	---	---	---	---	---	---	--- */
 
 #include "../base.h"
-#include "drv_video.h"
 
 #include "mem_wrap.h"
 

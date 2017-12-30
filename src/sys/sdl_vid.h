@@ -1,6 +1,8 @@
 #ifndef sdl_vid_h_file
 #define sdl_vid_h_file
 
+#include "drv_video.h"
+
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */

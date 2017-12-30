@@ -5,6 +5,7 @@
 #include "events.h"
 
 #include "../sys/mem_wrap.h"
+#include "../sys/sdl_vid.h"
 #include "../trace.h"
 
 
@@ -19,12 +20,10 @@ AGI_EVENT stop_ego = {2, 0};
 void events_init()
 {
 	SDL_EventState(SDL_SYSWMEVENT, SDL_IGNORE);
-	SDL_EventState(SDL_WINDOWEVENT, SDL_IGNORE);
 	SDL_EventState(SDL_USEREVENT, SDL_IGNORE);
 	SDL_EventState(SDL_JOYAXISMOTION, SDL_IGNORE);
 	SDL_EventState(SDL_JOYBALLMOTION, SDL_IGNORE);
 	SDL_EventState(SDL_JOYHATMOTION, SDL_IGNORE);
-	SDL_EventState(SDL_QUIT, SDL_IGNORE);
 	
 	events_clear();
 	
@@ -281,8 +280,10 @@ AGI_EVENT *event_read(void)
 {
 	SDL_Event event;
 	AGI_EVENT *agi_event;
+	u8 c;
 	
 	agi_event = 0;
+	c = 0;
 	
 	while (  (SDL_PollEvent(&event) != 0) && (agi_event == 0)  )
 	{
@@ -303,7 +304,22 @@ AGI_EVENT *event_read(void)
 			case SDL_MOUSEBUTTONDOWN:
 				agi_event = event_mouse_button(event.button.button,event.button.x,event.button.y);
 				break;
+
+			case SDL_QUIT:
+				cmd_quit(&c);
+				break;
+
+			case SDL_WINDOWEVENT:
+				if(SDL_WINDOWEVENT_CLOSE == event.window.event)
+				{
+					SDL_Window *main_window = vid_get_main_window();
+					if(SDL_GetWindowID(main_window) == event.window.windowID){
+						cmd_quit(&c);
+					}
+				}
 			
+				break;
+
 			default:
 				;
 		}
