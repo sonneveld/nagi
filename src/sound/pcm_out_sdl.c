@@ -19,11 +19,7 @@
 
 #if WRITE_TO_DISK
 
-#ifdef RAD_LINUX
 #include <unistd.h>
-#else
-#include <io.h>
-#endif
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -164,11 +160,7 @@ void pcm_out_sdl_shutdown(void)
 		int amount;
 		
 		cur = list_element_head(list_data);
-#ifndef RAD_LINUX
-		file_handle = open("sound.raw", O_BINARY|O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
-#else
 		file_handle = open("sound.raw", O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
-#endif
 		printf("handle = %d\n", file_handle);
 		while (cur)
 		{

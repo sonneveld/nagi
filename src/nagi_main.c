@@ -54,6 +54,12 @@ _Finish                          cseg     000002AE 00000015
 
 #include "list.h"
 
+#include "../config.h"
+
+#ifdef HAVE_WINDOWS_H
+#include <windows.h>
+#endif
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 int main(int argc, char *argv[]);
 
@@ -62,15 +68,26 @@ int main(int argc, char *argv[]);
 u16 old_score = 0;
 
 /* CODE	---	---	---	---	---	---	---	--- */
-
+#ifdef HAVE_WINDOWS_H
+// Stupid Windows does it differently to the rest of the world, as usual
+INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT showCmd )
+#else
 int main(int argc, char *argv[])
+#endif
 {
 	u16 snd_flag;
 	
 	(void) argc;	// SDL won't let me use these anyway
 	(void) argv;	// i think
 
+#ifdef HAVE_WINDOWS_H
+	LPSTR lpFilename[ MAX_PATH ];
+
+	GetModuleFileName( NULL, lpFilename, MAX_PATH );
+	dir_init( lpFilename );
+#else
 	dir_init(argv[0]);
+#endif
 	nagi_init();		// initialise NAGI
 	
 	standard_select_ng();

@@ -238,6 +238,7 @@ void menu_input()
 {
 	AGI_EVENT *temp2;
 	MENU *si;
+	MENU *siTemp;
 	MENU_ITEM *di;
 	MENU_ITEM *diTemp;
 	int hitMenu = 0;
@@ -354,20 +355,20 @@ menu_loop:
 			break;
 		case 10 :			// Mouse
 			hitMenu = font_size.w;
-			for( MENU *next = menu_head; ;
-				next = next->next ) {
-				hitMenuNext = hitMenu + ( ( strlen( next->name ) + 1 ) * font_size.w );
-				//printf( "%s %d %d %d\n", next->name, hitMenu, hitMenuNext, temp2->x );
+			for( siTemp = menu_head; ;
+				siTemp = siTemp->next ) {
+				hitMenuNext = hitMenu + ( ( strlen( siTemp->name ) + 1 ) * font_size.w );
+				//printf( "%s %d %d %d\n", siTemp->name, hitMenu, hitMenuNext, temp2->x );
 				if( temp2->x >= hitMenu &&
 					temp2->x < hitMenuNext && temp2->y < font_size.w ) {
 					menu_clear(si, di);
-					si = next;
+					si = siTemp;
 					di = si->cur;
 					break;
 				}
 				hitMenu = hitMenuNext;
 					
-				if( next->next == menu_head ) {
+				if( siTemp->next == menu_head ) {
 					hitMenu = 0;
 					break;
 				}

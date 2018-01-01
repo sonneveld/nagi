@@ -12,9 +12,7 @@
 //~ lower string for linux
 //~ unnamed union members
 
-#ifdef RAD_LINUX
 #include <unistd.h>
-#endif
 
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
@@ -72,10 +70,8 @@ struct agicrc_struct
 	u32 object;
 	u32 words;
 	
-#ifndef RAD_LINUX
 	union
 	{
-#endif
 		u32 dir_comb;
 		
 		struct
@@ -85,9 +81,7 @@ struct agicrc_struct
 			u32 view;
 			u32 snd;
 		} dir;
-#ifndef RAD_LINUX
 	};
-#endif
 
 	u32 vol[16];
 };

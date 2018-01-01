@@ -11,11 +11,6 @@ _RoomInit                        cseg     000012DE 00000015
 //~ warning placement
 
 /* BASE headers	---	---	---	---	---	---	--- */
-#ifndef RAD_LINUX
-#include <windows.h>
-#include <wincon.h>
-#endif
-
 #include "agi.h"
 #include "initialise.h"
 
@@ -69,6 +64,8 @@ _RoomInit                        cseg     000012DE 00000015
 
 #include "log.h"
 
+#include "../config.h"
+
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 // reads ini file and inits nagi
 void nagi_init(void);
@@ -88,7 +85,7 @@ void room_init(void);
 
 void nagi_init()
 {	
-#ifndef RAD_LINUX
+#ifdef  HAVE_WINDOWS_H
 	u8 env_value[50];
 #endif
 	INI *ini_nagi;
@@ -109,16 +106,6 @@ void nagi_init()
 	ini_nagi = ini_open("nagi.ini");
 	config_load(config_nagi, ini_nagi);
 	ini_close(ini_nagi);
-
-	// for the console window thingy
-#ifndef RAD_LINUX
-	if (c_nagi_console)
-	{
-		AllocConsole();
-		freopen("CON", "w", stdout);
-		freopen("CON", "w", stderr);
-	}
-#endif
 
 	printf("New Adventure Game Interpreter (NAGI) %s\n", NAGI_VERSION);
 	printf("Copyright (C) 2000-2002 Nick Sonneveld & Gareth McMullin\n");
@@ -141,7 +128,7 @@ void nagi_init()
 	if (strlen(c_sdl_drv_sound) > 30)
 		c_sdl_drv_sound[30] = 0;
 
-#ifndef RAD_LINUX
+#ifdef  HAVE_WINDOWS_H
 	sprintf(env_value, "SDL_VIDEODRIVER=%s", c_sdl_drv_video);
 	putenv(env_value);
 	// audio driver

@@ -4,26 +4,17 @@
 //~ RaDIaT1oN (2002-04-29):
 //~ lowercase file search routines for linux
 
-#ifdef RAD_LINUX
 #include <sys/types.h>
 #include <dirent.h>
-#else
-#include <io.h>
-#endif
 
 #define NAME_MAX 300
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 struct find_struct
 {
-#ifndef RAD_LINUX
-	struct _finddata_t winfile_info;
-	int handle;
-#else
 	DIR *dir;	
 	struct dirent *file;
 	char name[NAME_MAX];
-#endif
 };
 typedef struct find_struct FIND;
 	

@@ -1,0 +1,2 @@
+#!/bin/sh
+tar zcvf ../nagi-2.7.tar.gz --exclude .git --exclude .deps --exclude .dirstamp --exclude .gitignore --exclude autom4te.cache --exclude Makefile --exclude tarball --exclude config.h --exclude nagi --exclude "*.o" *

@@ -41,11 +41,6 @@ typedef signed char		s8;
 typedef signed short		s16;
 typedef signed long		s32;
 
-#ifndef RAD_LINUX
-typedef unsigned int		uint;
-typedef signed int		sint;
-#endif
-
 #define V00_ROOM0		0
 #define V01_OLDROOM		1
 #define V02_BORDER		2
@@ -335,10 +330,8 @@ struct view_struct
 	//u8 unknown29;		// 29	// like that
 	//u8 unknown2A;		// 2A
 	
-#ifndef RAD_LINUX
 	union
 	{
-#endif
 		struct	// move_ego move_obj
 		{
 			s16 x;		// 27
@@ -359,9 +352,7 @@ struct view_struct
 	
 		// reverse or end of loop
 		u8 loop_flag;		// 27
-#ifndef RAD_LINUX
 	};
-#endif
 };
 
 typedef struct view_struct VIEW;
@@ -401,10 +392,8 @@ struct conf_struct
 	u8 *key;
 	u8 *section;
 	u8 type;
-#ifndef RAD_LINUX
 	union
 	{
-#endif
 		struct
 		{
 			CONF_INT *ptr;
@@ -424,9 +413,7 @@ struct conf_struct
 			CONF_STRING *ptr;
 			CONF_STRING def;
 		} s;
-#ifndef RAD_LINUX
 	};
-#endif
 };
 typedef struct conf_struct CONF;
 

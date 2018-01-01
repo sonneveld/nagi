@@ -100,11 +100,7 @@ u16 print_err_code()
 	switch (errno)
 	{
 		default:
-#ifndef RAD_LINUX
-			_snprintf(str, sizeof(str), "Disk error:\n%s\n", strerror(errno) );
-#else
 			snprintf(str, sizeof(str), "Disk error:\n%s\n", strerror(errno) );
-#endif
 	}
 	strncat(str, "\nPress ENTER to try again.", sizeof(str)-strlen(str)-1);
 	strncat(str, "\nPress ESC to quit.", sizeof(str)-strlen(str)-1);

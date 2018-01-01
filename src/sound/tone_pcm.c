@@ -81,10 +81,8 @@ struct tone_chan_struct
 	
 	int gen_type;
 	int gen_type_prev;
-#ifndef RAD_LINUX
 	union
 	{
-#endif
 		
 #if USE_SAMPLE
 		struct 
@@ -105,9 +103,7 @@ struct tone_chan_struct
 			int feedback;		/* noise feedback mask */
 		} n;
 		
-#ifndef RAD_LINUX
 	};
-#endif
 	
 };
 typedef struct tone_chan_struct TONECHAN;
