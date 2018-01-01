@@ -213,9 +213,10 @@ void vid_render(SDL_Surface *surface, const u32 x, const u32 y, const u32 w, con
 		agi_exit();
 	}
 	assert(bigSurface);
+	SDL_SetClipRect( bigSurface, &rect );
 	// Blit the entire surface onto the texture - it's not optimal but meh
 	SDL_UpdateTexture(video_data.texture, NULL, bigSurface->pixels, bigSurface->pitch);
-	SDL_RenderCopy(video_data.renderer, video_data.texture, &rect, &rect );
+	SDL_RenderCopy(video_data.renderer, video_data.texture, NULL, NULL );
 	SDL_RenderPresent(video_data.renderer);
 	SDL_FreeSurface(bigSurface);
 }
