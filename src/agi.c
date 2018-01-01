@@ -53,9 +53,6 @@ CONF_INT c_game_dir_type = 1;	// RES TYPE
 u8 c_game_file_id[ID_SIZE+1] = "";// RES TYPE
 VSTRING *c_game_location = 0;
 
-// TODO: need to figure out if we're going to use one method or the other here:
-
-
 // for use in nagi.ini
 CONF config_nagi[] =
 {

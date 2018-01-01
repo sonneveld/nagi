@@ -330,29 +330,26 @@ struct view_struct
 	//u8 unknown29;		// 29	// like that
 	//u8 unknown2A;		// 2A
 	
-	union
+	struct	// move_ego move_obj
 	{
-		struct	// move_ego move_obj
-		{
-			s16 x;		// 27
-			s16 y;		// 28
-			u8 step_size;	// 29	// original stepsize
-			u8 flag;		// 2A
-		} move;
+		s16 x;		// 27
+		s16 y;		// 28
+		u8 step_size;	// 29	// original stepsize
+		u8 flag;		// 2A
+	} move;
 		
-		struct	// follow_ego
-		{
-			u8 step_size;	// 27
-			u8 flag;		// 28
-			u8 count;		// 29
-		} follow;
+	struct	// follow_ego
+	{
+		u8 step_size;	// 27
+		u8 flag;		// 28
+		u8 count;		// 29
+	} follow;
 		
-		// wander
-		u8 wander_count;	// 27
+	// wander
+	u8 wander_count;	// 27
 	
-		// reverse or end of loop
-		u8 loop_flag;		// 27
-	};
+	// reverse or end of loop
+	u8 loop_flag;		// 27
 };
 
 typedef struct view_struct VIEW;
@@ -392,28 +389,26 @@ struct conf_struct
 	u8 *key;
 	u8 *section;
 	u8 type;
-	union
+		
+	struct
 	{
-		struct
-		{
-			CONF_INT *ptr;
-			CONF_INT def;
-			s32 min;
-			s32 max;
-		} i;
+		CONF_INT *ptr;
+		CONF_INT def;
+		s32 min;
+		s32 max;
+	} i;
 		
-		struct
-		{
-			CONF_BOOL *ptr;
-			CONF_BOOL def;
-		} b;
+	struct
+	{
+		CONF_BOOL *ptr;
+		CONF_BOOL def;
+	} b;
 		
-		struct
-		{
-			CONF_STRING *ptr;
-			CONF_STRING def;
-		} s;
-	};
+	struct
+	{
+		CONF_STRING *ptr;
+		CONF_STRING def;
+	} s;
 };
 typedef struct conf_struct CONF;
 
