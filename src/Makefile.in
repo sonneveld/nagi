@@ -86,7 +86,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = nagi$(EXEEXT)
+bin_PROGRAMS = $(top_builddir)/bin/nagi$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -100,16 +100,16 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_nagi_OBJECTS = base.$(OBJEXT) debug.$(OBJEXT) decrypt.$(OBJEXT) \
-	flags.$(OBJEXT) nagi_main.$(OBJEXT) initialise.$(OBJEXT) \
-	agi_string.$(OBJEXT) new_room.$(OBJEXT) objects.$(OBJEXT) \
-	state_io.$(OBJEXT) agi.$(OBJEXT) state_info.$(OBJEXT) \
-	obj_show.$(OBJEXT) game_id.$(OBJEXT) cmd_misc.$(OBJEXT) \
-	trace.$(OBJEXT) config.$(OBJEXT) list.$(OBJEXT) log.$(OBJEXT) \
-	version/agi_crc.$(OBJEXT) version/standard.$(OBJEXT) \
-	res/res_dir.$(OBJEXT) res/res_vol.$(OBJEXT) \
-	res/res_lzw.$(OBJEXT) res/res_pic.$(OBJEXT) \
-	sys/script.$(OBJEXT) sys/error.$(OBJEXT) \
+am___top_builddir__bin_nagi_OBJECTS = base.$(OBJEXT) debug.$(OBJEXT) \
+	decrypt.$(OBJEXT) flags.$(OBJEXT) nagi_main.$(OBJEXT) \
+	initialise.$(OBJEXT) agi_string.$(OBJEXT) new_room.$(OBJEXT) \
+	objects.$(OBJEXT) state_io.$(OBJEXT) agi.$(OBJEXT) \
+	state_info.$(OBJEXT) obj_show.$(OBJEXT) game_id.$(OBJEXT) \
+	cmd_misc.$(OBJEXT) trace.$(OBJEXT) config.$(OBJEXT) \
+	list.$(OBJEXT) log.$(OBJEXT) version/agi_crc.$(OBJEXT) \
+	version/standard.$(OBJEXT) res/res_dir.$(OBJEXT) \
+	res/res_vol.$(OBJEXT) res/res_lzw.$(OBJEXT) \
+	res/res_pic.$(OBJEXT) sys/script.$(OBJEXT) sys/error.$(OBJEXT) \
 	sys/glob_sys.$(OBJEXT) sys/delay.$(OBJEXT) \
 	sys/memory.$(OBJEXT) sys/rand.$(OBJEXT) sys/endian.$(OBJEXT) \
 	sys/time.$(OBJEXT) sys/mem_wrap.$(OBJEXT) \
@@ -137,8 +137,9 @@ am_nagi_OBJECTS = base.$(OBJEXT) debug.$(OBJEXT) decrypt.$(OBJEXT) \
 	ui/events.$(OBJEXT) ui/cmd_input.$(OBJEXT) \
 	ui/controller.$(OBJEXT) ui/status.$(OBJEXT) ui/menu.$(OBJEXT) \
 	ui/mouse.$(OBJEXT) ui/list_box.$(OBJEXT)
-nagi_OBJECTS = $(am_nagi_OBJECTS)
-nagi_LDADD = $(LDADD)
+__top_builddir__bin_nagi_OBJECTS =  \
+	$(am___top_builddir__bin_nagi_OBJECTS)
+__top_builddir__bin_nagi_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -167,8 +168,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(nagi_SOURCES)
-DIST_SOURCES = $(nagi_SOURCES)
+SOURCES = $(__top_builddir__bin_nagi_SOURCES)
+DIST_SOURCES = $(__top_builddir__bin_nagi_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -311,28 +312,28 @@ top_srcdir = @top_srcdir@
 # sound files
 
 # user input
-nagi_SOURCES = base.c debug.c decrypt.c flags.c nagi_main.c \
-	initialise.c agi_string.c new_room.c objects.c state_io.c \
-	agi.c state_info.c obj_show.c game_id.c cmd_misc.c trace.c \
-	config.c list.c log.c version/agi_crc.c version/standard.c \
-	res/res_dir.c res/res_vol.c res/res_lzw.c res/res_pic.c \
-	sys/script.c sys/error.c sys/glob_sys.c sys/delay.c \
-	sys/memory.c sys/rand.c sys/endian.c sys/time.c sys/mem_wrap.c \
-	sys/sys_dir.c sys/vstring.c sys/ini_config.c sys/gfx.c \
-	sys/vid_render.c sys/sdl_vid.c sys/chargen.c sys/agi_file.c \
-	picture/pic_render.c picture/pic_res.c picture/sbuf_util.c \
-	picture/pic_add.c logic/arithmetic.c logic/cmd_table.c \
-	logic/logic_base.c logic/logic_eval.c logic/logic_execute.c \
-	view/view_base.c view/obj_update.c view/obj_blit.c \
-	view/obj_base.c view/obj_proximity.c view/obj_position.c \
-	view/obj_loop.c view/obj_motion.c view/obj_drawerase.c \
-	view/obj_cycle.c view/obj_motion_cmd.c view/obj_block.c \
-	view/obj_priority.c view/obj_picbuff.c sound/sound_base.c \
-	sound/pcm_out.c sound/pcm_out_sdl.c sound/sound_gen.c \
-	sound/tone.c sound/tone_pcm.c sys/drvpick.c ui/parse.c \
-	ui/window.c ui/printf.c ui/agi_text.c ui/string.c ui/msg.c \
-	ui/events.c ui/cmd_input.c ui/controller.c ui/status.c \
-	ui/menu.c ui/mouse.c ui/list_box.c
+__top_builddir__bin_nagi_SOURCES = base.c debug.c decrypt.c flags.c \
+	nagi_main.c initialise.c agi_string.c new_room.c objects.c \
+	state_io.c agi.c state_info.c obj_show.c game_id.c cmd_misc.c \
+	trace.c config.c list.c log.c version/agi_crc.c \
+	version/standard.c res/res_dir.c res/res_vol.c res/res_lzw.c \
+	res/res_pic.c sys/script.c sys/error.c sys/glob_sys.c \
+	sys/delay.c sys/memory.c sys/rand.c sys/endian.c sys/time.c \
+	sys/mem_wrap.c sys/sys_dir.c sys/vstring.c sys/ini_config.c \
+	sys/gfx.c sys/vid_render.c sys/sdl_vid.c sys/chargen.c \
+	sys/agi_file.c picture/pic_render.c picture/pic_res.c \
+	picture/sbuf_util.c picture/pic_add.c logic/arithmetic.c \
+	logic/cmd_table.c logic/logic_base.c logic/logic_eval.c \
+	logic/logic_execute.c view/view_base.c view/obj_update.c \
+	view/obj_blit.c view/obj_base.c view/obj_proximity.c \
+	view/obj_position.c view/obj_loop.c view/obj_motion.c \
+	view/obj_drawerase.c view/obj_cycle.c view/obj_motion_cmd.c \
+	view/obj_block.c view/obj_priority.c view/obj_picbuff.c \
+	sound/sound_base.c sound/pcm_out.c sound/pcm_out_sdl.c \
+	sound/sound_gen.c sound/tone.c sound/tone_pcm.c sys/drvpick.c \
+	ui/parse.c ui/window.c ui/printf.c ui/agi_text.c ui/string.c \
+	ui/msg.c ui/events.c ui/cmd_input.c ui/controller.c \
+	ui/status.c ui/menu.c ui/mouse.c ui/list_box.c
 all: all-am
 
 .SUFFIXES:
@@ -572,10 +573,13 @@ ui/status.$(OBJEXT): ui/$(am__dirstamp) ui/$(DEPDIR)/$(am__dirstamp)
 ui/menu.$(OBJEXT): ui/$(am__dirstamp) ui/$(DEPDIR)/$(am__dirstamp)
 ui/mouse.$(OBJEXT): ui/$(am__dirstamp) ui/$(DEPDIR)/$(am__dirstamp)
 ui/list_box.$(OBJEXT): ui/$(am__dirstamp) ui/$(DEPDIR)/$(am__dirstamp)
+$(top_builddir)/bin/$(am__dirstamp):
+	@$(MKDIR_P) $(top_builddir)/bin
+	@: > $(top_builddir)/bin/$(am__dirstamp)
 
-nagi$(EXEEXT): $(nagi_OBJECTS) $(nagi_DEPENDENCIES) $(EXTRA_nagi_DEPENDENCIES) 
-	@rm -f nagi$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(nagi_OBJECTS) $(nagi_LDADD) $(LIBS)
+$(top_builddir)/bin/nagi$(EXEEXT): $(__top_builddir__bin_nagi_OBJECTS) $(__top_builddir__bin_nagi_DEPENDENCIES) $(EXTRA___top_builddir__bin_nagi_DEPENDENCIES) $(top_builddir)/bin/$(am__dirstamp)
+	@rm -f $(top_builddir)/bin/nagi$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(__top_builddir__bin_nagi_OBJECTS) $(__top_builddir__bin_nagi_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -824,6 +828,7 @@ distclean-generic:
 	-rm -f version/$(am__dirstamp)
 	-rm -f view/$(DEPDIR)/$(am__dirstamp)
 	-rm -f view/$(am__dirstamp)
+	-test -z "$(top_builddir)/bin/$(am__dirstamp)" || rm -f $(top_builddir)/bin/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
