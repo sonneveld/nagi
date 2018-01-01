@@ -96,6 +96,11 @@ u16 system_keymap(SDL_Keysym *keysym)
 		if ((keysym->sym >= SDLK_a) && (keysym->sym <= SDLK_z)  )
 			return keysym->sym - SDLK_a + 0x01;	// ctrl a-z
 	}
+	else if ((keysym->mod & KMOD_SHIFT) != 0)
+	{
+		if ((keysym->sym >= SDLK_a) && (keysym->sym < SDLK_z) )
+			return keysym->sym - ('a' - 'A' );	// shift a-z
+	}
 	else
 	{
 		switch (keysym->sym)
@@ -114,7 +119,7 @@ u16 system_keymap(SDL_Keysym *keysym)
 			case SDLK_RETURN:
 				return 0x0D;
 			default:
-				return keysym->sym;
+				return keysym->sym & 0x7f;
 		}
 	}
 	return 0;
