@@ -77,11 +77,8 @@ int main(int argc, char *argv[])
 {
 	u16 snd_flag;
 	
-	(void) argc;	// SDL won't let me use these anyway
-	(void) argv;	// i think
-
 #ifdef HAVE_WINDOWS_H
-	LPSTR lpFilename[ MAX_PATH ];
+	char lpFilename[ MAX_PATH ];
 
 	GetModuleFileName( NULL, lpFilename, MAX_PATH );
 	dir_init( lpFilename );

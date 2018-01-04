@@ -1,7 +1,9 @@
 #ifndef agi_h_file
 #define agi_h_file
 
-// the only include file i should include in an include file
+// Important include files that just about every file uses
+#include <stdio.h>
+#include <stdlib.h>
 #include <SDL.h>
 
 //#define alloca __builtin_alloca
