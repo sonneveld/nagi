@@ -3,6 +3,7 @@
 .*.swp
 *.deps
 *.dirstamp
+.DS_Store
 Makefile
 autom4te.cache
 config.h
@@ -10,4 +11,5 @@ config.status
 config.cache
 config.log
 bin/nagi
-src/nagi
+bin/x86
+bin/x64
