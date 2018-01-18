@@ -221,9 +221,12 @@ u16 state_read_view(FILE *data_stream, VIEW *head, VIEW *tail)
 
 			// Check the saved game has the right object size
 			// (the original AGI saves pointers as 16-bit,
-			// NAGI will save whatever the operating system is)
+			// NAGI will save whatever the compiler decides is
+			// an appropriate pointer size and structure
+			// alignment)
 			// 'cause if they don't match you'll get out of sync
 			// and _bad things_ will happen.....
+			// (see http://www.catb.org/esr/structure-packing/)
 
 			expected_data_size = (tail-head) * sizeof(VIEW);
 			if(expected_data_size == data_size)
