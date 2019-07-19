@@ -144,7 +144,7 @@ u8 *cmd_restore_game(u8 *c)
 			fseek(rest_stream, 0x1F, SEEK_SET);
 			if (state_read(rest_stream, &state) == 0)
 				goto loc2630;
-			if (state_read(rest_stream, objtable) == 0)
+			if (state_read_view(rest_stream, objtable, objtable_tail) == 0)
 				goto loc2630;
 			if (state_read(rest_stream, inv_obj_table) == 0)
 				goto loc2630;
@@ -206,6 +206,40 @@ u16 state_read(FILE *data_stream, void *data_alloc)
 	return 0;
 }
 
+u16 state_read_view(FILE *data_stream, VIEW *head, VIEW *tail)
+{
+	u8 buff;
+	u16 data_size;
+	u16 expected_data_size;
+	
+	if ( fread(&buff, sizeof(u8), 1, data_stream) == 1)
+	{
+		data_size = buff;
+		if (fread(&buff, sizeof(u8), 1, data_stream) == 1)
+		{
+			data_size += buff << 8;
+
+			// Check the saved game has the right object size
+			// (the original AGI saves pointers as 16-bit,
+			// NAGI will save whatever the compiler decides is
+			// an appropriate pointer size and structure
+			// alignment)
+			// 'cause if they don't match you'll get out of sync
+			// and _bad things_ will happen.....
+			// (see http://www.catb.org/esr/structure-packing/)
+
+			expected_data_size = (tail-head) * sizeof(VIEW);
+			if(expected_data_size == data_size)
+			{
+				if ( fread(head, sizeof(u8), data_size, data_stream) == data_size)
+				{
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
 
 u8 *cmd_unknown_170(u8 *c)
 {

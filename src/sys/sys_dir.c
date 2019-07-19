@@ -74,12 +74,6 @@ blah/.nagi/agi-0xDA01FEAB/
 
 // pass it argv0 from the cmd line
 
-#ifdef WIN32
-#define SEP_CHAR	'\\'
-#else
-#define SEP_CHAR	'/'
-#endif
-
 void dir_init(u8 *argv0)
 {
 	memset(dir_preset, 0, sizeof(dir_preset));

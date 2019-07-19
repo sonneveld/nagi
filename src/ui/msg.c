@@ -410,9 +410,10 @@ u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 			msg = disp_last_word;
 			*msg = 0x0A;	// new line
 			
-			while ( *(msg++) == ' ');
-				
-			msg = strcpy(disp_last_word+1, msg);
+			while ( *(msg++) == ' ' );
+		
+			if(disp_last_word+1 != msg)	
+				msg = strcpy(disp_last_word+1, msg);
 			
 			disp_last_word = 0;
 			while ( *msg != 0)

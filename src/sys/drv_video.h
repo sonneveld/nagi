@@ -1,3 +1,6 @@
+#ifndef drv_video_h_file
+#define drv_video_h_file
+
 struct colour_struct
 {
 	u8 odd;	// al
@@ -51,3 +54,5 @@ struct font_struct
 	u32 line_size;  // size of each line in bytes
 };
 typedef struct font_struct FONT;
+
+#endif

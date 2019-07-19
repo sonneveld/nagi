@@ -84,7 +84,7 @@ void clock_init()
 	state.var[V13_HOURS] = 0;
 	state.var[V14_DAYS] = 0;
 	clock_state = 0;
-	agi_clock_thread = SDL_CreateThread(clock_thread, NULL);
+	agi_clock_thread = SDL_CreateThread(clock_thread, "nagi_clock", NULL);
 	if ( agi_clock_thread == NULL )
 	{
 		printf("Unable to create SDL thread!");

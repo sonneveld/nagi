@@ -19,11 +19,7 @@
 
 #if WRITE_TO_DISK
 
-#ifdef RAD_LINUX
 #include <unistd.h>
-#else
-#include <io.h>
-#endif
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -164,11 +160,7 @@ void pcm_out_sdl_shutdown(void)
 		int amount;
 		
 		cur = list_element_head(list_data);
-#ifndef RAD_LINUX
-		file_handle = open("sound.raw", O_BINARY|O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
-#else
 		file_handle = open("sound.raw", O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
-#endif
 		printf("handle = %d\n", file_handle);
 		while (cur)
 		{
@@ -231,7 +223,7 @@ int pcm_out_sdl_open( int (*callback)(void *userdata, Uint8 *stream, int len), v
 {
 	SDL_CHAN chan;
 	SDL_CHAN *chan_new;
-	
+
 	pcm_out_sdl_lock();
 	
 	if (chan_list == 0)
@@ -312,6 +304,8 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 #if WRITE_TO_DISK
 	DATA *new_data;
 #endif
+
+	SDL_memset(stream,0,len);
 	
 	(void) userdata;
 	

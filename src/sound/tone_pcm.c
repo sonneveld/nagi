@@ -81,10 +81,8 @@ struct tone_chan_struct
 	
 	int gen_type;
 	int gen_type_prev;
-#ifndef RAD_LINUX
 	union
 	{
-#endif
 		
 #if USE_SAMPLE
 		struct 
@@ -105,9 +103,7 @@ struct tone_chan_struct
 			int feedback;		/* noise feedback mask */
 		} n;
 		
-#ifndef RAD_LINUX
 	};
-#endif
 	
 };
 typedef struct tone_chan_struct TONECHAN;
@@ -296,6 +292,8 @@ int tone_pcm_callback(void *userdata, u8 *stream, int len)
 	TONE new_tone;
 	int fill_size;
 	int ret_val;
+
+	SDL_memset(stream,0,len);
 	
 	tpcm = (TONECHAN*)userdata;
 	stream_cur = (s16 *)stream;

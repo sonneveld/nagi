@@ -54,7 +54,6 @@ u8 menu_pos_y;
 // mouse stuff?
 u16 menu_drawn = 0;
 
-
 u8 *cmd_set_menu(u8 *c)
 {
 	u8 *m_name;
@@ -239,7 +238,11 @@ void menu_input()
 {
 	AGI_EVENT *temp2;
 	MENU *si;
+	MENU *siTemp;
 	MENU_ITEM *di;
+	MENU_ITEM *diTemp;
+	int hitMenu = 0;
+	int hitMenuNext = 0;
 	
 	if (state.menu_state == 0)
 		return;
@@ -278,18 +281,7 @@ menu_loop:
 					event_write(3, di->control);
 					// continue on to quit.. ie.. no break here
 				case 0x1B:	// esc
-					menu_clear(si, di);
-					text_attrib_pop();
-					pop_row_col();
-					if ( state.status_state != 0)
-						status_line_write();
-					else
-					{
-						window_line_clear(0,0);
-						ch_update();
-					}
-					menu_next_input = 0;
-					menu_drawn = 0;
+					menu_leave(si,di);
 					return;
 			}
 			break;
@@ -361,6 +353,54 @@ menu_loop:
 					;
 			}
 			break;
+		case 10 :			// Mouse
+			hitMenu = font_size.w;
+			for( siTemp = menu_head; ;
+				siTemp = siTemp->next ) {
+				hitMenuNext = hitMenu + ( ( strlen( siTemp->name ) + 1 ) * font_size.w );
+				//printf( "%s %d %d %d\n", siTemp->name, hitMenu, hitMenuNext, temp2->x );
+				if( temp2->x >= hitMenu &&
+					temp2->x < hitMenuNext && temp2->y < font_size.w ) {
+					menu_clear(si, di);
+					si = siTemp;
+					di = si->cur;
+					break;
+				}
+				hitMenu = hitMenuNext;
+					
+				if( siTemp->next == menu_head ) {
+					hitMenu = 0;
+					break;
+				}
+			}
+			if( hitMenu != 0 ) {
+				menu_draw(si);
+			} else {
+				menu_calc_size(si);
+				//printf( "%d %d %d\n", temp2->x, menu_pos_x << 2, ( menu_pos_x + menu_size_width ) << 2 );
+				if( temp2->x >= menu_pos_x << 2 &&
+					temp2->x < ( menu_pos_x + menu_size_width ) << 2 ) {
+					menu_item_name(di);
+					hitMenu = temp2->y / font_size.h;
+					for( diTemp = si->head; ; diTemp = diTemp->next ) {
+						if( diTemp->status && diTemp->row == hitMenu ) {
+							di = diTemp;
+							menu_item_name_invert( di );
+							event_write(3, di->control);
+							menu_leave(si, di);
+							return;
+						}
+						if( diTemp->next == si->head ) {
+							menu_leave(si,di);
+							return;
+						}
+					}
+				} else {
+					menu_leave(si,di);
+					return;
+				}
+			}
+			break;
 	}
 	
 	menu_cur = si;
@@ -368,6 +408,21 @@ menu_loop:
 	goto menu_loop;
 }
 
+void menu_leave( MENU *si, MENU_ITEM *di )
+{
+	menu_clear(si, di);
+	text_attrib_pop();
+	pop_row_col();
+	if ( state.status_state != 0)
+		status_line_write();
+	else
+	{
+		window_line_clear(0,0);
+		ch_update();
+	}
+	menu_next_input = 0;
+	menu_drawn = 0;
+}
 
 void menu_draw(MENU *m)
 {

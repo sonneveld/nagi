@@ -12,9 +12,7 @@
 //~ lower string for linux
 //~ unnamed union members
 
-#ifdef RAD_LINUX
 #include <unistd.h>
-#endif
 
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
@@ -33,6 +31,8 @@
 #include "../sys/mem_wrap.h"
 #include "../sys/vstring.h"
 #include "../sys/sys_dir.h"
+#include "../sys/drv_video.h"
+#include "../sys/sdl_vid.h"
 #include "../base.h"
 #include "../ui/msg.h"
 #include "../list.h"
@@ -70,10 +70,8 @@ struct agicrc_struct
 	u32 object;
 	u32 words;
 	
-#ifndef RAD_LINUX
 	union
 	{
-#endif
 		u32 dir_comb;
 		
 		struct
@@ -83,9 +81,7 @@ struct agicrc_struct
 			u32 view;
 			u32 snd;
 		} dir;
-#ifndef RAD_LINUX
 	};
-#endif
 
 	u32 vol[16];
 };
@@ -725,7 +721,9 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 	}
 	else
 		window_caption = "NAGI";
-	SDL_WM_SetCaption(window_caption, 0);
+	SDL_Window* window = vid_get_main_window();
+	if(window)
+		SDL_SetWindowTitle(window,window_caption);
 }
 
 

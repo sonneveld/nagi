@@ -28,7 +28,7 @@ Check it out!
   * [Nick Sonneveld][1] - Original author
   * [Gareth McMullin][2] - Linux port and tweaking
   * [Claudio Matsuoka][3] - has pledged to support the project.
-
+  * [Ritchie Swann][4] - OS X port, upgrade to SDL2 and various improvements
 
 ### License
 
@@ -38,7 +38,7 @@ if that is your wish.  You have to make sure you acknowledge my copyright and
 you cannot use my name as an endorsement of something else.  No warranties are
 implied either.
 
-The X11 license has been deemed to be [compatible with the GPL license][4].
+The X11 license has been deemed to be [compatible with the GPL license][5].
 For the full license, check out of the bottom of this page.
 
 
@@ -51,36 +51,19 @@ For the full license, check out of the bottom of this page.
 ### Build Requirements
 
 In order to successfully build NAGI from the provided source code, you will
-need:
+need a suitable toolchain and a suitable SDL2 library.
 
-  * gcc - [MinGW][5] is an excellent compiler for Windows
-  * Make - automating compilation  (available through cygwin or the ported
-mingw tools)
-  * Sed - an attempt at dependancy generation
-  * [SDL Library Headers][6] - NAGI links to this
-  * SDL Runtime Library - necessary to run NAGI.  Usually is provided with SDL
-Library
-
+Windows - MinGW / MSYS (www.mingw.org/wiki/msys) provides a suitable toolset
+MacOS - use MacPorts (www.macports.org)
+Linux - most distributions have some way of getting SDL2 installed. See below
 
 ### How to Build
 
-Make sure SDL include files are available using #include <sdl/sdl.h>
+ * Arch Linux, MinGW : sudo pacman -S libsdl2-dev 
+ * Debian Linux : sudo apt-get install libsdl2-dev
+ * MacPorts : sudo port install libsdl2
 
-The mingw tools, sed and make will need to be in the system path.  Depending
-on the operation system you need to type in:
-
-  * "make -f Makefile.win"
-  * "make -f Makefile.linux"
-
-For Windows (since Linux version only has one build)
-
-  * "make -f xx" - compile NAGI and NAGI-console
-  * "make -f xx nagi" - compile NAGI
-  * "make -f xx nagi-console" - compile NAGI with console support
-
-All files are produced in a directory called "../bin".  This is easily changed
-in the makefile.
-
+Then : ./configure ; make ; make install
 
 ### Suggestions
 
@@ -142,7 +125,7 @@ The license in full: (applies to all source code)
 
     COPYRIGHT AND PERMISSION NOTICE
 
-    Copyright (c) 2001, 2001 Nick Sonneveld
+    Copyright (c) 2001 - 2017 Nick Sonneveld, Gareth McMullin, Ritchie Swann
 
     All rights reserved.
 
@@ -171,7 +154,7 @@ The license in full: (applies to all source code)
     or other dealings in this Software without prior written authorization
     of the copyright holder.
 
-[Nick Sonneveld][7]
+[Nick Sonneveld][6]
 
 
 
@@ -182,11 +165,9 @@ The license in full: (applies to all source code)
 
    [3]: mailto:claudio.at.helllabs.org
 
-   [4]: http://www.gnu.org/licenses/license-list.html
+   [4]: mailto:ritchieswann@gmail.com
 
-   [5]: http://www.mingw.org
+   [5]: http://www.gnu.org/licenses/license-list.html
 
-   [6]: http://www.libsdl.org/
-
-   [7]: mailto:sonneveld.at.hotmail.com
+   [6]: mailto:sonneveld.at.hotmail.com
 

@@ -13,13 +13,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef RAD_LINUX
 #include <sys/types.h>
 #include <dirent.h>
 #include <string.h>
-#else
-#include <io.h>
-#endif
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"
@@ -48,13 +44,6 @@
 
 u8 *find_first(FIND *token, const u8 *name_const)
 {
-#ifndef RAD_LINUX
-	token->handle = _findfirst(name, &token->winfile_info);
-	if (token->handle != -1)
-		return token->winfile_info.name;
-	else 
-		return 0;
-#else
 	u8 *name = strdupa(name_const);
 	token->dir = opendir(".");
 	strcpy(token->name, name);
@@ -77,17 +66,10 @@ u8 *find_first(FIND *token, const u8 *name_const)
 	}
 	
 	return NULL;
-#endif
 }
 
 u8 *find_next(FIND *token)
 {
-#ifndef RAD_LINUX
-	if (_findnext(token->handle, &token->winfile_info) == 0)
-		return token->winfile_info.name;
-	else
-		return 0;
-#else
 	while((token->file = readdir(token->dir))) {
 		char *tok, *found;
 		
@@ -106,25 +88,18 @@ u8 *find_next(FIND *token)
 	}
 	
 	return NULL;
-#endif
 }
 
 void find_close(FIND *token)
 {
-#ifndef RAD_LINUX
-	if (token->handle != -1)
-		_findclose(token->handle);
-#else
 	if(token->dir) closedir(token->dir);
 	token->dir = NULL;
-#endif
 }
 
 
 
 FILE *fopen_nocase(const u8 *name)
 {
-#ifdef RAD_LINUX
 	DIR *dir;
 	struct dirent *fileent;
 	FILE *ret;
@@ -149,9 +124,6 @@ FILE *fopen_nocase(const u8 *name)
 	
 	closedir(dir);
 	return NULL;
-#else
-	return fopen(name, "rb");
-#endif
 }
 
 

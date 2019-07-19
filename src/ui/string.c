@@ -180,33 +180,3 @@ u8 *sub4f96(u8 *given_string, u16 ch)
 		return s;
 }
 
-#ifndef RAD_LINUX
-u8 *strtok_r(char *newstring, char *delimiters, char **save_ptr)
-{
-	u8 *token_cur;
-	u8 *token_cur_end;
-	u8 *token_next;
-	
-	assert(save_ptr != 0);
-	assert(delimiters != 0);
-	
-	if (newstring != 0)
-		token_cur = newstring;
-	else
-		token_cur = *save_ptr;
-	
-	if (token_cur != 0)
-	{
-		token_cur_end = token_cur + strcspn(token_cur, delimiters);
-		token_next = token_cur_end + strspn(token_cur_end, delimiters);
-	
-		if (*token_next == '\0')
-			token_next = 0;
-		
-		*token_cur_end = '\0';
-		*save_ptr = token_next;
-	}
-	
-	return token_cur;
-}
-#endif
