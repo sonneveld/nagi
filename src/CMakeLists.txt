@@ -234,6 +234,7 @@ target_sources(nagi
 
 target_link_libraries(nagi PRIVATE 
     SDL2::SDL2
+    SDL2::SDL2main
 )
 
 set_target_properties(nagi PROPERTIES

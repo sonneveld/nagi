@@ -26,6 +26,8 @@ _Finish                          cseg     000002AE 00000015
 #include <stdio.h>
 #include <setjmp.h>
 
+#include "SDL.h"
+
 /* OTHER headers	---	---	---	---	---	---	--- */
 #include "initialise.h"
 #include "flags.h"
@@ -55,9 +57,6 @@ _Finish                          cseg     000002AE 00000015
 #include "list.h"
 
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 int main(int argc, char *argv[]);
@@ -67,12 +66,7 @@ int main(int argc, char *argv[]);
 u16 old_score = 0;
 
 /* CODE	---	---	---	---	---	---	---	--- */
-#ifdef _WIN32
-// Stupid Windows does it differently to the rest of the world, as usual
-INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT showCmd )
-#else
 int main(int argc, char *argv[])
-#endif
 {
 	u16 snd_flag;
 	
