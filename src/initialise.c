@@ -64,7 +64,6 @@ _RoomInit                        cseg     000012DE 00000015
 
 #include "log.h"
 
-#include "../config.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 // reads ini file and inits nagi
@@ -85,7 +84,7 @@ void room_init(void);
 
 void nagi_init()
 {	
-#ifdef  HAVE_WINDOWS_H
+#ifdef  _WIN32
 	u8 env_value[50];
 #endif
 	INI *ini_nagi;
@@ -128,7 +127,7 @@ void nagi_init()
 	if (strlen(c_sdl_drv_sound) > 30)
 		c_sdl_drv_sound[30] = 0;
 
-#ifdef  HAVE_WINDOWS_H
+#ifdef  _WIN32
 	sprintf(env_value, "SDL_VIDEODRIVER=%s", c_sdl_drv_video);
 	putenv(env_value);
 	// audio driver

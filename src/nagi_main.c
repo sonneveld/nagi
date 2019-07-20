@@ -54,9 +54,8 @@ _Finish                          cseg     000002AE 00000015
 
 #include "list.h"
 
-#include "../config.h"
 
-#ifdef HAVE_WINDOWS_H
+#ifdef _WIN32
 #include <windows.h>
 #endif
 
@@ -68,7 +67,7 @@ int main(int argc, char *argv[]);
 u16 old_score = 0;
 
 /* CODE	---	---	---	---	---	---	---	--- */
-#ifdef HAVE_WINDOWS_H
+#ifdef _WIN32
 // Stupid Windows does it differently to the rest of the world, as usual
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT showCmd )
 #else
@@ -77,7 +76,7 @@ int main(int argc, char *argv[])
 {
 	u16 snd_flag;
 	
-#ifdef HAVE_WINDOWS_H
+#ifdef _WIN32
 	char lpFilename[ MAX_PATH ];
 
 	GetModuleFileName( NULL, lpFilename, MAX_PATH );
