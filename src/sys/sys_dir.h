@@ -17,7 +17,7 @@ void vstring_getcwd(VSTRING *buff);
 extern int dir_exists(u8 *d_name);
 
 
-extern void dir_init(u8 *argv0);
+extern void dir_init(int argc, char *argv[]);
 extern void dir_shutdown(void);
 extern void dir_preset_set(int preset_id, u8 *dir);
 extern void dir_preset_set_cwd(int preset_id);

@@ -26,7 +26,7 @@
 
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
-void dir_init(u8 *argv0);
+void dir_init(int argc, char *argv[]);
 void dir_shutdown(void);
 void dir_preset_set(int preset_id, u8 *dir);
 void dir_preset_set_cwd(int preset_id);
@@ -72,16 +72,31 @@ blah/.nagi/agi-0xDA01FEAB/
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
-// pass it argv0 from the cmd line
 
-void dir_init(u8 *argv0)
+// Configure preset paths
+// DIR_PRESET_ORIG should point towards the current directory (or first cmdline arg)
+// DIR_PRESET_NAGI should point towards where the nagi binary is stored, to find config files.
+// NOTE: these paths have to be absolute for now.
+void dir_init(int argc, char *argv[])
 {
 	memset(dir_preset, 0, sizeof(dir_preset));
 	
 	// set orig directory
+
+	// if directory is passed in, pretend nagi was run from that directory
+    if (argc >= 2) {
+		int chdirres = chdir(argv[1]);
+		if (chdirres != 0) {
+			printf("WARNING: Could not change directory to %s\n", argv[1]);
+		}
+	}
 	dir_preset_set_cwd(DIR_PRESET_ORIG);
-	
+
 	// set nagi main
+	char *argv0 = 0;
+	if (argc >= 1) {
+		argv0 = argv[0];
+	}
 	if ((argv0 != 0) && (argv0[0] != 0))
 	{
 		u8 *path_cpy;
@@ -161,10 +176,16 @@ u8 *dir_preset_get(int preset_id)
 
 int dir_preset_change(int preset_id)
 {
+	int result = -1;
 	if (dir_preset[preset_id] != 0)
 		if (dir_preset[preset_id]->data != 0)
-			return chdir(dir_preset[preset_id]->data);
-	return -1;
+			result = chdir(dir_preset[preset_id]->data);
+
+	if (result == -1) {
+		printf("WARNING: Could not change directory to %s\n", dir_preset[preset_id]->data);
+	}
+
+	return result;
 }
 
 

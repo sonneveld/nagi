@@ -70,14 +70,8 @@ int main(int argc, char *argv[])
 {
 	u16 snd_flag;
 	
-#ifdef _WIN32
-	char lpFilename[ MAX_PATH ];
+	dir_init(argc, argv);
 
-	GetModuleFileName( NULL, lpFilename, MAX_PATH );
-	dir_init( lpFilename );
-#else
-	dir_init(argv[0]);
-#endif
 	nagi_init();		// initialise NAGI
 	
 	standard_select_ng();
