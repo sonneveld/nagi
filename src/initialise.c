@@ -144,7 +144,7 @@ void nagi_init()
 #endif
 
 	//SDL_INIT_EVENTTHREAD SDL_INIT_AUDIO|
-	if ( SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0 )
+	if ( SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0 )
 	{
 		printf("Unable to init SDL: %s\n", SDL_GetError());
 		exit(1);
