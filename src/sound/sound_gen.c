@@ -45,7 +45,7 @@ typedef struct sndgen_channel_struct SNDGEN_CHAN;
 
 // "fade out" or possibly "dissolve"
 // v2.9xx
-s8 dissolve_data_v2[] =
+static s8 dissolve_data_v2[] =
 {
 	-2, -3, -2, -1, 0x00, 0x00, 0x01, 0x01, 0x01,
 	0x01, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
@@ -59,7 +59,7 @@ s8 dissolve_data_v2[] =
 }; 
 
 // v3
-s8 dissolve_data_v3[] =
+static s8 dissolve_data_v3[] =
 {
 -2, -3, -2, -1,
 0, 0, 0, 0, 0, 
@@ -81,31 +81,36 @@ s8 dissolve_data_v3[] =
 
 
 //u8 channels_left = 0;
-SNDGEN_CHAN channel[CHAN_MAX];
+static SNDGEN_CHAN channel[CHAN_MAX];
 
+// set when sndgen_init ran successfully (extra check before trying to shutdown)
+static int sndgen_initialised = 0;
 		
 /* CODE	---	---	---	---	---	---	---	--- */
 
 void sndgen_init(void)
 {
-	if (c_snd_enable)
-	{
-		// init tone_gen
-		if (tone_init())
-			c_snd_enable = 0;
-		else
-			tone_state_set(0);
+	if (!c_snd_enable) { return; }
+
+	// init tone_gen
+	if (tone_init() != 0) {
+		c_snd_enable = 0;
+		return;
 	}
+
+	tone_state_set(0);
+	sndgen_initialised = 1;
 }
 
 void sndgen_shutdown(void)
 {
 	// shutdown tone_gen
-	if (c_snd_enable)
-	{
-		sndgen_stop();
-		tone_shutdown();
-	}
+	if (!c_snd_enable) { return; }
+	if (!sndgen_initialised) { return; }
+
+	sndgen_stop();
+	tone_shutdown();
+	sndgen_initialised = 0;
 }
 
 void sndgen_play(SOUND *snd)
@@ -146,7 +151,8 @@ void sndgen_play(SOUND *snd)
 	else
 	{
 		flag_set(sound_flag);
-	}}
+	}
+}
 
 
 void sndgen_kill_thread(void)
@@ -171,11 +177,12 @@ void sndgen_stop(void)
 		tone_lock();
 		sndgen_kill_thread();
 		tone_unlock();
-	}}
+	}
+}
 
 
 
-int volume_calc(SNDGEN_CHAN *chan)
+static int volume_calc(SNDGEN_CHAN *chan)
 {
 	s8 al, dissolve_value;
 	
