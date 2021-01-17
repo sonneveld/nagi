@@ -4,7 +4,8 @@
 // Important include files that just about every file uses
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL.h>
+
+#include "SDL.h"
 
 //#define alloca __builtin_alloca
 
