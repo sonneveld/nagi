@@ -91,7 +91,7 @@ int font_check(AGISIZE *size)
 
 FILE *font_open(AGISIZE *needed)
 {
-	u8 *token, *running;
+	char *token, *running;
 	u8 *list;
 	AGISIZE size;
 	
@@ -101,12 +101,18 @@ FILE *font_open(AGISIZE *needed)
 	FILE *cur_file;
 	int cur_scale;
 
+	char *base_path = SDL_GetBasePath();
+
 	list = strdupa(c_vid_fonts_bitmap);
 	token = strtok_r(list, ";", (char**)&running);
 	while (token != 0)
 	{
+        size_t token_full_len = snprintf(NULL, 0, "%s/%s", base_path, token);
+		char *token_full = malloc(token_full_len + 1);
+        snprintf(token_full, token_full_len + 1, "%s/%s", base_path, token);
+        
 		//check token
-		cur_file = fopen(token, "rb");
+		cur_file = fopen(token_full, "rb");
 		if (cur_file != 0)
 		{
 			// FIXME .. doesn't check size
@@ -130,12 +136,16 @@ FILE *font_open(AGISIZE *needed)
 			if (cur_file != 0)
 				fclose(cur_file);
 		}
+
+		free(token_full);
 		token = strtok_r(0, ";", (char**)&running);
 	}
 	
 	// FIX ME
 	c_vid_scale = pref_scale;
 	
+	SDL_free(base_path);
+
 	return pref_file;
 }
 
