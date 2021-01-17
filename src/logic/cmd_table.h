@@ -1,8 +1,9 @@
-
+#ifndef SRC_LOGIC_CMD_TABLE
+#define SRC_LOGIC_CMD_TABLE
 
 struct func_struct
 {
-	u8 *func_name;
+	const char *func_name;
 	void *func;
 	u8 param_total;		// 2
 	u8 param_flag;		// 3
@@ -34,3 +35,4 @@ FUNC cmd_table[CMD_MAX + 1];
 extern u8 *cmd_do_nothing(u8 *code);
 extern u8 cmd_ret_false(void);
 
+#endif /* SRC_LOGIC_CMD_TABLE */

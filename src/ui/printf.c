@@ -24,20 +24,17 @@ _FormatChar                      cseg     0000245E 00000014
 #include "../sys/chargen.h"
 
 // void *format_ip = 0;
-u8 *format_strbuff = 0;
-u8 format_to_string = 0;	// boolean value
+static u8 *format_strbuff = 0;
+static u8 format_to_string = 0;	// boolean value
 
-/*
-?? sprintf()
-{
-	asdfkljasdlfk
-}
+static u8 *di;	// sprintf string
 
-*/
+static void format_string_ax(const u8 *str);
+static void format_char(u8 ch);
 
-u8 *di;	// sprintf string
 
-int charCount(char *str)
+#ifdef AGI_UNUSED
+static int charCount(const char *str)
 {
   int count;
 
@@ -55,12 +52,13 @@ int charCount(char *str)
 
   return count;
 }
+#endif
 
-void agi_printf(u8 *var8, ...)
+void agi_printf(const u8 *var8, ...)
 {
 	va_list ap;
 	
-	u8 *si;
+	const u8 *si;
 	s16 bx;
 	u8 al;
 	
@@ -129,8 +127,7 @@ void agi_printf(u8 *var8, ...)
 	ch_update();
 }
 
-
-void format_string_ax(u8 *str)
+static void format_string_ax(const u8 *str)
 {
 	u8 al;
 	
@@ -142,11 +139,10 @@ void format_string_ax(u8 *str)
 	}
 }
 
-void format_char(u8 ch)
+static void format_char(u8 ch)
 {
 	if (format_to_string != 0)
 		*(di++) = ch;
 	else
 		window_put_char(ch);
 }
-

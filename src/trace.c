@@ -53,13 +53,13 @@ void trace_scroll(void);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
-u16 trace_top_given = 1;
-u16 trace_height = 0x0F;
+static u16 trace_top_given = 1;
+static u16 trace_height = 0x0F;
 // this is ONLY accessed by trace.clear...  used by cga/hgc???
-u16 trace_unknown = 0xFFFF;
+static u16 trace_unknown = 0xFFFF;
 // determines if said eval cmd was called
 // 1=said 0=other
-u16 said_state = 0;
+static u16 said_state = 0;
 // trace state, 0=uninit 1=init'd... 2=??
 u16 trace_state = 0;
 // number of logic that contains cmd text
@@ -67,23 +67,23 @@ u16 trace_logic = 0;
 
 // text positions of the trace window
 // trace_top
-u16 trace_top = 0;
+static u16 trace_top = 0;
 // trace_left
-u16 trace_left = 0;
+static u16 trace_left = 0;
 // trace_bottom
-u16 trace_bottom = 0;
+static u16 trace_bottom = 0;
 // trace_right
-u16 trace_right = 0;
+static u16 trace_right = 0;
 
 // pic buff positions of the trace window
 // pos of trace bg window
 //u16 word_1d12 = 0;
-u8 trace_win_x = 0;
-u8 trace_win_y = 0;
+static u8 trace_win_x = 0;
+static u8 trace_win_y = 0;
 // dimensions pos of trace bg window
 //u16 word_1d14 = 0;
-u8 trace_win_w = 0;
-u8 trace_win_h = 0;
+static u8 trace_win_w = 0;
+static u8 trace_win_h = 0;
 
 // set to 1 whenever a logic.call is umm.. called
 // ONLY LOGIC 0!!
