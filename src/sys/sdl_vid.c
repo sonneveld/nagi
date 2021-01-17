@@ -81,12 +81,19 @@ void vid_display(AGISIZE *screen_size, int fullscreen_state)
 	if (fullscreen_state)
 		sdl_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
-	result = SDL_CreateWindowAndRenderer( screen_size->w, screen_size->h,
-		sdl_flags, &video_data.window, &video_data.renderer);
-
-	if(result < 0)
+	video_data.window = SDL_CreateWindow("NAGI", 0,0, screen_size->w, screen_size->h,
+		sdl_flags);
+	if(!video_data.window)
 	{
 		printf("Unable to create video window: %s\n", SDL_GetError());
+		agi_exit();
+	}
+
+	video_data.renderer = SDL_CreateRenderer(video_data.window, -1, SDL_RENDERER_ACCELERATED);
+
+	if(!video_data.renderer)
+	{
+		printf("Unable to create video renderer: %s\n", SDL_GetError());
 		agi_exit();
 	}
 
