@@ -9,61 +9,39 @@ big endian is motorola
 
 */
 
+#include <assert.h>
+
 #include "../agi.h"
 
 // byte-order support
 #include "endian.h"
 
+uint16_t load_le_16(const void *data)
+{
+	assert(data != 0);
+	const uint8_t *data8 = (uint8_t *)data;
+	return (data8[1]<<8) | data8[0];
+}
 
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
-	// ----------- little endian -------------------------------------------------------
-	u16 load_le_16(void *data)
-	{
-		return *(  (u16 *)data  );
-	}
-	
-	u16 load_be_16(void *data)
-	{
-		return ((u8 *)data)[1] |  (     ((u16)((u8 *)data)[0]) << 8  );
-	}
-	
-	
-	void store_le_16(void *data, u16 value)
-	{
-		 *(  (u16 *)data  ) = value;
-	}
-	
-	void store_be_16(void *data, u16 value)
-	{
-		((u8 *)data)[1] = value & 0xFF;
-		((u8 *)data)[0] = (value & 0xFF00) >> 8;
-	}
-	
-#else
-	
-	// ----------- big endian -------------------------------------------------------
-	#warning big endian is untested..  I hope it works
-	u16 load_le_16(void *data)
-	{
-		return ((u8 *)data)[0] |  (   ((u16)((u8 *)data)[1]) << 8  );
-	}
-	
-	u16 load_be_16(void *data)
-	{
-		return *(  (u16 *)data  );
-	}
-	
-	
-	void store_le_16(void *data, u16 value)
-	{
-		((u8 *)data)[0] = value & 0xFF;
-		((u8 *)data)[1] = (value & 0xFF00) >> 8;
-	}
-	
-	void store_be_16(void *data, u16 value)
-	{
-		*(  (u16 *)data  ) = value;
-	
-	}
-#endif
+uint16_t load_be_16(const void *data)
+{
+	assert(data != 0);
+	const uint8_t *data8 = (uint8_t *)data;
+	return (data8[0]<<8) | data8[1];
+}
 
+void store_le_16(void *data, uint16_t value)
+{
+	assert(data != 0);
+	uint8_t *data8 = (uint8_t *)data;
+	data8[0] = value & 0xFF;
+	data8[1] = (value >> 8) & 0xFF;
+}
+
+void store_be_16(void *data, uint16_t value)
+{
+	assert(data != 0);
+	uint8_t *data8 = (uint8_t *)data;
+	data8[0] = (value >> 8) & 0xFF;
+	data8[1] = value & 0xFF;
+}
