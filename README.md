@@ -59,11 +59,11 @@ Linux - most distributions have some way of getting SDL2 installed. See below
 
 ### How to Build
 
- * Arch Linux, MinGW : sudo pacman -S libsdl2-dev 
- * Debian Linux : sudo apt-get install libsdl2-dev
- * MacPorts : sudo port install libsdl2
+ * Arch Linux, MinGW : sudo pacman -S libsdl2-dev cmake
+ * Debian Linux : sudo apt-get install libsdl2-dev cmake
+ * MacPorts : brew install sdl2 cmake
 
-Then : ./configure ; make ; make install
+Then : mkdir build ; cd build; cmake .. ; make
 
 ### Suggestions
 
