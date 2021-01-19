@@ -1,5 +1,5 @@
-#ifndef config_h_file
-#define config_h_file
+#ifndef NAGI_CONFIG_H
+#define NAGI_CONFIG_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 
@@ -13,5 +13,4 @@ extern void config_load(CONF *config, INI *ini);
 extern void config_print(CONF *config);
 extern void config_unload(CONF *config);
 
-
-#endif
+#endif /* NAGI_CONFIG_H */

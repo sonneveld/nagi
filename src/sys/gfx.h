@@ -1,5 +1,5 @@
-#ifndef gfx_h_file
-#define gfx_h_file
+#ifndef NAGI_SYS_GFX_H
+#define NAGI_SYS_GFX_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -39,4 +39,4 @@ extern void gfx_clear(void);
 extern void gfx_picbuff_update(void);
 extern void gfx_reinit(void);
 
-#endif
+#endif /* NAGI_SYS_GFX_H */

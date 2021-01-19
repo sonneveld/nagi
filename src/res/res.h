@@ -1,3 +1,5 @@
+#ifndef NAGI_RES_RES_H
+#define NAGI_RES_RES_H
 
 // res_dir.c
 
@@ -39,3 +41,5 @@ u16 lzw_decompress(FILE *cfile, u8 *cbuff, u16 fsize, u8 *ubuff, u16 usize);
 
 // res_pic.c
 u16 pic_decompress(FILE *cfile, u8 *cbuff, u16 cfile_size, u8 *buff, u16 cbuff_size);
+
+#endif /* NAGI_RES_RES_H */

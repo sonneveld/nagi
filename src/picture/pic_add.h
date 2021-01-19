@@ -1,3 +1,6 @@
+#ifndef NAGI_PICTURE_PIC_ADD_H
+#define NAGI_PICTURE_PIC_ADD_H
+
 extern u8 add_num;
 extern u8 add_loop;
 extern u8 add_cel;
@@ -11,3 +14,4 @@ extern void add_to_pic(void);
 
 extern u8 *cmd_show_pri(u8 *c);
 
+#endif /* NAGI_PICTURE_PIC_ADD_H */

@@ -1,3 +1,5 @@
+#ifndef NAGI_UI_STATUS_H
+#define NAGI_UI_STATUS_H
 
 struct invent_item_struct
 {
@@ -17,3 +19,5 @@ extern INVENT *invent_swap_colour(INVENT *item_cur, INVENT *item_new);
 extern void status_line_write(void);
 extern u8 *cmd_status_line_on(u8 *c);
 extern u8 *cmd_status_line_off(u8 *c); 
+
+#endif /* NAGI_UI_STATUS_H */

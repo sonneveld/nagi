@@ -1,5 +1,5 @@
-#ifndef tone_pcm_h_file
-#define tone_pcm_h_file
+#ifndef NAGI_SOUND_TONE_PCM_H
+#define NAGI_SOUND_TONE_PCM_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -16,4 +16,4 @@ extern int tone_pcm_state_get(void);
 extern void tone_pcm_lock(void);
 extern void tone_pcm_unlock(void);
 
-#endif
+#endif /* NAGI_SOUND_TONE_PCM_H */

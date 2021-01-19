@@ -1,5 +1,5 @@
-#ifndef tone_h_file
-#define tone_h_file
+#ifndef NAGI_SOUND_TONE_H
+#define NAGI_SOUND_TONE_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 
@@ -35,4 +35,5 @@ extern void tone_state_set(int);
 extern int tone_state_get(void);
 extern void tone_lock(void);
 extern void tone_unlock(void);
-#endif
+
+#endif /* NAGI_SOUND_TONE_H */

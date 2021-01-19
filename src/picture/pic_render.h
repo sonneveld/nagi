@@ -1,3 +1,6 @@
+#ifndef NAGI_PICTURE_PIC_RENDER_H
+#define NAGI_PICTURE_PIC_RENDER_H
+
 extern u8 pos_init_y;
 extern u8 pos_init_x;
 extern u8 pos_final_y;
@@ -31,3 +34,4 @@ void draw_x_corner(void);
 void relative_line(void);
 void draw_corner(u8 type);
 
+#endif /* NAGI_PICTURE_PIC_RENDER_H */

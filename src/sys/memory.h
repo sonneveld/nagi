@@ -1,3 +1,6 @@
+#ifndef NAGI_SYS_MEMORY_H
+#define NAGI_SYS_MEMORY_H
+
 // memory allocations
 // _Malloc                        cseg     000013D6 0000005A
 // _GetMemPtr                     cseg     00001430 0000000C
@@ -9,7 +12,6 @@
 // _UpdateVar8                    cseg     000014A0 0000001D
 // CmdShowMem                     cseg     000014BD 0000004D
 // END memory allocations
-
 
 void init_agi_heap(void);
 u16 update_var8(void);
@@ -23,3 +25,4 @@ void clear_memory(void);
 
 /* u8 *CmdShowMem(*u8); */
 
+#endif /* NAGI_SYS_MEMORY_H */

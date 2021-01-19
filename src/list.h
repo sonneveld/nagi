@@ -1,5 +1,10 @@
-#ifndef list_h_struct
-#define list_h_struct
+#ifndef NAGI_LIST_H
+#define NAGI_LIST_H
+
+// sonneveld: Possibly for build time performance: the NODE, LIST and 
+// STACK types are also defined in agi.h
+#ifndef NAGI_LIST_H_STRUCT
+#define NAGI_LIST_H_STRUCT
 
 //~ RaDIaT1oN (2002-04-29):
 //~ add const to search declaration
@@ -21,10 +26,10 @@ struct list_struct
 };
 typedef struct list_struct LIST;
 typedef struct list_struct STACK;
-#endif
 
-#ifndef list_h_file
-#define list_h_file
+#endif /* NAGI_LIST_H_STRUCT */
+
+
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 
@@ -51,5 +56,4 @@ extern void *stack_push(STACK *stack);
 extern void stack_pop(STACK *stack);
 extern void *stack_top(STACK *stack);
 
-
-#endif
+#endif /* NAGI_LIST_H */

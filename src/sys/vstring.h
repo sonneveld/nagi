@@ -1,5 +1,5 @@
-#ifndef vstring_h_file
-#define vstring_h_file
+#ifndef NAGI_SYS_VSTRING_H
+#define NAGI_SYS_VSTRING_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 
@@ -13,4 +13,4 @@ extern void vstring_set_text(VSTRING *vs, u8 *str);
 extern void vstring_set_size(VSTRING *vs, u32 new_size);
 extern void vstring_shift(VSTRING *vs, u32 shift_size);
 
-#endif
+#endif /* NAGI_SYS_VSTRING_H */

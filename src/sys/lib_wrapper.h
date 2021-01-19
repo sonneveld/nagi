@@ -1,9 +1,8 @@
-#ifndef lib_wrapper_h_file
-#define lib_wrapper_h_file
+#ifndef NAGI_SYS_LIB_WRAPPER_H
+#define NAGI_SYS_LIB_WRAPPER_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 
-#endif
-
+#endif /* NAGI_SYS_LIB_WRAPPER_H */

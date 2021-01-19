@@ -1,3 +1,6 @@
+#ifndef NAGI_SOUND_SOUND_H
+#define NAGI_SOUND_SOUND_H
+
 struct sound_struct
 {
 	struct sound_struct *next;	// 0-1
@@ -87,3 +90,5 @@ u8 *sample_data;
 
 
 //extern u8 nagi_sound_disable;
+
+#endif /* NAGI_SOUND_SOUND_H */

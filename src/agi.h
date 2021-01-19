@@ -1,5 +1,5 @@
-#ifndef agi_h_file
-#define agi_h_file
+#ifndef NAGI_AGI_H
+#define NAGI_AGI_H
 
 // Important include files that just about every file uses
 #include <stdio.h>
@@ -10,8 +10,9 @@
 
 // ok no warning here
 
-#ifndef list_h_struct
-#define list_h_struct
+#ifndef NAGI_LIST_H_STRUCT
+#define NAGI_LIST_H_STRUCT
+
 /* STRUCTURES	---	---	---	---	---	---	--- */
 struct node_struct
 {
@@ -32,7 +33,8 @@ struct list_struct
 };
 typedef struct list_struct LIST;
 typedef struct list_struct STACK;
-#endif
+
+#endif /* NAGI_LIST_H_STRUCT */
 
 
 
@@ -465,4 +467,4 @@ extern CONF config_nagi[];
 extern CONF config_standard[];
 extern CONF config_game[];
 
-#endif
+#endif /* NAGI_AGI_H */

@@ -1,5 +1,5 @@
-#ifndef drv_video_h_file
-#define drv_video_h_file
+#ifndef NAGI_SYS_DRV_VIDEO_H
+#define NAGI_SYS_DRV_VIDEO_H
 
 struct colour_struct
 {
@@ -55,4 +55,4 @@ struct font_struct
 };
 typedef struct font_struct FONT;
 
-#endif
+#endif /* NAGI_SYS_DRV_VIDEO_H */

@@ -1,3 +1,6 @@
+#ifndef NAGI_FLAGS_H
+#define NAGI_FLAGS_H
+
 extern u8 *cmd_set(u8 *c);
 extern u8 *cmd_reset(u8 *c);
 extern u8 *cmd_toggle(u8 *c);
@@ -10,3 +13,5 @@ void flag_reset(u8 flag_num);
 void flag_toggle(u8 flag_num);
 u8 flag_test(u8 flag_num);
 void flags_clear(void);
+
+#endif /* NAGI_FLAGS_H */

@@ -1,7 +1,5 @@
-
-
-
-
+#ifndef NAGI_VIEW_OBJ_BLIT_H
+#define NAGI_VIEW_OBJ_BLIT_H
 
 /*
 f0 - the previous blit info struct?
@@ -14,3 +12,5 @@ AGI allocates 0x10 bytes for this struct
 extern void blit_save(BLIT *b);
 extern void blit_restore(BLIT *b);
 extern void obj_blit(VIEW *v);
+
+#endif /* NAGI_VIEW_OBJ_BLIT_H */

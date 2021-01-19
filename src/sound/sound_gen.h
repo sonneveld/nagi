@@ -1,5 +1,5 @@
-#ifndef sound_gen_h_file
-#define sound_gen_h_file
+#ifndef NAGI_SOUND_SOUND_GEN_H
+#define NAGI_SOUND_SOUND_GEN_H
 
 //~ RaDIaT1oN: fix warnings, add sndgen_kill
 
@@ -26,4 +26,4 @@ extern int sndgen_callback(int ch, TONE *tone);
 extern void sndgen_poll(void);
 extern void sndgen_kill_thread(void);
 
-#endif
+#endif /* NAGI_SOUND_SOUND_GEN_H */

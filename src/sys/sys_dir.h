@@ -1,5 +1,5 @@
-#ifndef sys_dir_h_file
-#define sys_dir_h_file
+#ifndef NAGI_SYS_SYS_DIR_H
+#define NAGI_SYS_SYS_DIR_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -24,5 +24,4 @@ extern void dir_preset_set_cwd(int preset_id);
 extern u8 *dir_preset_get(int preset_id);
 extern int dir_preset_change(int preset_id);
 
-
-#endif
+#endif /* NAGI_SYS_SYS_DIR_H */

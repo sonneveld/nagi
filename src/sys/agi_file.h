@@ -1,5 +1,5 @@
-#ifndef file_h_file
-#define file_h_file
+#ifndef NAGI_SYS_AGI_FILE_H
+#define NAGI_SYS_AGI_FILE_H
 
 //~ RaDIaT1oN (2002-04-29):
 //~ lowercase file search routines for linux
@@ -30,4 +30,4 @@ extern void find_close(FIND *token);
 
 extern FILE *fopen_nocase(const u8 *name);
 
-#endif
+#endif /* NAGI_SYS_AGI_FILE_H */

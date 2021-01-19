@@ -1,5 +1,5 @@
-
-
+#ifndef NAGI_UI_MENU_H
+#define NAGI_UI_MENU_H
 
 struct menu_item_struct
 {
@@ -58,3 +58,5 @@ extern void menu_calc_size(MENU *var8);
 
 
 extern void r_menu930a(void);
+
+#endif /* NAGI_UI_MENU_H */

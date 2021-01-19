@@ -1,3 +1,6 @@
+#ifndef NAGI_PICTURE_PIC_RES_H
+#define NAGI_PICTURE_PIC_RES_H
+
 struct pic_struct
 {
 	struct pic_struct *next;
@@ -24,3 +27,5 @@ extern u8 *cmd_show_pic(u8 *c);
 extern u8 *cmd_discard_pic(u8 *c);
 extern void pic_discard(u16 pic_num);
 extern u8 *cmd_set_upper_left(u8 *c);
+
+#endif /* NAGI_PICTURE_PIC_RES_H */

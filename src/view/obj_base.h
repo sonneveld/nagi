@@ -1,3 +1,6 @@
+#ifndef NAGI_VIEW_OBJ_BASE_H
+#define NAGI_VIEW_OBJ_BASE_H
+
 // #include obj_blit.h as well
 
 extern u16 objtable_size;
@@ -25,3 +28,4 @@ extern u8 *cmd_unanimate_all(u8 *c);
 
 extern void objtable_update(void);
 
+#endif /* NAGI_VIEW_OBJ_BASE_H */

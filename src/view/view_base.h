@@ -1,3 +1,6 @@
+#ifndef NAGI_VIEW_VIEW_BASE_H
+#define NAGI_VIEW_VIEW_BASE_H
+
 struct view_node_struct
 {
 	//struct view_node_struct *next;	// 0
@@ -36,3 +39,5 @@ extern u8 *cmd_number_of_loops(u8 *c);
 extern u8 *cmd_discard_view(u8 *c);
 extern u8 *cmd_discard_view_v(u8 *c);
 extern void view_discard(u16 num);
+
+#endif /* NAGI_VIEW_VIEW_BASE_H */

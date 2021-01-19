@@ -1,5 +1,5 @@
-#ifndef sound_base_h_file
-#define sound_base_h_file
+#ifndef NAGI_SOUND_SOUND_BASE_H
+#define NAGI_SOUND_SOUND_BASE_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 
@@ -28,4 +28,4 @@ extern u8 *cmd_sound(u8 *c);
 extern u8 *cmd_stop_sound(u8 *c);
 extern void sound_stop(void);
 
-#endif
+#endif /* NAGI_SOUND_SOUND_BASE_H */

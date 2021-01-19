@@ -1,9 +1,10 @@
-#ifndef sdl_test_h_file
-#define sdl_test_h_file
+#ifndef NAGI_SYS_DRV_SDL_H
+#define NAGI_SYS_DRV_SDL_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 extern void sdl_driver_init(VDRIVER *drv);
-#endif
+
+#endif /* NAGI_SYS_DRV_SDL_H */
 

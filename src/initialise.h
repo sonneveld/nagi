@@ -1,5 +1,5 @@
-#ifndef initialise_h_file
-#define initialise_h_file
+#ifndef NAGI_INITIALISE_H
+#define NAGI_INITIALISE_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -17,5 +17,4 @@ extern void room_init(void);
 extern void agi_shutdown(void);
 extern void nagi_shutdown(void);
 
-
-#endif
+#endif /* NAGI_INITIALISE_H */

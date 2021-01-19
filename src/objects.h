@@ -1,3 +1,6 @@
+#ifndef NAGI_OBJECTS_H
+#define NAGI_OBJECTS_H
+
 struct inv_obj_struct
 {
 	u16 name;
@@ -19,3 +22,5 @@ extern INV_OBJ *inv_obj_table;
 extern int inv_obj_table_size;
 extern u8 *inv_obj_string;
 extern int inv_obj_string_size;
+
+#endif /* NAGI_OBJECTS_H */

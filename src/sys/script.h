@@ -1,3 +1,5 @@
+#ifndef NAGI_SYS_SCRIPT_H
+#define NAGI_SYS_SCRIPT_H
 
 extern u8 *script_head;
 extern u16 mem_script;
@@ -13,3 +15,4 @@ extern u8 *cmd_script_size(u8 *c);
 extern u8 *cmd_unknown_171(u8 *c);
 extern u8 *cmd_unknown_172(u8 *c);
 
+#endif /* NAGI_SYS_SCRIPT_H */

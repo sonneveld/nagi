@@ -1,5 +1,5 @@
-#ifndef sdl_vid_h_file
-#define sdl_vid_h_file
+#ifndef NAGI_SYS_SDL_VID_H
+#define NAGI_SYS_SDL_VID_H
 
 #include "drv_video.h"
 
@@ -24,5 +24,4 @@ extern void *vid_getbuf(void);
 extern int vid_getlinesize(void);
 extern SDL_Window* vid_get_main_window();
 
-#endif
-
+#endif /* NAGI_SYS_SDL_VID_H */

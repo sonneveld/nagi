@@ -1,5 +1,5 @@
-#ifndef trace_h_file
-#define trace_h_file
+#ifndef NAGI_TRACE_H
+#define NAGI_TRACE_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -15,4 +15,4 @@ extern void trace_clear(void);
 extern void trace_cmd(u16, u8 *);
 extern void trace_eval(u16 , u8 *);
 
-#endif
+#endif /* NAGI_TRACE_H */

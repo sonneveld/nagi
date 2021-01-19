@@ -1,5 +1,5 @@
-#ifndef drvpick_h_file
-#define drvpick_h_file
+#ifndef NAGI_SYS_DRVPICK_H
+#define NAGI_SYS_DRVPICK_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 struct drv_init_struct
@@ -26,5 +26,5 @@ typedef struct drv_init_state_struct DRVINITSTATE;
 extern int drvpick_first(DRVINITSTATE *, DRVINIT *init_list, int size, u8 *def, void *ptr_list);
 extern int drvpick_next(DRVINITSTATE *);
 
-#endif
+#endif /* NAGI_SYS_DRVPICK_H */
 

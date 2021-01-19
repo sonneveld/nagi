@@ -1,3 +1,6 @@
+#ifndef NAGI_LOGIC_LOGIC_EVAL_H
+#define NAGI_LOGIC_LOGIC_EVAL_H
+
 extern u8 cmd_equal_n(void);
 extern u8 cmd_equal_v(void);
 extern u8 cmd_less_n(void);
@@ -19,3 +22,5 @@ extern u8 cmd_said(void);
 extern u8 cmd_have_key(void);
 // compare strings
 extern u8 cmd_compare_strings(void);
+
+#endif /* NAGI_LOGIC_LOGIC_EVAL_H */

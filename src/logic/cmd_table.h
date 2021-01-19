@@ -1,4 +1,5 @@
-
+#ifndef NAGI_LOGIC_CMD_TABLE_H
+#define NAGI_LOGIC_CMD_TABLE_H
 
 struct func_struct
 {
@@ -34,3 +35,4 @@ FUNC cmd_table[CMD_MAX + 1];
 extern u8 *cmd_do_nothing(u8 *code);
 extern u8 cmd_ret_false(void);
 
+#endif /* NAGI_LOGIC_CMD_TABLE_H */

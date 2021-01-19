@@ -1,3 +1,6 @@
+#ifndef NAGI_UI_MSG_H
+#define NAGI_UI_MSG_H
+
 extern u8 *cmd_print(u8 *c);
 extern u8 *cmd_print_v(u8 *c);
 extern u8 *cmd_print_at(u8 *c);
@@ -57,3 +60,5 @@ extern TPOS msg_tpos;
 extern TPOS msg_tpos_edge;
 
 extern MSGSTATE msgstate;
+
+#endif /* NAGI_UI_MSG_H */

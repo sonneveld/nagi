@@ -1,5 +1,5 @@
-#ifndef ini_config_h_file
-#define ini_config_h_file
+#ifndef NAGI_SYS_INI_CONFIG_H
+#define NAGI_SYS_INI_CONFIG_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 struct ini_struct
@@ -31,5 +31,5 @@ extern u8 *ini_recursive(INI *ini, u8 *sect_name, u8 *key_name);
 extern int ini_int(INI *ini, u8 *key, int def);
 extern int ini_boolean(INI *ini, u8 *key, int def);
 extern u8 *ini_string(INI *ini, u8 *key, u8 *def);
-#endif
 
+#endif /* NAGI_SYS_INI_CONFIG_H */

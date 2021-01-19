@@ -1,3 +1,6 @@
+#ifndef NAGI_UI_AGI_TEXT_H
+#define NAGI_UI_AGI_TEXT_H
+
 extern u8 *cmd_text_screen(u8 *c);
 extern u8 *cmd_graphics(u8 *c);
 extern u8 *cmd_clear_lines(u8 *c);
@@ -14,4 +17,4 @@ extern void screen_redraw(void);
 extern void text_attrib_push(void);
 extern void text_attrib_pop(void);
 
-
+#endif /* NAGI_UI_AGI_TEXT_H */

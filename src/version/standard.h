@@ -1,5 +1,5 @@
-#ifndef standard_h_file
-#define standard_h_file
+#ifndef NAGI_VERSION_STANDARD_H
+#define NAGI_VERSION_STANDARD_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -7,4 +7,4 @@
 
 extern void standard_select_ng(void);
 
-#endif
+#endif /* NAGI_VERSION_STANDARD_H */

@@ -1,3 +1,6 @@
+#ifndef NAGI_LOGIC_ARITHMETIC_H
+#define NAGI_LOGIC_ARITHMETIC_H
+
 u8 *cmd_increment(u8 *code);
 
 u8 *cmd_decrement(u8 *code);
@@ -29,3 +32,5 @@ u8 *cmd_multv(u8 *code);
 u8 *cmd_divn(u8 *code);
 
 u8 *cmd_divv(u8 *code);
+
+#endif /* NAGI_LOGIC_ARITHMETIC_H */

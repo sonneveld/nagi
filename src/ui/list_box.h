@@ -1,5 +1,5 @@
-#ifndef list_box_h_file
-#define list_box_h_file
+#ifndef NAGI_UI_LIST_BOX_H
+#define NAGI_UI_LIST_BOX_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -8,4 +8,4 @@
 
 extern int list_box(u8 **list, int size, int init);
 
-#endif
+#endif /* NAGI_UI_LIST_BOX_H */

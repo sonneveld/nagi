@@ -1,8 +1,8 @@
-#ifndef template_header_h_file
-#define template_header_h_file
+#ifndef NAGI_TEMPLATE_HEADER_H
+#define NAGI_TEMPLATE_HEADER_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 
-#endif
+#endif /* NAGI_TEMPLATE_HEADER_H */

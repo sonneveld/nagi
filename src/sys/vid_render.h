@@ -1,5 +1,5 @@
-#ifndef vid_render_h_file
-#define vid_render_h_file
+#ifndef NAGI_SYS_VID_RENDER_H
+#define NAGI_SYS_VID_RENDER_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 
@@ -18,5 +18,4 @@ extern void render_rect(int x, int y, int width, int height, u8 colour);
 extern void render_colour(u8 col, COLOUR *col_dith);
 extern void render_view_dither(u8 *view_data);
 
-
-#endif
+#endif /* NAGI_SYS_VID_RENDER_H */

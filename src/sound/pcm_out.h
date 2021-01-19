@@ -1,5 +1,5 @@
-#ifndef pcm_out_h_file
-#define pcm_out_h_file
+#ifndef NAGI_SOUND_PCM_OUT_H
+#define NAGI_SOUND_PCM_OUT_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -38,6 +38,4 @@ extern int pcm_out_state_get(void);
 extern void pcm_out_lock(void);
 extern void pcm_out_unlock(void);
 
-
-#endif
-
+#endif /* NAGI_SOUND_PCM_OUT_H */

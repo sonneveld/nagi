@@ -1,5 +1,5 @@
-#ifndef pcm_out_sdl_h_file
-#define pcm_out_sdl_h_file
+#ifndef NAGI_SOUND_PCM_OUT_SDL_H
+#define NAGI_SOUND_PCM_OUT_SDL_H
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -16,4 +16,4 @@ extern void pcm_out_sdl_lock(void);
 extern void pcm_out_sdl_unlock(void);
 extern void sdl_callback(void *userdata, u8 *stream, int len);
 
-#endif
+#endif /* NAGI_SOUND_PCM_OUT_SDL_H */

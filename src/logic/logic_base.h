@@ -1,3 +1,6 @@
+#ifndef NAGI_LOGIC_LOGIC_BASE_H
+#define NAGI_LOGIC_LOGIC_BASE_H
+
 struct logic_struct
 {
 	struct logic_struct *next;	// 0
@@ -30,3 +33,5 @@ extern u8 *cmd_set_scan_start(u8 *c);
 extern u8 *cmd_reset_scan_start(u8 *c);
 extern u16 logic_save_scan_start(void);
 extern void logic_restore_scan_start(LOGIC *log);
+
+#endif /* NAGI_LOGIC_LOGIC_BASE_H */

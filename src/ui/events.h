@@ -1,4 +1,6 @@
- 
+#ifndef NAGI_UI_EVENTS_H
+#define NAGI_UI_EVENTS_H
+
 // --------- AN AGI EVENT STRUCT
 struct agi_event_struct
 {
@@ -48,3 +50,5 @@ extern u16 event_write(u16 type, u16 data);
 // need event_write(type, data)
 
 extern u8 *cmd_extension_171(u8 *c);
+
+#endif /* NAGI_UI_EVENTS_H */
