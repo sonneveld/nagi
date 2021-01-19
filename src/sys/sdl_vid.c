@@ -297,7 +297,7 @@ void vid_shake(int count)
 	amask = surface->format->Amask;
 	width =  surface->w;
 	height =  surface->h;
-	        
+
 	//      create new surface
 	orig = SDL_CreateRGBSurface(0, width, height, bpp, rmask, gmask, bmask, amask);
 	if (!orig) return;
@@ -311,26 +311,26 @@ void vid_shake(int count)
 	count *= 8;
 	while (count--)
 	{
-	        // clear entire window
-	        vid_lock();
-	        if (SDL_FillRect(surface, 0, 0))
-	                goto shake_error;       
-	        vid_unlock();
-	        
-	        // print the surface in some strange location
-	        dest.x = shake_offset[rand()%3];
-	        dest.y = shake_offset[rand()%3];
-	        if (SDL_BlitSurface(orig, 0, surface, &dest)) // blit to some offset  stretch*10 or something
-	                goto shake_error; 
-	        vid_render(surface, 0, 0, 0, 0);
-	        
-	        SDL_Delay(50);
+		// clear entire window
+		vid_lock();
+		if (SDL_FillRect(surface, 0, 0))
+			goto shake_error;       
+		vid_unlock();
+
+		// print the surface in some strange location
+		dest.x = shake_offset[rand()%3];
+		dest.y = shake_offset[rand()%3];
+		if (SDL_BlitSurface(orig, 0, surface, &dest)) // blit to some offset  stretch*10 or something
+			goto shake_error; 
+		vid_render(surface, 0, 0, 0, 0);
+
+		SDL_Delay(50);
 	}
 	// put the original screen back on
 	if (SDL_BlitSurface(orig, 0, surface, 0)) // update the screen
-	        goto shake_error; 
+		goto shake_error; 
 	vid_render(surface, 0, 0, 0, 0);
 	
 shake_error:
 	SDL_FreeSurface(orig);
- }
+}

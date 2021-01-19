@@ -27,7 +27,7 @@ _SetCarry                        cseg     0000660B 00000002
 _GetPicYPos                      cseg     0000660D 0000000D
 
 _DrawLine                        cseg     0000661A 00000096
- ----- END Pic Rendering  */
+----- END Pic Rendering  */
 
 // *** BIG NOTE
 // all picture functions must contribute to pic_Data and pic_byte!!!

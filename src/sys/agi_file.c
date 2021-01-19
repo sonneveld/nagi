@@ -103,10 +103,10 @@ FILE *fopen_nocase(const u8 *name)
 	DIR *dir;
 	struct dirent *fileent;
 	FILE *ret;
-    u8 *name_copy;
+	u8 *name_copy;
 	
 	dir = opendir(".");
-    name_copy = strdupa(name);
+	name_copy = strdupa(name);
 	string_lower( name_copy );
 
 	while((fileent = readdir(dir))) {

@@ -181,7 +181,7 @@ u8 *cmd_program_control(u8 *c)
 	return c;
 }
 
- 
+
 u8 *cmd_player_control(u8 *c)
 {
 	state.ego_control_state = 1;

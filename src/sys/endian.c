@@ -30,7 +30,7 @@ big endian is motorola
 	
 	void store_le_16(void *data, u16 value)
 	{
-		 *(  (u16 *)data  ) = value;
+		*(  (u16 *)data  ) = value;
 	}
 	
 	void store_be_16(void *data, u16 value)

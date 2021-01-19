@@ -39,21 +39,21 @@ u8 *di;	// sprintf string
 
 int charCount(char *str)
 {
-  int count;
+	int count;
 
-  assert(str);
+	assert(str);
 
-  count = 0;
-  str = strchr(str, '%');
+	count = 0;
+	str = strchr(str, '%');
 
-  while (str != 0)
-    {
-      count++;
-      str++;
-      str = strchr(str, '%');
-    }
+	while (str != 0)
+	{
+		count++;
+		str++;
+		str = strchr(str, '%');
+	}
 
-  return count;
+	return count;
 }
 
 void agi_printf(u8 *var8, ...)
@@ -78,7 +78,7 @@ void agi_printf(u8 *var8, ...)
 			format_char(al);
 		else
 		{
-    
+
 			switch (*(si++))
 			{
 				case 's':		// string

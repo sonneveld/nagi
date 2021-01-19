@@ -769,7 +769,7 @@ void text_init(void)
 	text_colour(0, 0x0F);
 	goto_row_col(0, 5);
 	agi_printf("New Adventure Game Interpreter");
- 
+
 	text_attrib_pop();
 	pop_row_col();
 }

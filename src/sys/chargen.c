@@ -366,7 +366,7 @@ void ch_put(u8 ch)
 // scrolled is signed
 // positive is up
 // negative is down
- 
+
 
 void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 {
@@ -466,7 +466,7 @@ void ch_scroll(TPOS *pos1, TPOS *pos2, s16 scroll, u8 attrib)
 	}
 	
 	
- 
+
 }
 
 

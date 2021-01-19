@@ -45,7 +45,7 @@ void objs_dir_calc()
 {
 	VIEW *v;
 	
-        for (v=objtable; v<objtable_tail; v++)
+	for (v=objtable; v<objtable_tail; v++)
 		if ((v->flags & (O_DRAWN|O_ANIMATE|O_UPDATE))==(O_DRAWN|O_ANIMATE|O_UPDATE))
 			if (v->step_count == 1)
 				obj_motion_update(v);
@@ -55,20 +55,20 @@ void objs_dir_calc()
 void obj_motion_update(VIEW *v)
 {
 	switch(v->motion)
-       	{
-	        case MT_WANDER:
+	{
+		case MT_WANDER:
 				obj_wander_update(v);
 				break;
-	        case MT_FOLLOW:	
+		case MT_FOLLOW:	
 				obj_follow_update(v);
 				break;
 			case MT_EGO:
 			case MT_MOVE:
 				obj_move_update(v);
 				break;
-	        default:
+		default:
 				;
-        }
+	}
 
 	if (state.block_state == 0)
 		v->flags &= ~O_BLOCK;	// no block exists so why bother?

@@ -252,7 +252,7 @@ void gfx_msgbox(int x, int y, int w, int h, u8 bg, u8 line)
 	render_rect(x+1, y-2, 1, h-4, line);	// left
 }
 
- 
+
 void gfx_palette_update(void)
 {
 	if (chgen_textmode)

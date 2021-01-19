@@ -284,7 +284,7 @@ void blit_add(VIEW *v, BLIT *h)  // var8 = v    vara = h
 BLIT *blit_new(VIEW *v)
 {
 	BLIT *b;
- 
+
 	b = a_malloc(sizeof(BLIT));
 	b->prev = 0;
 	b->next = 0;

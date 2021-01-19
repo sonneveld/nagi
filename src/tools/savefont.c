@@ -35,7 +35,7 @@ typedef struct font_struct FONT;
 
 unsigned char font_4x8_data[FONTDATAMAX] = {
 
-  
+
 
 };
 

@@ -84,7 +84,7 @@ void dir_init(int argc, char *argv[])
 	// set orig directory
 
 	// if directory is passed in, pretend nagi was run from that directory
-    if (argc >= 2) {
+	if (argc >= 2) {
 		int chdirres = chdir(argv[1]);
 		if (chdirres != 0) {
 			printf("WARNING: Could not change directory to %s\n", argv[1]);

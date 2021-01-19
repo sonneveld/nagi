@@ -18,19 +18,19 @@ u8 agi_rand(void)
 	u8 r;
 		
 	if (agi_rand_seed == 0)
-        {
+	{
 		//printf("Creating new randomised seed...\n");
 		/* ah = 0; int(1Ah); */	// number of ticks since midnight
 		ftime(&t);
 		//printf("time = %ld seconds %ld milliseconds\n", t.time, t.millitm );
 		agi_rand_seed = t.time * TANDY_CLOCK_PER_SEC;
 		agi_rand_seed += (u16) ((double)t.millitm  / 1000 * TANDY_CLOCK_PER_SEC);
-        	//printf("seed = 0x%04X\n\n", agi_rand_seed);
+		//printf("seed = 0x%04X\n\n", agi_rand_seed);
 	}
 
-        agi_rand_seed = 0x7C4D * agi_rand_seed + 1;
+	agi_rand_seed = 0x7C4D * agi_rand_seed + 1;
 	r = agi_rand_seed ^ (agi_rand_seed>>8);
-        return( r );
+	return( r );
 }
 
 

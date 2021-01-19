@@ -210,7 +210,7 @@ void handle_free(int handle)
 	
 	assert(handle > 0);
 	assert(handle <= 8);
-    
+	
 	mask >>= handle - 1;
 	mask ^= 0xFF;
 	

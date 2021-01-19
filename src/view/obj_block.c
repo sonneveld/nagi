@@ -16,10 +16,10 @@ _CheckBlock                      cseg     00007B1F 00000032
 u8 *cmd_block(u8 *c)
 {
 	state.block_state = 1;
-        state.block_x1 = *c++;
-        state.block_y1 = *c++;
-        state.block_x2 = *c++;
-        state.block_y2 = *c++;
+	state.block_x1 = *c++;
+	state.block_y1 = *c++;
+	state.block_x2 = *c++;
+	state.block_y2 = *c++;
 	return(c);
 }
 

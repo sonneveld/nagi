@@ -257,7 +257,7 @@ void status_line_write()
 		else
 			agi_printf("Sound:%s", "on");
 	}
- 
+
 	text_attrib_pop();
 	pop_row_col();
 	ch_update();

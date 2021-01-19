@@ -6,7 +6,7 @@
 #include "../logic/arithmetic.h"
 #include "../logic/logic_eval.h"
 
- 
+
 // pause, quit 
 #include "../base.h" 
 // block, unblock, ignoreblocks, observe blocks
@@ -107,13 +107,13 @@ FUNC eval_table[] = {
 			{"center.posn", cmd_center_posn, 5, 0},
 			{"right.posn", cmd_right_posn, 5, 0},
 			{"unknown.19", cmd_ret_false, 0, 0}
-	   	};
- 
+		};
+
 FUNC cmd_table[CMD_MAX + 1] = {
 			// 0
 			{"cmd.return", cmd_do_nothing, 0, 0},
 
-                        // 1
+			// 1
 			{"cmd.increment", cmd_increment, 1, 0x80},
 			{"cmd.decrement", cmd_decrement, 1, 0x80},
 			{"cmd.assignn", cmd_assignn, 2, 0x80},
@@ -134,7 +134,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.reset.v", cmd_reset_v, 1, 0x80},
 			{"cmd.toggle.v", cmd_toggle_v, 1, 0x80},
 
-                        // 18
+			// 18
 			{"cmd.new.room", cmd_new_room, 1, 0},
 			{"cmd.new.room.v", cmd_new_room_v, 1, 0x80},
 			
@@ -188,7 +188,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.release.priority", cmd_release_priority, 1, 0},
 			{"cmd.get.priority", cmd_get_priority, 2, 0x40},
 
-                        // 58
+			// 58
 			{"cmd.stop.update", cmd_stop_update, 1, 0},
 			{"cmd.start.update", cmd_start_update, 1, 0},
 			{"cmd.force.update", cmd_force_update, 1, 0},
@@ -214,7 +214,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.reverse.loop", cmd_reverse_loop, 2, 0},
 			{"cmd.cycle.time", cmd_cycle_time, 2, 0x40},
 			
-                        // 77
+			// 77
 			{"cmd.stop.motion", cmd_stop_motion, 1, 0},
 			{"cmd.start.motion", cmd_start_motion, 1, 0},
 			{"cmd.step.size", cmd_step_size, 2, 0x40},
@@ -227,7 +227,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.set.dir", cmd_set_dir, 2, 0x40},
 			{"cmd.get.dir", cmd_get_dir, 2, 0x40},
 
-                        // 88
+			// 88
 			{"cmd.ignore.blocks", cmd_ignore_blocks, 1, 0},
 			{"cmd.observe.blocks", cmd_observe_blocks, 1, 0},
 			{"cmd.block", cmd_block, 4, 0},
@@ -240,8 +240,8 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.put", cmd_put, 2, 0},
 			{"cmd.put.v", cmd_put_v, 2, 0x40},
 			{"cmd.get.room.v", cmd_get_room_v, 2, 0xC0},
- 
-                        // 98
+
+			// 98
 			{"cmd.load.sound",cmd_load_sound , 1, 0}, //cmd_load_sound
 			{"cmd.sound", cmd_sound, 2, 0},//cmd_sound
 			{"cmd.stop.sound",cmd_stop_sound , 0, 0},	//cmd_stop_sound
@@ -253,7 +253,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.text.screen", cmd_text_screen, 0, 0},
 			{"cmd.graphics", cmd_graphics, 0, 0},
 
-                        // 108
+			// 108
 			{"cmd.set.cursor.char", cmd_set_cursor_char, 1, 0},
 			{"cmd.set.text.attrib", cmd_set_text_attribute, 2, 0},
 			{"cmd.shake.screen", cmd_shake_screen, 1, 0},
@@ -265,7 +265,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.word.to.string", cmd_word_to_string, 2, 0},
 			{"cmd.parse", cmd_parse, 1, 0},
 
-                        // 118
+			// 118
 			{"cmd.get.num", cmd_get_num, 2, 0x40},
 			{"cmd.prevent.input", cmd_prevent_input, 0, 0},
 			{"cmd.accept.input", cmd_accept_input, 0, 0},
@@ -277,7 +277,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.restore.game (incomplete)", cmd_restore_game, 0, 0},
 			{"cmd.init.disk (incomplete)", cmd_do_nothing, 0, 0},
 
-                        // 128
+			// 128
 			{"cmd.restart.game", cmd_restart_game, 0, 0},
 			{"cmd.show.obj", cmd_show_obj, 1, 0},
 			{"cmd.random", cmd_random, 3, 0x20},
@@ -289,7 +289,7 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.pause", cmd_pause, 0, 0},
 			{"cmd.echo.line", cmd_echo_line, 0, 0},
 
-                        // 138
+			// 138
 			{"cmd.cancel.line", cmd_cancel_line, 0, 0},
 			{"cmd.init.joy (incomplete)", cmd_do_nothing, 0, 0},
 			{"cmd.toggle.monitor", cmd_toggle_monitor, 0, 0},
@@ -326,13 +326,13 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.open.dialogue", cmd_open_dialogue, 0, 0},
 			{"cmd.close.dialogue", cmd_close_dialogue, 0, 0},
 
-                        // 165
+			// 165
 			{"cmd.mult.n", cmd_multn, 2, 0x80},
 			{"cmd.mult.v", cmd_multv, 2, 0xC0},
 			{"cmd.div.n", cmd_divn, 2, 0x80},
 			{"cmd.div.v", cmd_divv, 2, 0xC0},
 
-                        // 169
+			// 169
 			{"cmd.close.window", cmd_close_window, 0, 0},
 			
 			// 170
@@ -350,5 +350,5 @@ FUNC cmd_table[CMD_MAX + 1] = {
 			{"cmd.mouse.posn (incomplete)", cmd_do_nothing, 2, 0xC0},
 			{"cmd.release.key", cmd_unknown_181, 0, 0},
 			{"cmd.adj.ego.move.to.x.y (incomplete)", cmd_do_nothing, 0, 0}
-	   	};
+		};
 

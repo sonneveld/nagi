@@ -29,7 +29,7 @@ _TraceScroll                     cseg     00008FAD 00000023
 #include "sys/chargen.h"
 #include "ui/events.h"
 #include "sys/endian.h"
- 
+
 #include "ui/printf.h"
 #include "ui/window.h"
 #include "ui/agi_text.h"

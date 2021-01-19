@@ -33,7 +33,7 @@ void vstring_shift(VSTRING *, shift_size)
 //#include "view/crap.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
- 
+
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 

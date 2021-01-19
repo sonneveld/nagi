@@ -11,7 +11,7 @@ _CharInvert                      cseg     00002C37 0000000F
 _CharDisable                     cseg     00002C46 0000000F
 _Char0x80Read                    cseg     00002C55 00000025
 */
- 
+
 #include "../agi.h"
 
 // getpos, setpos, scroll, clear and putchar

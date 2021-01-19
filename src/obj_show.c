@@ -92,7 +92,7 @@ void obj_show(u16 view_num)
 			obj_blit(&obj_view);
 			obj_cel_update(&obj_view);
 		}
-		 
+		
 		si = view_find(view_num);
 		message_box(si->data + load_le_16(si->data + 3));
 		

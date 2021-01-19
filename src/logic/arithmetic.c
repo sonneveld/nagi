@@ -17,7 +17,7 @@ CmdDivV                          cseg     0000739E 0000001F
 */
 
 /*
- state.var[V06_DIRECTION]
+	state.var[V06_DIRECTION]
 */
 
 #include "../agi.h"
@@ -30,7 +30,7 @@ u8 *cmd_increment(u8 *code)
 {
 	u8 a;
 
-        a = *code++;
+	a = *code++;
 	if (state.var[a] < 0xFF)
 		state.var[a]++;
 
@@ -43,9 +43,9 @@ u8 *cmd_decrement(u8 *code)
 {
 	u8 a;
 
-        a = *code++;
-        // b = *code++;
-        // c = *code++;
+	a = *code++;
+	// b = *code++;
+	// c = *code++;
 	if (state.var[a] != 0x00)
 		state.var[a]--;
 
@@ -58,9 +58,9 @@ u8 *cmd_assignn(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
-        // c = *code++;
+	a = *code++;
+	b = *code++;
+	// c = *code++;
 	state.var[a] = b;
 
 	return(code);
@@ -71,9 +71,9 @@ u8 *cmd_assignv(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
-        // c = *code++;
+	a = *code++;
+	b = *code++;
+	// c = *code++;
 	state.var[a] = state.var[b];
 
 	return(code);
@@ -86,9 +86,9 @@ u8 *cmd_addn(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
-        // c = *code++;
+	a = *code++;
+	b = *code++;
+	// c = *code++;
 	state.var[a] += b;
 
 	return(code);
@@ -98,9 +98,9 @@ u8 *cmd_addv(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
-        // c = *code++;
+	a = *code++;
+	b = *code++;
+	// c = *code++;
 	state.var[a] += state.var[b];
 
 	return(code);
@@ -110,9 +110,9 @@ u8 *cmd_subn(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
-        // c = *code++;
+	a = *code++;
+	b = *code++;
+	// c = *code++;
 	state.var[a] -= b;
 
 	return(code);
@@ -122,9 +122,9 @@ u8 *cmd_subv(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
-        // c = *code++;
+	a = *code++;
+	b = *code++;
+	// c = *code++;
 	state.var[a] -= state.var[b];
 
 	return(code);
@@ -137,8 +137,8 @@ u8 *cmd_lindirectv(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
+	a = *code++;
+	b = *code++;
 	state.var[ state.var[a] ] = state.var[b];
 
 	return(code);
@@ -148,8 +148,8 @@ u8 *cmd_lindirectn(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
+	a = *code++;
+	b = *code++;
 	state.var[ state.var[a] ] = b;
 
 	return(code);
@@ -159,8 +159,8 @@ u8 *cmd_rindirect(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
+	a = *code++;
+	b = *code++;
 	state.var[a] = state.var[ state.var[b] ];
 
 	return(code);
@@ -172,9 +172,9 @@ u8 *cmd_multn(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
-        // c = *code++;
+	a = *code++;
+	b = *code++;
+	// c = *code++;
 	state.var[a] *= b;
 
 	return(code);
@@ -184,9 +184,9 @@ u8 *cmd_multv(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
-        // c = *code++;
+	a = *code++;
+	b = *code++;
+	// c = *code++;
 	state.var[a] *= state.var[b];
 
 	return(code);
@@ -196,9 +196,9 @@ u8 *cmd_divn(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
-        // c = *code++;
+	a = *code++;
+	b = *code++;
+	// c = *code++;
 	state.var[a] /= b;
 
 	return(code);
@@ -208,8 +208,8 @@ u8 *cmd_divv(u8 *code)
 {
 	u8 a,b;
 
-        a = *code++;
-        b = *code++;
+	a = *code++;
+	b = *code++;
 	state.var[a] /= state.var[b];
 
 	return(code);

@@ -7,7 +7,7 @@ struct colour_struct
 	u8 even;	// ah
 };
 typedef struct colour_struct COLOUR;
- 
+
 
 struct render_driver_struct
 {
