@@ -52,9 +52,9 @@ _StateWrite                      cseg     000028C6 00000074
 
 #include "trace.h"
 
+#include "sys/endian.h"
 
-
-
+static u16 state_read(FILE *data_stream, void *data_alloc, size_t size_multiple, size_t size_max);
 
 u8 state_name_auto[0x32] = {0};
 
@@ -142,18 +142,20 @@ u8 *cmd_restore_game(u8 *c)
 		else
 		{
 			fseek(rest_stream, 0x1F, SEEK_SET);
-			if (state_read(rest_stream, &state) == 0)
+			if (state_read(rest_stream, &state, sizeof(AGI_STATE), sizeof(AGI_STATE)) == 0)
 				goto loc2630;
-			if (state_read_view(rest_stream, objtable, objtable_tail) == 0)
+			if (state_read(rest_stream, objtable, sizeof(VIEW), (objtable_tail - objtable) * sizeof(VIEW)) == 0)
 				goto loc2630;
-			if (state_read(rest_stream, inv_obj_table) == 0)
+			if (state_read(rest_stream, inv_obj_table, sizeof(INV_OBJ), inv_obj_table_size * sizeof(INV_OBJ)) == 0)
 				goto loc2630;
-			if (state_read(rest_stream, inv_obj_string) == 0)
+			if (state_read(rest_stream, inv_obj_string, 1, inv_obj_string_size) == 0)
 				goto loc2630;
-			if (state_read(rest_stream, script_head) == 0)
+			if (state_read(rest_stream, script_head, 1, (state.script_size << 1)) == 0)
 				goto loc2630;
-			if (state_read(rest_stream, scan_start_list) != 0)
-				goto loc2647;
+			if (state_read(rest_stream, scan_start_list, sizeof(u16), sizeof(u16)*60) == 0)
+				goto loc2630;
+
+			goto loc2647;
 		loc2630:
 			fclose(rest_stream);
 			message_box("Error in restoring game.\nPress ENTER to quit.");
@@ -188,57 +190,25 @@ rest_end:
 	return code_ret;
 }
 
-u16 state_read(FILE *data_stream, void *data_alloc)
+// Read in object array from save game file
+//
+// `size_multiple` and `size_max` are used to ensure some integrity.
+// (because this format is based on the original dos format, it is possible that nagi
+// could inadvertently try to read it and crash because of struct differences)
+// Kudos to @Ritchie333 for suggesting and implementing the first iteration of this check.
+//
+// Format is:
+//   0..1 - little endian word - data size
+//   2..  - bytes[data_size] - data
+static u16 state_read(FILE *data_stream, void *data_alloc, size_t size_multiple, size_t size_max)
 {
-	u8 buff;
-	u16 data_size;
-	
-	if ( fread(&buff, sizeof(u8), 1, data_stream) == 1)
-	{
-		data_size = buff;
-		if (fread(&buff, sizeof(u8), 1, data_stream) == 1)
-		{
-			data_size += buff << 8;
-			if ( fread(data_alloc, sizeof(u8), data_size, data_stream) == data_size)
-				return 1;
-		}
-	}
-	return 0;
-}
-
-u16 state_read_view(FILE *data_stream, VIEW *head, VIEW *tail)
-{
-	u8 buff;
-	u16 data_size;
-	u16 expected_data_size;
-	
-	if ( fread(&buff, sizeof(u8), 1, data_stream) == 1)
-	{
-		data_size = buff;
-		if (fread(&buff, sizeof(u8), 1, data_stream) == 1)
-		{
-			data_size += buff << 8;
-
-			// Check the saved game has the right object size
-			// (the original AGI saves pointers as 16-bit,
-			// NAGI will save whatever the compiler decides is
-			// an appropriate pointer size and structure
-			// alignment)
-			// 'cause if they don't match you'll get out of sync
-			// and _bad things_ will happen.....
-			// (see http://www.catb.org/esr/structure-packing/)
-
-			expected_data_size = (tail-head) * sizeof(VIEW);
-			if(expected_data_size == data_size)
-			{
-				if ( fread(head, sizeof(u8), data_size, data_stream) == data_size)
-				{
-					return 1;
-				}
-			}
-		}
-	}
-	return 0;
+	uint8_t size_bytes[2];
+	if (fread(&size_bytes, sizeof(size_bytes), 1, data_stream) != 1) { return 0; }
+	size_t data_size = load_le_16(size_bytes);
+	if ((data_size % size_multiple) != 0) { return 0; }
+	if ((data_size > size_max) != 0) { return 0; }
+	if (fread(data_alloc, data_size, 1, data_stream) != 1) { return 0; }
+	return 1;
 }
 
 u8 *cmd_unknown_170(u8 *c)
