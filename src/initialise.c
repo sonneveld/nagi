@@ -156,7 +156,7 @@ void nagi_init()
 	
 	// clear keyboard input
 	//clear_input();
-#warning keyboard needs a bit of cleanup
+	// TODO: keyboard needs a bit of cleanup
 	events_init();
 	
 	//load_vectors();	// keyboard, timer, critical error

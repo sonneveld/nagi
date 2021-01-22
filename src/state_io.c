@@ -361,7 +361,7 @@ void state_reload(void)
 	}
 
 	blists_erase();
-#warning clear_memory() not implemented
+	// TODO: clear_memory() not implemented
 	//clear_memory();
 	pic_visible = 0;
 	script_first();

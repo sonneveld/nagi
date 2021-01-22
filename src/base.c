@@ -13,7 +13,7 @@
 #include "ui/events.h"
 #include "ui/msg.h"
 
-#warning base.c needs work
+// TODO: base.c needs work
 
 #include "sys/time.h"
 

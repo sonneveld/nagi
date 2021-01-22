@@ -146,6 +146,7 @@ void font_load(FILE *font_stream)
 	if (font_stream == 0)
 	{
 		printf("font_init(): Unable to find appropriate font for current resolution.\n");
+		// TODO: this breaks sndgen which hasn't initialised yet
 		agi_exit();
 	}
 

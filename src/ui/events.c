@@ -28,7 +28,7 @@ void events_init()
 	
 	events_clear();
 	
-#warning needs cmd_init_joy ??
+	// TODO: needs cmd_init_joy ??
 }
 
 
@@ -77,7 +77,7 @@ u16 system_alt_map[] = {30, 48, 46, 32, 18, 33, 34, 35, 23, 36, 37, 38, 50,
 				49, 24, 25, 16, 19, 31, 20, 22, 47, 17, 45, 21, 44};
 
 // map the keys depending on system (ibm in this case)
-// TODO write amiga?  apple ][.. um.. mac??  why don't I scratch my ass?
+// TODO: write amiga?  apple ][.. um.. mac??
 // for the next gen of agi.. define a set of keys? that's the same over systems?
 u16 system_keymap(SDL_Keysym *keysym)
 {
@@ -150,7 +150,7 @@ AGI_EVENT *key_parse(SDL_Keysym *keysym)
 
 // --------------- SPECIAL KEY
 
-#warning this version skips some keys but will still pass them to the bios_buff read bit
+// TODO: this version skips some keys but will still pass them to the bios_buff read bit
 
 KEY key_special[] = { {SDLK_HOME, 0}, {SDLK_UP, 0},
 				{SDLK_PAGEUP, 0}, {SDLK_LEFT, 0}, 
@@ -347,8 +347,8 @@ void events_clear()
 	SDL_Event event; 
 	int one_count = 0;
 	int x;
-#warning perhaps another time we could check for non-input events and use them
-#warning doesnt matter for the time being since i dont check for them anyways
+	// TODO: perhaps another time we could check for non-input events and use them
+	// TODO: doesnt matter for the time being since i dont check for them anyways
 	
 	while ( (x=SDL_PollEvent(&event)) != 0)
 	{
@@ -356,13 +356,13 @@ void events_clear()
 			one_count++;
 		if (one_count > 10)
 		{
-#warning this is because sometimes poll_event always returns 1 event left
+			// TODO: this is because sometimes poll_event always returns 1 event left
 			printf("events_clear(): ONE EVENT LEFT ERROR!");
 			break;
 		}
 	}
 	
-#warning a bit missing for joystick
+	// TODO: a bit missing for joystick
 	/*
 	clear_bios_buff;
 	reset_joy
@@ -494,7 +494,7 @@ u8 *cmd_unknown_181(u8 *c)
 AGI_EVENT *event_wait()
 {
 	AGI_EVENT *si;
-#warning SHEDLOADS MISSING FOR JOYSTICK SUPPORT
+	// TODO: SHEDLOADS MISSING FOR JOYSTICK SUPPORT
 	do
 	{
 		si = event_read();

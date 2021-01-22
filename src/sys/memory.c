@@ -36,7 +36,7 @@ void *mem_max;
 
 void init_agi_heap(void)
 {
-#warning text mode support needed
+	// TODO: text mode support needed
 	//text_mode = 1;
 	//text_colour(0xFF, 0);
 
@@ -49,7 +49,7 @@ void init_agi_heap(void)
 	mem_end = (u8 *)mem_ptr + HEAP_SIZE;
 	
 	// allocate room for screen buffer
-#warning move this screen buffer thingy to somewhere else
+	// TODO: move this screen buffer thingy to somewhere else
 	// other = 0x6900    hgc = 0xD200
 	
 	// sbuff = malloc(0x6900);
@@ -80,7 +80,7 @@ void *agi_malloc(u16 size)
 		_Print(temp);
 		agi_exit();	*/
 		exit(1);
-#warning need to fix error statement
+		// TODO: need to fix error statement
 	}
 	
 	return_ptr = mem_ptr;
@@ -130,7 +130,7 @@ void clear_memory(void)
 	update_var8();
 }
 
-#warning finish cmd_show_mem
+// TODO: finish cmd_show_mem
 /* word CmdShowMem(var param)
 {
 	word string[0x64];

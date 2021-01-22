@@ -95,7 +95,7 @@ void sbuff_xline()
 		pos_final_x = x2;
 	}
 
-#warning replicated from sbuff_plot code
+	// TODO: replicated from sbuff_plot code
 	b = gfx_picbuff + PBUF_MULT(pos_init_y) + pos_init_x;
 	if ((pos_init_y & 1) == 0)
 		colour = col_even;
@@ -235,7 +235,7 @@ void sbuff_picfill(u8 ypos, u8 xpos)
 	stack_ptr += 7;
 	
 	//d = fill_push(d, 255,255,255,255,255,255,255 );	
-	//#warning check for NO leaks in push /pop
+	// TODO: check for NO leaks in push /pop
 
 	// ***** Fill in a *line*
 

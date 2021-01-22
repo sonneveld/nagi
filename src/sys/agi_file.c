@@ -40,7 +40,7 @@
 // file next
 // file open
 
-// todo later on  .. ignore directories.. case.. 
+// TODO: later on  .. ignore directories.. case.. 
 
 u8 *find_first(FIND *token, const u8 *name_const)
 {

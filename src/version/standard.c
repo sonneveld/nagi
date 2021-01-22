@@ -834,7 +834,7 @@ void standard_select_ng(void)
 	text_shutdown();
 }
 
-// TODO
+// TODO:
 // menu WHOOOOO DONE
 // standard_separation DONE
 // what happens if a dir doesn't exist on list? WORKS

@@ -136,7 +136,7 @@ void inventory(void)
 		invent_state = 1;
 	key_loop:
 		di = event_wait();
-#warning need the joystick BUTT map..
+		// TODO: need the joystick BUTT map..
 		//joy_butt_map(di);
 		
 		switch(di->type)

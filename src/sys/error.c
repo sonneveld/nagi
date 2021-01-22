@@ -34,7 +34,7 @@ _PrintErrCode                    cseg     0000401D 00000095
 
 jmp_buf agi_err_state;
 
-#warning beep_speaker() incomplete
+// TODO: beep_speaker() incomplete
 void long_beep()
 {
 	printf("BEEEEEEP! (long beep)\n");
@@ -48,7 +48,7 @@ void beep_speaker()
 
 void set_agi_error(u16 err_type, u16 err_data)
 {
-#warning set_agi_error() incomplete
+	// TODO: set_agi_error() incomplete
 	sound_stop();
 	// clear_memory();
 	events_clear();

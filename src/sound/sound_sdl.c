@@ -241,7 +241,7 @@ void sound_vector()
 						//	channel[chan_cur].attenuation = 0xF;
 					}
 				}
-				#warning fix the volume some day
+				// TODO: fix the volume some day
 				//sound_volume();
 				chan_cur++;
 			}	

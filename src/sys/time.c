@@ -18,7 +18,7 @@ SDL_Thread *agi_clock_thread;
 
 #define SDL_TICK_SCALE 50
 
-#warning check base.c   disable clock and denit time
+// TODO: check base.c   disable clock and denit time
 
 
 int clock_thread(void *unused)

@@ -42,7 +42,7 @@ big endian is motorola
 #else
 	
 	// ----------- big endian -------------------------------------------------------
-	#warning big endian is untested..  I hope it works
+	// TODO: big endian is untested..  I hope it works
 	u16 load_le_16(void *data)
 	{
 		return ((u8 *)data)[0] |  (   ((u16)((u8 *)data)[1]) << 8  );

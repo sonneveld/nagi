@@ -20,7 +20,7 @@ u8 *cmd_version(u8 *c)
 	message_box("Want to make your own AGI based game?\n\n" "Visit:\n"
 		"http://agidev.com/\n" "http://mega-tokyo.com/forum/\n");
 	
-#warning TODO: add interpreter version type.
+	// TODO: add interpreter version type.
 	
 	return c;
 }

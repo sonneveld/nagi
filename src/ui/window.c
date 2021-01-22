@@ -82,7 +82,7 @@ void window_put_char(u16 given_char)
 			bl = state.text_comb & 0x7F;	// turn off invert bit
 		}
 		
-		//#warning fix this one day
+		// TODO: fix this one day
 		/*
 		Bitfields for character's display attribute:
 		Bit(s)	Description	(Table 00014)

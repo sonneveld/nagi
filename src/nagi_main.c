@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 		state.var[V19_KEYPRESSED] = 0;
 		state.var[V09_BADWORD] = 0;
 		
-		//#warning need joy polling setup.
+		// TODO: need joy polling setup.
 		//poll_joystick();	// poll the joystick
 		//input_poll();	// read the events and do something with them
 		

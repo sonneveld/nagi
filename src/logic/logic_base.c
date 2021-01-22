@@ -229,7 +229,7 @@ u8 *logic_call(u16 logic_num)
 	
 	code = logic_execute(logic_cur);
 
-	//warning another AGI bug.  if restore/restart/newroom is called from a called logic, havoc may be wrecked when returning.
+	// TODO: warning another AGI bug.  if restore/restart/newroom is called from a called logic, havoc may be wrecked when returning.
 	// you don't want to try and free the previous logic code if it was just free'd by a returning restore command.
 	if ( (untouched == 0) && (code != NULL) )
 	{

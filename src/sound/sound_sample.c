@@ -80,7 +80,7 @@ SAMPLE *sample_open2(u8 *file_name, int freq_base)
 		printf("sample_open(): Error seeking to end of %s\n", file_name);
 		return 0;
 	}
-	#warning will probably only work on gnu systems
+	// TODO: warning will probably only work on gnu systems
 	// file size
 	s->size = ftell(file);
 	rewind(file);
@@ -188,7 +188,7 @@ void mix_new(u8 *stream, CHANNEL *c, int len)
 		//c->scale = 1;
 		c->sample_cur = s->data;
 		c->freq_prev = 0;
-		#warning add an ending wave
+		// TODO: add an ending wave
 	}
 	else
 	{
@@ -242,7 +242,7 @@ void mix_add(u8 *stream, CHANNEL *c, int len)
 		//c->scale = 1;
 		c->sample_cur = s->data;
 		c->freq_prev = c->freq_count;
-		#warning add an ending wave
+		// TODO: add an ending wave
 	}
 	else
 	{
