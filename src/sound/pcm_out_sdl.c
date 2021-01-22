@@ -293,7 +293,7 @@ void pcm_out_sdl_unlock(void)
 
 void sdl_callback(void *userdata, u8 *stream, int len)
 {
-	s16 chan_data[len / (int)sizeof(s16)];
+	s16* chan_data = alloca(len);
 	int stream_len, stream_count;
 	s16 *s_ptr, *c_ptr;
 	
@@ -322,7 +322,7 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 			// get channel data(chan.userdata)
 			if (ch->avail)
 			{
-				if (ch->callback( ch->userdata, (u8 *)&chan_data, len) == 0)
+				if (ch->callback( ch->userdata, (u8 *)chan_data, len) == 0)
 				{
 					// divide by number of channels then add to stream
 					stream_count = stream_len;

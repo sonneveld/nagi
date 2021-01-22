@@ -70,7 +70,7 @@ void dir_load(void)
 	
 	while (!dir_loaded)
 	{
-		u8 dir_v3_name[strlen("dir") + ID_SIZE + 1];
+		u8* dir_v3_name = alloca(strlen("dir") + ID_SIZE + 1);
 		FILE *dir_stream;
 		
 		dir_stream = 0;

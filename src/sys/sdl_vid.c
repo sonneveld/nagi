@@ -224,7 +224,7 @@ void vid_render(SDL_Surface *surface, const u32 x, const u32 y, const u32 w, con
 // set 8-bit palette
 void vid_palette_set(PCOLOUR *palette, u8 num)
 {
-	SDL_Color sdl_palette[num];
+	SDL_Color *sdl_palette = alloca(num * sizeof(SDL_Color));
 	int i;
 	SDL_Surface *surface;
 

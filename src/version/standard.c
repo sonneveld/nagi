@@ -450,7 +450,7 @@ void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 	AGICRC agicrc;
 	GAMEINFO info_new;
 	GAMEINFO *info;
-	u8 msg[strlen("Games found: XXXXXXXXXXXX")];
+	u8 *msg = alloca(strlen("Games found: XXXXXXXXXXXX"));
 	
 	assert(list != 0);
 	
