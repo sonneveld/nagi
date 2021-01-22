@@ -8,6 +8,13 @@
 
 //#define alloca __builtin_alloca
 
+#ifdef _MSC_VER
+//not #if defined(_WIN32) || defined(_WIN64) because we have strncasecmp in mingw
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#define strtok_r strtok_s
+#endif
+
 // ok no warning here
 
 #ifndef NAGI_LIST_H_STRUCT
