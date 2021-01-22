@@ -243,8 +243,8 @@ set_target_properties(nagi PROPERTIES
 )
 
 if (WIN32)
-    target_sources(ags PRIVATE nagi.rc)
-    set_target_properties(ags PROPERTIES
+    target_sources(nagi PRIVATE nagi.rc)
+    set_target_properties(nagi PROPERTIES
         WIN32_EXECUTABLE TRUE
     )
 endif()
