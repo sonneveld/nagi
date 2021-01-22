@@ -127,7 +127,7 @@ void sndgen_play(SOUND *snd)
 			
 			if (channel[i].tone_handle == 0)
 			{
-				printf("%s(): error opening tone channel.\n", __PRETTY_FUNCTION__);
+				printf("%s(): error opening tone channel.\n", __func__);
 				sndgen_shutdown();
 				c_snd_enable = 0;
 				return;

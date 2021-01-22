@@ -372,7 +372,7 @@ typedef struct vstring_struct VSTRING;
 #define SBUF_MULT(width) ((( (width)<<2) + (width)) << 6)
 
 
-#define AGI_TRACE printf("trace at: file=%s, func=%s, line=%d\n", __FILE__,__PRETTY_FUNCTION__, __LINE__);
+#define AGI_TRACE printf("trace at: file=%s, func=%s, line=%d\n", __FILE__,__func__, __LINE__);
 
 #ifndef strdupa
 #define strdupa(a) strcpy((char*)alloca(strlen(a) + 1), a)
