@@ -13,3 +13,8 @@ config.log
 bin/nagi
 bin/x86
 bin/x64
+
+# visual studio cmake support defaults to out/
+.vs
+out
+CMakeSettings.json
