@@ -258,7 +258,10 @@ void vid_fill(POS *pos, AGISIZE *size, u32 colour)
 	assert(video_data.surface);
 	
 	if ( (pos->x|pos->y|size->w|size->h) == 0)
+	{
 		SDL_FillRect(video_data.surface, 0, colour);
+	}
+	else
 	{
 		SDL_Rect rect;
 	
