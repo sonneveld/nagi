@@ -9,6 +9,7 @@
 #include "../sys/sdl_vid.h"
 #include "../trace.h"
 
+#include "../lib/utf8_decode.h"
 
 
 
@@ -26,6 +27,8 @@ void events_init()
 	SDL_EventState(SDL_JOYBALLMOTION, SDL_IGNORE);
 	SDL_EventState(SDL_JOYHATMOTION, SDL_IGNORE);
 	
+	SDL_StartTextInput();
+
 	events_clear();
 	
 	// TODO: needs cmd_init_joy ??
@@ -96,11 +99,14 @@ u16 system_keymap(SDL_Keysym *keysym)
 		if ((keysym->sym >= SDLK_a) && (keysym->sym <= SDLK_z)  )
 			return keysym->sym - SDLK_a + 0x01;	// ctrl a-z
 	}
+	// shifted letters should be handled by SDL_TEXTINPUT
+#if 0
 	else if ((keysym->mod & KMOD_SHIFT) != 0)
 	{
 		if ((keysym->sym >= SDLK_a) && (keysym->sym < SDLK_z) )
 			return keysym->sym - ('a' - 'A' );	// shift a-z
 	}
+#endif
 	else
 	{
 		switch (keysym->sym)
@@ -119,7 +125,8 @@ u16 system_keymap(SDL_Keysym *keysym)
 			case SDLK_RETURN:
 				return 0x0D;
 			default:
-				return keysym->sym & 0x7f;
+				// return keysym->sym & 0x7f;
+				;
 		}
 	}
 	return 0;
@@ -129,21 +136,25 @@ u16 system_keymap(SDL_Keysym *keysym)
 // else, return the ascii thing back
 AGI_EVENT *key_parse(SDL_Keysym *keysym)
 {
-	u16 direction;
-	AGI_EVENT *agi_event = &passed_agi_event;
-	
-	direction = dir_keymap(keysym);
+	u16 direction = dir_keymap(keysym);
 	if (direction != 0xFFFF)
 	{
+		AGI_EVENT *agi_event = &passed_agi_event;
 		agi_event->type = 2;
 		agi_event->data = direction;
+		return agi_event;
 	}
-	else
+
+	u16 mapped_key = system_keymap(keysym);
+	if (mapped_key != 0)
 	{
+		AGI_EVENT *agi_event = &passed_agi_event;
 		agi_event->type = 1;
-		agi_event->data = system_keymap(keysym);
+		agi_event->data = mapped_key;
+		return agi_event;
 	}
-	return agi_event;
+
+	return NULL;
 }
 
 
@@ -221,7 +232,30 @@ AGI_EVENT *event_key_down(SDL_Keysym *keysym)
 	
 	return agi_event;
 }
+
+
+AGI_EVENT *event_text_input(SDL_TextInputEvent *textinput)
+{
+	// SDL Text Input Events are unicode strings. We only care about
+	// ASCII characters right now, so ignore anything that isn't a
+	// 7 bit ascii.
 	
+	utf8_decode_init(textinput->text, strlen(textinput->text));
+	for(;;) {
+		int ch = utf8_decode_next();
+		if (ch == UTF8_END) { break; }
+		if (ch == UTF8_ERROR) { break; }
+		if (ch <= 0) { break; }
+		if ((ch & 0x7f) == ch) {
+			AGI_EVENT *agi_event = &passed_agi_event;
+			agi_event->type = 1;
+			agi_event->data = ch;
+			return agi_event;
+		}
+	}
+	return 0;
+}
+
 // return 1 if ok.. 0 if it failed
 u16 event_write(u16 type, u16 data)
 {
@@ -235,11 +269,9 @@ u16 event_write(u16 type, u16 data)
 	new_event->data = data;
 	
 	event.user.data1 = new_event;
-	
-	if (SDL_PushEvent(&event) == 0)
-		return 1;
-	else
-		return 0;
+
+	// return code for SDL_PushEvent changed in sdl2	
+	return SDL_PushEvent(&event) == 1;
 }
 
 AGI_EVENT *user_event_decode(void *data)
@@ -291,7 +323,7 @@ AGI_EVENT *event_read(void)
 	
 	agi_event = 0;
 	c = 0;
-	
+
 	while (  (SDL_PollEvent(&event) != 0) && (agi_event == 0)  )
 	{
 		switch (event.type)
@@ -302,6 +334,10 @@ AGI_EVENT *event_read(void)
 
 			case SDL_KEYDOWN:
 				agi_event = event_key_down( &(event.key.keysym) );
+				break;
+
+			case SDL_TEXTINPUT:
+				agi_event = event_text_input( &(event.text) );
 				break;
 			
 			case SDL_USEREVENT:

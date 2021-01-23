@@ -218,6 +218,11 @@ set(view_sources
     view/view_base.h
 )
 
+set(lib_sources
+    lib/utf8_decode.c
+    lib/utf8_decode.h
+)
+
 target_sources(nagi
     PRIVATE
     ${base_sources} 
@@ -230,6 +235,7 @@ target_sources(nagi
     ${version_sources} 
     ${video_sources}
     ${view_sources} 
+    ${lib_sources} 
 )
 
 target_link_libraries(nagi PRIVATE 
