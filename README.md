@@ -57,13 +57,23 @@ Windows - MinGW / MSYS (www.mingw.org/wiki/msys) provides a suitable toolset
 MacOS - use MacPorts (www.macports.org)
 Linux - most distributions have some way of getting SDL2 installed. See below
 
-### How to Build
+### How to Build (Linux/Macos)
 
  * Arch Linux, MinGW : sudo pacman -S libsdl2-dev cmake
  * Debian Linux : sudo apt-get install libsdl2-dev cmake
  * MacPorts : brew install sdl2 cmake
 
 Then : mkdir build ; cd build; cmake .. ; make
+
+### How to Build (Windows)
+
+ * Install Visual Studio 2019 Community
+ * Download SDL2-devel-2.0.14-VC.zip from https://www.libsdl.org/download-2.0.php
+ * Decompress SDL2-devel-2.0.14-VC.zip into a directory
+ * Add support/sdl2-config.cmake to SDL directory
+ * Open nagi directory in Visual Studio as a cmake project
+ * Go to Project/CMake Settings for NAGI. Set variable SDL2_DIR to SDL location
+ * Build!
 
 ### Suggestions
 
