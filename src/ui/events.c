@@ -324,7 +324,7 @@ AGI_EVENT *event_read(void)
 	agi_event = 0;
 	c = 0;
 
-	while (  (SDL_PollEvent(&event) != 0) && (agi_event == 0)  )
+	while (SDL_PollEvent(&event) != 0)
 	{
 		switch (event.type)
 		{
@@ -372,6 +372,8 @@ AGI_EVENT *event_read(void)
 			default:
 				;
 		}
+
+		if (agi_event != 0) { break; }
 	}
 
 	return agi_event;
