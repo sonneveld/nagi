@@ -293,8 +293,6 @@ int tone_pcm_callback(void *userdata, u8 *stream, int len)
 	int fill_size;
 	int ret_val;
 
-	SDL_memset(stream,0,len);
-	
 	tpcm = (TONECHAN*)userdata;
 	stream_cur = (s16 *)stream;
 

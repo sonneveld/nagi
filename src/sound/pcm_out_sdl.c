@@ -305,11 +305,11 @@ void sdl_callback(void *userdata, u8 *stream, int len)
 	DATA *new_data;
 #endif
 
-	SDL_memset(stream,0,len);
-	
 	(void) userdata;
 	
 	assert(stream);
+
+	SDL_memset(stream,0,len);
 	
 	if (chan_list != NULL)
 	{
