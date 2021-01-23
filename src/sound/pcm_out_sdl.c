@@ -19,7 +19,11 @@
 
 #if WRITE_TO_DISK
 
+#ifdef _WIN32
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -160,7 +164,11 @@ void pcm_out_sdl_shutdown(void)
 		int amount;
 		
 		cur = list_element_head(list_data);
+#ifdef _WIN32
+		file_handle = open("sound.raw", O_BINARY|O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
+#else
 		file_handle = open("sound.raw", O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
+#endif
 		printf("handle = %d\n", file_handle);
 		while (cur)
 		{
