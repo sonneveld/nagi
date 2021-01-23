@@ -18,3 +18,5 @@ bin/x64
 .vs
 out
 CMakeSettings.json
+
+build
