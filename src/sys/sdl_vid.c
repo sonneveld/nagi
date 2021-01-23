@@ -2,6 +2,19 @@
 
 */
 
+/*
+I haven't found an ideal solution for converting 8 bit indexed surfaces to 32bit textures. However one thing that I
+decided was that I don't want to call SDL_ConvertSurfaceFormat or SDL_CreateTextureFromSurface per frame.
+
+I ended up creating two surfaces, the 8 bit one that the AGI engine draws to and a second 32bit one that has the same
+pixel format as the main screen texture. On render, we SDL_BlitSurface from the 8bit to 32bit surface to do pixel 
+conversion, then call SDL_UpdateTexture on the (streaming) screen texture with the 32bit surface as source.
+
+References:
+Rendering 8-bit palettized surfaces in SDL 2.0 applications: http://sandervanderburg.blogspot.com/2014/05/rendering-8-bit-palettized-surfaces-in.html
+Mini code sample for SDL2 256-color palette https://discourse.libsdl.org/t/mini-code-sample-for-sdl2-256-color-palette/27147/10
+*/
+
 /* BASE headers	---	---	---	---	---	---	--- */
 #include "../agi.h"
 
@@ -31,11 +44,12 @@ struct video_struct
 	SDL_Renderer *renderer;
 	SDL_Texture *texture;
 	SDL_Surface *surface;
+	SDL_Surface *surface_conv;
 };
 
 typedef struct video_struct VIDEO;
 
-VIDEO video_data = { 0, 0, 0, 0 };
+VIDEO video_data = { 0 };
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
@@ -75,16 +89,14 @@ void vid_display(AGISIZE *screen_size, int fullscreen_state)
 	int result = 0;
 	u32 sdl_flags;
 	
-	// SDL_HWSURFACE doesn't work too well for fullscreen
-	// or windibSDL_HWPALETTE 
-	sdl_flags = SDL_SWSURFACE | SDL_WINDOW_RESIZABLE;
+	sdl_flags = SDL_WINDOW_RESIZABLE;
 	if (fullscreen_state)
 		sdl_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
 	result = SDL_CreateWindowAndRenderer( screen_size->w, screen_size->h,
 		sdl_flags, &video_data.window, &video_data.renderer);
 
-	if(result < 0)
+	if(result != 0)
 	{
 		printf("Unable to create video window: %s\n", SDL_GetError());
 		agi_exit();
@@ -96,32 +108,89 @@ void vid_display(AGISIZE *screen_size, int fullscreen_state)
 	video_data.surface = SDL_CreateRGBSurface( 0,
 		screen_size->w, screen_size->h, 8,
 		0, 0, 0, 0 );
-	if( !video_data.surface )
+	if (video_data.surface == NULL)
 	{
 		printf("Unable to create video surface: %s\n", SDL_GetError());
+		agi_exit();
 	}
+	SDL_FillRect(video_data.surface, NULL, 0);
 
 	video_data.texture = SDL_CreateTexture( video_data.renderer,
 		SDL_PIXELFORMAT_RGB888,
 		SDL_TEXTUREACCESS_STREAMING,
 		screen_size->w, screen_size->h );
-	if( !video_data.texture )
+	if (video_data.texture == NULL)
 	{
 		printf("Unable to create video texture: %s\n", SDL_GetError());
 		agi_exit();
 	}	
 
+	// Create intermediate surface to convert 8bit to 32bit pixels.
+	// TODO: Nick: I think it should be okay to just use SDL_ConvertSurfaceFormat but I thought I saw some issues.
+#if 1
+	video_data.surface_conv = SDL_ConvertSurfaceFormat(video_data.surface, SDL_PIXELFORMAT_RGB888, 0);
+	SDL_FillRect(video_data.surface_conv, NULL, SDL_MapRGBA(video_data.surface_conv->format, 0, 0, 0, 255));
+#else
+	int conv_bpp;
+	Uint32 conv_Rmask;
+	Uint32 conv_Gmask;
+	Uint32 conv_Bmask;
+	Uint32 conv_Amask;
+	if (!SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_RGB888, &conv_bpp, &conv_Rmask, &conv_Gmask, &conv_Bmask, &conv_Amask)) {
+		printf("Unable to create pixel format masks: %s\n", SDL_GetError());
+		agi_exit();
+	}
+	video_data.surface_conv = SDL_CreateRGBSurface(
+		0, 
+		screen_size->w, screen_size->h,
+		conv_bpp,
+		conv_Rmask, conv_Gmask, conv_Bmask, conv_Amask
+		);
+#endif
+
+	if (video_data.surface_conv == NULL) {
+		printf("Unable to create conversion video surface: %s\n", SDL_GetError());
+		agi_exit();
+	}
+
 	// clear
 	SDL_SetRenderDrawColor(video_data.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(video_data.renderer);
+
 	SDL_RenderPresent(video_data.renderer);
 }
 
 void vid_free()
 {
-	SDL_DestroyTexture(video_data.texture);
-	SDL_DestroyRenderer(video_data.renderer);
-	SDL_DestroyWindow(video_data.window);
+	if (video_data.texture != 0) 
+	{
+		SDL_DestroyTexture(video_data.texture);
+		video_data.texture = 0;
+	}
+
+	if (video_data.surface != 0)
+	{
+		SDL_FreeSurface(video_data.surface);
+		video_data.surface = 0;
+	}
+
+	if (video_data.surface_conv != 0)
+	{
+		SDL_FreeSurface(video_data.surface_conv);
+		video_data.surface_conv = 0;
+	}
+
+	if (video_data.renderer != 0) 
+	{
+		SDL_DestroyRenderer(video_data.renderer);
+		video_data.renderer = 0;
+	}
+
+	if (video_data.window != 0)
+	{
+		SDL_DestroyWindow(video_data.window);
+		video_data.window = 0;
+	}
 }
 
 void *vid_getbuf()
@@ -204,22 +273,31 @@ void vid_render(SDL_Surface *surface, const u32 x, const u32 y, const u32 w, con
 	rect.y = y;
 	rect.w = w;
 	rect.h = h;
+
+	int res;
+
 	// Convert up from 8bpp (used on ye olde graphics cards) to
 	// something relevant to this century
-	SDL_Surface *bigSurface = SDL_ConvertSurfaceFormat(surface,
-		SDL_PIXELFORMAT_RGB888, 0);
-	if(!bigSurface)
-	{
-		printf("Unable to transfer graphics to window: %s\n", SDL_GetError());
-		agi_exit();
+	res = SDL_BlitSurface(surface, NULL, video_data.surface_conv, NULL);
+	if (res != 0) {
+		printf("vid_render: Error converting surface: %s\n", SDL_GetError());
 	}
-	assert(bigSurface);
-	SDL_SetClipRect( bigSurface, &rect );
-	// Blit the entire surface onto the texture - it's not optimal but meh
-	SDL_UpdateTexture(video_data.texture, NULL, bigSurface->pixels, bigSurface->pitch);
-	SDL_RenderCopy(video_data.renderer, video_data.texture, NULL, NULL );
+	res = SDL_UpdateTexture(video_data.texture, NULL, video_data.surface_conv->pixels, video_data.surface_conv->pitch);
+	if (res != 0) {
+		printf("vid_render: Error updating screen texture: %s\n", SDL_GetError());
+	}
+
+	res = SDL_SetRenderDrawColor(video_data.renderer, 0, 0, 0, 255);
+	res = SDL_RenderClear(video_data.renderer);
+	if (res != 0) {
+		printf("vid_render: Error clearing screen: %s\n", SDL_GetError());
+	}
+
+	res = SDL_RenderCopy(video_data.renderer, video_data.texture, NULL, NULL);
+	if (res != 0) {
+		printf("vid_render: Error copying texture to screen: %s\n", SDL_GetError());
+	}
 	SDL_RenderPresent(video_data.renderer);
-	SDL_FreeSurface(bigSurface);
 }
 
 // set 8-bit palette
@@ -240,7 +318,7 @@ void vid_palette_set(PCOLOUR *palette, u8 num)
 		sdl_palette[i].a = 0;
 	}
 
-	if( 0 > SDL_SetPaletteColors(surface->format->palette, sdl_palette, 0, num) )
+	if(SDL_SetPaletteColors(surface->format->palette, sdl_palette, 0, num) != 0)
 	{
 		printf( "Unable to set colour palette: %s\n", SDL_GetError());
 		agi_exit();
