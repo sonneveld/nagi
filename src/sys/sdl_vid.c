@@ -144,7 +144,8 @@ SDL_Window* vid_get_main_window()
 void vid_lock()
 {
 	assert(video_data.surface);
-	if (SDL_LockSurface(video_data.surface) != 0)
+	if (!SDL_MUSTLOCK(video_data.surface)) { return; }
+	if (!SDL_LockSurface(video_data.surface))
 	{
 		printf("vid_lock(); Unable to lock video surface: %s\n", SDL_GetError());
 		agi_exit();
@@ -154,7 +155,7 @@ void vid_lock()
 void vid_unlock()
 {
 	assert(video_data.surface);
-
+	if (!SDL_MUSTLOCK(video_data.surface)) { return; }
 	SDL_UnlockSurface(video_data.surface);
 }
 
@@ -253,28 +254,27 @@ void vid_palette_set(PCOLOUR *palette, u8 num)
 // can use library's fast blit's 'n stuff
 void vid_fill(POS *pos, AGISIZE *size, u32 colour)
 {
-	vid_lock();
-	
 	assert(video_data.surface);
 	
 	if ( (pos->x|pos->y|size->w|size->h) == 0)
 	{
+		vid_lock();
 		SDL_FillRect(video_data.surface, 0, colour);
+		vid_unlock();
 	}
 	else
 	{
 		SDL_Rect rect;
-	
 		rect.x = pos->x;
 		rect.y = pos->y;
 		rect.w = size->w;
 		rect.h = size->h;
+		vid_lock();
 		SDL_FillRect(video_data.surface, &rect, colour);
+		vid_unlock();
 		vid_render(video_data.surface,
 			rect.x, rect.y, rect.w, rect.h);
 	}
-	
-	vid_unlock();
 }
 
 int shake_offset[] = {25, 0, -25};
