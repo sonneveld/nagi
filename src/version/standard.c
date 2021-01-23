@@ -12,15 +12,21 @@
 //~ lower string for linux
 //~ unnamed union members
 
-#include <unistd.h>
 
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
-#include <dirent.h>
-#include <sys/stat.h>
 #include <string.h>
 #include <assert.h>
+
+#ifdef _WIN32
+#include <Windows.h>
+#include <direct.h>
+#else
+#include <unistd.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#endif
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 #include "../sys/ini_config.h"
@@ -146,6 +152,7 @@ void stand_rejoin(void)
 	}
 }
 
+#define DOS_FILE_MAX (8 + 1 + 3)
 // read the crc/game type/directory type and determine if the game is a proper agi game
 // 0 = ok
 // anything else is a failure
@@ -172,33 +179,41 @@ int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 	// if found set file_id (from func)
 	else
 	{
-		FIND find_vol;
-		u8 *fname, *tail;
+		char fname[DOS_FILE_MAX + 1];
+		struct dir_list_struct *dir;
+		char *tail;
 		int ok = 0;
 		
-		fname = find_first(&find_vol, "*vol.0");
-//		printf("Found vol: %s\n", fname);
-		while (fname != 0)
+		dir = agi_open_cwd();
+		if (dir != 0) 
 		{
-			fname = string_lower(fname);	// to lower the name
-			tail = strstr(fname, "vol.0");	// get id
-			
-			// check size of it
-			if (((tail - fname) < ID_SIZE) && (tail != 0))
-				// get crc
-				if (file_crc_gen(fname, &agicrc->vol[0]) == 0)
-				{
-					*tail = 0;
-					strcpy(info->file_id, fname);
-					ok = 1;
-					break;
-				}
-			
-			fname = find_next(&find_vol);
-//			printf("Found vol: %s\n", fname);
+			for (;;) 
+			{
+				const char *fname_orig = agi_read_dir(dir);
+
+				if (fname_orig == 0) { continue; }
+				if (strlen(fname_orig) > DOS_FILE_MAX) { continue; }
+
+				strcpy(fname, fname_orig);
+				string_lower(fname);
+
+				tail = strstr(fname, "vol.0");	// get id
+
+				if (tail == 0) { continue; }
+				if ((fname - tail) > ID_SIZE) { continue; }
+
+				if (file_crc_gen(fname_orig, &agicrc->vol[0]) != 0) { continue; }
+				
+				tail[0] = 0;
+				strcpy(info->file_id, fname);
+				ok = 1;
+				break;
+			}
+
+			agi_close_dir(dir);
+			dir = 0;
 		}
-		find_close(&find_vol);
-		
+
 		if (!ok)
 			return 3;	// NO *VOL.0
 	}
@@ -494,9 +509,7 @@ void gi_list_init(LIST *list, INI *ini)
 {
 	u8 *dir_list;
 	u8 *token, *running;
-	DIR *dp;
-	struct dirent *ep;
-	struct stat fs;
+	struct dir_list_struct *dir; 
 	
 	assert(list != 0);
 
@@ -510,23 +523,27 @@ void gi_list_init(LIST *list, INI *ini)
 	{
 		dir_preset_change(DIR_PRESET_ORIG);
 		
-		dp = opendir(token);
-		if (dp != 0)
+		dir = agi_open_cwd();
+		if (dir != 0)
 		{
-			while ((ep = readdir(dp))!= 0)
+			for(;;)
 			{
+				char *filename = agi_read_dir(dir);
+				if (filename == 0) { break; }
+
+				if (strcmp(filename, "..") == 0) { continue; }
+
 				dir_preset_change(DIR_PRESET_ORIG);
-				if ( (chdir(token) != -1) &&
-					(stat(ep->d_name, &fs) == 0) &&
-					(S_ISDIR(fs.st_mode)) &&
-					(strcmp(ep->d_name, "..") != 0) &&
-					(chdir(ep->d_name) != -1) )
-				{
-					//printf("trying %s\\%s...\n", token, ep->d_name);
-					gameinfo_add(list, ini, ep->d_name, token);
-				}
-			}
-			closedir(dp);
+
+				if (chdir(token) != 0) { continue; }
+
+				if (!dir_exists(filename)) { continue; }
+				if (chdir(filename) != 0) { continue; }
+
+				//printf("trying %s\\%s...\n", token, ep->d_name);
+				gameinfo_add(list, ini, filename, token);
+			} 
+			agi_close_dir(dir);
 		}
 		
 		token = strtok_r(0, ";", (char**)&running);

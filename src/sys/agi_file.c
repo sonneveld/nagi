@@ -12,10 +12,16 @@
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
+#ifdef _WIN32
+#include <Windows.h>
+#include <direct.h>
+#else
 #include <sys/types.h>
 #include <dirent.h>
-#include <string.h>
+#include <unistd.h>
+#endif
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 //#include "view/crap.h"
@@ -42,61 +48,99 @@
 
 // TODO: later on  .. ignore directories.. case.. 
 
-u8 *find_first(FIND *token, const u8 *name_const)
+#ifdef _WIN32
+
+struct dir_list_struct
 {
-	u8 *name = strdupa(name_const);
-	token->dir = opendir(".");
-	strcpy(token->name, name);
+	HANDLE hFind;
+	WIN32_FIND_DATA FindFileData;
+	int first;
+}; 
 
-	while((token->file = readdir(token->dir))) {
-		char *tok, *found;
-		
-		if(!strcmp(token->file->d_name, name)) 
-			return token->file->d_name;
-			
-		tok = strtok(name, "*");
-		if(tok == NULL) continue;
-		found = strstr(token->file->d_name, tok);
-		if(found == NULL) continue;
+struct dir_list_struct *agi_open_cwd()
+{
+	struct dir_list_struct *d = malloc(sizeof(struct dir_list_struct));
+	d->hFind = INVALID_HANDLE_VALUE;
+	d->first = 1;
 
-		while((tok = strtok(NULL, "*"))) {
-			if(!(found = strstr(found, tok))) break;
-		}
-		if(found) return token->file->d_name;
+	d->hFind = FindFirstFile("*", &d->FindFileData);
+	if (d->hFind == INVALID_HANDLE_VALUE) {
+		free(d);
+		d = 0;
 	}
-	
-	return NULL;
+	return d;
 }
 
-u8 *find_next(FIND *token)
+void agi_close_dir(struct dir_list_struct *d)
 {
-	while((token->file = readdir(token->dir))) {
-		char *tok, *found;
-		
-		if(!strcmp(token->file->d_name, token->name)) 
-			return token->file->d_name;
-
-		tok = strtok(token->name, "*");
-		if(tok == NULL) continue;
-		found = strstr(token->file->d_name, tok);
-		if(found == NULL) continue;
-
-		while((tok = strtok(NULL, "*"))) {
-			if(!(found = strstr(found, tok))) break;
-		}
-		if(found) return token->file->d_name;
+	if (d == 0) { return; }
+	if (d->hFind != INVALID_HANDLE_VALUE)
+	{
+		FindClose(d->hFind);
 	}
-	
-	return NULL;
+	free(d);
 }
 
-void find_close(FIND *token)
+const char *agi_read_dir(struct dir_list_struct *d)
 {
-	if(token->dir) closedir(token->dir);
-	token->dir = NULL;
+	if (d == 0) { return 0; }
+	if (d->hFind == INVALID_HANDLE_VALUE) { return 0; }
+	if (d->first) {
+		d->first = 0;
+		return d->FindFileData.cFileName;
+	}
+	int res = FindNextFile(d->hFind, &d->FindFileData);
+	if (res == 0) {
+		return 0;
+	}
+	return d->FindFileData.cFileName;
 }
 
+FILE *fopen_nocase(const u8 *name)
+{
+	return fopen(name, "rb");
+}
 
+#else
+
+struct dir_list_struct
+{
+	DIR *dir;	
+	struct dirent *file;
+}; 
+
+struct dir_list_struct *agi_open_cwd()
+{
+	struct dir_list_struct *d = malloc(sizeof(struct dir_list_struct));
+	d->dir = 0;
+	d->file = 0;
+
+	d->dir = opendir(".");
+	if (d->dir == 0) {
+		free(d);
+		d = 0;
+	}
+	return d;
+}
+
+void agi_close_dir(struct dir_list_struct *d)
+{
+	if (d == 0) { return; }
+	if (d->dir != 0) 
+	{
+		closedir(d->dir);
+	}
+	free(d);
+}
+
+const char *agi_read_dir(struct dir_list_struct *d)
+{
+	if (d == 0) { return 0; }
+	if (d->dir == 0) { return 0; }
+	d->file = readdir(d->dir);
+	if (d->file == 0) { return 0; }
+	return d->file->d_name;
+}
 
 FILE *fopen_nocase(const u8 *name)
 {
@@ -112,6 +156,7 @@ FILE *fopen_nocase(const u8 *name)
 	while((fileent = readdir(dir))) {
 		char *testname;
 		
+		// TODO: strdupa uses alloca which is dangerous in a loop.
 		testname = strdupa(fileent->d_name);
 		string_lower(testname);
 		
@@ -125,6 +170,8 @@ FILE *fopen_nocase(const u8 *name)
 	closedir(dir);
 	return NULL;
 }
+
+#endif
 
 
 

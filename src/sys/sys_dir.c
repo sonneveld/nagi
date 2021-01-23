@@ -5,8 +5,6 @@
 //~ RaDIaT1oN (2002-04-29):
 //~ include unistd.h
 
-#include <unistd.h>
-
 
 /* BASE headers	---	---	---	---	---	---	--- */
 //#include "agi.h"
@@ -17,9 +15,16 @@
 /* LIBRARY headers	---	---	---	---	---	---	--- */
 #include <stdlib.h>
 #include <stdio.h>
-#include <dirent.h>
-#include <sys/stat.h>
 #include <string.h>
+
+#ifdef _WIN32
+#include <Windows.h>
+#include <direct.h>
+#else
+#include <dirent.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#endif
 
 /* OTHER headers	---	---	---	---	---	---	--- */
 #include "mem_wrap.h"
@@ -206,44 +211,50 @@ void vstring_getcwd(VSTRING *buff)
 }
 
 
-// return 1 if exists
+// case insenstive file existence check 
 int file_exists(u8 *f_name)
 {
+#ifdef _WIN32
+	DWORD res = GetFileAttributes(f_name);
+	return (res != INVALID_FILE_ATTRIBUTES) && ((res & FILE_ATTRIBUTE_DIRECTORY) == 0);
+#else
 	DIR *dp;
 	struct dirent *ep;
 	struct stat fs;
+	int result = 0;
 	
 	dp = opendir (".");
-	if (dp != 0)
-	{
-		while ( (ep=readdir (dp)) != 0)
-			if (stat(ep->d_name, &fs) == 0)
-				if (S_ISREG(fs.st_mode))
-				{
-					if (strcasecmp(ep->d_name, f_name) == 0)
-					{
-						(void) closedir (dp);
-						return 1;
-					}
-				}
-		(void) closedir (dp);
-	}
+	if (!dp) { return 0; }
 	
-	return 0;
+	for (;;) {
+		ep = readdir(dp);
+		if (!ep) { break; }
+
+		if (!S_ISREG(fs.st_mode)) { continue; }
+		if (strcasecmp(ep->d_name, f_name) != 0) { continue; }
+
+		result = 1;
+		break;
+	}
+
+	(void) closedir (dp);
+	return result;
+#endif
 }
 
 
+// case insenstive directory existence check 
 int dir_exists(u8 *d_name)
 {
+#ifdef _WIN32
+	DWORD res = GetFileAttributes(d_name);
+	return (res != INVALID_FILE_ATTRIBUTES) && (res & FILE_ATTRIBUTE_DIRECTORY);
+#else	
 	DIR *dp;
-	
 	dp = opendir(d_name);
-	if (dp != 0)
-	{
-		(void) closedir(dp);
-		return 1;
-	}
-	
-	return 0;
+	if (!dp) { return 0; }
+	(void) closedir(dp);
+	return 1;
+#endif
 }
 
