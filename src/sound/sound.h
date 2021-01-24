@@ -57,38 +57,4 @@ extern u8 *cmd_sound(u8 *c);
 extern u8 *cmd_stop_sound(u8 *c);
 extern void sound_stop(void);
 
-// ------ SAMPLE
-
-extern SAMPLE *sample[2];
-	
-extern int sample_init(void);
-extern void sample_denit(void);
-extern void mix_new(u8 *stream, CHANNEL *c, int len);
-extern void mix_add(u8 *stream, CHANNEL *c, int len);
-
-// ------------- SDL
-
-
-
-
-extern void sound_driver_init(void);
-extern void sound_driver_denit(void);
-
-
-void sound_new(SOUND *snd);
-void sound_fill_buff(void *udata, u8 *stream, int len);
-void sound_vector(void);
-void sound_stop_sdl(void);
-void sound_send(u16 freq);
-void sound_volume(void);
-SAMPLE *open_sample(u8 *file_name, int freq);
-void sample_fill_chan(u8 *stream, int c,  int len);
-void fill_sample_mix_audio(void *udata, u8 *stream, int len);
-
-int snd_off;
-u8 *sample_data;
-
-
-//extern u8 nagi_sound_disable;
-
 #endif /* NAGI_SOUND_SOUND_H */

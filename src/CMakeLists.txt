@@ -93,8 +93,6 @@ set(sound_sources
     sound/sound_base.h
     sound/sound_gen.c
     sound/sound_gen.h
-    # sound/sound_sample.c
-    # sound/sound_sdl.c
     sound/tone.c
     sound/tone.h
     sound/tone_pcm.c
@@ -104,12 +102,7 @@ set(sound_sources
 set(video_sources
     sys/chargen.c
     sys/chargen.h
-    # sys/drv_dummy.c
-    # sys/drv_dummy.h
-    # sys/drv_sdl.c
-    # sys/drv_sdl.h
-    # sys/drv_video.c
-    # sys/drv_video.h
+    sys/drv_video.h
     sys/gfx.c
     sys/gfx.h
     sys/sdl_vid.c
