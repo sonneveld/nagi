@@ -27,6 +27,18 @@
 #include <setjmp.h>
 #include "../sys/error.h"
 
+// TODO: Does any agi logic code do something differently based on v8?
+
+u16 update_var8(void)	// return via ax
+{
+	// store in multiples of 0x100 or 256
+	// free_mem
+	state.var[8] = 127;
+	return(state.var[8]);
+}
+
+#if 0
+
 void *mem_base;
 void *mem_end;
 void *mem_ptr;
@@ -145,3 +157,5 @@ void clear_memory(void)
 	_Print(&string);
 	return(param);		
 } */
+
+#endif

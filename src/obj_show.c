@@ -16,6 +16,8 @@ subShowObj                       cseg     00005E13 00000152
 #include "sys/script.h"
 #include "view/obj_blit.h"
 #include "ui/msg.h"
+#include "sys/memory.h"
+
 
 u8 *cmd_show_obj_v(u8 *c)
 {
@@ -84,6 +86,7 @@ void obj_show(u16 view_num)
 		obj_view.num = 0xFF;
 		
 		obj_size = obj_view.y_size * obj_view.x_size + sizeof(BLIT);
+		update_var8();
 		//if ( update_var8() > obj_size)
 		{
 			obj_displayed = 1;

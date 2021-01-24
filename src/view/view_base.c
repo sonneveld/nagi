@@ -383,5 +383,9 @@ void view_discard(u16 num)
 	//set_mem_ptr(si);
 	
 	blists_draw();
-	//update_var8();
+
+	// TODO: This was commented out because at least gold rush checks for this
+	// It now sets and returns a large value. Will have to investigate if that's
+	// enough
+	update_var8();
 }

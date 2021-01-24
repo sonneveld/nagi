@@ -41,6 +41,7 @@ _FileLoad                        cseg     00003113 000000C5
 #include "../log.h"
 
 #include "../sys/agi_file.h"
+#include "../sys/memory.h"
 
 u16 volume_error = 0;
 u8 res_header[8];
@@ -120,6 +121,7 @@ u8 *v2_res_load(u8 *dir_entry, u8 *buff)
 			{
 				if ( free_mem_check != 0)
 				{
+					update_var8();
 					/*
 					if ( update_var8() < res_size)
 					{
