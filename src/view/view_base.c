@@ -60,11 +60,11 @@ _DiscardView                     cseg     00003F0D 0000004A
 #include "../sys/drv_video.h"
 #include "../sys/vid_render.h"
 
-LIST *view_list = 0;
+static LIST *view_list = 0;
 
 
-void obj_loop_data(VIEW *v, u16 loop_num);
-void obj_cel_data(VIEW *v, u16 cel_num);
+static void obj_loop_data(VIEW *v, u16 loop_num);
+static void obj_cel_data(VIEW *v, u16 cel_num);
 
 void view_list_init()
 {
@@ -232,7 +232,7 @@ void obj_loop_set(VIEW *v, u16 loop_num)
 }
 
 
-void obj_loop_data(VIEW *v, u16 loop_num)
+static void obj_loop_data(VIEW *v, u16 loop_num)
 {
 	u16 loop_pos;
 	u8 *data;
@@ -305,7 +305,7 @@ void obj_cel_set(VIEW *v, u16 cel_num)
 
 }
 
-void obj_cel_data(VIEW *v, u16 cel_num)
+static void obj_cel_data(VIEW *v, u16 cel_num)
 {
 	v->cel_cur = cel_num;
 	v->cel_data = v->loop_data + load_le_16(v->loop_data + (cel_num<<1) + 1);

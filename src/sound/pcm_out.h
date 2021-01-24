@@ -27,10 +27,8 @@ struct pcm_out_driver_struct
 };
 typedef struct pcm_out_driver_struct PCM_OUT_DRIVER;
 	
-extern void pcm_out_drv_init(void);
 extern int pcm_out_init(int freq, int format);
 extern void pcm_out_shutdown(void);
-extern void pcm_out_avail(void);
 extern int pcm_out_open( int (*callback)(void *userdata, Uint8 *stream, int len), void *userdata);
 extern void pcm_out_close(int handle);
 extern void pcm_out_state_set(int);

@@ -44,6 +44,10 @@ CmdGetNum                        cseg     00007126 000000C8
 
 #include "sys/chargen.h"
 
+
+static void agi_string_clean(u16 str_agi, u8 *str_buff);
+
+
 // the size is probably related to the text resolution
 
 
@@ -106,7 +110,7 @@ u8 *cmd_word_to_string(u8 *c)
 
 // whatever is in str... it displays it and then allows you to edit it
 // at least within the len limits
-u16 string_edit_old(u8 *str, u16 len)
+static u16 string_edit_old(u8 *str, u16 len)
 {
 	u8 buff[STRING_SIZE];
 	u8 *str_end, *str_cur;
@@ -204,7 +208,7 @@ u16 agi_string_compare(u16 var8, u16 vara)
 }
 
 // clean the string? 
-void agi_string_clean(u16 str_agi, u8 *str_buff)
+static void agi_string_clean(u16 str_agi, u8 *str_buff)
 {
 	u8 *di;
 	
@@ -235,7 +239,7 @@ u8 *cmd_get_num(u8 *c)
 
 
 
-TPOS stredit_pos = {0,0};
+static TPOS stredit_pos = {0,0};
 
 
 
@@ -243,7 +247,7 @@ TPOS stredit_pos = {0,0};
 // 1/3	-- moving right
 
 // display an end portion of the str
-void stredit_disp2(u8 *port, u16 disp_size, u16 offset)
+static void stredit_disp2(u8 *port, u16 disp_size, u16 offset)
 {
 	window_clear(stredit_pos.row, stredit_pos.col+offset, stredit_pos.row, stredit_pos.col+disp_size-1, state.text_bg);
 	
@@ -260,7 +264,7 @@ void stredit_disp2(u8 *port, u16 disp_size, u16 offset)
 }
 
 
-u8 *stredit_disp(u8 *str_edit, u16 str_size,u16 disp_size, u16 percent)
+static u8 *stredit_disp(u8 *str_edit, u16 str_size,u16 disp_size, u16 percent)
 {
 	u8 *str_disp;
 	// display string

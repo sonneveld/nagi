@@ -34,8 +34,15 @@ _LogicExecute                    cseg     0000293C 000000BA
 
 #include "../trace.h"
 
+static void execute_if(void);
+static void skip_true_or(void);
+static void skip_false_and(void);
+static void logic_cmd(void);
+static u8 logic_eval(void);
+
+
 u8 *logic_data;	// si;
-u8 op;	// al;
+static u8 op;	// al;
 
 
 
@@ -92,7 +99,7 @@ u8 *logic_execute(LOGIC *log)
 	return logic_data;
 }
 
-void execute_if()
+static void execute_if()
 {
 	u8 not_mode = 0;
 	u8 or_mode = 0;	// bh:  or mode or something
@@ -165,7 +172,7 @@ void execute_if()
 	}
 }
 
-void skip_true_or()
+static void skip_true_or()
 {
 	op = *(logic_data++);
 	while (op != 0xFC)	// while not end of "if" bracket
@@ -185,7 +192,7 @@ void skip_true_or()
 	}
 }
 
-void skip_false_and()
+static void skip_false_and()
 {
 	op = *(logic_data++);
 	while (op != 0xFF)	// while not end of "or" bracket
@@ -207,7 +214,7 @@ void skip_false_and()
 	logic_data += load_le_16(logic_data) + 2;	// address
 }
 
-void logic_cmd()
+static void logic_cmd()
 {
 	while (  (op < 0xFC) && (op != 0)  )
 	{
@@ -238,11 +245,11 @@ void logic_cmd()
 	}
 }
 
-u8 *data_orig;
+static u8 *data_orig;
 
 // returns the result.. but changes the global value logic_data;
 // op is changed to whatever.. dun worry about it mate
-u8 logic_eval()
+static u8 logic_eval()
 {
 	u8 result;
 	

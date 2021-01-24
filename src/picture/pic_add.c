@@ -22,7 +22,7 @@ u8 add_x = 0;
 u8 add_y = 0;
 u8 add_pri = 0;
 
-VIEW view_pic_add;
+static VIEW view_pic_add;
 
 u8 *cmd_add_to_pic(u8 *c)
 {

@@ -67,12 +67,12 @@ struct mouse_ext_struct
 typedef struct mouse_ext_struct M_EXT;
 
 #define M_BUFF_SIZE 50
-M_EXT mstack[M_BUFF_SIZE];
-u8 mstack_index = 0;
+static M_EXT mstack[M_BUFF_SIZE];
+static u8 mstack_index = 0;
 // debug stuff
-int mstack_max = 0;
+static int mstack_max = 0;
 
-void mstack_push(int button, int x, int y)
+static void mstack_push(int button, int x, int y)
 {
 	if (mstack_index < M_BUFF_SIZE)
 	{
@@ -90,7 +90,7 @@ void mstack_push(int button, int x, int y)
 
 // 0 if succesful
 // -1 if not
-int mstack_pop(int *button, int *x, int *y)
+static int mstack_pop(int *button, int *x, int *y)
 {
 	if (mstack_index > 0)
 	{
@@ -114,21 +114,21 @@ struct mouse_area_struct
 };
 typedef struct mouse_area_struct M_AREA;
 
-STACK *m_area_stack = 0;
+static STACK *m_area_stack = 0;
 
-void mouse_area_init(void)
+static void mouse_area_init(void)
 {
 	if (m_area_stack == 0)
 		m_area_stack = stack_new(sizeof(M_AREA));
 }
 
-void mouse_area_shutdown(void)
+static void mouse_area_shutdown(void)
 {
 	stack_free(m_area_stack);
 	m_area_stack = 0;
 }
 
-void mouse_area_push(int id, int x, int y, int w, int h)
+static void mouse_area_push(int id, int x, int y, int w, int h)
 {
 	M_AREA *m;
 	
@@ -140,19 +140,19 @@ void mouse_area_push(int id, int x, int y, int w, int h)
 	m->size.h = h;
 }
 
-void mouse_area_pop(void)
+static void mouse_area_pop(void)
 {
 	stack_pop(m_area_stack);
 }
 
-void mouse_area_clear(void)
+static void mouse_area_clear(void)
 {
 	stack_clear(m_area_stack);
 }
 
 // -1 on error or if it doesn't register
 // changes pos to relative pos
-int mouse_area_check(POS *pos)
+static int mouse_area_check(POS *pos)
 {
 	int id = -1;
 	
@@ -191,7 +191,7 @@ int mouse_area_check(POS *pos)
 // return the stack of button presses when cmd171 is pressed
 // else just the position of the mouse
 
-u8 *cmd_brian_poll_mouse(u8 *c)
+static u8 *cmd_brian_poll_mouse(u8 *c)
 {
 	int get_butt, get_x, get_y;
 	
@@ -210,8 +210,8 @@ u8 *cmd_brian_poll_mouse(u8 *c)
 	return c;
 }
 
-int status_prev;
-int picbuff_prev;
+static int status_prev;
+static int picbuff_prev;
 
 void mouse_init(void)
 {

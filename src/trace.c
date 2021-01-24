@@ -44,10 +44,10 @@ u8 *cmd_trace_info(u8 *c);
 void trace_clear(void);
 void trace_cmd(u16 op, u8 *log_data);
 void trace_eval(u16 result, u8 *log_data);
-void trace_add(u16 op, FUNC *table, u8 *log_data, u16 table_offset, u16 result);
-void trace_var_print(FUNC *table, u8 *log_data);
-u16 trace_var_read(u8 *log_data, u16 var_cur);
-void trace_scroll(void);
+static void trace_add(u16 op, FUNC *table, u8 *log_data, u16 table_offset, u16 result);
+static void trace_var_print(FUNC *table, u8 *log_data);
+static u16 trace_var_read(u8 *log_data, u16 var_cur);
+static void trace_scroll(void);
 
 
 
@@ -165,7 +165,7 @@ void trace_eval(u16 result, u8 *log_data)
 
 // trace_add?
 // var8, vara, varc, vare, var10
-void trace_add(u16 op, FUNC *table, u8 *log_data, u16 table_offset, u16 result)
+static void trace_add(u16 op, FUNC *table, u8 *log_data, u16 table_offset, u16 result)
 {
 	AGI_EVENT *temp4 = 0;
 	LOGIC *logic_orig = 0;	// orig logic_cur
@@ -240,7 +240,7 @@ void trace_add(u16 op, FUNC *table, u8 *log_data, u16 table_offset, u16 result)
 	ch_update();
 }
 // trace var print more like I think
-void trace_var_print(FUNC *table, u8 *log_data)
+static void trace_var_print(FUNC *table, u8 *log_data)
 {
 	u16 var_value;
 	u16 var_cur;
@@ -297,7 +297,7 @@ void trace_var_print(FUNC *table, u8 *log_data)
 }
 
 
-u16 trace_var_read(u8 *log_data, u16 var_cur)
+static u16 trace_var_read(u8 *log_data, u16 var_cur)
 {
 	if ( said_state != 0)
 		return load_le_16(log_data + (var_cur<<1));
@@ -305,7 +305,7 @@ u16 trace_var_read(u8 *log_data, u16 var_cur)
 		return *(log_data+var_cur);
 }
 
-void trace_scroll(void)
+static void trace_scroll(void)
 {
 	window_scroll(trace_top, trace_left, trace_bottom, trace_right, 0xFF);
 }

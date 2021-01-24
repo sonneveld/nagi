@@ -46,9 +46,9 @@ R_Logic13A5                      cseg     000013A5 0000002F
 
 #include "../trace.h"
 
-LOGIC logic_head = {0,0,0,0,0,0,0};
+static LOGIC logic_head = {0,0,0,0,0,0,0};
 LOGIC *logic_cur = 0;
-LOGIC *logic_last = 0;
+static LOGIC *logic_last = 0;
 u16 scan_start_list[60];
 
 // initialising the list for the first time

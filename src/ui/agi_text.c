@@ -42,6 +42,8 @@ _PopTextAtt                      cseg     000078FC 0000003A
 
 #define ATTRIB_MAX 5
 
+static u16 text_combine(u16 fg, u16 bg);
+
 struct attrib_struct
 {
 	u16 fg;
@@ -50,8 +52,9 @@ struct attrib_struct
 };
 
 typedef struct attrib_struct ATTRIB;
-ATTRIB attrib_list[ATTRIB_MAX];
-u16 attrib_cur = 0;
+
+static ATTRIB attrib_list[ATTRIB_MAX];
+static u16 attrib_cur = 0;
 
 u8 *cmd_text_screen(u8 *c)
 {
@@ -129,10 +132,10 @@ void text_colour(u16 fg, u16 bg)
 	state.text_bg = calc_text_bg(bg);
 }
 
-u8 cga_text_conv[] = {0, 1, 1, 1, 2, 2, 2, 3, 3, 1, 1, 1, 2, 2, 2};
+static u8 cga_text_conv[] = {0, 1, 1, 1, 2, 2, 2, 3, 3, 1, 1, 1, 2, 2, 2};
 
 // performs colour conversion for cga  'n stuff
-u16 text_combine(u16 fg, u16 bg)
+static u16 text_combine(u16 fg, u16 bg)
 {
 	u16 comb;
 	

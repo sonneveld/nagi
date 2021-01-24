@@ -23,9 +23,12 @@ _FormatChar                      cseg     0000245E 00000014
 #include "../ui/window.h"
 #include "../sys/chargen.h"
 
+static void format_string_ax(u8 *str);
+static void format_char(u8 ch);
+
 // void *format_ip = 0;
-u8 *format_strbuff = 0;
-u8 format_to_string = 0;	// boolean value
+static u8 *format_strbuff = 0;
+static u8 format_to_string = 0;	// boolean value
 
 /*
 ?? sprintf()
@@ -35,9 +38,9 @@ u8 format_to_string = 0;	// boolean value
 
 */
 
-u8 *di;	// sprintf string
+static u8 *di;	// sprintf string
 
-int charCount(char *str)
+static int charCount(char *str)
 {
 	int count;
 
@@ -130,7 +133,7 @@ void agi_printf(u8 *var8, ...)
 }
 
 
-void format_string_ax(u8 *str)
+static void format_string_ax(u8 *str)
 {
 	u8 al;
 	
@@ -142,7 +145,7 @@ void format_string_ax(u8 *str)
 	}
 }
 
-void format_char(u8 ch)
+static void format_char(u8 ch)
 {
 	if (format_to_string != 0)
 		*(di++) = ch;

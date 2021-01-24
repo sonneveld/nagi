@@ -32,10 +32,12 @@ _SoundStop                       cseg     0000516C 00000023
 #include <setjmp.h>
 #include "../sys/error.h"
 
+static SOUND *sound_find(u16 snd_num);
+
 volatile int sound_state = 0;  // 0=silence  1=playing
 u16 sound_flag = 0;		// the flag to set when the sound is finished
 
-LIST *sound_list = 0;
+static LIST *sound_list = 0;
 
 void sound_list_init(void)
 {
@@ -50,7 +52,7 @@ void sound_list_new_room(void)
 	sound_list_init();
 }
 
-SOUND *sound_find(u16 snd_num)
+static SOUND *sound_find(u16 snd_num)
 {
 	SOUND *s;
 	

@@ -2,8 +2,6 @@
 #define NAGI_SYS_SCRIPT_H
 
 extern u8 *script_head;
-extern u16 mem_script;
-
 
 extern void script_block(void);
 extern void script_allow(void);

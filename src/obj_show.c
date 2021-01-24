@@ -19,6 +19,9 @@ subShowObj                       cseg     00005E13 00000152
 #include "sys/memory.h"
 
 
+static void obj_show(u16 view_num);
+
+
 u8 *cmd_show_obj_v(u8 *c)
 {
 	obj_show(state.var[*(c++)]);
@@ -31,7 +34,7 @@ u8 *cmd_show_obj(u8 *c)
 	return c;
 }
 
-void obj_show(u16 view_num)
+static void obj_show(u16 view_num)
 {
 	u16 obj_displayed;
 	u16 view_loaded;	// 1=view exists

@@ -37,7 +37,7 @@ int list_box (u8 **list, int size, int init);
 
 
 // i would like to apologise for this crappy crappy code.. but at least it checks for buffer overflows
-void list_print(u8 **list, TPOS *pos, AGISIZE *size, int status, int up, int down)
+static void list_print(u8 **list, TPOS *pos, AGISIZE *size, int status, int up, int down)
 {
 	int i;
 	
@@ -76,13 +76,13 @@ void list_print(u8 **list, TPOS *pos, AGISIZE *size, int status, int up, int dow
 	}
 }
 
-void list_box_draw_arrow(u16 var8)
+static void list_box_draw_arrow(u16 var8)
 {
 	goto_row_col(var8, msgstate.tpos.col);
 	window_put_char(0x1A);
 }
 
-void list_box_draw_blank(u16 var8)
+static void list_box_draw_blank(u16 var8)
 {
 	goto_row_col(var8, msgstate.tpos.col);
 	window_put_char(' ');

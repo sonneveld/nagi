@@ -15,6 +15,5 @@ extern u8 *cmd_stop_update(u8 *c);
 extern u8 *cmd_start_update(u8 *c);
 extern u8 *cmd_force_update(u8 *c);
 extern void obj_stop_update(VIEW *v);
-extern void obj_start_update(VIEW *v);
 
 #endif /* NAGI_VIEW_OBJ_UPDATE_H */

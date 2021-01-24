@@ -12,20 +12,27 @@ _LzwBuffShift                    cseg     00000A01 00000030
 #include <errno.h>
 #include <string.h>
 
-void lzw_buff_fill(u16 cur_byte);
-u16 lzw_read_next(void);
-void lzw_buff_shift(void);
+struct dict_struct
+{
+	u16 prev;
+	u8 ascii;
+};
+typedef struct dict_struct DICT;
+	
+static void lzw_buff_fill(u16 cur_byte);
+static u16 lzw_read_next(void);
+static void lzw_buff_shift(void);
 
-DICT *lzw_dict = 0;
+static DICT *lzw_dict = 0;
 
-FILE *lzw_res_stream = 0;
-u16 lzw_buff_size = 0;
-u16 lzw_res_size = 0;
-u8 *lzw_buff = 0;
-u16 lzw_code_width = 0;
-u16 lzw_code_mask[] = {0x1FF, 0x3FF, 0x7FF, 0xFFF}; //code mask (9bits, 10 bits, 11 bits, 12 bits 
-u16 lzw_bit_cur = 0;	// current bit
-u16 lzw_bit_max = 0;	// max number of bits in lzw_buffer
+static FILE *lzw_res_stream = 0;
+static u16 lzw_buff_size = 0;
+static u16 lzw_res_size = 0;
+static u8 *lzw_buff = 0;
+static u16 lzw_code_width = 0;
+static u16 lzw_code_mask[] = {0x1FF, 0x3FF, 0x7FF, 0xFFF}; //code mask (9bits, 10 bits, 11 bits, 12 bits 
+static u16 lzw_bit_cur = 0;	// current bit
+static u16 lzw_bit_max = 0;	// max number of bits in lzw_buffer
 
 // var8 = res stream handle
 // vara = comp buff
@@ -33,7 +40,19 @@ u16 lzw_bit_max = 0;	// max number of bits in lzw_buffer
 // vare = uncompressed buff
 // var10 = decomp buff size
 
+void lzw_init()
+{
+	// allocate memory for the LZW dictionary
+	if (lzw_dict != 0) { return; }
+	lzw_dict = malloc(0x800 * sizeof(DICT));
+}
 
+void lzw_shutdown()
+{
+	if (lzw_dict == 0) { return; }
+	free(lzw_dict);
+	lzw_dict = 0;
+}
 
 u16 lzw_decompress(FILE *cfile, u8 *cbuff, u16 fsize, u8 *lzw_uncomp_buff, u16 cbuff_size)
 {
@@ -126,7 +145,7 @@ u16 lzw_decompress(FILE *cfile, u8 *cbuff, u16 fsize, u8 *lzw_uncomp_buff, u16 c
 }
 
 // cur byte in the lzw_buff.. not in the res
-void lzw_buff_fill(u16 cur_byte)	// cur point?
+static void lzw_buff_fill(u16 cur_byte)	// cur point?
 {
 	u16 temp2;
 	temp2 = lzw_buff_size - cur_byte;
@@ -148,7 +167,7 @@ void lzw_buff_fill(u16 cur_byte)	// cur point?
 
 
 
-u16 lzw_read_next()
+static u16 lzw_read_next()
 {
 	u16 code_new, over_flow;
 	
@@ -171,7 +190,7 @@ u16 lzw_read_next()
 }
 
 // si = bit cur
-void lzw_buff_shift()
+static void lzw_buff_shift()
 {
 	u16 cx;
 	cx = lzw_buff_size - (lzw_bit_cur>>3);

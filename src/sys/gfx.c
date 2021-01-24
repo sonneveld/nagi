@@ -30,7 +30,7 @@
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
-PCOLOUR ega_palette[] =
+static PCOLOUR ega_palette[] =
 { 	{0,0,0},		// black
 	{0,0,170},	// dark blue
 	{0,170,0},	// dark green
@@ -50,7 +50,7 @@ PCOLOUR ega_palette[] =
 };
 
 // same as ega atm.. must change
-PCOLOUR text_palette[] =
+static PCOLOUR text_palette[] =
 { 	{0,0,0},		// black
 	{0,0,170},	// dark blue
 	{0,170,0},	// dark green
@@ -69,21 +69,21 @@ PCOLOUR text_palette[] =
 	{255,255,255}	// white
 };
 
-PCOLOUR cga_0_palette[] =
+static PCOLOUR cga_0_palette[] =
 { 	{0,0,0},		// black
 	{85,255,255},	// cyan
 	{255,85,255},	// magenta
 	{255,255,255}	// white
 };
 
-PCOLOUR cga_1_palette[] =
+static PCOLOUR cga_1_palette[] =
 { 	{0,0,170},	// blue
 	{0,170,0},	// green
 	{170,0,0},	// red
 	{170,85,0}	// yellow
 };
 
-PCOLOUR bw_palette[] =
+static PCOLOUR bw_palette[] =
 {	{0,0,0},		// black
 	{255, 255, 255}	// white
 };
@@ -98,7 +98,7 @@ u8 gfx_palsize = 0;
 //u8 gfx_scale = 1;	// set from config
 //u8 gfx_fullscreen = 0;	// set from config
 
-POS render_scale = {0, 0};
+// POS render_scale = {0, 0};
 
 AGISIZE gfx_size = {320, 200};	// from render size * scale
 u8 *gfx_picbuff = 0;	// created in gfx_init();

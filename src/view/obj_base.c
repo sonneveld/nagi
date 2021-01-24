@@ -56,9 +56,9 @@ VIEW *objtable = 0;
 VIEW *objtable_tail;
 u16 objtable_size;
 
-void blit_add(VIEW *v, BLIT *h);
-s16 gen_sort_pos(s16 var8);
-void obj_animate(u8 num);
+static void blit_add(VIEW *v, BLIT *h);
+static s16 gen_sort_pos(s16 var8);
+static void obj_animate(u8 num);
 
 void objtable_new(u16 max)
 {
@@ -165,9 +165,9 @@ BLIT *blitlist_build( u16(*f)(VIEW *) , BLIT *head)	// function, spritelist
 	return head;	// a passed parameter
 }
 
-u16 priority_orig = 1;
+static u16 priority_orig = 1;
 
-s16 gen_sort_pos(s16 var8)
+static s16 gen_sort_pos(s16 var8)
 {
 	s16 temp2;
 	
@@ -257,7 +257,7 @@ u8 *cmd_unknown_174(u8 *c)
 }
 */
 
-void blit_add(VIEW *v, BLIT *h)  // var8 = v    vara = h
+static void blit_add(VIEW *v, BLIT *h)  // var8 = v    vara = h
 {
 	BLIT *d, *c;
 	
@@ -348,7 +348,7 @@ u8 *cmd_animate_obj(u8 *c)
 	return c;	
 }
 
-void obj_animate(u8 num)
+static void obj_animate(u8 num)
 {
 	VIEW *v;
 	

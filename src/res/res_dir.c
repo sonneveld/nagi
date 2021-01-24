@@ -31,12 +31,12 @@ _ResNotFound                     cseg     00004441 0000002F
 
 #define DIR_ITEM_SIZE 3
 
-u8 dir_ver = 0;
-u8 *dir_data = 0;
-u8 *dir_log_data = 0;
-u8 *dir_pic_data = 0;
-u8 *dir_view_data = 0;
-u8 *dir_snd_data = 0;
+static u8 dir_ver = 0;
+static u8 *dir_data = 0;
+static u8 *dir_log_data = 0;
+static u8 *dir_pic_data = 0;
+static u8 *dir_view_data = 0;
+static u8 *dir_snd_data = 0;
 
 
 void dir_load(void)
@@ -163,7 +163,7 @@ void dir_unload(void)
 }
 
 // checks the first four bits of a vol_item.
-u8 *dir_check(u8 *v)
+static u8 *dir_check(u8 *v)
 {
 	if ( (v[0] & 0xF0) == 0xF0)
 		return 0;
@@ -171,7 +171,7 @@ u8 *dir_check(u8 *v)
 		return v;
 }
 
-void dir_error(u8 *name, u16 num)
+static void dir_error(u8 *name, u16 num)
 {
 	u8 str[100];
 	sprintf(str, "%s %d not found", name, num);

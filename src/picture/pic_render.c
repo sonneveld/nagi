@@ -42,6 +42,25 @@ _DrawLine                        cseg     0000661A 00000096
 #include "../sys/drv_video.h"
 #include "../sys/vid_render.h"
 
+static void pic_cmd_loop(void);
+static void enable_pic_draw(void);
+static void disable_pic_draw(void);
+static void enable_pri_draw(void);
+static void disable_pri_draw(void);
+static void plot_with_pen(void);
+static void read_pen_status(void);
+static void plot_with_pen_2(void);
+static void absolute_line(void);
+static void pic_fill(void);
+static int read_xy_pos(u8 *x, u8 *y);
+static int get_x_pos(u8 *x);
+static int get_y_pos(u8 *y);
+static void draw_line(void);
+static void draw_y_corner(void);
+static void draw_x_corner(void);
+static void relative_line(void);
+static void draw_corner(u8 type);
+
 u8 pos_init_y = 0;
 u8 pos_init_x = 0;
 u8 pos_final_y = 0;
@@ -54,10 +73,10 @@ u8 colour_pictpart=0;
 u8 colour_pripart=0;
 u8 *given_pic_data = 0;
 
-u16 pen_status = 0;
-s16 pen_x = 0;		// these should be u16
-s16 pen_y = 0;
-u16 texture_num = 0;
+static u16 pen_status = 0;
+static s16 pen_x = 0;		// these should be u16
+static s16 pen_y = 0;
+static u16 texture_num = 0;
 
 /*
 u8 LineFinalX
@@ -104,8 +123,8 @@ void render_pic(u8 overlay)
 
 // ----------------
 
-u8 *pic_code;
-u8 pic_byte;
+static u8 *pic_code;
+static u8 pic_byte;
 
 // ----------------
 
@@ -113,7 +132,7 @@ u8 pic_byte;
 // reads through the picture data and executes commands.
 // if there's a command it doesn't understand, it skips it and keeps going
 // FFh means it quits
-void pic_cmd_loop()
+static void pic_cmd_loop()
 {
 	pic_code = given_pic_data;
 	pic_byte = *(pic_code++);		// read next byte
@@ -154,7 +173,7 @@ void pic_cmd_loop()
 
 
 // 0xF0: Change picture colour and enable picture draw
-void enable_pic_draw()
+static void enable_pic_draw()
 {
 	COLOUR new_col;
 	
@@ -176,7 +195,7 @@ void enable_pic_draw()
 }
 
 // 0xF1: Disable picture draw
-void disable_pic_draw()
+static void disable_pic_draw()
 {
 	sbuff_drawmask = sbuff_drawmask & 0xF0;
 	col_odd = col_odd | 0x0F;	// white
@@ -187,7 +206,7 @@ void disable_pic_draw()
 }
 
 // 0xF2: Change priority colour and enable priority draw
-void enable_pri_draw()
+static void enable_pri_draw()
 {
 	pic_byte = *(pic_code++);	
 
@@ -203,7 +222,7 @@ void enable_pri_draw()
 
 
 // 0xF3: Disable priority draw
-void disable_pri_draw()
+static void disable_pri_draw()
 {
 	sbuff_drawmask = sbuff_drawmask & 0x0F;
 	col_odd = col_odd | 0xF0;
@@ -219,7 +238,7 @@ void disable_pri_draw()
 
 
 // 0xFA: Plot with pen
-void plot_with_pen()
+static void plot_with_pen()
 {
 	u8 xx, yy;
 	//printf("pen plot.. incomplete \n");
@@ -245,7 +264,7 @@ loc6438:
 }
 
 // 0xF9: Change pen size and style
-void read_pen_status()
+static void read_pen_status()
 {	
 	pen_status = *(pic_code++);
 	pic_byte = *(pic_code++);
@@ -255,11 +274,11 @@ void read_pen_status()
 
 
 
-u16 binary_list[] = {0x8000, 0x4000, 0x2000, 0x1000, 0x800, 0x400, 0x200, 0x100, 
+static u16 binary_list[] = {0x8000, 0x4000, 0x2000, 0x1000, 0x800, 0x400, 0x200, 0x100, 
 			0x80, 0x40, 0x20, 0x10, 0x8, 0x4, 0x2, 0x1};
 
-u8 circle_list[] = {0, 1, 4, 9, 16, 25, 37, 50};
-u16 circle_data[] =
+static u8 circle_list[] = {0, 1, 4, 9, 16, 25, 37, 50};
+static u16 circle_data[] =
 {0x8000, 
 0x0E000, 0x0E000, 0x0E000, 
 0x7000, 0xF800, 0x0F800, 0x0F800, 0x7000, 
@@ -270,7 +289,7 @@ u16 circle_data[] =
 0x07C0, 0x1FF0, 0x3FF8, 0x7FFC, 0x7FFC, 0x0FFFE, 0x0FFFE, 0x0FFFE, 0x0FFFE, 0x0FFFE, 0x7FFC, 0x7FFC, 0x3FF8, 0x1FF0, 0x07C0};
 				
 // called by plot with pen.
-void plot_with_pen_2()
+static void plot_with_pen_2()
 {
 	u16 circle_word;
 	u16 *circle_ptr;	// si
@@ -376,7 +395,7 @@ loc651b:
 
 
 // 0xF6: Absolute line
-void absolute_line()
+static void absolute_line()
 {	
 	if (read_xy_pos(&pos_init_x, &pos_init_y) != 1)
 	{
@@ -392,7 +411,7 @@ void absolute_line()
 	
 
 // 0xF5: Draw an X corner
-void draw_x_corner()
+static void draw_x_corner()
 {
 	if (read_xy_pos(&pos_init_x, &pos_init_y) != 1)
 	{
@@ -402,7 +421,7 @@ void draw_x_corner()
 }
 
 // 0xF4: Draw a Y corner
-void draw_y_corner()
+static void draw_y_corner()
 {
 	if (read_xy_pos(&pos_init_x, &pos_init_y) != 1)
 	{
@@ -413,7 +432,7 @@ void draw_y_corner()
 
 // 0 = x corner
 // 1 = y corner
-void draw_corner(u8 type)
+static void draw_corner(u8 type)
 {
 	u8 pos;
 	u8 orig_x, orig_y;
@@ -456,7 +475,7 @@ draw_y:
 	
 	
 	
-void relative_line()
+static void relative_line()
 {
 	u8 x_pos, y_pos;
 	u8 x_step, y_step;	// x = bh, y = bl;
@@ -515,7 +534,7 @@ void relative_line()
 
 
 // 0xF8: Fill
-void pic_fill()
+static void pic_fill()
 {
 	while (read_xy_pos(&pos_init_x, &pos_init_y) != 1)
 		sbuff_picfill(pos_init_y, pos_init_x);
@@ -525,14 +544,14 @@ void pic_fill()
 // reads the position from the pic file data
 // puts read positions into x and y mem ptrs
 // returns 0 if successful
-int read_xy_pos(u8 *x, u8 *y)
+static int read_xy_pos(u8 *x, u8 *y)
 {
 	if(get_x_pos(x) == 1)
 		return 1;
 	return(get_y_pos(y));
 }
 
-int get_x_pos(u8 *x)
+static int get_x_pos(u8 *x)
 {
 	pic_byte = *(pic_code++);
 	*x = pic_byte;
@@ -544,7 +563,7 @@ int get_x_pos(u8 *x)
 	return 0;
 }
 
-int get_y_pos(u8 *y)
+static int get_y_pos(u8 *y)
 {
 	pic_byte = *(pic_code++);
 	*y = pic_byte;
@@ -558,7 +577,7 @@ int get_y_pos(u8 *y)
 
 
 
-void draw_line()
+static void draw_line()
 {
 	//u8 line_x_final;	// these final are ignored in this or any function
 	//u8 line_y_final;	// I'll put them in if necessary

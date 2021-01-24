@@ -44,7 +44,10 @@ These are implemented in the gnu library:
 
 #include "string.h"
 
-u8 string_buff[0xC];
+static u8 *string_reverse(u8 *str);
+
+
+static u8 string_buff[0xC];
 
 // atoi
 u16 string_to_int(u8 *string)
@@ -93,7 +96,7 @@ u8 *string_zero_pad(u8 *str, u16 pad_size)
 	return string_buff;
 }
 
-u8 *hex_conv = "0123456789ABCDEF";
+static u8 *hex_conv = "0123456789ABCDEF";
 
 u8 *int_to_hex_string(u16 num)
 {
@@ -111,7 +114,7 @@ u8 *int_to_hex_string(u16 num)
 }
 
 
-u8 *int_to_hex_string_v2(u16 num)
+static u8 *int_to_hex_string_v2(u16 num)
 {
 	u8 temp;
 	u8 *si;
@@ -135,7 +138,7 @@ u8 *int_to_hex_string_v2(u16 num)
 	return string_reverse(string_buff);
 }
 
-u8 *string_reverse(u8 *str)
+static u8 *string_reverse(u8 *str)
 {
 	u8 *si, *di;
 	u8 temp;
@@ -169,7 +172,7 @@ u8 *string_lower(u8 *str)
 
 // find character
 // u8 *strchr
-u8 *sub4f96(u8 *given_string, u16 ch)
+static u8 *sub4f96(u8 *given_string, u16 ch)
 {
 	u8 *s = given_string;
 	while (  (*s != 0) && (*s != ch)  )

@@ -22,16 +22,16 @@
 
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
-void ega_update(int x, int y, int width, int height);
-void cga_update(int x, int y, int width, int height);
-void dummy_update(int x, int y, int width, int height);
+static void ega_update(int x, int y, int width, int height);
+static void cga_update(int x, int y, int width, int height);
+static void dummy_update(int x, int y, int width, int height);
 
-void ega_rect(int x, int y, int width, int height, u8 colour);
-void cga_rect(int x, int y, int width, int height, u8 colour);
-void dummy_rect(int x, int y, int width, int height, u8 colour);
+static void ega_rect(int x, int y, int width, int height, u8 colour);
+static void cga_rect(int x, int y, int width, int height, u8 colour);
+static void dummy_rect(int x, int y, int width, int height, u8 colour);
 
-void dummy_view_dither(u8 *view_data);
-void cga_view_dither(u8 *view_data);	// dither view
+static void dummy_view_dither(u8 *view_data);
+static void cga_view_dither(u8 *view_data);	// dither view
 
 
 
@@ -40,7 +40,7 @@ void cga_view_dither(u8 *view_data);	// dither view
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
-RDRIVER render_drv_cga0 = 
+static RDRIVER render_drv_cga0 = 
 {
 	R_CGA0, 0, PAL_CGA0,
 	320, 168, 2,1, 
@@ -48,7 +48,7 @@ RDRIVER render_drv_cga0 =
 	render_colour, cga_view_dither
 };
 
-RDRIVER render_drv_cga1 = 
+static RDRIVER render_drv_cga1 = 
 {
 	R_CGA1, 1, PAL_CGA1,
 	320, 168, 2, 1, 
@@ -56,7 +56,7 @@ RDRIVER render_drv_cga1 =
 	render_colour, cga_view_dither
 };
 
-RDRIVER render_drv_ega = 
+static RDRIVER render_drv_ega = 
 {
 	R_EGA, 3, PAL_16,
 	320, 168, 2,1, 
@@ -64,7 +64,7 @@ RDRIVER render_drv_ega =
 	render_colour, dummy_view_dither
 };
 
-RDRIVER render_drv_dummy = 
+static RDRIVER render_drv_dummy = 
 {
 	R_NONE, 0, PAL_16,
 	0, 0, 1,1, 
@@ -76,11 +76,11 @@ RDRIVER *rend_drv;
 u8 *rend_buf;
 int rend_buf_size;
 
-RDRIVER *drv_list[] = {&render_drv_ega, 
+static RDRIVER *drv_list[] = {&render_drv_ega, 
 				&render_drv_cga0,
 				&render_drv_cga1,
 				0};
-RDRIVER **drv_list_ptr = 0;
+static RDRIVER **drv_list_ptr = 0;
 
 
 
@@ -145,7 +145,7 @@ void render_shutdown()
 	}
 }
 
-int render_clip(int *r_x, int *r_y, int *r_w, int *r_h)
+static int render_clip(int *r_x, int *r_y, int *r_w, int *r_h)
 {
 	int w_max, h_max;
 
@@ -196,7 +196,7 @@ void render_update(int x, int y, int width, int height)
 	gfx_update(x, y, width, height);
 }
 
-void ega_update(int x, int y, int width, int height)
+static void ega_update(int x, int y, int width, int height)
 {
 	u8 *pbuf, *rbuf;
 	int w, h;
@@ -217,7 +217,7 @@ void ega_update(int x, int y, int width, int height)
 	
 }
 
-void cga_update(int x, int y, int width, int height)
+static void cga_update(int x, int y, int width, int height)
 {
 	u8 *pbuf, *rbuf;
 	int w, h;
@@ -238,7 +238,7 @@ void cga_update(int x, int y, int width, int height)
 	}
 }
 
-void dummy_update(int x, int y, int width, int height)
+static void dummy_update(int x, int y, int width, int height)
 {
 	(void) x;
 	(void) y;
@@ -261,7 +261,7 @@ void render_rect(int x, int y, int width, int height, u8 colour)
 }
 
 
-void ega_rect(int x, int y, int width, int height, u8 colour)
+static void ega_rect(int x, int y, int width, int height, u8 colour)
 {
 	u8 *rbuf;
 	int h;
@@ -275,7 +275,7 @@ void ega_rect(int x, int y, int width, int height, u8 colour)
 	}
 }
 
-void cga_rect(int x, int y, int width, int height, u8 colour)
+static void cga_rect(int x, int y, int width, int height, u8 colour)
 {
 	u8 *rbuf;
 	COLOUR rend_col;
@@ -320,7 +320,7 @@ void cga_rect(int x, int y, int width, int height, u8 colour)
 
 }
 
-void dummy_rect(int x, int y, int width, int height, u8 colour)
+static void dummy_rect(int x, int y, int width, int height, u8 colour)
 {
 	(void) x;
 	(void) y;
@@ -333,7 +333,7 @@ void dummy_rect(int x, int y, int width, int height, u8 colour)
 // ---------- DITHERING -------------------------
 
 // PIC DITHERING
-u8 cga_colour_pal[]={0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x01, 0x04,
+static u8 cga_colour_pal[]={0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x01, 0x04,
 				0x05, 0x03, 0x01, 0x00, 0x04, 0x0A, 0x0A, 0x06,
 				0x03, 0x0C, 0x08, 0x0B, 0x0E, 0x05, 0x03, 0x04,
 				0x0A, 0x04, 0x03, 0x07, 0x0D, 0x00, 0x09, 0x01,
@@ -362,17 +362,17 @@ void render_colour(u8 col, COLOUR *col_dith)
 
 //(black-cyan-magenta-white CGA palette)
 // display == 0
-u8 cga0_view_pal[]={0x00, 0x22, 0x11, 0x33, 0x44, 0x66, 0x88, 0x55,
+static u8 cga0_view_pal[]={0x00, 0x22, 0x11, 0x33, 0x44, 0x66, 0x88, 0x55,
 				0xAA, 0x77, 0x99, 0xBB, 0xEE, 0xCC, 0xDD, 0xFF};
 	
 //(blue-yellow-red-green CGA palette)
 // display == 1
-u8 cga1_view_pal[]={0x00, 0x00, 0xCC, 0x11, 0xAA, 0x22, 0x99, 0xDD,
+static u8 cga1_view_pal[]={0x00, 0x00, 0xCC, 0x11, 0xAA, 0x22, 0x99, 0xDD,
 				0x00, 0x33, 0x55, 0x77, 0xEE, 0xEE, 0xFF, 0xFF};
 
 // copy of cga1_view_pal.. it's used as a buffer.. because one of the colours
 // gets changed to the transparent colour (only in this mode (1)though)
-u8 cga1_view_buff[]={0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+static u8 cga1_view_buff[]={0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 void render_view_dither(u8 *view_data)
@@ -380,13 +380,13 @@ void render_view_dither(u8 *view_data)
 	rend_drv->func_view_dither(view_data);
 }
 
-void dummy_view_dither(u8 *view_data)
+static void dummy_view_dither(u8 *view_data)
 {
 	// oh wait.. I don't DO anything!
 	(void) view_data;
 }
 				
-void cga_view_dither(u8 *view_data)	// dither view
+static void cga_view_dither(u8 *view_data)	// dither view
 {
 	u16 loop_prev;	// checks to make sure you're not mirroring a previous loop	
 	u8 *loop_table;

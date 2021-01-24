@@ -44,7 +44,7 @@ int dir_preset_change(int preset_id);
 //VSTRING *directory_nagi  = 0;
 
 
-VSTRING *dir_preset[10];
+static VSTRING *dir_preset[10];
 
 
 // home

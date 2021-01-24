@@ -33,26 +33,75 @@ _MenuCalcSize                    cseg     000095C4 00000073
 #include "../sys/chargen.h"
 #include "../sys/vid_render.h"
 
-u16 menu_next_input = 0;
 
-u16 menu_col = 0;
-u16 menu_item_row = 0;
-u16 menu_item_col = 0;
-u16 menu_submit = 0;			// 1 = submited.. no later changes possible
+struct menu_item_struct
+{
+	struct menu_item_struct *next;	// 0-1	next
+	struct menu_item_struct *prev; 	// 2-3 prev
+	u8 *name;				// 4-5
+	u16 row; 				// 6-7
+	u16 col;				// 8-9
+	u16 status;				// a-b	// 1 = enable 0 = disable
+	
+	u16 control;			// c-d
+};
 
-MENU *menu_head = 0;
-MENU *menu_cur = 0;
-MENU_ITEM *menu_item_cur = 0;	// menuE ptr cur
+typedef struct menu_item_struct MENU_ITEM;
+
+struct menu_struct
+{
+	struct menu_struct *next;	// 0-1 next
+	struct menu_struct *prev;	// 2-3 prev
+	u8 *name;				// 0x4-5
+	u16 row;				// 6-7	// guesing it's row
+	u16 col;				// 0x8-9
+	u16 status;				// 0xA-b  -  0 = no items.. empty
+	
+	struct menu_item_struct *head;	// 0xC-0xD - menu_item head
+	struct menu_item_struct *cur;	// 0xE-0xF - menu_item current
+	u16 size;				// 0x10-0x11 - number of items
+};
+
+typedef struct menu_struct MENU;
+
+
+static void menu_item_set(u16 cont, u16 new_state);
+static void menu_leave(MENU *si, MENU_ITEM *di);
+static void menu_draw(MENU *var8);
+static void menu_clear(MENU *var8, MENU_ITEM *vara);
+static void menu_item_name_invert(MENU_ITEM *mi);
+static void menu_name_invert(MENU *m);
+static void menu_item_name(MENU_ITEM *mi);
+static void menu_name(MENU *m);
+static void menu_calc_size(MENU *var8);
+
+
+static int menu_next_input = 0;
+
+static u16 menu_col = 0;
+static u16 menu_item_row = 0;
+static u16 menu_item_col = 0;
+static u16 menu_submit = 0;			// 1 = submited.. no later changes possible
+
+static MENU *menu_head = 0;
+static MENU *menu_cur = 0;
+static MENU_ITEM *menu_item_cur = 0;	// menuE ptr cur
 //u16 menu_size = 0;			// menu size  ah = width  al = height
 //u16 menu_pos = 0;			// menu position ah = col  al = row
 
-u8 menu_size_width = 0;
-u8 menu_size_height = 0;
-u8 menu_pos_x;
-u8 menu_pos_y;
+static u8 menu_size_width = 0;
+static u8 menu_size_height = 0;
+static u8 menu_pos_x;
+static u8 menu_pos_y;
 
 // mouse stuff?
-u16 menu_drawn = 0;
+static u16 menu_drawn = 0;
+
+
+int get_menu_requires_input_events(void)
+{
+	return menu_next_input;
+}
 
 u8 *cmd_set_menu(u8 *c)
 {
@@ -191,7 +240,7 @@ u8 *cmd_disable_item(u8 *c)
 }
 
 // change menu item stat
-void menu_item_set(u16 cont, u16 new_state)
+static void menu_item_set(u16 cont, u16 new_state)
 {
 	MENU_ITEM *temp2;
 	MENU *di;
@@ -408,7 +457,7 @@ menu_loop:
 	goto menu_loop;
 }
 
-void menu_leave( MENU *si, MENU_ITEM *di )
+static void menu_leave( MENU *si, MENU_ITEM *di )
 {
 	menu_clear(si, di);
 	text_attrib_pop();
@@ -424,7 +473,7 @@ void menu_leave( MENU *si, MENU_ITEM *di )
 	menu_drawn = 0;
 }
 
-void menu_draw(MENU *m)
+static void menu_draw(MENU *m)
 {
 	MENU_ITEM *di;
 	
@@ -448,7 +497,7 @@ void menu_draw(MENU *m)
 }
 
 
-void menu_clear(MENU *m, MENU_ITEM *mi)
+static void menu_clear(MENU *m, MENU_ITEM *mi)
 {
 	m->cur = mi;
 	menu_name(m);
@@ -470,7 +519,7 @@ void menu_item_name_invert(MENU_ITEM *mi)
 }
 
 // selected name of menu
-void menu_name_invert(MENU *m)
+static void menu_name_invert(MENU *m)
 {
 	text_colour(do_nothing(0x0F), calc_text_bg(0));
 	goto_row_col(m->row, m->col);
@@ -483,7 +532,7 @@ void menu_name_invert(MENU *m)
 
 
 // normal unselected menu item
-void menu_item_name(MENU_ITEM *mi)
+static void menu_item_name(MENU_ITEM *mi)
 {
 	text_colour(do_nothing(0), calc_text_bg(0x0F));
 	goto_row_col(mi->row, mi->col);
@@ -494,7 +543,7 @@ void menu_item_name(MENU_ITEM *mi)
 }
 
 // normal name of menu
-void menu_name(MENU *m)
+static void menu_name(MENU *m)
 {
 	text_colour(do_nothing(0), calc_text_bg(0x0F));
 	goto_row_col(m->row, m->col);
@@ -505,7 +554,7 @@ void menu_name(MENU *m)
 }
 
 // calculate the menu size??
-void menu_calc_size(MENU *m)
+static void menu_calc_size(MENU *m)
 {
 	menu_size_height = LINE_SIZE * (m->size + 2);
 	menu_size_width = (strlen((m->head)->name) << 2) + 8;

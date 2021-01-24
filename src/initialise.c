@@ -187,7 +187,7 @@ void nagi_init()
 	input_redraw();
 	
 	// allocate memory for the LZW dictionary
-	lzw_dict = malloc(0x800 * sizeof(DICT));
+	lzw_init();
 }
 
 void agi_init()
@@ -303,10 +303,7 @@ void agi_shutdown(void)
 
 void nagi_shutdown(void)
 {
-	// lzw dict
-	if (lzw_dict != 0)
-		free(lzw_dict);
-	lzw_dict = 0;
+	lzw_shutdown();
 
 	//sound_shutdown
 	sndgen_shutdown();

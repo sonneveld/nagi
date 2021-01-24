@@ -50,11 +50,22 @@ struct sdl_channel_struct
 };
 typedef struct sdl_channel_struct SDL_CHAN;
 
+static int pcm_out_sdl_init(int freq, int format);
+static void pcm_out_sdl_shutdown(void);
+static void pcm_out_sdl_avail(void);
+static int pcm_out_sdl_open( int (*callback)(void *userdata, Uint8 *stream, int len), void *userdata);
+static void pcm_out_sdl_close(int handle);
+static void pcm_out_sdl_state_set(int );
+static int pcm_out_sdl_state_get(void);
+static void pcm_out_sdl_lock(void);
+static void pcm_out_sdl_unlock(void);
+static void sdl_callback(void *userdata, u8 *stream, int len);
+
 /* VARIABLES	---	---	---	---	---	---	--- */
 
-u8 handles_used = 0;
+static u8 handles_used = 0;
 
-LIST *chan_list = 0;
+static LIST *chan_list = 0;
 
 
 #if WRITE_TO_DISK
@@ -65,8 +76,8 @@ struct data_struct
 };
 typedef struct data_struct DATA;
 	
-LIST *list_data = 0;
-int file_handle = 0;
+static LIST *list_data = 0;
+static int file_handle = 0;
 #endif
 
 
@@ -94,7 +105,7 @@ void pcm_out_sdl_drv_init(void *void_ptr)
 }
 
 
-int pcm_out_sdl_init(int freq, int format)
+static int pcm_out_sdl_init(int freq, int format)
 {
 	SDL_AudioSpec wanted;
 	
@@ -139,7 +150,7 @@ int pcm_out_sdl_init(int freq, int format)
 	return 0;
 }
 
-void pcm_out_sdl_shutdown(void)
+static void pcm_out_sdl_shutdown(void)
 {
 
 	// set state to stop
@@ -187,7 +198,7 @@ void pcm_out_sdl_shutdown(void)
 }
 
 // get available options
-void pcm_out_sdl_avail(void)
+static void pcm_out_sdl_avail(void)
 {
 	// return 16bit, 8bit, 22khz, 41khz
 }
@@ -195,7 +206,7 @@ void pcm_out_sdl_avail(void)
 // uses a char to store 8 bits.  each bit represents a used handle
 // easier to determine which handles are free.
 
-int handle_new(void)
+static int handle_new(void)
 {
 	int handle = 1;
 	u8 mask = 0x80;
@@ -212,7 +223,7 @@ int handle_new(void)
 	return (mask) ? handle : 0;
 }
 
-void handle_free(int handle)
+static void handle_free(int handle)
 {
 	u8 mask = 0x80;
 	
@@ -227,7 +238,7 @@ void handle_free(int handle)
 
 // returns 0 if failed
 // else returns handle
-int pcm_out_sdl_open( int (*callback)(void *userdata, Uint8 *stream, int len), void *userdata)
+static int pcm_out_sdl_open( int (*callback)(void *userdata, Uint8 *stream, int len), void *userdata)
 {
 	SDL_CHAN chan;
 	SDL_CHAN *chan_new;
@@ -252,7 +263,7 @@ int pcm_out_sdl_open( int (*callback)(void *userdata, Uint8 *stream, int len), v
 	return chan.handle;
 }
 
-void pcm_out_sdl_close(int handle)
+static void pcm_out_sdl_close(int handle)
 {
 	SDL_CHAN *ch;
 	(void) handle;
@@ -275,31 +286,31 @@ void pcm_out_sdl_close(int handle)
 
 // 1 = playing
 // 0 = stopped
-void pcm_out_sdl_state_set(int snd_state)
+static void pcm_out_sdl_state_set(int snd_state)
 {
 	SDL_PauseAudio(snd_state?0:1);
 }
 
-int pcm_out_sdl_state_get(void)
+static int pcm_out_sdl_state_get(void)
 {
 	return (SDL_GetAudioStatus() == SDL_AUDIO_PLAYING);
 }
 
 // lock audio thread so data can be changed
-void pcm_out_sdl_lock(void)
+static void pcm_out_sdl_lock(void)
 {
 	SDL_LockAudio();
 }
 
 // unlock thread
-void pcm_out_sdl_unlock(void)
+static void pcm_out_sdl_unlock(void)
 {
 	SDL_UnlockAudio();
 }
 
 
 
-void sdl_callback(void *userdata, u8 *stream, int len)
+static void sdl_callback(void *userdata, u8 *stream, int len)
 {
 	s16* chan_data = alloca(len);
 	int stream_len, stream_count;

@@ -33,13 +33,13 @@ _WordNext                        cseg     00001BE4 00000020
 
 void parse(u8 *string);
 u8 *cmd_parse(u8 *c);
-void parse_read(u8 *s);
-u16 word_find(void);
-void playerWordIsolate(void);
-u8 *dictWordNext(u8 *si);
+static void parse_read(u8 *s);
+static u16 word_find(void);
+static void playerWordIsolate(void);
+static u8 *dictWordNext(u8 *si);
 
-u8 *char_separators = " ,.?!();:[]{}";
-u8 *char_illegal = "'`-\"";	// 0x27 is '
+static const u8 *char_separators = " ,.?!();:[]{}";
+static const u8 *char_illegal = "'`-\"";	// 0x27 is '
 
 u16 word_num[WORD_BUF_SIZE];
 u8 *word_string[WORD_BUF_SIZE];
@@ -48,8 +48,8 @@ u16 word_total = 0;	// bad word
 u8 *words_tok_data = 0;
 
 // work area
-u8 parse_string[42];
-u8 *strPtr;
+static u8 parse_string[42];
+static u8 *strPtr;
 
 void parse(u8 *string)
 {
@@ -104,7 +104,7 @@ u8 *cmd_parse(u8 *c)
 
 // cleans the word.. separates good words by ' '
 // puts in it parse_string[]
-void parse_read(u8 *str)
+static void parse_read(u8 *str)
 {
 	u8 *buf;
 
@@ -145,7 +145,7 @@ void parse_read(u8 *str)
 
 
 // accesses the words.tok file
-u16 word_find()
+static u16 word_find()
 {
 	u16 indexOffset;	// offset to data for that letter
 	u16 chCount;		// count of characters already matched
@@ -234,7 +234,7 @@ u16 word_find()
 
 // go through str until we reach a space or zero
 // then set it to zero.
-void playerWordIsolate()
+static void playerWordIsolate()
 {
 	u8 *str;
 	for (str=(u8*)strPtr; (*str!=' ')&&(*str); str++) {};
@@ -244,7 +244,7 @@ void playerWordIsolate()
 // skip past current word in dictionary
 // return pointer to next word
 // return 0 if no word exists
-u8 *dictWordNext(u8 *str)
+static u8 *dictWordNext(u8 *str)
 {
 	while ((*str & 0x80) == 0)	// msb
 		str++;

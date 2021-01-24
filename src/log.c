@@ -20,7 +20,7 @@
 /* OTHER headers	---	---	---	---	---	---	--- */
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
-void log_open(void);
+static void log_open(void);
 
 
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -29,7 +29,7 @@ void log_open(void);
 /* CODE	---	---	---	---	---	---	---	--- */
 
 
-FILE *log_stream = NULL;
+static FILE *log_stream = NULL;
 
 u8 *cmd_log(u8 *c)
 {
@@ -60,7 +60,7 @@ u8 *cmd_log(u8 *c)
 	return c;
 }
 
-void log_open(void)
+static void log_open(void)
 {
 	if (log_stream == NULL)
 	{

@@ -20,6 +20,8 @@ _Erase                           cseg     00000AAB 00000089
 #include <setjmp.h>
 #include "../sys/error.h"
 
+static void obj_erase(u16 num);
+
 
 u8 *cmd_draw(u8 *c)
 {
@@ -61,7 +63,7 @@ u8 *cmd_erase(u8 *c)
 	return c;
 }
 
-void obj_erase(u16 num)
+static void obj_erase(u16 num)
 {
 	VIEW *v;
 	u16 no_update_flag;

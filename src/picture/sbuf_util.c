@@ -46,7 +46,7 @@ void sbuff_fill(u8 colour)
 	memset(gfx_picbuff, colour, PICBUFF_WIDTH*PICBUFF_HEIGHT);
 }
 
-void sbuff_testpattern()
+static void sbuff_testpattern()
 {
 	int i, m,n;
 	u8 *b;
@@ -177,12 +177,12 @@ void sbuff_plot()
 }
 
 
-u8 left=0, right=0;
-u8 direction=0, old_direction=0;
-u8 toggle=0, old_toggle=0;		//, pos_x3;
-u8 old_initx=0, old_inity=0;
-u8 stack_left=0, stack_right=0;
-u8 old_right=0, old_left=0;
+static u8 left=0, right=0;
+static u8 direction=0, old_direction=0;
+static u8 toggle=0, old_toggle=0;		//, pos_x3;
+static u8 old_initx=0, old_inity=0;
+static u8 stack_left=0, stack_right=0;
+static u8 old_right=0, old_left=0;
 // FILL
 void sbuff_picfill(u8 ypos, u8 xpos)
 {

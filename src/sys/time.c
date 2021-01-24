@@ -13,14 +13,14 @@
 // 2 = turn off
 u16 clock_state = 0;
 
-SDL_Thread *agi_clock_thread;
+static SDL_Thread *agi_clock_thread;
 
 #define SDL_TICK_SCALE 50
 
 // TODO: check base.c   disable clock and denit time
 
 
-int clock_thread(void *unused)
+static int clock_thread(void *unused)
 {	
 	u16 time_counter = 0;
 	u32 sdl_tick_prev = 0;

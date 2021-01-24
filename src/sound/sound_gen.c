@@ -45,7 +45,7 @@ typedef struct sndgen_channel_struct SNDGEN_CHAN;
 
 // "fade out" or possibly "dissolve"
 // v2.9xx
-s8 dissolve_data_v2[] =
+static s8 dissolve_data_v2[] =
 {
 	-2, -3, -2, -1, 0x00, 0x00, 0x01, 0x01, 0x01,
 	0x01, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
@@ -59,7 +59,7 @@ s8 dissolve_data_v2[] =
 }; 
 
 // v3
-s8 dissolve_data_v3[] =
+static s8 dissolve_data_v3[] =
 {
 -2, -3, -2, -1,
 0, 0, 0, 0, 0, 
@@ -81,7 +81,7 @@ s8 dissolve_data_v3[] =
 
 
 //u8 channels_left = 0;
-SNDGEN_CHAN channel[CHAN_MAX];
+static SNDGEN_CHAN channel[CHAN_MAX];
 
 		
 /* CODE	---	---	---	---	---	---	---	--- */
@@ -175,7 +175,7 @@ void sndgen_stop(void)
 
 
 
-int volume_calc(SNDGEN_CHAN *chan)
+static int volume_calc(SNDGEN_CHAN *chan)
 {
 	s8 al, dissolve_value;
 	

@@ -21,7 +21,6 @@ extern u16 sound_flag;
 
 extern void sound_list_init(void);
 extern void sound_list_new_room(void);
-extern SOUND *sound_find(u16 snd_num);
 extern u8 *cmd_load_sound(u8 *c);
 extern SOUND *sound_load(u16 snd_num);
 extern u8 *cmd_sound(u8 *c);

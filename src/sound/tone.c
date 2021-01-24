@@ -33,7 +33,7 @@
 
 // tone  interface
 
-DRVINIT tone_init_list[] =
+static DRVINIT tone_init_list[] =
 {
 	/*{"speaker", 0},
 	{"pcm_16bit", 0},
@@ -42,9 +42,9 @@ DRVINIT tone_init_list[] =
 	{"pcm_16bit", tone_pcm_drv_init}
 };
 
-u8 c_snd_tone_drv[] = "pcm_16bit";
+static u8 c_snd_tone_drv[] = "pcm_16bit";
 
-TONE_DRIVER tone_drv={0};
+static TONE_DRIVER tone_drv={0};
 
 int tone_init(void)
 {

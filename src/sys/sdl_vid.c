@@ -35,6 +35,7 @@ Mini code sample for SDL2 256-color palette https://discourse.libsdl.org/t/mini-
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 
+static void vid_render(SDL_Surface* surface, const u32 x, const u32 y, const u32 w, const u32 h);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
@@ -49,7 +50,7 @@ struct video_struct
 
 typedef struct video_struct VIDEO;
 
-VIDEO video_data = { 0 };
+static VIDEO video_data = { 0 };
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
@@ -61,17 +62,17 @@ VIDEO video_data = { 0 };
 
 void vid_init()
 {
+#if 0
 	printf("Initialising SDL video subsystem... ");
 	
-#if 0
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
 	{
 		printf("vid_driver_init(): unable to initialise SDL video subsystem.\n");
 		agi_exit();
 	}
-#endif
 	
 	printf("done.\n");
+#endif
 }
 
 void vid_shutdown()
@@ -266,7 +267,7 @@ void vid_resize(s32 x, s32 y)
 	}
 }
 
-void vid_render(SDL_Surface *surface, const u32 x, const u32 y, const u32 w, const u32 h)
+static void vid_render(SDL_Surface *surface, const u32 x, const u32 y, const u32 w, const u32 h)
 {
 	SDL_Rect rect;
 	rect.x = x;
@@ -355,7 +356,7 @@ void vid_fill(POS *pos, AGISIZE *size, u32 colour)
 	}
 }
 
-int shake_offset[] = {25, 0, -25};
+static int shake_offset[] = {25, 0, -25};
 
 void vid_shake(int count)
 {

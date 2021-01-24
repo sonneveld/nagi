@@ -46,6 +46,7 @@ CmdCompareStrns                  cseg     000009DB 0000000F
 
 #include "../ui/controller.h"
 
+static u8 is_obj_inside(u16 left, u16 right, u16 y);
 
 // logic_data is the logic data
 // return the true/false bit
@@ -146,7 +147,7 @@ u8 cmd_obj_in_box()
 	return is_obj_inside(v->x, v->x+v->x_size-1, v->y);
 }
 	
-u8 is_obj_inside(u16 left, u16 right, u16 y)
+static u8 is_obj_inside(u16 left, u16 right, u16 y)
 {
 	if (left < *(logic_data++))
 	{

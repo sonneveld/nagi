@@ -26,8 +26,6 @@
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 
-#define USE_SAMPLE 0
-
 /* Formulas for noise generator */
 /* bit0 = output */
 
@@ -47,25 +45,8 @@
 
 //#define WAVE_HEIGHT  (0x7FFF)
 
-#if USE_SAMPLE
 
-#include <math.h>
-
-#define M_PI 3.14159265358979323846264338327
-struct sample_struct
-{
-	s16 *data;
-	int samples;
-	int freq;
-};
-typedef struct sample_struct SAMPLE;
-	
-int sample_fill(TONECHAN *t, s16 *buf, int len);
-void sample_free(SAMPLE *sample);
-SAMPLE *sample_sine_new(int freq, int samp_rate);
-#endif
-
-s16 vol_table[16];
+static s16 vol_table[16];
 
 struct tone_chan_struct
 {
@@ -83,17 +64,6 @@ struct tone_chan_struct
 	int gen_type_prev;
 	union
 	{
-		
-#if USE_SAMPLE
-		struct 
-		{
-			int count;	// for scaling
-			int scale;	// ""      ""
-			SAMPLE *samp;
-			u16 *samp_cur; // current sample point
-		} s;
-#endif
-		
 		struct
 		{
 			int count;
@@ -108,26 +78,25 @@ struct tone_chan_struct
 };
 typedef struct tone_chan_struct TONECHAN;
 
-int tone_pcm_callback(void *tpcm, u8 *stream, int len);
-int noise_fill(TONECHAN *t, s16 *buf, int len);
-int square_fill(TONECHAN *t, s16 *buf, int len);
-
-void vol_table_init(void);
+static int tone_pcm_callback(void *tpcm, u8 *stream, int len);
+static int noise_fill(TONECHAN *t, s16 *buf, int len);
+static int square_fill(TONECHAN *t, s16 *buf, int len);
+static void tone_pcm_state_set(int tone_state);
+static int tone_pcm_state_get(void);
+static void tone_pcm_lock(void);
+static void tone_pcm_unlock(void);
+static void vol_table_init(void);
+static void tone_pcm_shutdown(void);
+static int tone_pcm_open(int ch);
+static void tone_pcm_close(int handle);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
-#if USE_SAMPLE
-SAMPLE *sample_sine = 0;
-SAMPLE *sample_triangle = 0;
-SAMPLE *sample_square = 0;
-SAMPLE *sample_noise = 0;
-#endif
-
-LIST *list_ch =0;
+static LIST *list_ch = 0;
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
-void vol_table_init()
+static void vol_table_init()
 {
 	double value;
 	int i;
@@ -177,7 +146,7 @@ int tone_pcm_init(void)
 }
 
 //shutdown
-void tone_pcm_shutdown(void)
+static void tone_pcm_shutdown(void)
 {
 	tone_pcm_state_set(0);
 	
@@ -186,22 +155,13 @@ void tone_pcm_shutdown(void)
 		list_free(list_ch);
 	list_ch = 0;
 	
-#if USE_SAMPLE
-	// close all samples
-	if (sample_sine)
-	{
-		sample_free(sample_sine);
-		sample_sine = 0;
-	}
-#endif	
-	
 	// shutdown pcm out
 	pcm_out_shutdown();
 }
 
 // open
 // return 0 on error
-int tone_pcm_open(int agi_ch)
+static int tone_pcm_open(int agi_ch)
 {
 	TONECHAN ch;
 	TONECHAN *new_ch;
@@ -218,12 +178,6 @@ int tone_pcm_open(int agi_ch)
 	ch.note_count = 0;
 	ch.avail = 1;
 	
-#if USE_SAMPLE
-	// init a sample for that specific type if it doesn't exist.
-	if (sample_sine==NULL)
-		sample_sine = sample_sine_new(50, 44100);
-#endif
-	
 	new_ch = list_add(list_ch);
 	memcpy(new_ch, &ch, sizeof(TONECHAN) );
 	
@@ -238,7 +192,7 @@ int tone_pcm_open(int agi_ch)
 	return new_ch->handle;
 }
 
-void tone_pcm_close(int handle)
+static void tone_pcm_close(int handle)
 {
 	TONECHAN *ch;
 	
@@ -259,22 +213,22 @@ void tone_pcm_close(int handle)
 	
 }
 
-void tone_pcm_state_set(int tone_state)
+static void tone_pcm_state_set(int tone_state)
 {
 	pcm_out_state_set(tone_state);
 }
 
-int tone_pcm_state_get(void)
+static int tone_pcm_state_get(void)
 {
 	return pcm_out_state_get();
 }
 
-void tone_pcm_lock(void)
+static void tone_pcm_lock(void)
 {
 	pcm_out_lock();
 }
 
-void tone_pcm_unlock(void)
+static void tone_pcm_unlock(void)
 {
 	pcm_out_unlock();
 }
@@ -285,7 +239,7 @@ void tone_pcm_unlock(void)
 
 // fill buff
 // return -1 if channel is complete.
-int tone_pcm_callback(void *userdata, u8 *stream, int len)
+static int tone_pcm_callback(void *userdata, u8 *stream, int len)
 {
 	TONECHAN *tpcm;
 	s16 *stream_cur;
@@ -363,7 +317,7 @@ int tone_pcm_callback(void *userdata, u8 *stream, int len)
 
 
 
-int square_fill(TONECHAN *t, s16 *buf, int len)
+static int square_fill(TONECHAN *t, s16 *buf, int len)
 {
 	int count;
 	
@@ -402,7 +356,7 @@ int square_fill(TONECHAN *t, s16 *buf, int len)
 	return len;
 }
 
-int noise_fill(TONECHAN *t, s16 *buf, int len)
+static int noise_fill(TONECHAN *t, s16 *buf, int len)
 {
 	int count;
 	
@@ -447,92 +401,3 @@ int noise_fill(TONECHAN *t, s16 *buf, int len)
 	
 	return len;
 }
-
-// ------------------------------------------------------------------------------------------
-
-#if USE_SAMPLE
-
-// in resampling.. if we have to skip through the wave file several times to get to the sample.. don't bother,
-// mod it a few times to scale it down.
-
-int sample_fill(TONECHAN *t, s16 *buf, int len)
-{
-	s16 *samp_cur;
-	int count;
-	
-	if (t->gen_type != t->gen_type_prev)
-	{
-		// set the samples
-		t->s.samp = sample_sine;
-		t->s.samp_cur = sample_sine->data;
-		t->freq_count_prev = -1;
-		t->gen_type_prev = t->gen_type;
-	}
-	
-	if (t->freq_count != t->freq_count_prev)
-	{
-		//t->scale = (int)( (double)t->samp->freq*t->freq_count/FREQ_DIV * MULT + 0.5);
-		t->s.scale = t->s.samp->freq * t->freq_count;
-		t->s.count = t->s.scale;
-		t->freq_count_prev = t->freq_count;	
-	}
-
-	samp_cur = t->s.samp_cur;
-	count = len;
-	
-	while (count > 0)
-	{		
-		*(buf++) = *samp_cur;
-		count--;
-		
-		// get next sample
-		t->s.count -= MULT;
-		while (t->s.count <= 0)
-		{
-			samp_cur++;
-			t->s.count += t->s.scale;
-		}
-		// check sample bounds
-		while ((samp_cur - t->s.samp->data) >= t->s.samp->samples )
-			samp_cur -= t->s.samp->samples;
-	}
-	
-	t->s.samp_cur = samp_cur;
-	return len;
-}
-
-// samp rate/.. samples per second
-SAMPLE *sample_sine_new(int freq, int samp_rate)
-{
-	int i;
-	double mult;
-	SAMPLE *s;
-	s16 *wave;
-	int wave_len;
-	
-	s = (SAMPLE *)a_malloc(sizeof(SAMPLE) );
-
-	wave_len = samp_rate / freq;
-	wave = a_malloc(sizeof(s16) * wave_len);	
-	mult =  (2.0*M_PI) / (wave_len);
-	
-	for (i=0; i<wave_len; i++)
-		wave[i] = (s16)(sin(i * mult)*c_snd_volume );
-		
-	s->freq = freq;
-	s->data = wave;
-	s->samples = wave_len;
-	
-	return s;	
-}
-
-void sample_free(SAMPLE *sample)
-{
-	assert(sample);
-	assert(sample->data);
-
-	a_free(sample->data);
-	a_free(sample);
-}
-
-#endif

@@ -25,7 +25,25 @@ CmdStatusLneOff                  cseg     0000355C 0000001F
 
 #include "../sys/endian.h"
 #include "../sys/chargen.h"
-u16 invent_state = 0;
+
+
+struct invent_item_struct
+{
+	u16 num;	// 0
+	u8 *name;	// 2
+	u16 row;	// 4
+	u16 col;	// 6
+};
+typedef struct invent_item_struct INVENT;
+
+
+static void inventory(void);
+static void invent_display(INVENT *invent, INVENT *last, INVENT *current);
+static INVENT *invent_key(INVENT *invent, INVENT *last, INVENT *current, u16 direction);
+static INVENT *invent_swap_colour(INVENT *item_cur, INVENT *item_new);
+
+
+static u16 invent_state = 0;
 
 /*
 u8 *cmd_status(u8 *c)
@@ -72,7 +90,7 @@ u8 *cmd_status(u8 *c)
 
 
 
-void inventory(void)
+static void inventory(void)
 {
 	u16 col;
 	u16 row;
@@ -163,7 +181,7 @@ void inventory(void)
 
 }
 
-void invent_display(INVENT *invent, INVENT *last, INVENT *current)
+static void invent_display(INVENT *invent, INVENT *last, INVENT *current)
 {
 	INVENT *di;
 	
@@ -193,7 +211,7 @@ void invent_display(INVENT *invent, INVENT *last, INVENT *current)
 	}
 }
 
-INVENT *invent_key(INVENT *invent, INVENT *last, INVENT *current, u16 direction)
+static INVENT *invent_key(INVENT *invent, INVENT *last, INVENT *current, u16 direction)
 {
 	INVENT *si;
 	
@@ -221,7 +239,7 @@ INVENT *invent_key(INVENT *invent, INVENT *last, INVENT *current, u16 direction)
 }
 
 
-INVENT *invent_swap_colour(INVENT *item_cur, INVENT *item_new)
+static INVENT *invent_swap_colour(INVENT *item_cur, INVENT *item_new)
 {
 	if (item_cur != item_new)
 	{

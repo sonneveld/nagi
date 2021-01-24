@@ -37,15 +37,15 @@ _StateDrawBlank                  cseg     00008FB3 00000020
 #include "sys/chargen.h"
 
 
-u16 diskspace_available = 1;
+static u16 diskspace_available = 1;
 
 VSTRING *save_dir = 0;
 VSTRING *save_filename = 0;
 
-u16 word_1aad = 0;
+static u16 word_1aad = 0;
 u8 save_description[0x20];
 
-u8 save_drive = 0;
+static u8 save_drive = 0;
 
 struct save_struct
 {
@@ -56,14 +56,14 @@ struct save_struct
 typedef struct save_struct SAVE;
 
 u16 state_get_info(u8 state_type);
-u16 state_get_path(u8 state_type);
-u16 state_get_text(u8 *msg, u8 *str, u16 str_alloc);
-u16 state_get_filename(u8 state_type);
-u16 state_get_diz(u16 var8, SAVE *vara, u32 *varc);
-void state_draw_arrow(u16 var8);
-void state_draw_blank(u16 var8);
-void state_name_create(u16 save_num, VSTRING *filename);
-u16 state_dir_check(VSTRING *dir);
+static u16 state_get_path(u8 state_type);
+static u16 state_get_text(u8 *msg, u8 *str, u16 str_alloc);
+static u16 state_get_filename(u8 state_type);
+static u16 state_get_diz(u16 var8, SAVE *vara, u32 *varc);
+static void state_draw_arrow(u16 var8);
+static void state_draw_blank(u16 var8);
+static void state_name_create(u16 save_num, VSTRING *filename);
+static u16 state_dir_check(VSTRING *dir);
 
 
 u16 state_get_info(u8 state_type)
@@ -150,7 +150,7 @@ u16 save_disk_check(u8 state_type)
 	return tempa2;
 } */
 
-u16 state_get_path(u8 state_type)
+static u16 state_get_path(u8 state_type)
 {
 	//u8 user_msg[160];
 	VSTRING *msg = 0;
@@ -199,7 +199,7 @@ u16 state_get_path(u8 state_type)
 	return 0;
 }
 
-u16 state_get_text(u8 *msg, u8 *str, u16 str_alloc)
+static u16 state_get_text(u8 *msg, u8 *str, u16 str_alloc)
 {
 	u16 edit_result;
 	
@@ -217,7 +217,7 @@ u16 state_get_text(u8 *msg, u8 *str, u16 str_alloc)
 	return (edit_result==0xD);
 }
 
-u16 state_get_filename(u8 state_type)
+static u16 state_get_filename(u8 state_type)
 {
 	//u16 temp202;	// cur file time	lo
 	//u16 temp200;	// date		hi
@@ -405,7 +405,7 @@ u16 state_get_filename(u8 state_type)
 
 
 
-u32 stream_get_date(FILE *fstream)
+static u32 stream_get_date(FILE *fstream)
 {
 	int file_des;
 	struct stat stat_buf;
@@ -419,7 +419,7 @@ u32 stream_get_date(FILE *fstream)
 
 
 // read file description?
-u16 state_get_diz(u16 s_num, SAVE *s_item, u32 *s_date)
+static u16 state_get_diz(u16 s_num, SAVE *s_item, u32 *s_date)
 {
 	FILE *state_stream;	// file handle
 	u8 state_id[ID_SIZE+1];
@@ -455,7 +455,7 @@ u16 state_get_diz(u16 s_num, SAVE *s_item, u32 *s_date)
 		return 1;
 }
 
-void state_draw_arrow(u16 var8)
+static void state_draw_arrow(u16 var8)
 {
 	//system ("PAUSE");
 	goto_row_col(var8, msgstate.tpos.col);
@@ -464,7 +464,7 @@ void state_draw_arrow(u16 var8)
 	//system("PAUSE");
 }
 
-void state_draw_blank(u16 var8)
+static void state_draw_blank(u16 var8)
 {
 	goto_row_col(var8, msgstate.tpos.col);
 	window_put_char(' ');
@@ -473,7 +473,7 @@ void state_draw_blank(u16 var8)
 
 
 //u8 *state_name_create(u16 save_num, u8 *buff, int *buff_size)
-void state_name_create(u16 save_num, VSTRING *filename)
+static void state_name_create(u16 save_num, VSTRING *filename)
 {
 	u8 *dir_sep;
 	int size_new;
@@ -537,7 +537,7 @@ u16 save_5f6b(u8 *save_path)
 
 */
 // save path exists
-u16 state_dir_check(VSTRING *dir)
+static u16 state_dir_check(VSTRING *dir)
 {
 	u8 *path_tail;
 	u32 path_size;

@@ -26,10 +26,10 @@ CmdUnknown172                    cseg     000070D6 00000020
 
 
 u8 *script_head = 0;		// dseg:16FD	*// top of script
-u8 *script_next = 0;		// dseg:16ff
-u8 *script_cur = 0;		// dseg:1701
-u16 write_ok = 0;		// dseg:1703
-u16 mem_script = 0;		// dseg:1705	*used by cmdshowmem
+static u8 *script_next = 0;		// dseg:16ff
+static u8 *script_cur = 0;		// dseg:1701
+static u16 write_ok = 0;		// dseg:1703
+static u16 mem_script = 0;		// dseg:1705	*used by cmdshowmem
 
 
 void script_block()
@@ -58,6 +58,7 @@ u8 *script_new()
 
 void script_write(u16 var8, u16 vara)
 {
+#if 0
 	u8 *script_name = 0;
 	
 	switch (var8)
@@ -94,7 +95,8 @@ void script_write(u16 var8, u16 vara)
 			break;
 	}
 	
-	//printf("script write %s - %d\n", script_name, vara);
+	printf("script write %s - %d\n", script_name, vara);
+#endif
 	
 	if (flag_test(0x07) == 0)
 	{

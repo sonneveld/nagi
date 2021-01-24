@@ -47,6 +47,10 @@ _DispNewLine                     cseg     0000234E 0000001F
 #include <setjmp.h>
 #include "../sys/error.h"
 
+static u8 *print_at(u16 msg_num, u8 *c);
+static u8 *r_display1f93(u8 *given_source, u8 *given_msg);
+static u8 *str_to_int_ptr(u8 *s, u16 *num);
+static void display_new_line(void);
 
 //u16 word_dseg_D09 = 20;	// row related ..   the MAX WIDTH???
 #define HEIGHT_MAX 20
@@ -86,7 +90,7 @@ u8 *cmd_print_at_v(u8 *c)
 	return print_at(msg_num, c);
 }
 
-u8 *print_at(u16 msg_num, u8 *c)
+static u8 *print_at(u16 msg_num, u8 *c)
 {
 	msgstate.wanted_pos.row = *(c++);
 	msgstate.wanted_pos.col = *(c++);
@@ -262,9 +266,9 @@ void message_box_draw(u8 *str, u16 row, u16 w, u16 toggle)
 
 
 // used by r_display 'n stuff
-u16 disp_char_cur = 0;		// character count for the count line
-u16 disp_width_max = 0;	// desired maximum width
-u8 *disp_last_word = 0;	// ptr to the last word.. so you can wrap lines
+static u16 disp_char_cur = 0;		// character count for the count line
+static u16 disp_width_max = 0;	// desired maximum width
+static u8 *disp_last_word = 0;	// ptr to the last word.. so you can wrap lines
 
 // var8 = msg,  vara = str  varc = w
 // I think it arranges the text.. inserts \n and stuff man
@@ -288,7 +292,7 @@ u8 *str_wordwrap(u8 *msg, u8 *str, u16 w)
 //u16 stuff[] = {0, 0x0A, 0x20, 0x25};
 
 // add str to msg
-u8 *r_display1f93(u8 *given_source, u8 *given_msg)
+static u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 {
 	LOGIC *log_orig;	// orig log0
 	u16 var_pad;	// number of zeroes to pad variable with
@@ -448,7 +452,7 @@ u8 *logic_msg(u16 msg_num)
 
 
 // converts a string to an int
-u8 *str_to_int_ptr(u8 *s, u16 *num)
+static u8 *str_to_int_ptr(u8 *s, u16 *num)
 {
 	u16 di;
 	di = 0;
@@ -459,7 +463,7 @@ u8 *str_to_int_ptr(u8 *s, u16 *num)
 }
 
 // new line?
-void display_new_line()
+static void display_new_line()
 {
 	msgstate.tsize.h++;
 	if ( disp_char_cur > msgstate.tsize.w) 

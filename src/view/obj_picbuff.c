@@ -31,7 +31,7 @@ _VidMode_Get                     cseg     000059AC 00000015
 #include "../sys/vid_render.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
-u16 obj_chk_walk_area(VIEW *v);
+static u16 obj_chk_walk_area(VIEW *v);
 
 
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -446,7 +446,7 @@ void obj_pos_shuffle(VIEW *v)
 
 // if the object is within the walking area (including horizon if needed) then return 1
 // else return 0
-u16 obj_chk_walk_area(VIEW *v)
+static u16 obj_chk_walk_area(VIEW *v)
 {
 	if (v->x < 0) return 0;
 	if ((v->x + v->x_size) > 160 ) return 0;

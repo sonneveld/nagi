@@ -19,12 +19,14 @@ _StartUpdate                     cseg     00006A9B 0000001E
 #include "obj_base.h"
 #include "obj_update.h"
 
-u16 obj_updated(VIEW *v)
+static void obj_start_update(VIEW *v);
+
+static u16 obj_updated(VIEW *v)
 {
 	return ((v->flags & (O_DRAWN|O_UPDATE|O_ANIMATE)) == (O_DRAWN|O_UPDATE|O_ANIMATE));
 }
 
-u16 obj_static(VIEW *v)
+static u16 obj_static(VIEW *v)
 {
 	return ((v->flags & (O_DRAWN|O_UPDATE|O_ANIMATE)) == (O_DRAWN|O_ANIMATE));
 }
@@ -99,7 +101,7 @@ void obj_stop_update(VIEW *v)
 	}
 } 
 
-void obj_start_update(VIEW *v)
+static void obj_start_update(VIEW *v)
 {
 	if ((v->flags & O_UPDATE) == 0)
 	{

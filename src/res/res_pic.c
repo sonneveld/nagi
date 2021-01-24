@@ -10,18 +10,18 @@ _PdBuffShift                     cseg     00009B70 0000001E
 #include <string.h>
 #include <errno.h>
 
-void pd_buff_fill(u16 byte_cur);
-u8 *pd_buff_shift(u8 *buff_cur);
+static void pd_buff_fill(u16 byte_cur);
+static u8 *pd_buff_shift(u8 *buff_cur);
 
 
-FILE *pd_stream = 0;
-u16 pd_stream_size = 0;
-u8 *pd_buff = 0;
-u8 *pd_buff_end = 0;
-u16 pd_buff_size = 0;
-u8 *pd_uncomp_buff = 0;
-u8 nibble_pad = 0;
-u8 nibble_align = 0;
+static FILE *pd_stream = 0;
+static u16 pd_stream_size = 0;
+static u8 *pd_buff = 0;
+static u8 *pd_buff_end = 0;
+static u16 pd_buff_size = 0;
+static u8 *pd_uncomp_buff = 0;
+static u8 nibble_pad = 0;
+static u8 nibble_align = 0;
 
 u16 pic_decompress(FILE *cfile, u8 *cbuff, u16 cfile_size, u8 *buff, u16 cbuff_size)
 {
@@ -88,7 +88,7 @@ u16 pic_decompress(FILE *cfile, u8 *cbuff, u16 cfile_size, u8 *buff, u16 cbuff_s
 	return di - pd_uncomp_buff;	
 }
 
-void pd_buff_fill(u16 byte_cur)
+static void pd_buff_fill(u16 byte_cur)
 {
 	u16 size;
 	size = pd_buff_size-byte_cur;
@@ -103,7 +103,7 @@ void pd_buff_fill(u16 byte_cur)
 		fread(pd_buff+byte_cur, sizeof(u8), size, pd_stream);
 }
 
-u8 *pd_buff_shift(u8 *buff_cur)
+static u8 *pd_buff_shift(u8 *buff_cur)
 {
 	u16 cx;
 	cx = pd_buff_size-(buff_cur-pd_buff);

@@ -95,7 +95,7 @@ void ini_close(INI *ini)
 // return 1 if reach end of file or line
 // starts from ini->cur_ptr
 // don't trash ini_cur ptr if stuffed.. because we can still continue
-int string_isolate(INI *ini, u8 ch)
+static int string_isolate(INI *ini, u8 ch)
 {
 	u8 *cur;
 	
@@ -118,7 +118,7 @@ int string_isolate(INI *ini, u8 ch)
 }
 
 // this means if you have a key on the last line.. it better have a eoln at the end
-int line_isolate(INI *ini)
+static int line_isolate(INI *ini)
 {
 	u8 *cur;
 	
@@ -143,7 +143,7 @@ int line_isolate(INI *ini)
 	return -1; // i failed.. nothing has been touched
 }
 
-void string_rejoin(INI *ini)
+static void string_rejoin(INI *ini)
 {
 	if ((ini!=0) && (ini->isol_ptr != 0) )
 	{
@@ -154,7 +154,7 @@ void string_rejoin(INI *ini)
 
 // we can trash this (cur_ptr) if we want.. we need ini->cur and we save ini->cur
 // if we can't get to the next line.. we don't need the data.. we just finish
-void line_next(INI *ini)
+static void line_next(INI *ini)
 {
 	u8 *cur;
 	cur = ini->cur_ptr;

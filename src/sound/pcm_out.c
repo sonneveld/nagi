@@ -21,6 +21,7 @@
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 
+static void pcm_out_avail(void);
 
 
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -30,7 +31,7 @@
 
 // pcm out interface
 
-DRVINIT pcm_out_init_list[] =
+static DRVINIT pcm_out_init_list[] =
 {
 	{"sdl", pcm_out_sdl_drv_init}
 	//{"speaker", 0},
@@ -38,7 +39,7 @@ DRVINIT pcm_out_init_list[] =
 	//{"directx", 0}
 };
 
-PCM_OUT_DRIVER pcm_out_drv;
+static PCM_OUT_DRIVER pcm_out_drv;
 
 int pcm_out_init(int freq, int format)
 {
@@ -64,7 +65,7 @@ void pcm_out_shutdown(void)
 }
 
 // get available options
-void pcm_out_avail(void)
+static void pcm_out_avail(void)
 {
 	pcm_out_drv.ptr_avail();
 }

@@ -12,10 +12,11 @@
 #include "../lib/utf8_decode.h"
 
 
+static u16 dir_keymap(SDL_Keysym *keysym);
 
 
-AGI_EVENT passed_agi_event; 
-AGI_EVENT stop_ego = {2, 0};
+static AGI_EVENT passed_agi_event; 
+static AGI_EVENT stop_ego = {2, 0};
 
 // -------------------- INIT
 
@@ -39,7 +40,7 @@ void events_init()
 			
 #define DIR_MAX 8
 
-KEY dir_map[]={ {SDLK_UP, 1}, {SDLK_PAGEUP, 2},
+static KEY dir_map[]={ {SDLK_UP, 1}, {SDLK_PAGEUP, 2},
 			{SDLK_RIGHT, 3}, {SDLK_PAGEDOWN, 4},
 			{SDLK_DOWN, 5}, {SDLK_END, 6}, 
 			{SDLK_LEFT, 7}, {SDLK_HOME, 8} , 
@@ -50,7 +51,7 @@ KEY dir_map[]={ {SDLK_UP, 1}, {SDLK_PAGEUP, 2},
 		{0,0}};
 
 // map directions to key symbols
-u16 dir_keymap(SDL_Keysym *keysym)
+static u16 dir_keymap(SDL_Keysym *keysym)
 {	
 	KEY *k = dir_map;
 	
@@ -76,13 +77,13 @@ u16 dir_keymap(SDL_Keysym *keysym)
 */
 
 // i hate the alt key
-u16 system_alt_map[] = {30, 48, 46, 32, 18, 33, 34, 35, 23, 36, 37, 38, 50, 
+static u16 system_alt_map[] = {30, 48, 46, 32, 18, 33, 34, 35, 23, 36, 37, 38, 50, 
 				49, 24, 25, 16, 19, 31, 20, 22, 47, 17, 45, 21, 44};
 
 // map the keys depending on system (ibm in this case)
 // TODO: write amiga?  apple ][.. um.. mac??
 // for the next gen of agi.. define a set of keys? that's the same over systems?
-u16 system_keymap(SDL_Keysym *keysym)
+static u16 system_keymap(SDL_Keysym *keysym)
 {
 	if (  (keysym->sym >= SDLK_F1) && (keysym->sym <= SDLK_F10)  )
 	{
@@ -134,7 +135,7 @@ u16 system_keymap(SDL_Keysym *keysym)
 
 // if the key is a direction, then map it to that
 // else, return the ascii thing back
-AGI_EVENT *key_parse(SDL_Keysym *keysym)
+static AGI_EVENT *key_parse(SDL_Keysym *keysym)
 {
 	u16 direction = dir_keymap(keysym);
 	if (direction != 0xFFFF)
@@ -163,7 +164,7 @@ AGI_EVENT *key_parse(SDL_Keysym *keysym)
 
 // TODO: this version skips some keys but will still pass them to the bios_buff read bit
 
-KEY key_special[] = { {SDLK_HOME, 0}, {SDLK_UP, 0},
+static KEY key_special[] = { {SDLK_HOME, 0}, {SDLK_UP, 0},
 				{SDLK_PAGEUP, 0}, {SDLK_LEFT, 0}, 
 				{SDLK_RIGHT, 0}, {SDLK_END, 0}, 
 				{SDLK_DOWN, 0}, {SDLK_PAGEDOWN, 0}, {0,0} };
@@ -172,7 +173,7 @@ KEY key_special[] = { {SDLK_HOME, 0}, {SDLK_UP, 0},
 if it's alternative walk mode, when the player lifts the arrow key, the ego should stop 
 otherwise, it's a waste of space
 */
-AGI_EVENT *event_key_up(SDL_Keysym *keysym)
+static AGI_EVENT *event_key_up(SDL_Keysym *keysym)
 {
 	KEY *k = key_special;
 	AGI_EVENT *agi_event = 0;
@@ -190,7 +191,7 @@ AGI_EVENT *event_key_up(SDL_Keysym *keysym)
 	return agi_event;
 }
 
-AGI_EVENT *event_key_down(SDL_Keysym *keysym)
+static AGI_EVENT *event_key_down(SDL_Keysym *keysym)
 {
 	KEY *k = key_special;
 	KEY *t;
@@ -234,7 +235,7 @@ AGI_EVENT *event_key_down(SDL_Keysym *keysym)
 }
 
 
-AGI_EVENT *event_text_input(SDL_TextInputEvent *textinput)
+static AGI_EVENT *event_text_input(SDL_TextInputEvent *textinput)
 {
 	// SDL Text Input Events are unicode strings. We only care about
 	// ASCII characters right now, so ignore anything that isn't a
@@ -274,7 +275,7 @@ u16 event_write(u16 type, u16 data)
 	return SDL_PushEvent(&event) == 1;
 }
 
-AGI_EVENT *user_event_decode(void *data)
+static AGI_EVENT *user_event_decode(void *data)
 {
 	AGI_EVENT *old_event;
 	AGI_EVENT *agi_event = &passed_agi_event;	
@@ -288,7 +289,7 @@ AGI_EVENT *user_event_decode(void *data)
 }
 
 
-AGI_EVENT *event_mouse_button(u8 button, u16 x, u16 y)
+static AGI_EVENT *event_mouse_button(u8 button, u16 x, u16 y)
 {
 	AGI_EVENT *agi_event = &passed_agi_event;	
 	
@@ -429,7 +430,7 @@ void joy_button_map(AGI_EVENT *agi_event)
 }
 
 // it's to convert joystick buttons to their equivalant keys
-void mouse_button_map(AGI_EVENT *agi_event)
+static void mouse_button_map(AGI_EVENT *agi_event)
 {
 	if (agi_event->type == 10)
 	{

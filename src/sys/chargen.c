@@ -52,24 +52,24 @@ void ch_clear(TPOS *pos1, TPOS *pos2, u8 attrib)
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 u8 chgen_textmode;
-TPOS chgen_textpos = {0,0};
+static TPOS chgen_textpos = {0,0};
 
 //u8 *font_list = "font_8x8.fnt,font_16x16.fnt";
-u8 *font_data = 0;
-u8 *font_work = 0;
+static u8 *font_data = 0;
+static u8 *font_work = 0;
 AGISIZE font_size = {0,0};
-u32 font_chsize = 0;
-u32 font_linesize = 0;
+static u32 font_chsize = 0;
+static u32 font_linesize = 0;
 
-POS update_pos= {0,0};
-AGISIZE update_size= {0,0};
+static POS update_pos = {0,0};
+static AGISIZE update_size = {0,0};
 
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
 // returns scale of screen necessary
 // returns 0 if crap
-int font_check(AGISIZE *size)
+static int font_check(AGISIZE *size)
 {
 	int render_w, render_h;
 	
@@ -89,7 +89,7 @@ int font_check(AGISIZE *size)
 	return size->w * 40 / render_w;
 }
 
-FILE *font_open(AGISIZE *needed)
+static FILE *font_open(AGISIZE *needed)
 {
 	u8 *token, *running;
 	u8 *list;
@@ -139,7 +139,7 @@ FILE *font_open(AGISIZE *needed)
 	return pref_file;
 }
 
-void font_load(FILE *font_stream)
+static void font_load(FILE *font_stream)
 {
 	u8 ch;
 
@@ -216,7 +216,7 @@ void ch_update(void)
 	update_size.h = 0;
 }
 
-void font_lazy_update(POS *pos, AGISIZE *size)
+static void font_lazy_update(POS *pos, AGISIZE *size)
 {
 	POS p1, p2;
 
@@ -272,8 +272,8 @@ void ch_pos_set(TPOS *pos)
 	chgen_textpos.col = pos->col;
 }
 
-u8 given_colour = 0;
-u16 given_flags = 0;
+static u8 given_colour = 0;
+static u16 given_flags = 0;
 
 void ch_attrib( u8 colour, u16 flags )
 {

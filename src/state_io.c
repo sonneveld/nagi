@@ -55,6 +55,7 @@ _StateWrite                      cseg     000028C6 00000074
 #include "sys/endian.h"
 
 static u16 state_read(FILE *data_stream, void *data_alloc, size_t size_multiple, size_t size_max);
+static u16 state_write(FILE *stream, void *write_data, u16 write_size);
 
 u8 state_name_auto[0x32] = {0};
 
@@ -292,7 +293,7 @@ save_end:
 }
 
 
-u16 state_write(FILE *stream, void *write_data, u16 write_size)
+static u16 state_write(FILE *stream, void *write_data, u16 write_size)
 {
 	u8 temp;
 	

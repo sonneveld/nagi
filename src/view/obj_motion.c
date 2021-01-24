@@ -28,17 +28,17 @@ void obj_follow_update(VIEW *v)
 #include "../view/obj_block.h"
 #include "../view/obj_picbuff.h"
 
-void obj_motion_update(VIEW *v);
-void obj_chk_block(VIEW *v);
-void obj_move_stop(VIEW *v);
-u16 move16ed(s16 x, s16 y, s16 new_x, s16 new_y, u16 step_size);
-u16 move172d(s16 disp, s16 step);
-u16 get_rand_dir(void);
-void obj_wander_update(VIEW *v);
-void obj_follow_update(VIEW *v);
+static void obj_motion_update(VIEW *v);
+static void obj_chk_block(VIEW *v);
+static void obj_move_stop(VIEW *v);
+static u16 move16ed(s16 x, s16 y, s16 new_x, s16 new_y, u16 step_size);
+static u16 move172d(s16 disp, s16 step);
+static u16 get_rand_dir(void);
+static void obj_wander_update(VIEW *v);
+static void obj_follow_update(VIEW *v);
 
-s16 x_dir_mult[] = {0,0,1,1,1,0,-1,-1,-1};
-s16 y_dir_mult[] = {0,-1,-1,0,1,1,1,0,-1};
+static s16 x_dir_mult[] = {0,0,1,1,1,0,-1,-1,-1};
+static s16 y_dir_mult[] = {0,-1,-1,0,1,1,1,0,-1};
 
 // called from the game loop to update the direction all all animated sprites
 void objs_dir_calc()
@@ -52,7 +52,7 @@ void objs_dir_calc()
 } 
 
 // update the animated objects with motion
-void obj_motion_update(VIEW *v)
+static void obj_motion_update(VIEW *v)
 {
 	switch(v->motion)
 	{
@@ -80,7 +80,7 @@ void obj_motion_update(VIEW *v)
 
 // for a change in the "block state"
 // ie, you can stay in the block and not get out or stay out and not get in.
-void obj_chk_block(VIEW *v)
+static void obj_chk_block(VIEW *v)
 {
 	u16 stat;
 	u16 x;
@@ -205,7 +205,7 @@ void obj_move_update(VIEW *v)
 }
 
 // stop movement
-void obj_move_stop(VIEW *v)
+static void obj_move_stop(VIEW *v)
 {
 	v->step_size = v->move.step_size;
 	// VERSION THREE
@@ -220,10 +220,10 @@ void obj_move_stop(VIEW *v)
 	}
 }
 
-u16 worda7d[] = {8, 1, 2,    7, 0, 3,    6, 5, 4};
+static u16 worda7d[] = {8, 1, 2,    7, 0, 3,    6, 5, 4};
 
 // find a new direction depending on the direction and size of the step
-u16 move16ed(s16 x, s16 y, s16 new_x, s16 new_y, u16 step_size) // 8, a, c, e, 10
+static u16 move16ed(s16 x, s16 y, s16 new_x, s16 new_y, u16 step_size) // 8, a, c, e, 10
 { 
 	u16 di;
 	di = move172d(new_x-x, step_size);	// *2 for word
@@ -231,7 +231,7 @@ u16 move16ed(s16 x, s16 y, s16 new_x, s16 new_y, u16 step_size) // 8, a, c, e, 1
 	return worda7d[di];
 } 
 
-u16 move172d(s16 disp, s16 step)
+static u16 move172d(s16 disp, s16 step)
 {
 	if (-step >= disp)
 		return 0;		// negative disp
@@ -259,12 +259,12 @@ void ego_move(u16 ego_x, u16 ego_y)
 
 // WANDER MOTION
 
-u16 get_rand_dir()
+static u16 get_rand_dir()
 {
 	return (agi_rand() % 9);
 }
 
-void obj_wander_update(VIEW *v)
+static void obj_wander_update(VIEW *v)
 {
 	s16 ax;
 	ax = v->wander_count;
@@ -281,7 +281,7 @@ void obj_wander_update(VIEW *v)
 	
 // FOLLOW MOTION
 
-void obj_follow_update(VIEW *v)
+static void obj_follow_update(VIEW *v)
 {
 	s16 temp8;
 	s16 view_x;

@@ -102,7 +102,7 @@ typedef struct agicrc_struct AGICRC;
 // ---------------------------------------- LIST INIT ----------------------------------------
 
 // generate a crc from a file
-int file_crc_gen(u8 *file_name, u32 *crc32)
+static int file_crc_gen(u8 *file_name, u32 *crc32)
 {
 	u8 *buf;
 	
@@ -127,11 +127,11 @@ int file_crc_gen(u8 *file_name, u32 *crc32)
 }
 
 
-u8 st_end_char;
-u8 *st_end = 0;
+static u8 st_end_char;
+static u8 *st_end = 0;
 
 // hopefully a pointer to the standard you wanna sep
-void stand_sep(u8 *ptr)
+static void stand_sep(u8 *ptr)
 {
 	assert(ptr != 0);
 	
@@ -143,7 +143,7 @@ void stand_sep(u8 *ptr)
 	}
 }
 
-void stand_rejoin(void)
+static void stand_rejoin(void)
 {
 	if (st_end != 0)
 	{
@@ -156,7 +156,7 @@ void stand_rejoin(void)
 // read the crc/game type/directory type and determine if the game is a proper agi game
 // 0 = ok
 // anything else is a failure
-int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
+static int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 {
 	int i;
 	u8 name[ID_SIZE + 20];
@@ -259,7 +259,7 @@ int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 }
 
 
-void crc_print(AGICRC *agicrc, GAMEINFO *info)
+static void crc_print(AGICRC *agicrc, GAMEINFO *info)
 {
 	u8 key_vol[20];	// twice as much needed
 	int i;
@@ -321,7 +321,7 @@ void crc_print(AGICRC *agicrc, GAMEINFO *info)
 // hopefully the ini file has been set to the appropriate section
 // otherwise we'll crash 'n burn and destroy the whole world.
 // return 0 if ok
-int crc_compare(AGICRC *agicrc, GAMEINFO *info, INI *ini)
+static int crc_compare(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 {
 	u8 *key;
 	u8 key_vol[20];	// twice as much needed
@@ -376,7 +376,7 @@ int crc_compare(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 
 // open up each section on the list and compare available crc's with one's calculated before
 // return pointer to section in section list if a match is found.
-u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
+static u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 {
 	u8 *crc_list; 
 	u8 *token, *running;
@@ -406,7 +406,7 @@ u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 // 12 34 00 2F 00 2F 00
 
 // generate a name for the game info from standard.ini or just from other available resrouces
-void gameinfo_namegen(GAMEINFO *info, INI *ini, u8 *dir_sub, u8 *dir)
+static void gameinfo_namegen(GAMEINFO *info, INI *ini, u8 *dir_sub, u8 *dir)
 {
 	u8 *name = 0;
 
@@ -455,12 +455,12 @@ void gameinfo_namegen(GAMEINFO *info, INI *ini, u8 *dir_sub, u8 *dir)
 	stand_rejoin();
 }
 
-int game_count = 0;
+static int game_count = 0;
 
 
 // create a new gameinfo struct for a given directory if a game exists in it.. 
 // called on for each dir
-void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
+static void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 {
 	AGICRC agicrc;
 	GAMEINFO info_new;
@@ -505,7 +505,7 @@ void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 
 // create a list of game infos starting from gameinfo_head from the dirlist in standard.ini
 // search one level into it too if possible
-void gi_list_init(LIST *list, INI *ini)
+static void gi_list_init(LIST *list, INI *ini)
 {
 	u8 *dir_list;
 	u8 *token, *running;
@@ -569,7 +569,7 @@ void gi_list_init(LIST *list, INI *ini)
 
 // display nice menu of games and allow user to select game to play
 // returns 0 on error
-GAMEINFO *gi_list_menu(LIST *list)
+static GAMEINFO *gi_list_menu(LIST *list)
 {
 	int list_size, selection;
 	u8 **str_list, **str_cur;
@@ -639,9 +639,9 @@ top:
 
 // ---------------------------------------- ITEM INIT ----------------------------------------
 
-u8 *window_caption = 0;
+static u8 *window_caption = 0;
 
-void standard_init_ng(GAMEINFO *game, INI *ini)
+static void standard_init_ng(GAMEINFO *game, INI *ini)
 {
 	assert(game != 0);
 	
@@ -747,7 +747,7 @@ void standard_init_ng(GAMEINFO *game, INI *ini)
 // ---------------------------------------- MAIN ----------------------------------------
 
 
-int gameinfo_compare(const void *a, const void *b)
+static int gameinfo_compare(const void *a, const void *b)
 {
 	const GAMEINFO *info_a = *((const GAMEINFO **)a);
 	const GAMEINFO *info_b = *((const GAMEINFO **)b);
@@ -759,7 +759,7 @@ int gameinfo_compare(const void *a, const void *b)
 }
 
 // destory list
-void gi_list_free(LIST *list)
+static void gi_list_free(LIST *list)
 {
 	GAMEINFO *info;
 	
@@ -773,7 +773,7 @@ void gi_list_free(LIST *list)
 	}
 }
 
-void text_init(void)
+static void text_init(void)
 {
 	state.window_row_min = 2;
 	state.window_row_max = 23;
@@ -791,7 +791,7 @@ void text_init(void)
 	pop_row_col();
 }
 
-void text_shutdown(void)
+static void text_shutdown(void)
 {
 	// clear window
 	gfx_clear();

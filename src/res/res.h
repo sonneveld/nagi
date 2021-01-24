@@ -28,16 +28,10 @@ extern void volumes_close(void);
 extern u8 *file_load(u8 *name, u8 *buff);
 
 // res_lzw.c
-struct dict_struct
-{
-	u16 prev;
-	u8 ascii;
-};
-typedef struct dict_struct DICT;
-	
-extern DICT *lzw_dict;
 
-u16 lzw_decompress(FILE *cfile, u8 *cbuff, u16 fsize, u8 *ubuff, u16 usize);
+extern void lzw_init(void);
+extern void lzw_shutdown(void);
+extern u16 lzw_decompress(FILE *cfile, u8 *cbuff, u16 fsize, u8 *ubuff, u16 usize);
 
 // res_pic.c
 u16 pic_decompress(FILE *cfile, u8 *cbuff, u16 cfile_size, u8 *buff, u16 cbuff_size);

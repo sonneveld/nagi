@@ -46,10 +46,10 @@
 
 #include "../sys/mem_wrap.h"
 
+static PIC *pic_find(u16 pic_num);
 
-
-PIC pic_head = {0,0,0};	// the pic head struct
-PIC *last_pic;
+static PIC pic_head = {0,0,0};	// the pic head struct
+static PIC *last_pic;
 u16 pic_visible = 0;
 
 
@@ -78,7 +78,7 @@ void pic_list_new_room()
 
 // finds the pointer to a pic struct
 // passes 0 if nothing found.
-PIC *pic_find(u16 pic_num)
+static PIC *pic_find(u16 pic_num)
 {
 	PIC *next, *cur;
 	

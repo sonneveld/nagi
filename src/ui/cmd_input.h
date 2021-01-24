@@ -10,9 +10,7 @@ extern u8 *cmd_open_dialogue(u8 *c);
 extern u8 *cmd_close_dialogue(u8 *c);
 
 extern void input_poll(void);
-extern void input_put_char(u16 key_char);
 
-extern void input_echo(void);
 extern void input_edit_off(void);
 extern void input_edit_on(void);
 extern u16 input_edit_status(void);

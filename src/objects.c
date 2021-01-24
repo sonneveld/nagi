@@ -38,8 +38,8 @@ u16 object_size = 0;*/
 
 int object_file_load(void);
 void object_file_unload(void);
-INV_OBJ *invent_find(u8 **c);
-INV_OBJ *invent_find_v(u8 **c);
+static INV_OBJ *invent_find(u8 **c);
+static INV_OBJ *invent_find_v(u8 **c);
 
 INV_OBJ *inv_obj_table = 0;
 int inv_obj_table_size = 0;
@@ -202,7 +202,7 @@ void object_file_unload()
 }
 
 
-void inv_obj_table_print(void)
+static void inv_obj_table_print(void)
 {
 	int i;
 	
@@ -259,7 +259,7 @@ u8 *cmd_get_room_v(u8 *c)
 }
 
 
-INV_OBJ *invent_find(u8 **c)
+static INV_OBJ *invent_find(u8 **c)
 {
 	if ((**c) >= inv_obj_table_size)
 		set_agi_error(0x17,  (**c) - inv_obj_table_size);
@@ -267,7 +267,7 @@ INV_OBJ *invent_find(u8 **c)
 	return &inv_obj_table[*((*c)++)];
 }
 
-INV_OBJ *invent_find_v(u8 **c)
+static INV_OBJ *invent_find_v(u8 **c)
 {
 	if (state.var[(**c)] >= inv_obj_table_size)
 		set_agi_error(0x17,  state.var[(**c)] - inv_obj_table_size);

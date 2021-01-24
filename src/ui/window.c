@@ -27,8 +27,8 @@ u8 window_col = 0;	// set by messagebox so it wrap inside the window
 u8 window_row = 0;
 
 #define PA_MAX 5
-u8 pos_count = 0;
-TPOS pos_array[PA_MAX];
+static u8 pos_count = 0;
+static TPOS pos_array[PA_MAX];
 
 u16 text_shade = 0;	// if set, text is shaded
 

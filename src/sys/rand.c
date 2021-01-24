@@ -7,7 +7,7 @@
 // gettimeofday() does not exist in mingw libraries
 #include <sys/timeb.h>
 
-u16 agi_rand_seed = 0;
+static u16 agi_rand_seed = 0;
 
 #define IBM_CLOCK_PER_SEC 18.2
 #define TANDY_CLOCK_PER_SEC 20

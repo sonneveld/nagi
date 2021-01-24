@@ -62,8 +62,9 @@ _Finish                          cseg     000002AE 00000015
 int main(int argc, char *argv[]);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
-// external presumably to do with setjmp?
-u16 old_score = 0;
+
+// Score before running logic scripts, to determine whether we update status bar
+static u16 old_score = 0;
 
 /* CODE	---	---	---	---	---	---	---	--- */
 int main(int argc, char *argv[])

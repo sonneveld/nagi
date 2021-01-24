@@ -54,10 +54,14 @@ CmdCloseDialogu                  cseg     0000394B 00000012
 #include "../sys/chargen.h"
 
 
-u16 input_edit_disabled = 0;
-u8 input[42];
-u8 input_prev[42];
-u16 input_cur = 0;
+static void input_put_char(u16 key_char);
+static void input_echo(void);
+
+
+static u16 input_edit_disabled = 0;
+static u8 input[42];
+u8 input_prev[42];  // used for logging
+static u16 input_cur = 0;
 
 
 
@@ -66,7 +70,7 @@ void input_poll(void)
 {
 	AGI_EVENT *si;
 	
-	if ( menu_next_input != 0)
+	if (get_menu_requires_input_events())
 		menu_input();
 	si = control_key_map(event_read());
 	
@@ -102,7 +106,7 @@ void input_poll(void)
 }
 
 // add to input string?
-void input_put_char(u16 key_char)
+static void input_put_char(u16 key_char)
 {
 	u16 max;
 	
@@ -171,7 +175,7 @@ u8 *cmd_echo_line(u8 *c)
 	return c;
 }
 
-void input_echo()
+static void input_echo()
 {
 	if ( input_cur < strlen(input_prev)) 
 	{
@@ -263,8 +267,8 @@ void input_redraw()
 	}
 }
 
-u8 hgc_note = 0;
-void hgc_show_note(void)
+static u8 hgc_note = 0;
+static void hgc_show_note(void)
 {
 	if (hgc_note == 0)
 	{

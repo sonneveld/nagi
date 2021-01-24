@@ -28,8 +28,6 @@ struct key_struct
 typedef struct key_struct KEY;
 
 
-u16 dir_keymap(SDL_Keysym *keysym);
-AGI_EVENT *key_parse(SDL_Keysym *keysym);
 extern AGI_EVENT *event_read(void);
 extern void events_init(void);
 extern u8 *cmd_unknown_173(u8 *c);
@@ -44,7 +42,6 @@ extern u16 user_bolean_poll(void);
 extern void joy_button_map(AGI_EVENT *agi_event);
 extern AGI_EVENT *event_wait(void);
 
-extern AGI_EVENT *user_event_decode(void *data);
 extern u16 event_write(u16 type, u16 data);
 
 // need event_write(type, data)
