@@ -21,6 +21,6 @@ extern void vid_shake(int count);
 
 extern void *vid_getbuf(void);
 extern int vid_getlinesize(void);
-extern SDL_Window* vid_get_main_window();
+extern SDL_Window* vid_get_main_window(void);
 
 #endif /* NAGI_SYS_SDL_VID_H */

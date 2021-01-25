@@ -15,7 +15,7 @@ extern u32 file_buf_size;
 
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 
-extern struct dir_list_struct *agi_open_cwd();
+extern struct dir_list_struct *agi_open_cwd(void);
 extern void agi_close_dir(struct dir_list_struct *);
 extern const char *agi_read_dir(struct dir_list_struct *);
 

@@ -36,7 +36,7 @@ Mini code sample for SDL2 256-color palette https://discourse.libsdl.org/t/mini-
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 
 	
-static void vid_free_surfaces();
+static void vid_free_surfaces(void);
 static void vid_render(SDL_Surface* surface, const u32 x, const u32 y, const u32 w, const u32 h);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -195,7 +195,7 @@ void vid_display(AGISIZE *screen_size, int fullscreen_state)
 	SDL_RenderPresent(video_data.renderer);
 }
 
-static void vid_free_surfaces()
+static void vid_free_surfaces(void)
 {
 	if (video_data.texture != 0) 
 	{
@@ -245,7 +245,7 @@ int vid_getlinesize()
 	return video_data.surface->pitch;
 }
 
-SDL_Window* vid_get_main_window()
+SDL_Window* vid_get_main_window(void)
 {
 	return video_data.window;
 }

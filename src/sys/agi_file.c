@@ -57,7 +57,7 @@ struct dir_list_struct
 	int first;
 }; 
 
-struct dir_list_struct *agi_open_cwd()
+struct dir_list_struct *agi_open_cwd(void)
 {
 	struct dir_list_struct *d = malloc(sizeof(struct dir_list_struct));
 	d->hFind = INVALID_HANDLE_VALUE;
@@ -109,7 +109,7 @@ struct dir_list_struct
 	struct dirent *file;
 }; 
 
-struct dir_list_struct *agi_open_cwd()
+struct dir_list_struct *agi_open_cwd(void)
 {
 	struct dir_list_struct *d = malloc(sizeof(struct dir_list_struct));
 	d->dir = 0;

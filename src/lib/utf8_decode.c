@@ -100,7 +100,7 @@ void utf8_decode_init(char p[], int length) {
 /*
     Get the current byte offset. This is generally used in error reporting.
 */
-int utf8_decode_at_byte() {
+int utf8_decode_at_byte(void) {
     return the_byte;
 }
 
@@ -109,7 +109,7 @@ int utf8_decode_at_byte() {
     Get the current character offset. This is generally used in error reporting.
     The character offset matches the byte offset if the text is strictly ASCII.
 */
-int utf8_decode_at_character() {
+int utf8_decode_at_character(void) {
     return (the_char > 0)
         ? the_char - 1
         : 0;
@@ -122,7 +122,7 @@ int utf8_decode_at_character() {
          or  UTF8_END   (the end)
          or  UTF8_ERROR (error)
 */
-int utf8_decode_next() {
+int utf8_decode_next(void) {
     int c;  /* the first byte of the character */
     int c1; /* the first continuation character */
     int c2; /* the second continuation character */
