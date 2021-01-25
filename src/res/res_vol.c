@@ -370,7 +370,7 @@ u8 *file_load(u8 *name, u8 *buff)
 		buff = (u8 *)a_malloc(res_size);
 	
 	if ( fread(buff, sizeof(u8), res_size, file_stream) != res_size)
-		if (print_err_code == 0)
+		if (print_err_code() == 0)
 		{
 			agi_exit();
 		}
