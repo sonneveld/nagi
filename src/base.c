@@ -48,7 +48,7 @@ u8 *cmd_quit(u8 *c)
 }
 
 
-void agi_exit()
+AGI_NO_RETURN void agi_exit()
 {
 	agi_shutdown();
 	nagi_shutdown();

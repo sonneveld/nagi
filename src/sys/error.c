@@ -46,7 +46,7 @@ void beep_speaker()
 }
 
 
-void set_agi_error(u16 err_type, u16 err_data)
+AGI_NO_RETURN void set_agi_error(u16 err_type, u16 err_data)
 {
 	// TODO: set_agi_error() incomplete
 	sound_stop();

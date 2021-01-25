@@ -171,7 +171,7 @@ static u8 *dir_check(u8 *v)
 		return v;
 }
 
-static void dir_error(u8 *name, u16 num)
+static AGI_NO_RETURN void dir_error(u8 *name, u16 num)
 {
 	u8 str[100];
 	sprintf(str, "%s %d not found", name, num);

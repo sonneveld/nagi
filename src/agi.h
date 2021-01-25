@@ -17,6 +17,13 @@
 #define strtok_r strtok_s
 #endif
 
+#ifdef _MSC_VER
+#define AGI_NO_RETURN __declspec(noreturn)
+#else
+#define AGI_NO_RETURN __attribute__((noreturn))
+#endif
+
+
 // ok no warning here
 
 #ifndef NAGI_LIST_H_STRUCT
