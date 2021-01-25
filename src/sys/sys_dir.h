@@ -5,12 +5,15 @@
 /* VARIABLES	---	---	---	---	---	---	--- */
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 
-#define DIR_PRESET_ORIG 0
-#define DIR_PRESET_NAGI 1
-#define DIR_PRESET_HOME 2
-#define DIR_PRESET_GAME 3
-#define DIR_PRESET_LASTSAVE 4
-
+enum
+{
+	DIR_PRESET_ORIG,
+	DIR_PRESET_NAGI,
+	DIR_PRESET_HOME,
+	DIR_PRESET_GAME,
+	DIR_PRESET_LASTSAVE,
+	DIR_PRESET_LEN
+};
 
 int file_exists(u8 *f_name);
 void vstring_getcwd(VSTRING *buff);
@@ -23,5 +26,8 @@ extern void dir_preset_set(int preset_id, u8 *dir);
 extern void dir_preset_set_cwd(int preset_id);
 extern u8 *dir_preset_get(int preset_id);
 extern int dir_preset_change(int preset_id);
+
+// dump all current DIR presets for debugging
+extern void dir_dump_preset_values(void);
 
 #endif /* NAGI_SYS_SYS_DIR_H */

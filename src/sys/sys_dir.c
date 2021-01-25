@@ -40,11 +40,15 @@ int dir_preset_change(int preset_id);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
+static const const char *dir_preset_names[DIR_PRESET_LEN] = {
+	"DIR_PRESET_ORIG",
+	"DIR_PRESET_NAGI",
+	"DIR_PRESET_HOME",
+	"DIR_PRESET_GAME",
+	"DIR_PRESET_LASTSAVE"
+};
 
-//VSTRING *directory_nagi  = 0;
-
-
-static VSTRING *dir_preset[10];
+static VSTRING *dir_preset[DIR_PRESET_LEN];
 
 
 // home
@@ -85,9 +89,12 @@ blah/.nagi/agi-0xDA01FEAB/
 void dir_init(int argc, char *argv[])
 {
 	memset(dir_preset, 0, sizeof(dir_preset));
-	
-	// set orig directory
 
+	// the location of nagi binary and data
+	char *base_path = SDL_GetBasePath();
+	dir_preset_set(DIR_PRESET_NAGI, base_path);
+	SDL_free(base_path);
+	
 	// if directory is passed in, pretend nagi was run from that directory
 	if (argc >= 2) {
 		int chdirres = chdir(argv[1]);
@@ -96,42 +103,6 @@ void dir_init(int argc, char *argv[])
 		}
 	}
 	dir_preset_set_cwd(DIR_PRESET_ORIG);
-
-	// set nagi main
-	char *argv0 = 0;
-	if (argc >= 1) {
-		argv0 = argv[0];
-	}
-	if ((argv0 != 0) && (argv0[0] != 0))
-	{
-		u8 *path_cpy;
-		u8 *end;
-		
-		path_cpy = strdupa(argv0);
-		// strip file name
-		
-		// '/' if win32
-		// '\' if anything else
-		end = path_cpy + strlen(path_cpy) - 1;
-		while ((end >= path_cpy) && (end != 0))
-		{
-			if ( (*end == '\\') || (*end == '/') )
-			{
-				*end = 0;
-				break;
-			}
-			else 
-				end--;
-		}
-
-		// set preset
-		dir_preset_set(DIR_PRESET_NAGI, path_cpy);
-	}
-	else
-	{
-		// what else can you do?
-		dir_preset_set_cwd(DIR_PRESET_NAGI);
-	}
 	
 	// set nagi home
 	// find profile/home directory
@@ -258,3 +229,14 @@ int dir_exists(u8 *d_name)
 #endif
 }
 
+
+void dir_dump_preset_values(void)
+{
+	for (int i = 0; i < DIR_PRESET_LEN; i++) {
+		char *value = dir_preset_get(i);
+		if (value == 0) {
+			value = "not set";
+		}
+		printf("%s=%d: %s\n", dir_preset_names[i], i, value);
+	}
+}
