@@ -6,6 +6,6 @@
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 
 
-extern int list_box(u8 **list, int size, int init);
+extern int list_box(const char **list, int size, int init);
 
 #endif /* NAGI_UI_LIST_BOX_H */

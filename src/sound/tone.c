@@ -42,7 +42,7 @@ static DRVINIT tone_init_list[] =
 	{"pcm_16bit", tone_pcm_drv_init}
 };
 
-static u8 c_snd_tone_drv[] = "pcm_16bit";
+static const char c_snd_tone_drv[] = "pcm_16bit";
 
 static TONE_DRIVER tone_drv={0};
 

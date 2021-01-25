@@ -57,7 +57,7 @@ _StateWrite                      cseg     000028C6 00000074
 static u16 state_read(FILE *data_stream, void *data_alloc, size_t size_multiple, size_t size_max);
 static u16 state_write(FILE *stream, void *write_data, u16 write_size);
 
-u8 state_name_auto[0x32] = {0};
+char state_name_auto[0x32] = {0};
 
 u8 *cmd_restart_game(u8 *c)
 {
@@ -104,10 +104,10 @@ u8 *cmd_restart_game(u8 *c)
 u8 *cmd_restore_game(u8 *c)
 {
 	u8 *code_ret;	// result to pass at the end
-	u8 newline_orig;	// d0d orig
+	char newline_orig;	// d0d orig
 	FILE *rest_stream;
 	//u8 msg[200];
-	u8 *msg;
+	char *msg;
 	
 	clock_state = 1;
 	code_ret = c;
@@ -164,7 +164,7 @@ u8 *cmd_restore_game(u8 *c)
 					// structures with stuff
 		loc2647:
 			fclose(rest_stream);
-			decrypt_string(inv_obj_string, inv_obj_string+inv_obj_string_size);
+			decrypt_string((u8*)inv_obj_string, (u8*)(inv_obj_string+inv_obj_string_size));
 			state.var[V20_COMPUTER] = computer_type;
 			state.var[V26_MONITORTYPE] = display_type;
 			state.var[V08_FREEMEM] = 10;
@@ -220,15 +220,15 @@ u8 *cmd_unknown_170(u8 *c)
 
 u8 *cmd_save_game(u8 *c)
 {
-	u8 newline_orig;
+	char newline_orig;
 	FILE *save_stream;	// file handle
-	u8 *msg;
+	char *msg;
 	
 	clock_state = 1;
 	newline_orig = msgstate.newline_char;
 	msgstate.newline_char = '@';
 		
-	decrypt_string(inv_obj_string, inv_obj_string+inv_obj_string_size);
+	decrypt_string((u8*)inv_obj_string, (u8*)(inv_obj_string+inv_obj_string_size));
 	
 	if (save_dir == 0)
 		save_dir = vstring_new(0, 200);
@@ -261,7 +261,7 @@ u8 *cmd_save_game(u8 *c)
 		}
 		else
 		{
-			if (fwrite(save_description, sizeof(u8), 0x1f, save_stream) != 0x1f)
+			if (fwrite(save_description, sizeof(char), 0x1f, save_stream) != 0x1f)
 				goto save_err;
 			if (state_write(save_stream, &state, sizeof(AGI_STATE)) == 0)
 				goto save_err;
@@ -288,26 +288,26 @@ save_end:
 	cmd_close_window(0);
 	msgstate.newline_char = newline_orig;
 	clock_state = 0;
-	decrypt_string(inv_obj_string, inv_obj_string+inv_obj_string_size);
+	decrypt_string((u8*)inv_obj_string, (u8*)(inv_obj_string+inv_obj_string_size));
 	return c;
 }
 
 
+// writes the size in little endian format.. then the data.
+// return 1 on success, 0 on error
+//
+// Format is:
+//   0..1 - little endian word - data size
+//   2..  - bytes[data_size] - data
 static u16 state_write(FILE *stream, void *write_data, u16 write_size)
 {
-	u8 temp;
-	
-	// writes the size in little endian format.. then the data.
-	
-	temp = write_size & 0xFF;
-	if ( fwrite(&temp, sizeof(u8), 1, stream) == 1 )
-	{
-		temp = write_size >> 8;
-		if ( fwrite(&temp, sizeof(u8), 1, stream)  == 1 )
-			if ( fwrite(write_data, sizeof(u8), write_size, stream) == write_size )
-				return 1;
-	}
-	return 0;
+	u8 header[2];
+	store_le_16(header, write_size);
+	if (fwrite(&header, sizeof(header), 1, stream) != 1) { return 0; }
+
+	if (fwrite(write_data, write_size, 1, stream) != 1) { return 0; }
+
+	return 1;
 }
 
 // used to reinitialise all the restored data so the game will run properly (ie, fix pointers 'n stuff man)

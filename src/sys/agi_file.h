@@ -19,8 +19,8 @@ extern struct dir_list_struct *agi_open_cwd(void);
 extern void agi_close_dir(struct dir_list_struct *);
 extern const char *agi_read_dir(struct dir_list_struct *);
 
-extern u8 *file_to_buf(const u8 *file_name);
+extern u8 *file_to_buf(const char *file_name);
 
-extern FILE *fopen_nocase(const u8 *name);
+extern FILE *fopen_nocase(const char *name);
 
 #endif /* NAGI_SYS_AGI_FILE_H */

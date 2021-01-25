@@ -14,7 +14,7 @@ struct node_struct
 {
 	struct node_struct *next;
 	struct node_struct *prev;
-	unsigned char contents[1];
+	__attribute__((aligned (8))) unsigned char contents[0];
 };
 typedef struct node_struct NODE;
 

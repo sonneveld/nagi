@@ -88,7 +88,7 @@ void clock_init()
 	{
 		printf("Unable to create SDL thread!");
 		agi_exit();
-		return;
+		// return;
 	}
 }
 

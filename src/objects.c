@@ -43,7 +43,7 @@ static INV_OBJ *invent_find_v(u8 **c);
 
 INV_OBJ *inv_obj_table = 0;
 int inv_obj_table_size = 0;
-u8 *inv_obj_string = 0;
+char *inv_obj_string = 0;
 int inv_obj_string_size = 0;
 
 int object_file_load()
@@ -54,9 +54,9 @@ int object_file_load()
 	//~ RaDIaT1oN: zero init variables
 	u8 field_size = 0;
 	u16 head_anim_obj_max = 0;
-	u16 head_string_offset;
+	u16 head_string_offset = 0;
 	u16 string_size;
-	u8 *string_ptr;
+	u8 *string_ptr;	// pointer to string in object file before copying to char buf
 	
 	if (inv_obj_table != 0)
 		object_file_unload();
@@ -74,16 +74,16 @@ int object_file_load()
 		
 	count = 5;
 	
+	// keep counting down till we hit 1, which will error out
 	while (count)
 	{
-
 		switch(count)
 		{
 			case 1: // still didn't work.. fail
 				printf("object_file_load(): invalid object file\n");
 				a_free(obj_data);
 				return 2;
-				break;
+				// break;
 			
 			case 2: // decrypt again with different field size
 				decrypt_string(obj_data, obj_data + res_size);
@@ -147,10 +147,15 @@ int object_file_load()
 			}
 		}
 		
+		// we found a way to decrypt `object` so break out
 		count = 0;
+		break;
+
 	obj_continue:
 		;
 	}
+	
+	assert (head_string_offset != 0);
 	
 	// bung in a '\0' at the end if one doesn't exist
 	string_size = res_size - head_string_offset - field_size ;
@@ -160,7 +165,7 @@ int object_file_load()
 	if (string_ptr[string_size-1] != '\0')
 	{
 		printf("object_file_load(): warning! object string does not end in '\\0'.\n");
-		inv_obj_string = (u8 *)a_malloc(string_size + 1);
+		inv_obj_string = (char *)a_malloc(string_size + 1);
 		assert(inv_obj_string);
 		inv_obj_string_size = string_size + 1;
 		memcpy(inv_obj_string, string_ptr, string_size);
@@ -168,7 +173,7 @@ int object_file_load()
 	}
 	else
 	{
-		inv_obj_string = (u8 *)a_malloc(string_size);
+		inv_obj_string = (char *)a_malloc(string_size);
 		assert(inv_obj_string);
 		inv_obj_string_size = string_size;
 		memcpy(inv_obj_string, string_ptr, string_size);

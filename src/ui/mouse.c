@@ -140,12 +140,12 @@ static void mouse_area_push(int id, int x, int y, int w, int h)
 	m->size.h = h;
 }
 
-static void mouse_area_pop(void)
+static AGI_UNUSED void mouse_area_pop(void)
 {
 	stack_pop(m_area_stack);
 }
 
-static void mouse_area_clear(void)
+static AGI_UNUSED void mouse_area_clear(void)
 {
 	stack_clear(m_area_stack);
 }

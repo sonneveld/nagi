@@ -21,7 +21,7 @@
 #include "../sys/chargen.h"
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
-int list_box (u8 **list, int size, int init);
+int list_box (const char **list, int size, int init);
 
 
 
@@ -37,11 +37,11 @@ int list_box (u8 **list, int size, int init);
 
 
 // i would like to apologise for this crappy crappy code.. but at least it checks for buffer overflows
-static void list_print(u8 **list, TPOS *pos, AGISIZE *size, int status, int up, int down)
+static void list_print(const char **list, TPOS *pos, AGISIZE *size, int status, int up, int down)
 {
 	int i;
 	
-	u8 str[500];
+	char str[500];
 	
 	window_clear(pos->row, pos->col, pos->row+size->h-1, 
 			pos->col+size->w-1, 0xFF);
@@ -96,7 +96,7 @@ static void list_box_draw_blank(u16 var8)
 // first pointer = heading for listbox.. 
 // size refers to the number of strings OTHER than the header
 // init is the first item to point at.
-int list_box(u8 **list, int size, int init)
+int list_box(const char **list, int size, int init)
 {
 	AGISIZE list_size;
 	TPOS list_pos;
@@ -244,8 +244,9 @@ int list_box(u8 **list, int size, int init)
 		}
 	}
 	
-	pop_row_col();
-	text_attrib_pop();
-	return -1;
+	// code never reached, handled in loop above.
+	// pop_row_col();
+	// text_attrib_pop();
+	// return -1;
 }
 

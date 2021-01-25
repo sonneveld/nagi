@@ -3,11 +3,11 @@
 #include "agi.h"
 #include "decrypt.h"
 
-#define DECRYPT_STRING "Avis Durgan"
+static const u8 DECRYPT_STRING[] = "Avis Durgan";
 
 void decrypt_string(u8 *start, u8 *end)
 {
-	u8 *d_string = "";
+	const u8 *d_string = DECRYPT_STRING;
 	u8 *cur_char = start;
 	
 	//printf("\n\nDecrypting information..\nVery Important: some files aren't encrypted in older AGI versions\n");

@@ -15,16 +15,16 @@ enum
 	DIR_PRESET_LEN
 };
 
-int file_exists(u8 *f_name);
+int file_exists(const char *f_name);
 void vstring_getcwd(VSTRING *buff);
-extern int dir_exists(u8 *d_name);
+extern int dir_exists(const char *d_name);
 
 
 extern void dir_init(int argc, char *argv[]);
 extern void dir_shutdown(void);
-extern void dir_preset_set(int preset_id, u8 *dir);
+extern void dir_preset_set(int preset_id, const char *dir);
 extern void dir_preset_set_cwd(int preset_id);
-extern u8 *dir_preset_get(int preset_id);
+extern const char *dir_preset_get(int preset_id);
 extern int dir_preset_change(int preset_id);
 
 // dump all current DIR presets for debugging

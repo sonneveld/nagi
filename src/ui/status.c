@@ -30,7 +30,7 @@ CmdStatusLneOff                  cseg     0000355C 0000001F
 struct invent_item_struct
 {
 	u16 num;	// 0
-	u8 *name;	// 2
+	const char *name;	// 2
 	u16 row;	// 4
 	u16 col;	// 6
 };

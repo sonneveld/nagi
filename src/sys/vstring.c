@@ -44,7 +44,7 @@ void vstring_shift(VSTRING *, shift_size)
 	
 #define VSTRING_DEF_MIN 50
 	
-VSTRING *vstring_new(u8 *str, u32 min_size)
+VSTRING *vstring_new(const char *str, u32 min_size)
 {
 	VSTRING *vs_new;
 	
@@ -59,7 +59,7 @@ VSTRING *vstring_new(u8 *str, u32 min_size)
 	else
 		vs_new->size = vs_new->min;
 	
-	vs_new->data = (u8 *)a_malloc(vs_new->size);
+	vs_new->data = (char *)a_malloc(vs_new->size);
 	memset(vs_new->data, 0, vs_new->size);
 	
 	if (str != 0)
@@ -85,13 +85,13 @@ void vstring_shrink(VSTRING *vs)
 {
 	if ( (vs != 0) && (vs->data != 0) )
 	{
-		u8 *new_data;
+		char *new_data;
 		
 		vs->size = strlen(vs->data)+1;
 		if (vs->size < vs->min)
 			vs->size = vs->min;
 		
-		new_data = (u8 *)a_malloc(vs->size);
+		new_data = (char *)a_malloc(vs->size);
 		memcpy(new_data, vs->data, vs->size);
 		a_free(vs->data);
 		vs->data = new_data;
@@ -99,7 +99,7 @@ void vstring_shrink(VSTRING *vs)
 }
 
 
-void vstring_set_text(VSTRING *vs, u8 *str)
+void vstring_set_text(VSTRING *vs, const char *str)
 {
 	if ( (vs!=0) && (str!=0) )
 	{
@@ -124,7 +124,7 @@ void vstring_set_size(VSTRING *vs, u32 new_size)
 		if (vs->size < new_size)
 		{
 			a_free(vs->data);
-			vs->data = (u8 *)a_malloc(new_size);
+			vs->data = (char *)a_malloc(new_size);
 			vs->size = new_size;
 			//memset(vs->data, 0, new_size);
 		}

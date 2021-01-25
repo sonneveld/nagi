@@ -179,7 +179,7 @@ static int volume_calc(SNDGEN_CHAN *chan)
 {
 	s8 al, dissolve_value;
 	
-	u8 *dissolve_data;
+	s8 *dissolve_data;
 	
 	
 	switch (c_snd_dissolve)

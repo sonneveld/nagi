@@ -9,10 +9,10 @@ extern u8 *cmd_close_window(u8 *c);
 extern u8 *cmd_display(u8 *c);
 extern u8 *cmd_display_v(u8 *c);
 
-extern u16 message_box(u8 *var8);
-extern void message_box_draw(u8 *str, u16 row, u16 w, u16 toggle);
-extern u8 *str_wordwrap(u8 *msg, u8 *str, u16 w);
-extern u8 *logic_msg(u16 msg_num);
+extern int message_box(const char *var8);
+extern void message_box_draw(const char *str, u16 row, u16 w, u16 toggle);
+extern char *str_wordwrap(char *msg, const char *str, u16 w);
+extern const char *logic_msg(u16 msg_num);
 
 
 struct msgstate_struct
@@ -26,7 +26,7 @@ struct msgstate_struct
 	u16 dialogue_open;
 	// '\' character.. if this exists then the next character is automatically put in.
 	// it probably changes since the directories would be a bugger to print in save/restore functions
-	u8 newline_char;		// 0x40 or 0x5c
+	char newline_char;		// 0x40 or 0x5c
 	
 	// internal settings ---------------------
 	

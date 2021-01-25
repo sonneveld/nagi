@@ -34,7 +34,7 @@ static FILE *log_stream = NULL;
 u8 *cmd_log(u8 *c)
 {
 	u16 str_num;
-	u8 msg[1000];
+	char msg[1000];
 	
 	assert(c != NULL);
 	

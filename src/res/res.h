@@ -14,13 +14,13 @@ extern u8 *dir_sound(u16 num);
 
 
 extern u16 free_mem_check;
-extern int res_size;
+extern size_t res_size;
 extern u16 not_compressed;
 
-extern u8 *vol_res_load(u8 *dir_entry, u8 *buff);
-extern void err_msg(u8 *msg, u16 num);
+extern u8 *vol_res_load(const u8 *dir_entry, u8 *buff);
+extern void err_msg(char *msg, u16 num);
 extern void volumes_close(void);
-extern u8 *file_load(u8 *name, u8 *buff);
+extern u8 *file_load(const char *name, u8 *buff);
 
 // res_lzw.c
 

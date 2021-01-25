@@ -23,6 +23,12 @@
 #define AGI_NO_RETURN __attribute__((noreturn))
 #endif
 
+#ifdef _MSC_VER
+#define AGI_UNUSED 
+#else
+#define AGI_UNUSED __attribute__((unused))
+#endif
+
 
 // ok no warning here
 
@@ -34,7 +40,7 @@ struct node_struct
 {
 	struct node_struct *next;
 	struct node_struct *prev;
-	unsigned char contents[1];
+	__attribute__((aligned (8))) unsigned char contents[0];
 };
 typedef struct node_struct NODE;
 
@@ -213,7 +219,7 @@ typedef struct cmap_struct CMAP;
 	
 struct agi_state_struct
 {
-	u8 id[ID_SIZE+1];
+	char id[ID_SIZE+1];
 	u8 var[VAR_SIZE];
 	u8 flag[FLAG_SIZE];
 	
@@ -233,7 +239,7 @@ struct agi_state_struct
 	u16 script_size;
 	u16 script_count;			// number written in script
 	CMAP control_map[CONTROL_SIZE];
-	u8 string[STRING_LIST_SIZE][STRING_SIZE];
+	char string[STRING_LIST_SIZE][STRING_SIZE];
 	
 	u16 text_fg;
 	u16 text_bg;
@@ -380,7 +386,7 @@ typedef struct view_struct VIEW;
 
 struct vstring_struct
 {
-	u8 *data;
+	char *data;
 	u32 size;	// allocated mem size
 	u32 min;	// minimum size
 };
@@ -403,7 +409,7 @@ typedef struct vstring_struct VSTRING;
 
 typedef s32 CONF_INT;
 typedef u32 CONF_BOOL;
-typedef u8 *CONF_STRING;
+typedef const char *CONF_STRING;
 
 struct conf_struct
 {
@@ -479,7 +485,7 @@ extern CONF_BOOL c_game_object_packed;
 extern CONF_BOOL c_game_compression;
 extern CONF_INT c_game_dir_type;
 
-extern u8 c_game_file_id[ID_SIZE+1];
+extern char c_game_file_id[ID_SIZE+1];
 extern VSTRING *c_game_location;
 
 extern CONF config_nagi[];

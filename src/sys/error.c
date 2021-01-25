@@ -92,7 +92,7 @@ u16 agi_print_err_code()
 
 u16 print_err_code()
 {
-	u8 str[100];
+	char str[100];
 	input_edit_on();	// remove the cursor
 	beep_speaker();
 	beep_speaker();

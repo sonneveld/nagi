@@ -33,9 +33,9 @@
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 void dir_init(int argc, char *argv[]);
 void dir_shutdown(void);
-void dir_preset_set(int preset_id, u8 *dir);
+void dir_preset_set(int preset_id, const char *dir);
 void dir_preset_set_cwd(int preset_id);
-u8 *dir_preset_get(int preset_id);
+const char *dir_preset_get(int preset_id);
 int dir_preset_change(int preset_id);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -127,7 +127,7 @@ void dir_shutdown()
 	
 }
 
-void dir_preset_set(int preset_id, u8 *dir)
+void dir_preset_set(int preset_id, const char *dir)
 {
 	if (dir_preset[preset_id] == 0)
 		dir_preset[preset_id] = vstring_new(dir, 10);
@@ -142,7 +142,7 @@ void dir_preset_set_cwd(int preset_id)
 	vstring_getcwd(dir_preset[preset_id]);
 }
 
-u8 *dir_preset_get(int preset_id)
+const char *dir_preset_get(int preset_id)
 {
 	if (dir_preset[preset_id] != 0)
 		if (dir_preset[preset_id]->data != 0)
@@ -170,7 +170,7 @@ int dir_preset_change(int preset_id)
 
 void vstring_getcwd(VSTRING *buff)
 {
-	u8 *value;
+	char *value;
 	
 	for(;;)
 	{
@@ -183,7 +183,7 @@ void vstring_getcwd(VSTRING *buff)
 
 
 // case insenstive file existence check 
-int file_exists(u8 *f_name)
+int file_exists(const char *f_name)
 {
 #ifdef _WIN32
 	DWORD res = GetFileAttributes(f_name);
@@ -215,7 +215,7 @@ int file_exists(u8 *f_name)
 
 
 // case insenstive directory existence check 
-int dir_exists(u8 *d_name)
+int dir_exists(const char *d_name)
 {
 #ifdef _WIN32
 	DWORD res = GetFileAttributes(d_name);
@@ -233,7 +233,7 @@ int dir_exists(u8 *d_name)
 void dir_dump_preset_values(void)
 {
 	for (int i = 0; i < DIR_PRESET_LEN; i++) {
-		char *value = dir_preset_get(i);
+		const char *value = dir_preset_get(i);
 		if (value == 0) {
 			value = "not set";
 		}

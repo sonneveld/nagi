@@ -7,6 +7,6 @@ extern u8 *cmd_unknown_170(u8 *c);
 extern u8 *cmd_save_game(u8 *c);
 extern void state_reload(void);
 
-extern u8 state_name_auto[0x32];
+extern char state_name_auto[0x32];
 
 #endif /* NAGI_STATE_IO_H */

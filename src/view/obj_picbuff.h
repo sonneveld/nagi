@@ -3,7 +3,7 @@
 
 /* STRUCTURES	---	---	---	---	---	---	--- */
 /* VARIABLES	---	---	---	---	---	---	--- */
-u8 pri_table[172];
+extern u8 pri_table[172];
 
 /* FUNCTIONS	---	---	---	---	---	---	--- */
 extern void table_init(void);

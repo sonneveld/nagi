@@ -61,11 +61,11 @@ struct gameinfo_struct
 {
 	struct gameinfo_struct *next;
 		
-	u8 name[81];	// 80 + null
+	char name[81];	// 80 + null
 	VSTRING *dir;
 	
-	u8 *standard;
-	u8 file_id[ID_SIZE+1];
+	const char *standard;
+	char file_id[ID_SIZE+1];
 	u8 dir_type;
 	u8 ver_type;	// used to pick defaults
 };
@@ -102,7 +102,7 @@ typedef struct agicrc_struct AGICRC;
 // ---------------------------------------- LIST INIT ----------------------------------------
 
 // generate a crc from a file
-static int file_crc_gen(u8 *file_name, u32 *crc32)
+static int file_crc_gen(const char *file_name, u32 *crc32)
 {
 	u8 *buf;
 	
@@ -127,11 +127,11 @@ static int file_crc_gen(u8 *file_name, u32 *crc32)
 }
 
 
-static u8 st_end_char;
-static u8 *st_end = 0;
+static char st_end_char;
+static char *st_end = 0;
 
 // hopefully a pointer to the standard you wanna sep
-static void stand_sep(u8 *ptr)
+static void stand_sep(char *ptr)
 {
 	assert(ptr != 0);
 	
@@ -159,7 +159,7 @@ static void stand_rejoin(void)
 static int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 {
 	int i;
-	u8 name[ID_SIZE + 20];
+	char name[ID_SIZE + 20];
 	
 	assert(agicrc != 0);
 	assert(info != 0);
@@ -261,7 +261,7 @@ static int dir_get_info(AGICRC *agicrc, GAMEINFO *info)
 
 static void crc_print(AGICRC *agicrc, GAMEINFO *info)
 {
-	u8 key_vol[20];	// twice as much needed
+	char key_vol[20];	// twice as much needed
 	int i;
 	
 	assert(agicrc != 0);
@@ -311,7 +311,7 @@ static void crc_print(AGICRC *agicrc, GAMEINFO *info)
 }
 
 
-#define CRC_FUDGE(x, y, z) key=ini_key(ini, (x) ); key_touched |= (int)key; \
+#define CRC_FUDGE(x, y, z) key=ini_key(ini, (x) ); key_touched |= (key != 0); \
 					if ( (key!= 0) \
 					&& (agicrc->y != strtoul(key, 0, 16)) ) \
 						return (z)
@@ -323,8 +323,8 @@ static void crc_print(AGICRC *agicrc, GAMEINFO *info)
 // return 0 if ok
 static int crc_compare(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 {
-	u8 *key;
-	u8 key_vol[20];	// twice as much needed
+	const char *key;
+	char key_vol[20];	// twice as much needed
 	int key_touched = 0;
 	int i;
 	
@@ -376,10 +376,10 @@ static int crc_compare(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 
 // open up each section on the list and compare available crc's with one's calculated before
 // return pointer to section in section list if a match is found.
-static u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
+static const char *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 {
-	u8 *crc_list; 
-	u8 *token, *running;
+	char *crc_list; 
+	char *token, *running;
 	
 	assert(agicrc != 0);
 	assert(info != 0);
@@ -406,9 +406,9 @@ static u8 *crc_search(AGICRC *agicrc, GAMEINFO *info, INI *ini)
 // 12 34 00 2F 00 2F 00
 
 // generate a name for the game info from standard.ini or just from other available resrouces
-static void gameinfo_namegen(GAMEINFO *info, INI *ini, u8 *dir_sub, u8 *dir)
+static void gameinfo_namegen(GAMEINFO *info, INI *ini, const char *dir_sub, const char *dir)
 {
-	u8 *name = 0;
+	char *name = 0;
 
 	assert(info != 0);
 	assert(dir != 0);
@@ -417,11 +417,12 @@ static void gameinfo_namegen(GAMEINFO *info, INI *ini, u8 *dir_sub, u8 *dir)
 	// standard separate
 	if ( (info->standard != 0) && (ini != 0) )
 	{
-		stand_sep(info->standard);
+		char *standard_dupe = strdupa(info->standard);
+		stand_sep(standard_dupe);
 		// go to section
-		ini_section(ini, info->standard);
+		ini_section(ini, standard_dupe);
 		// read name
-		name = ini_key(ini, "name");
+		name = strdupa(ini_key(ini, "name"));
 	}
 	
 	if (name == 0)
@@ -460,12 +461,12 @@ static int game_count = 0;
 
 // create a new gameinfo struct for a given directory if a game exists in it.. 
 // called on for each dir
-static void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
+static void gameinfo_add(LIST *list, INI *ini, const char *dir_sub, const char *dir)
 {
 	AGICRC agicrc;
 	GAMEINFO info_new;
 	GAMEINFO *info;
-	u8 *msg = alloca(strlen("Games found: XXXXXXXXXXXX"));
+	char *msg = alloca(strlen("Games found: XXXXXXXXXXXX"));
 	
 	assert(list != 0);
 	
@@ -507,8 +508,8 @@ static void gameinfo_add(LIST *list, INI *ini, u8 *dir_sub, u8 *dir)
 // search one level into it too if possible
 static void gi_list_init(LIST *list, INI *ini)
 {
-	u8 *dir_list;
-	u8 *token, *running;
+	char *dir_list;
+	char *token, *running;
 	struct dir_list_struct *dir; 
 	
 	assert(list != 0);
@@ -528,7 +529,7 @@ static void gi_list_init(LIST *list, INI *ini)
 		{
 			for(;;)
 			{
-				char *filename = agi_read_dir(dir);
+				const char *filename = agi_read_dir(dir);
 				if (filename == 0) { break; }
 
 				if (strcmp(filename, "..") == 0) { continue; }
@@ -572,9 +573,9 @@ static void gi_list_init(LIST *list, INI *ini)
 static GAMEINFO *gi_list_menu(LIST *list)
 {
 	int list_size, selection;
-	u8 **str_list, **str_cur;
-	u8 *msg;
-	u8 newline_orig;	// d0d orig
+	const char **str_list, **str_cur;
+	char *msg;
+	char newline_orig;	// d0d orig
 	GAMEINFO *info;
 	
 	assert(list != 0);
@@ -589,7 +590,7 @@ static GAMEINFO *gi_list_menu(LIST *list)
 		return list_element_head(list);
 	
 	// allocate list
-	str_list = alloca(sizeof(u8 *) * (list_size+1) );
+	str_list = alloca(sizeof(char *) * (list_size+1) );
 	// set the first item to instruction string
 	str_list[0] = "Use the arrow keys to select the game which you wish to play.\nPress ENTER to play the game, ESC to not play a game.";
 	
@@ -639,8 +640,6 @@ top:
 
 // ---------------------------------------- ITEM INIT ----------------------------------------
 
-static u8 *window_caption = 0;
-
 static void standard_init_ng(GAMEINFO *game, INI *ini)
 {
 	assert(game != 0);
@@ -686,8 +685,9 @@ static void standard_init_ng(GAMEINFO *game, INI *ini)
 	{
 		if (game->standard != 0)
 		{
-			stand_sep(game->standard);
-			ini_section(ini, game->standard);
+			char *standard_dupe = strdupa(game->standard);
+			stand_sep(standard_dupe);
+			ini_section(ini, standard_dupe);
 			stand_rejoin();
 		}
 		else if (game->dir_type == DIR_AMIGA)
@@ -731,16 +731,19 @@ static void standard_init_ng(GAMEINFO *game, INI *ini)
 	
 	// dont' store name.. use it for window only
 	// init window name
-	if ( (game->standard != 0) && (game->name[0] != 0) )
+	SDL_Window *window = vid_get_main_window();
+	if (window != 0)
 	{
-		window_caption = a_malloc(strlen(game->name) + strlen("NAGI - ") + 10);
-		sprintf(window_caption, "%s - NAGI", game->name);
+		if ( (game->standard != 0) && (strlen(game->name) > 0) )
+		{
+			int title_len = snprintf(NULL, 0, "%s - NAGI", game->name);
+			char *title = alloca(title_len + 1);
+			snprintf(title, title_len + 1, "%s - NAGI", game->name);
+			SDL_SetWindowTitle(window, title);
+		}
+		else
+			SDL_SetWindowTitle(window, "NAGI");
 	}
-	else
-		window_caption = "NAGI";
-	SDL_Window* window = vid_get_main_window();
-	if(window)
-		SDL_SetWindowTitle(window,window_caption);
 }
 
 
@@ -749,8 +752,8 @@ static void standard_init_ng(GAMEINFO *game, INI *ini)
 
 static int gameinfo_compare(const void *a, const void *b)
 {
-	const GAMEINFO *info_a = *((const GAMEINFO **)a);
-	const GAMEINFO *info_b = *((const GAMEINFO **)b);
+	const GAMEINFO *info_a = *((const GAMEINFO * const *)a);
+	const GAMEINFO *info_b = *((const GAMEINFO * const *)b);
 	
 	//~ info_a = *((GAMEINFO **)a);
 	//~ info_b = *((GAMEINFO **)b);

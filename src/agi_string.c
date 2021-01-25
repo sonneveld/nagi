@@ -45,7 +45,7 @@ CmdGetNum                        cseg     00007126 000000C8
 #include "sys/chargen.h"
 
 
-static void agi_string_clean(u16 str_agi, u8 *str_buff);
+static void agi_string_clean(u16 str_agi, char *str_buff);
 
 
 // the size is probably related to the text resolution
@@ -58,13 +58,13 @@ static void agi_string_clean(u16 str_agi, u8 *str_buff);
 // get.string(sA,mB,Y,X,L);
 u8 *cmd_get_string(u8 *c)
 {
-	u8 prompt[400];
+	char prompt[400];
 	u16 input_stat_orig;	// original input status
 	u16 prompt_num;	// msg number
 	u16 len;	// length
 	u16 col;	// x col
 	u16 row;	// y  row]
-	u8 *str_user;	// string
+	char *str_user;	// string
 
 	input_stat_orig = input_edit_status();
 	push_row_col();
@@ -94,7 +94,7 @@ u8 *cmd_get_string(u8 *c)
 
 u8 *cmd_set_string(u8 *c)
 {
-	u8 *di;
+	char *di;
 	di = state.string[*(c++)];
 	strncpy(di, logic_msg(*(c++)), STRING_SIZE);
 	return c;
@@ -102,7 +102,7 @@ u8 *cmd_set_string(u8 *c)
 
 u8 *cmd_word_to_string(u8 *c)
 {
-	u8 *di;
+	char *di;
 	di = state.string[*(c++)];
 	strncpy(di, word_string[*(c++)], STRING_SIZE);
 	return c;
@@ -189,9 +189,9 @@ u8 *cmd_set_game_id(u8 *c)
 // var8 and vara are agi_string NUMBERS
 u16 agi_string_compare(u16 var8, u16 vara)
 {
-	u8 temp52[41];	// string vara copy;
-	u8 temp29[41];	// string var8 copy
-	u8 *si, *di;
+	char temp52[41];	// string vara copy;
+	char temp29[41];	// string var8 copy
+	char *si, *di;
 	
 	agi_string_clean(var8, temp29);
 	agi_string_clean(vara, temp52);
@@ -210,9 +210,9 @@ u16 agi_string_compare(u16 var8, u16 vara)
 }
 
 // clean the string? 
-static void agi_string_clean(u16 str_agi, u8 *str_buff)
+static void agi_string_clean(u16 str_agi, char *str_buff)
 {
-	u8 *di;
+	char *di;
 	
 	for (di=state.string[str_agi]; *di!=0; di++)
 		if (strchr("\x20\x09.,;:'!-", *di) == 0)
@@ -222,8 +222,8 @@ static void agi_string_clean(u16 str_agi, u8 *str_buff)
 
 u8 *cmd_get_num(u8 *c)
 {
-	u8 temp194[400];
-	u8 temp4[4];
+	char temp194[400];
+	char temp4[4];
 	
 	temp4[0] = 0;
 
@@ -249,7 +249,7 @@ static TPOS stredit_pos = {0,0};
 // 1/3	-- moving right
 
 // display an end portion of the str
-static void stredit_disp2(u8 *port, u16 disp_size, u16 offset)
+static void stredit_disp2(const char *port, u16 disp_size, u16 offset)
 {
 	window_clear(stredit_pos.row, stredit_pos.col+offset, stredit_pos.row, stredit_pos.col+disp_size-1, state.text_bg);
 	
@@ -266,9 +266,9 @@ static void stredit_disp2(u8 *port, u16 disp_size, u16 offset)
 }
 
 
-static u8 *stredit_disp(u8 *str_edit, u16 str_size,u16 disp_size, u16 percent)
+static const char *stredit_disp(const char *str_edit, u16 str_size,u16 disp_size, u16 percent)
 {
-	u8 *str_disp;
+	const char *str_disp;
 	// display string
 	if ((str_size<=disp_size)||(strlen(str_edit) < disp_size))
 		str_disp = str_edit;
@@ -289,14 +289,14 @@ static u8 *stredit_disp(u8 *str_edit, u16 str_size,u16 disp_size, u16 percent)
 	return str_disp;
 }
 
-u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
+char string_edit(char *str, u16 str_size, u16 disp_size)
 {
-	u8 *str_edit;	// the whole str that gets edited
-	u8 *str_disp;	// pointer to the bit that gets displayed
-	u8 *str_tail;	// tail of the edited string;
-	u8 *str_end;	// the absolute end
+	char *str_edit;	// the whole str that gets edited
+	const char *str_disp;	// pointer to the bit that gets displayed
+	char *str_tail;	// tail of the edited string;
+	char *str_end;	// the absolute end
 	
-	u8 ch = 0;
+	char ch = 0;
 	
 	// init string
 	str_edit = alloca(str_size);
@@ -345,12 +345,12 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 				strcpy(str, str_edit);
 				ch_update();
 				return ch;	// LEAVE!
-				break;
+				// break;
 			
 			case 0x1B:	// esc
 				ch_update();
 				return ch;	// LEAVE!
-				break;
+				// break;
 			
 			default:
 				if (str_tail < str_end)
@@ -369,6 +369,7 @@ u8 string_edit(u8 *str, u16 str_size, u16 disp_size)
 				}
 		}
 	}
-	ch_update();
-	return ch;
+	// we should never reach this point, we only `return` from the for loop above.
+	// ch_update();
+	// return ch;
 }

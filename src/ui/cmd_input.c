@@ -59,8 +59,8 @@ static void input_echo(void);
 
 
 static u16 input_edit_disabled = 0;
-static u8 input[42];
-u8 input_prev[42];  // used for logging
+static char input[42];
+char input_prev[42];  // used for logging
 static u16 input_cur = 0;
 
 
@@ -244,7 +244,7 @@ u8 *cmd_accept_input(u8 *c)
 
 u8 *cmd_set_cursor_char(u8 *c)
 {
-	u8 *di;
+	const char *di;
 	di = logic_msg(*(c++));
 	state.cursor = *di;
 	return c;
@@ -253,7 +253,7 @@ u8 *cmd_set_cursor_char(u8 *c)
 // used a fair bit
 void input_redraw()
 {
-	u8 msg[400];
+	char msg[400];
 	
 	if (state.input_state != 0)
 	{

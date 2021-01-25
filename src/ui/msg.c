@@ -48,8 +48,8 @@ _DispNewLine                     cseg     0000234E 0000001F
 #include "../sys/error.h"
 
 static u8 *print_at(u16 msg_num, u8 *c);
-static u8 *r_display1f93(u8 *given_source, u8 *given_msg);
-static u8 *str_to_int_ptr(u8 *s, u16 *num);
+static char *r_display1f93(const char *given_source, char *given_msg);
+static const char *str_to_int_ptr(const char *s, u16 *num);
 static void display_new_line(void);
 
 //u16 word_dseg_D09 = 20;	// row related ..   the MAX WIDTH???
@@ -120,7 +120,7 @@ u8 *cmd_close_window(u8 *c)
 u8 *cmd_display(u8 *c)
 {
 	u16 row, col;
-	u8 msg[1000];
+	char msg[1000];
 	push_row_col();
 	row = *(c++);
 	col = *(c++);
@@ -133,7 +133,7 @@ u8 *cmd_display(u8 *c)
 u8 *cmd_display_v(u8 *c)
 {
 	u16 row, col;
-	u8 msg[1000];
+	char msg[1000];
 
 	push_row_col();
 	row = state.var[*(c++)];
@@ -148,10 +148,10 @@ u8 *cmd_display_v(u8 *c)
 
 
 
-u16 message_box(u8 *var8)
+int message_box(const char *var8)
 {
 	u32 temp;
-	u16 ret;
+	int ret;
 	
 	message_box_draw(var8, 0, 0, 0);
 	
@@ -181,15 +181,16 @@ u16 message_box(u8 *var8)
 	}
 }
 
+#define PARTIAL_STR_LEN 20
+
 // var8 is the string
 // vara is starting row?
 // varc is a width 
 // vare is a toggle... if == 1 then force width and height
-void message_box_draw(u8 *str, u16 row, u16 w, u16 toggle)
+void message_box_draw(const char *str, u16 row, u16 w, u16 toggle)
 {
-	u8 char_orig;
-	u8 msg_err[100];	// 2bc
-	u8 msg[600];	// 258
+	char msg_err[100];	// 2bc
+	char msg[600];	// 258
 	u16 ax;
 	
 	if ( msgstate.active != 0)
@@ -220,10 +221,11 @@ void message_box_draw(u8 *str, u16 row, u16 w, u16 toggle)
 		if ( msgstate.tsize.h <= (HEIGHT_MAX - 1))
 			break;
 		
-		char_orig = str[20];
-		str[20] = 0;
-		sprintf(msg_err, "Message too verbose:\n\n\"%s...\"\n\nPress ESC to continue.", str);
-		str[20] = char_orig;
+		// if too verbose, create an error msg then wrap round again to be wrapped.
+		char partial_str[PARTIAL_STR_LEN + 1];
+		strncpy(partial_str, str, PARTIAL_STR_LEN);
+		partial_str[PARTIAL_STR_LEN] = '\0';
+		sprintf(msg_err, "Message too verbose:\n\n\"%s...\"\n\nPress ESC to continue.", partial_str);
 		str = msg_err;
 	}
 	
@@ -268,11 +270,11 @@ void message_box_draw(u8 *str, u16 row, u16 w, u16 toggle)
 // used by r_display 'n stuff
 static u16 disp_char_cur = 0;		// character count for the count line
 static u16 disp_width_max = 0;	// desired maximum width
-static u8 *disp_last_word = 0;	// ptr to the last word.. so you can wrap lines
+static char *disp_last_word = 0;	// ptr to the last word.. so you can wrap lines
 
 // var8 = msg,  vara = str  varc = w
 // I think it arranges the text.. inserts \n and stuff man
-u8 *str_wordwrap(u8 *msg, u8 *str, u16 w)
+char *str_wordwrap(char *msg, const char *str, u16 w)
 {
 	disp_char_cur = 0;
 	disp_width_max = w;
@@ -282,8 +284,8 @@ u8 *str_wordwrap(u8 *msg, u8 *str, u16 w)
 	
 	if (str != 0) 
 	{
-		str = r_display1f93(str, msg);
-		*str = 0;
+		char *s = r_display1f93(str, msg);
+		*s = 0;
 		display_new_line();
 	}
 	return msg;
@@ -292,15 +294,15 @@ u8 *str_wordwrap(u8 *msg, u8 *str, u16 w)
 //u16 stuff[] = {0, 0x0A, 0x20, 0x25};
 
 // add str to msg
-static u8 *r_display1f93(u8 *given_source, u8 *given_msg)
+static char *r_display1f93(const char *given_source, char *given_msg)
 {
 	LOGIC *log_orig;	// orig log0
 	u16 var_pad;	// number of zeroes to pad variable with
 	u16 my_num;	// msg number
-	u8 *my_str;
-	u8 *log_msg;	// logic msg data
-	u8 *source;
-	u8 *msg;
+	const char *my_str;
+	const char *log_msg;	// logic msg data
+	const char *source;
+	char *msg;
 
 	
 	source = given_source;
@@ -432,7 +434,7 @@ static u8 *r_display1f93(u8 *given_source, u8 *given_msg)
 
 
 
-u8 *logic_msg(u16 msg_num)
+const char *logic_msg(u16 msg_num)
 {
 	u16 temp_off;
 	u8 *msg_item;
@@ -446,13 +448,15 @@ u8 *logic_msg(u16 msg_num)
 
 		if (temp_off == 0)
 			set_agi_error(0xE, msg_num);
-		return(logic_cur->msg + temp_off);
+
+		const char *result = (const char *)(logic_cur->msg + temp_off);
+		return result;
 	}
 }
 
 
 // converts a string to an int
-static u8 *str_to_int_ptr(u8 *s, u16 *num)
+static const char *str_to_int_ptr(const char *s, u16 *num)
 {
 	u16 di;
 	di = 0;

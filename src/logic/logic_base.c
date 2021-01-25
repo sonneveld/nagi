@@ -133,12 +133,22 @@ void logic_load(u16 logic_num)
 	script_write(0, logic_num);
 }
 
+
+// similar implementation to `logic_msg` but returns bytes
+static u8 *logic_msg_bytes(LOGIC *log, u16 msg_num)
+{
+	u8 *msg_item = log->msg + (msg_num<<1);
+	u16 temp_off = load_le_16(msg_item);
+	assert(temp_off != 0);
+	return log->msg + temp_off;
+}
+
 LOGIC *logic_load_2(u16 logic_num)
 {
 	LOGIC *log;	// logic
 	u8 *log_data;
 	u8 *msg;	// ptr to messages
-	LOGIC *logic_cur_orig;	// orig logic_cur
+	// LOGIC *logic_cur_orig;	// orig logic_cur
 
 	log = logic_list_find(logic_num);
 	if ( log == 0)
@@ -166,11 +176,11 @@ LOGIC *logic_load_2(u16 logic_num)
 		{
 			if ( log->msg_total != 0)
 			{
-				logic_cur_orig = logic_cur;
-				logic_cur = log;
+				// logic_cur_orig = logic_cur;
+				// logic_cur = log;
 				decrypt_string(  log->msg + ((log->msg_total + 1)<<1),
-							logic_msg(0)  );
-				logic_cur = logic_cur_orig;
+							logic_msg_bytes(log, 0)  );
+				// logic_cur = logic_cur_orig;
 			}
 		}
 

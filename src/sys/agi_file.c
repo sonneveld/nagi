@@ -96,7 +96,7 @@ const char *agi_read_dir(struct dir_list_struct *d)
 	return d->FindFileData.cFileName;
 }
 
-FILE *fopen_nocase(const u8 *name)
+FILE *fopen_nocase(const char *name)
 {
 	return fopen(name, "rb");
 }
@@ -142,12 +142,12 @@ const char *agi_read_dir(struct dir_list_struct *d)
 	return d->file->d_name;
 }
 
-FILE *fopen_nocase(const u8 *name)
+FILE *fopen_nocase(const char *name)
 {
 	DIR *dir;
 	struct dirent *fileent;
 	FILE *ret;
-	u8 *name_copy;
+	char *name_copy;
 	
 	dir = opendir(".");
 	name_copy = strdupa(name);
@@ -184,7 +184,7 @@ FILE *fopen_nocase(const u8 *name)
 
 u32 file_buf_size;
 
-u8 *file_to_buf(const u8 *file_name)
+u8 *file_to_buf(const char *file_name)
 {
 	int file_size;
 	FILE *file_stream;

@@ -91,8 +91,8 @@ static int font_check(AGISIZE *size)
 
 static FILE *font_open(AGISIZE *needed)
 {
-	u8 *token, *running;
-	u8 *list;
+	char *token, *running;
+	char *list;
 	AGISIZE size;
 	
 	FILE *pref_file = 0;
@@ -100,6 +100,9 @@ static FILE *font_open(AGISIZE *needed)
 
 	FILE *cur_file;
 	int cur_scale;
+
+	// to be used later when filtering fonts
+	(void)needed;
 
 	list = strdupa(c_vid_fonts_bitmap);
 	token = strtok_r(list, ";", (char**)&running);
@@ -290,7 +293,8 @@ void ch_put(u8 ch)
 	u8 *pixels;
 	POS gfx_pos;
 	u8 *fontp;
-	u32 h_count, w_count;
+	int h_count;
+	u32 w_count;
 	u8 mask_xor = 0;
 	u8 mask_or = 0;
 	u8 font_d, b;

@@ -385,8 +385,8 @@ u8 *cmd_unanimate_all(u8 *c)
 #define DOWN 2
 #define UP 3
 #define IGNORE 4
-u8 loop_small[] = {IGNORE, IGNORE, RIGHT,RIGHT,RIGHT, IGNORE,LEFT,LEFT,LEFT,RIGHT};	//8d5
-u8 loop_large[] = {IGNORE,    UP,    RIGHT,RIGHT,RIGHT, DOWN, LEFT,LEFT,LEFT,RIGHT};	// 8df
+static u8 loop_small[] = {IGNORE, IGNORE, RIGHT,RIGHT,RIGHT, IGNORE,LEFT,LEFT,LEFT,RIGHT};	//8d5
+static u8 loop_large[] = {IGNORE,    UP,    RIGHT,RIGHT,RIGHT, DOWN, LEFT,LEFT,LEFT,RIGHT};	// 8df
 // if loop == 4 then it doesn't change it (ie, moving characters only have 0-3 loops or something
 
 void objtable_update()

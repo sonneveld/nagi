@@ -100,7 +100,8 @@ static void obj_show(u16 view_num)
 		}
 		
 		si = view_find(view_num);
-		message_box(si->data + load_le_16(si->data + 3));
+		const char *obj_desc = (const char *)(si->data + load_le_16(si->data + 3));
+		message_box(obj_desc);
 		
 		if (obj_displayed != 0)
 		{

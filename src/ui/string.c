@@ -44,15 +44,15 @@ These are implemented in the gnu library:
 
 #include "string.h"
 
-static u8 *string_reverse(u8 *str);
+static char *string_reverse(char *str);
 
 
-static u8 string_buff[0xC];
+static char string_buff[0xC];
 
 // atoi
-u16 string_to_int(u8 *string)
+u16 string_to_int(const char *string)
 {
-	u8 *s;
+	const char *s;
 	u16 num;
 	s = string;
 	while (*s == ' ')
@@ -63,10 +63,10 @@ u16 string_to_int(u8 *string)
 	return num;
 }
 
-u8 *int_to_string(u16 num)
+char *int_to_string(u16 num)
 {
 	u16 si;
-	u8 *di;
+	char *di;
 	
 	si = num;
 	di = string_buff;
@@ -82,25 +82,26 @@ u8 *int_to_string(u16 num)
 }
 
 // eg "123" = "000000123" or something
-u8 *string_zero_pad(u8 *str, u16 pad_size)
+char *string_zero_pad(const char *str, u16 pad_size)
 {
 	u16 size, str_size;
-	u8 temp[0xB];
+	char temp[0xB]; // use another temp buffer because input `str` might be `string_buff`
 	
 	size = pad_size;
-	str_size = strlen(strcpy(temp, str));	// var8 into temp.. returns var8;
-	memset(string_buff, 0x30, 0xA);	// '0'
+	strcpy(temp, str);
+	str_size = strlen(temp);	// var8 into temp.. returns var8;
+	memset(string_buff, '0', 0xA);	// '0'
 	if (str_size > size)
 		size = str_size;
 	strcpy(string_buff + size - str_size, temp);
 	return string_buff;
 }
 
-static u8 *hex_conv = "0123456789ABCDEF";
+static const char *hex_conv = "0123456789ABCDEF";
 
-u8 *int_to_hex_string(u16 num)
+char *int_to_hex_string(u16 num)
 {
-	u8 *si;
+	char *si;
 	si = string_buff;
 	
 	do
@@ -139,10 +140,10 @@ static u8 *int_to_hex_string_v2(u16 num)
 }
 #endif
 
-static u8 *string_reverse(u8 *str)
+static char *string_reverse(char *str)
 {
-	u8 *si, *di;
-	u8 temp;
+	char *si, *di;
+	char temp;
 	
 	si = str;
 	di = str + strlen(si) - 1;
@@ -158,9 +159,9 @@ static u8 *string_reverse(u8 *str)
 }
 
 // this requires writable string constants maybe for some bits 'n pieces
-u8 *string_lower(u8 *str)
+char *string_lower(char *str)
 {
-	u8 *di;
+	char *di;
 	di = str;
 	while (*di != 0)
 	{

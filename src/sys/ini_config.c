@@ -31,10 +31,10 @@
 /* CODE	---	---	---	---	---	---	---	--- */
 
 
-INI *ini_open(u8 *ini_name);
+INI *ini_open(const char *ini_name);
 void ini_close(INI *inistate);
 
-INI *ini_open(u8 *ini_name)
+INI *ini_open(const char *ini_name)
 {
 	FILE *file_stream;
 	int inifile_size;
@@ -58,7 +58,7 @@ INI *ini_open(u8 *ini_name)
 	
 	// read file
 	ini_new->data = a_malloc(ini_new->size + 1);
-	if ( fread(ini_new->data, sizeof(u8), ini_new->size, file_stream) !=(size_t)ini_new->size)
+	if ( fread(ini_new->data, sizeof(char), ini_new->size, file_stream) !=(size_t)ini_new->size)
 	{
 		ini_close(ini_new);
 		return 0;
@@ -95,9 +95,9 @@ void ini_close(INI *ini)
 // return 1 if reach end of file or line
 // starts from ini->cur_ptr
 // don't trash ini_cur ptr if stuffed.. because we can still continue
-static int string_isolate(INI *ini, u8 ch)
+static int string_isolate(INI *ini, char ch)
 {
-	u8 *cur;
+	char *cur;
 	
 	cur = ini->cur_ptr;
 
@@ -120,7 +120,7 @@ static int string_isolate(INI *ini, u8 ch)
 // this means if you have a key on the last line.. it better have a eoln at the end
 static int line_isolate(INI *ini)
 {
-	u8 *cur;
+	char *cur;
 	
 	if (ini != 0)
 	{
@@ -156,7 +156,7 @@ static void string_rejoin(INI *ini)
 // if we can't get to the next line.. we don't need the data.. we just finish
 static void line_next(INI *ini)
 {
-	u8 *cur;
+	char *cur;
 	cur = ini->cur_ptr;
 	
 	// step through text
@@ -179,7 +179,7 @@ static void line_next(INI *ini)
 // if found sect_ptr = ptr
 // else sect_ptr = 0;
 // returns 0 if found.. so we don't have to call key_get
-int ini_section(INI *ini, u8 *sect_name)
+int ini_section(INI *ini, const char *sect_name)
 {
 	if (ini == 0)
 		return -1;
@@ -219,7 +219,7 @@ int ini_section(INI *ini, u8 *sect_name)
 	return (ini->sect_ptr == 0);
 }
 
-u8 *ini_key(INI *ini, u8 *key_name)
+const char *ini_key(INI *ini, const char *key_name)
 {
 	if (ini == 0)
 		return 0;
@@ -263,11 +263,11 @@ u8 *ini_key(INI *ini, u8 *key_name)
 
 // if sect_name == 0
 // then use the current one
-u8 *ini_recursive(INI *ini, u8 *sect_name, u8 *key_name)
+const char *ini_recursive(INI *ini, const char *sect_name, const char *key_name)
 {
-	u8 *sect_orig;
-	u8 *key_data;
-	u8 *inherits;
+	char *sect_orig;
+	const char *key_data;
+	char *inherits;
 	
 	if (ini == 0)
 		return 0;

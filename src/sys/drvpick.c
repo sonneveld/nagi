@@ -37,7 +37,7 @@
 
 // return 0 on good drv
 // return -1 on fail
-int drvpick_first(DRVINITSTATE *dstate, DRVINIT *init_list, int size, u8 *def, void *ptr_list)
+int drvpick_first(DRVINITSTATE *dstate, DRVINIT *init_list, int size, const char *def, void *ptr_list)
 {
 	int i = 0;
 

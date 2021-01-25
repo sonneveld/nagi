@@ -4,7 +4,7 @@
 extern u8 *cmd_get_string(u8 *c);
 extern u8 *cmd_set_string(u8 *c);
 extern u8 *cmd_word_to_string(u8 *c);
-extern u8 string_edit(u8 *str, u16 str_size, u16 disp_size);
+extern char string_edit(char *str, u16 str_size, u16 disp_size);
 
 extern u8 *cmd_set_game_id(u8 *c);
 

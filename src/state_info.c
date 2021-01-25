@@ -18,6 +18,7 @@ _StateDrawBlank                  cseg     00008FB3 00000020
 #include <sys/stat.h>
 
 #include "sys/vstring.h"
+#include "state_info.h"
 
 #include "state_io.h"
 #include "ui/cmd_input.h"
@@ -43,7 +44,7 @@ VSTRING *save_dir = 0;
 VSTRING *save_filename = 0;
 
 static u16 word_1aad = 0;
-u8 save_description[0x20];
+char save_description[0x20];
 
 #if 0
 static u8 save_drive = 0;
@@ -52,14 +53,14 @@ static u8 save_drive = 0;
 struct save_struct
 {
 	u16 num;
-	u8 diz[31];
+	char diz[31];
 };
 
 typedef struct save_struct SAVE;
 
 u16 state_get_info(u8 state_type);
 static u16 state_get_path(u8 state_type);
-static u16 state_get_text(u8 *msg, u8 *str, u16 str_alloc);
+static u16 state_get_text(const char *msg, char *str, u16 str_alloc);
 static u16 state_get_filename(u8 state_type);
 static u16 state_get_diz(u16 var8, SAVE *vara, u32 *varc);
 static void state_draw_arrow(u16 var8);
@@ -201,9 +202,9 @@ static u16 state_get_path(u8 state_type)
 	return 0;
 }
 
-static u16 state_get_text(u8 *msg, u8 *str, u16 str_alloc)
+static u16 state_get_text(const char *msg, char *str, u16 str_alloc)
 {
-	u16 edit_result;
+	char edit_result;
 	
 	message_box_draw(msg, 0, 0x1F, 1);
 	goto_row_col(msgstate.tpos_edge.row, msgstate.tpos.col);
@@ -216,7 +217,7 @@ static u16 state_get_text(u8 *msg, u8 *str, u16 str_alloc)
 	text_attrib_pop();
 	cmd_close_window(0);
 	
-	return (edit_result==0xD);
+	return (edit_result==0xD);  // carriage return
 }
 
 static u16 state_get_filename(u8 state_type)
@@ -285,7 +286,7 @@ static u16 state_get_filename(u8 state_type)
 
 	if (  (temp1f4 == 0) && (state_name_auto[0] == 0)  )
 	{
-		u8 *temp1f0;
+		char *temp1f0;
 		
 		temp1f0 = alloca(100 + strlen(save_dir->data));
 		
@@ -424,7 +425,7 @@ static u32 stream_get_date(FILE *fstream)
 static u16 state_get_diz(u16 s_num, SAVE *s_item, u32 *s_date)
 {
 	FILE *state_stream;	// file handle
-	u8 state_id[ID_SIZE+1];
+	char state_id[ID_SIZE+1];
 	//u8 temp40[64];
 	VSTRING *name_temp;
 	
@@ -443,9 +444,9 @@ static u16 state_get_diz(u16 s_num, SAVE *s_item, u32 *s_date)
 	}
 
 	*s_date = stream_get_date(state_stream);
-	fread(s_item->diz, sizeof(u8), sizeof(s_item->diz), state_stream);
+	fread(s_item->diz, sizeof(char), sizeof(s_item->diz), state_stream);
 	fseek(state_stream, 2, SEEK_CUR);	
-	fread(state_id, sizeof(u8), sizeof(state.id), state_stream);	
+	fread(state_id, sizeof(char), sizeof(state.id), state_stream);	
 	fclose(state_stream);
 
 	if (strcmp(state_id, state.id) != 0)
@@ -477,7 +478,7 @@ static void state_draw_blank(u16 var8)
 //u8 *state_name_create(u16 save_num, u8 *buff, int *buff_size)
 static void state_name_create(u16 save_num, VSTRING *filename)
 {
-	u8 *dir_sep;
+	const char *dir_sep;
 	int size_new;
 	
 	if ((strlen(save_dir->data)>0)&&(strchr("\\/", save_dir->data[strlen(save_dir->data)-1]) != 0))
@@ -541,7 +542,7 @@ u16 save_5f6b(u8 *save_path)
 // save path exists
 static u16 state_dir_check(VSTRING *dir)
 {
-	u8 *path_tail;
+	char *path_tail;
 	u32 path_size;
 	
 	vstring_shift(dir, strspn(dir->data, " "));

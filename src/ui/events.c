@@ -119,17 +119,18 @@ static u16 system_keymap(SDL_Keysym *keysym)
 		{
 			case SDLK_TAB:
 				return 0x09;
-				break;
+				// break;
 			case SDLK_ESCAPE:
 				return 0x1B;
-				break;
+				// break;
 			case SDLK_BACKSPACE:
 			case SDLK_DELETE:
 				return 0x08;
-				break;
+				// break;
 			case SDLK_KP_ENTER:
 			case SDLK_RETURN:
 				return 0x0D;
+				// break;
 			default:
 				// return keysym->sym & 0x7f;
 				;
@@ -495,11 +496,11 @@ u16 has_user_reply()
 	{
 		case 0x0D:		// Enter
 			return 1;
-			break;
+			// break;
 		
 		case 0x1B:		// ESC
 			return 0;
-			break;
+			// break;
 		
 		default:
 			return 0xFFFF;

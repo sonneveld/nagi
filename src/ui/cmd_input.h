@@ -18,6 +18,6 @@ extern u16 input_edit_status(void);
 extern void input_redraw(void);
 
 
-extern u8 input_prev[42];
+extern char input_prev[42];
 
 #endif /* NAGI_UI_CMD_INPUT_H */

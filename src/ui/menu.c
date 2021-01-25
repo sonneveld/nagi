@@ -38,7 +38,7 @@ struct menu_item_struct
 {
 	struct menu_item_struct *next;	// 0-1	next
 	struct menu_item_struct *prev; 	// 2-3 prev
-	u8 *name;				// 4-5
+	const char *name;				// 4-5
 	u16 row; 				// 6-7
 	u16 col;				// 8-9
 	u16 status;				// a-b	// 1 = enable 0 = disable
@@ -52,7 +52,7 @@ struct menu_struct
 {
 	struct menu_struct *next;	// 0-1 next
 	struct menu_struct *prev;	// 2-3 prev
-	u8 *name;				// 0x4-5
+	const char *name;				// 0x4-5
 	u16 row;				// 6-7	// guesing it's row
 	u16 col;				// 0x8-9
 	u16 status;				// 0xA-b  -  0 = no items.. empty
@@ -105,7 +105,7 @@ int get_menu_requires_input_events(void)
 
 u8 *cmd_set_menu(u8 *c)
 {
-	u8 *m_name;
+	const char *m_name;
 	MENU *m;
 	
 	m_name = strdup(logic_msg(*(c++)));
@@ -146,7 +146,7 @@ u8 *cmd_set_menu_item(u8 *c)
 	MENU_ITEM *mi_temp;
 	MENU_ITEM *mi;
 	u8 cont;
-	u8 *name;
+	const char *name;
 
 	name = strdup(logic_msg(*(c++)));
 	cont = *(c++);

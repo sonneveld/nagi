@@ -70,7 +70,7 @@ void dir_load(void)
 	
 	while (!dir_loaded)
 	{
-		u8* dir_v3_name = alloca(strlen("dir") + ID_SIZE + 1);
+		char *dir_v3_name = alloca(strlen("dir") + ID_SIZE + 1);
 		FILE *dir_stream;
 		
 		dir_stream = 0;
@@ -80,7 +80,7 @@ void dir_load(void)
 			case 0:
 				printf("dir_load(): unable to load an AGI directory.\n");
 				agi_exit();
-				break;
+				// break;
 			case 1:
 				if (dir_type_ptr)
 					printf("dir_load(): attempting to load seperated dir structure.\n");
@@ -171,9 +171,9 @@ static u8 *dir_check(u8 *v)
 		return v;
 }
 
-static AGI_NO_RETURN void dir_error(u8 *name, u16 num)
+static AGI_NO_RETURN void dir_error(const char *name, u16 num)
 {
-	u8 str[100];
+	char str[100];
 	sprintf(str, "%s %d not found", name, num);
 	message_box(str);
 	agi_exit();

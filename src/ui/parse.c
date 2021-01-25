@@ -31,30 +31,30 @@ _WordNext                        cseg     00001BE4 00000020
 
 #define WORD_BUF_SIZE 10
 
-void parse(u8 *string);
+void parse(const char *string);
 u8 *cmd_parse(u8 *c);
-static void parse_read(u8 *s);
+static void parse_read(const char *s);
 static u16 word_find(void);
 static void playerWordIsolate(void);
 static u8 *dictWordNext(u8 *si);
 
-static const u8 *char_separators = " ,.?!();:[]{}";
-static const u8 *char_illegal = "'`-\"";	// 0x27 is '
+static const char *char_separators = " ,.?!();:[]{}";
+static const char *char_illegal = "'`-\"";	// 0x27 is '
 
 u16 word_num[WORD_BUF_SIZE];
-u8 *word_string[WORD_BUF_SIZE];
+const char *word_string[WORD_BUF_SIZE];
 
 u16 word_total = 0;	// bad word
 u8 *words_tok_data = 0;
 
 // work area
-static u8 parse_string[42];
-static u8 *strPtr;
+static char parse_string[42];
+static char *strPtr;
 
-void parse(u8 *string)
+void parse(const char *string)
 {
 	u16 wordNumber;
-	u8 *wordString;	// the string data of the word
+	const char *wordString;	// the string data of the word
 
 	memset(word_string, 0, sizeof(word_string));
 	memset(word_num, 0, sizeof(word_num));
@@ -104,9 +104,9 @@ u8 *cmd_parse(u8 *c)
 
 // cleans the word.. separates good words by ' '
 // puts in it parse_string[]
-static void parse_read(u8 *str)
+static void parse_read(const char *str)
 {
-	u8 *buf;
+	char *buf;
 
 	buf = parse_string;	
 
@@ -151,9 +151,9 @@ static u16 word_find()
 	u16 chCount;		// count of characters already matched
 	u16 chFirst;		// lowercase version of the first character in the word.
 	u16 wordNum;
-	u8 *wordNext;		// the next word after the current on
+	char *wordNext;		// the next word after the current on
 	u8 *wordData;
-	u8 *playerInput;
+	char *playerInput;
 	
 	wordNum = 0xFFFF;
 	wordNext = 0;
@@ -167,7 +167,7 @@ static u16 word_find()
 			if ( (chFirst=='a') || (chFirst == 'i') )	// automatically skip 'a' and 'i' as words
 			{
 				wordNum = WORD_IGNORE;	// words are ignored
-				wordNext = (u8 *)strPtr + 1;
+				wordNext = (strPtr + 1);
 				if (strPtr[1] == ' ')
 					wordNext++;
 			}
@@ -236,8 +236,8 @@ static u16 word_find()
 // then set it to zero.
 static void playerWordIsolate()
 {
-	u8 *str;
-	for (str=(u8*)strPtr; (*str!=' ')&&(*str); str++) {};
+	char *str;
+	for (str=(char*)strPtr; (*str!=' ')&&(*str); str++) {};
 	*str = 0;
 }
 

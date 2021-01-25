@@ -1,8 +1,7 @@
 #ifndef NAGI_STATE_INFO_H
 #define NAGI_STATE_INFO_H
 
-extern u16 word_190a;
-extern u8 save_description[0x20];
+extern char save_description[0x20];
 
 extern VSTRING *save_dir;
 extern VSTRING *save_filename;

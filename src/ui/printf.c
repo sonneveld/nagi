@@ -23,12 +23,12 @@ _FormatChar                      cseg     0000245E 00000014
 #include "../ui/window.h"
 #include "../sys/chargen.h"
 
-static void format_string_ax(u8 *str);
-static void format_char(u8 ch);
+static void format_string_ax(const char *str);
+static void format_char(char ch);
 
 // void *format_ip = 0;
-static u8 *format_strbuff = 0;
-static u8 format_to_string = 0;	// boolean value
+static char *format_strbuff = 0;
+static int format_to_string = 0;	// boolean value
 
 /*
 ?? sprintf()
@@ -38,7 +38,7 @@ static u8 format_to_string = 0;	// boolean value
 
 */
 
-static u8 *di;	// sprintf string
+static char *di;	// sprintf string
 
 #if 0
 static int charCount(char *str)
@@ -61,13 +61,13 @@ static int charCount(char *str)
 }
 #endif
 
-void agi_printf(u8 *var8, ...)
+void agi_printf(const char *var8, ...)
 {
 	va_list ap;
 	
-	u8 *si;
+	const char *si;
 	s16 bx;
-	u8 al;
+	char al;
 	
 	va_start(ap, var8);
 	
@@ -87,7 +87,7 @@ void agi_printf(u8 *var8, ...)
 			switch (*(si++))
 			{
 				case 's':		// string
-					format_string_ax(va_arg(ap, u8 *));
+					format_string_ax(va_arg(ap, const char *));
 					//bx += 2;
 					break;
 				
@@ -116,7 +116,7 @@ void agi_printf(u8 *var8, ...)
 				case 'c':		// character
 					//al = *bx;
 					//bx += 2;	// everything is pushed on as a word
-					format_char((u8)va_arg(ap, int));
+					format_char((char)va_arg(ap, int));
 					break;
 				
 				default:		// not recognised
@@ -135,9 +135,9 @@ void agi_printf(u8 *var8, ...)
 }
 
 
-static void format_string_ax(u8 *str)
+static void format_string_ax(const char *str)
 {
-	u8 al;
+	char al;
 	
 	al = *(str++);
 	while ( al != 0 )
@@ -147,7 +147,7 @@ static void format_string_ax(u8 *str)
 	}
 }
 
-static void format_char(u8 ch)
+static void format_char(char ch)
 {
 	if (format_to_string != 0)
 		*(di++) = ch;

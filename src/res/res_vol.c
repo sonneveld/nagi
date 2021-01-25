@@ -43,8 +43,8 @@ _FileLoad                        cseg     00003113 000000C5
 #include "../sys/agi_file.h"
 #include "../sys/memory.h"
 
-static u8 *v2_res_load(u8 *dir_entry, u8 *buff);
-static u8 *v3_res_load(u8 *dir_entry, u8 *buff);
+static u8 *v2_res_load(const u8 *dir_entry, u8 *buff);
+static u8 *v3_res_load(const u8 *dir_entry, u8 *buff);
 static void err_insert_disk(u16 num);
 static u16 err_wrong_disk(u16 num);
 static void volumes_open(void);
@@ -54,12 +54,12 @@ static u8 res_header[8];
 // size 16 for v3,  10 for v2
 static FILE *vol_handle_table[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0};
 u16 free_mem_check = 0;
-int res_size = 0;
+size_t res_size = 0;
 static u16 vol_disk_num = 0;
 	
 u16 not_compressed = 0;
 
-u8 *vol_res_load(u8 *dir_entry, u8 *buff)
+u8 *vol_res_load(const u8 *dir_entry, u8 *buff)
 {
 	u8 *si=0;
 	
@@ -74,7 +74,7 @@ u8 *vol_res_load(u8 *dir_entry, u8 *buff)
 	return si;
 }
 
-static u8 *v2_res_load(u8 *dir_entry, u8 *buff)
+static u8 *v2_res_load(const u8 *dir_entry, u8 *buff)
 {	
 	u8 res_head[5];
 	//u8 *mem_ptr_orig;		// orig mem ptr
@@ -165,7 +165,7 @@ static u8 *v2_res_load(u8 *dir_entry, u8 *buff)
 	return 0;
 }
 
-static u8 *v3_res_load(u8 *dir_entry, u8 *buff)
+static u8 *v3_res_load(const u8 *dir_entry, u8 *buff)
 {
 	u16 pic_compressed;		// 1 = picture compression
 	u8 decomp_buff[0x400];
@@ -265,13 +265,13 @@ res_error_2:
 
 static void err_insert_disk(u16 num)
 {
-	u8 msg[100];
+	char msg[100];
 	err_msg(msg, num);
 	message_box(msg);
 	//disk_reset();
 }
 
-void err_msg(u8 *msg, u16 num)
+void err_msg(char *msg, u16 num)
 {
 	if ((num == 0) || (c_game_compression && (num > 8)) )
 		sprintf(msg, "Please insert disk %d\nand press ENTER.",
@@ -284,8 +284,8 @@ void err_msg(u8 *msg, u16 num)
 static u16 err_wrong_disk(u16 num)
 {
 	u16 ret_value;
-	u8 msg_insert[100];
-	u8 msg_main[200];
+	char msg_insert[100];
+	char msg_main[200];
 	
 	beep_speaker();
 	err_msg(msg_insert, num);
@@ -298,7 +298,7 @@ static u16 err_wrong_disk(u16 num)
 
 static void volumes_open()
 {
-	u8 *name = alloca(strlen("vol.XXXXXXX") + ID_SIZE + 1);
+	char *name = alloca(strlen("vol.XXXXXXX") + ID_SIZE + 1);
 	//u16 vol_max;
 	u16 i;
 	/*
@@ -346,12 +346,12 @@ void volumes_close()
 	log_close();
 }
 
-u8 *file_load(u8 *name, u8 *buff)
+u8 *file_load(const char *name, u8 *buff)
 {
-	u8 msg[100];
-	int file_size;
+	char msg[100];
+	size_t file_size;
 	FILE *file_stream;
-	u8 newline_orig;
+	char newline_orig;
 
 	newline_orig = msgstate.newline_char;
 	msgstate.newline_char = '@';
@@ -371,7 +371,7 @@ u8 *file_load(u8 *name, u8 *buff)
 	//fgetpos(file_stream, &file_size);
 	file_size = ftell(file_stream);
 	fseek(file_stream, 0, SEEK_SET);
-	res_size = (int)file_size;
+	res_size = file_size;
 	if (buff == 0)
 		buff = (u8 *)a_malloc(res_size);
 	

@@ -30,7 +30,7 @@
 void config_load(CONF *config, INI *ini)
 {
 	CONF *conf_ptr;
-	u8 *key_data;
+	const char *key_data;
 	
 	conf_ptr = config;
 	
@@ -91,7 +91,7 @@ void config_print(CONF *config)
 		switch (conf_ptr->type)
 		{
 			case CT_BOOL:
-				printf("%s->%s = %ld\n", conf_ptr->section, conf_ptr->key,*conf_ptr->b.ptr );
+				printf("%s->%s = %d\n", conf_ptr->section, conf_ptr->key, (int)(*conf_ptr->b.ptr) );
 				break;
 			
 			case CT_STRING:
@@ -99,7 +99,7 @@ void config_print(CONF *config)
 				break;
 			
 			case CT_INT:
-				printf("%s->%s = %ld\n", conf_ptr->section, conf_ptr->key,*conf_ptr->i.ptr );
+				printf("%s->%s = %ld\n", conf_ptr->section, conf_ptr->key, (long)(*conf_ptr->i.ptr) );
 				break;
 			
 			default:		// probably safest for defaults
@@ -120,10 +120,11 @@ void config_unload(CONF *config)
 		switch (conf_ptr->type)
 		{
 			case CT_STRING:
-				if (*conf_ptr->s.ptr != conf_ptr->s.def)
+				// if not using the default string, that means we allocated it
+				if (*(conf_ptr->s.ptr) != conf_ptr->s.def)
 				{
-					// if not using the default
-					a_free(*conf_ptr->s.ptr);
+					// TODO: casting a `const char *` to `void *` is a little bit naughty here
+					a_free((void *)*(conf_ptr->s.ptr));
 				}
 				break;
 		}

@@ -50,7 +50,7 @@ CONF_BOOL c_game_compression = 0;	// RES TYPE
 CONF_INT c_game_dir_type = 1;	// RES TYPE
 
 // pre calc'd
-u8 c_game_file_id[ID_SIZE+1] = "";// RES TYPE
+char c_game_file_id[ID_SIZE+1] = "";// RES TYPE
 VSTRING *c_game_location = 0;
 
 // for use in nagi.ini
