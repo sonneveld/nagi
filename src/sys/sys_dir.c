@@ -40,7 +40,7 @@ int dir_preset_change(int preset_id);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
-static const const char *dir_preset_names[DIR_PRESET_LEN] = {
+static const char *dir_preset_names[DIR_PRESET_LEN] = {
 	"DIR_PRESET_ORIG",
 	"DIR_PRESET_NAGI",
 	"DIR_PRESET_HOME",
