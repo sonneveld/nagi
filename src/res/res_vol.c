@@ -43,13 +43,19 @@ _FileLoad                        cseg     00003113 000000C5
 #include "../sys/agi_file.h"
 #include "../sys/memory.h"
 
-u16 volume_error = 0;
-u8 res_header[8];
+static u8 *v2_res_load(u8 *dir_entry, u8 *buff);
+static u8 *v3_res_load(u8 *dir_entry, u8 *buff);
+static void err_insert_disk(u16 num);
+static u16 err_wrong_disk(u16 num);
+static void volumes_open(void);
+
+static u16 volume_error = 0;
+static u8 res_header[8];
 // size 16 for v3,  10 for v2
-FILE *vol_handle_table[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0};
+static FILE *vol_handle_table[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0};
 u16 free_mem_check = 0;
 int res_size = 0;
-u16 vol_disk_num = 0;
+static u16 vol_disk_num = 0;
 	
 u16 not_compressed = 0;
 
@@ -68,7 +74,7 @@ u8 *vol_res_load(u8 *dir_entry, u8 *buff)
 	return si;
 }
 
-u8 *v2_res_load(u8 *dir_entry, u8 *buff)
+static u8 *v2_res_load(u8 *dir_entry, u8 *buff)
 {	
 	u8 res_head[5];
 	//u8 *mem_ptr_orig;		// orig mem ptr
@@ -159,7 +165,7 @@ u8 *v2_res_load(u8 *dir_entry, u8 *buff)
 	return 0;
 }
 
-u8 *v3_res_load(u8 *dir_entry, u8 *buff)
+static u8 *v3_res_load(u8 *dir_entry, u8 *buff)
 {
 	u16 pic_compressed;		// 1 = picture compression
 	u8 decomp_buff[0x400];
@@ -257,7 +263,7 @@ res_error_2:
 
 
 
-void err_insert_disk(u16 num)
+static void err_insert_disk(u16 num)
 {
 	u8 msg[100];
 	err_msg(msg, num);
@@ -275,7 +281,7 @@ void err_msg(u8 *msg, u16 num)
 				num);
 }
 
-u16 err_wrong_disk(u16 num)
+static u16 err_wrong_disk(u16 num)
 {
 	u16 ret_value;
 	u8 msg_insert[100];
@@ -290,7 +296,7 @@ u16 err_wrong_disk(u16 num)
 	return ret_value;
 }
 
-void volumes_open()
+static void volumes_open()
 {
 	u8 *name = alloca(strlen("vol.XXXXXXX") + ID_SIZE + 1);
 	//u16 vol_max;
