@@ -356,9 +356,8 @@ AGI_EVENT *event_read(void)
 			case SDL_WINDOWEVENT:
 				switch( event.window.event)
 				{
-					case SDL_WINDOWEVENT_RESIZED:
-						vid_resize(event.window.data1,
-							event.window.data2);
+					case SDL_WINDOWEVENT_SIZE_CHANGED:
+						vid_notify_window_size_changed(event.window.windowID);
 						break;
 					case SDL_WINDOWEVENT_CLOSE:
 						window = vid_get_main_window();

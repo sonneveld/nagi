@@ -35,6 +35,8 @@ Mini code sample for SDL2 256-color palette https://discourse.libsdl.org/t/mini-
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 
+	
+static void vid_free_surfaces();
 static void vid_render(SDL_Surface* surface, const u32 x, const u32 y, const u32 w, const u32 h);
 
 /* VARIABLES	---	---	---	---	---	---	--- */
@@ -88,70 +90,102 @@ void vid_shutdown()
 void vid_display(AGISIZE *screen_size, int fullscreen_state)
 {
 	int result = 0;
-	u32 sdl_flags;
-	
-	sdl_flags = SDL_WINDOW_RESIZABLE;
-	if (fullscreen_state)
-		sdl_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
-	result = SDL_CreateWindowAndRenderer( screen_size->w, screen_size->h,
-		sdl_flags, &video_data.window, &video_data.renderer);
-
-	if(result != 0)
+	if (video_data.window == 0)
 	{
-		printf("Unable to create video window: %s\n", SDL_GetError());
-		agi_exit();
+		Uint32 sdl_flags;
+		sdl_flags = SDL_WINDOW_RESIZABLE;
+		if (fullscreen_state)
+			sdl_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+		result = SDL_CreateWindowAndRenderer( screen_size->w, screen_size->h,
+			sdl_flags, &video_data.window, &video_data.renderer);
+
+		if(result != 0)
+		{
+			printf("Unable to create video window: %s\n", SDL_GetError());
+			agi_exit();
+		}
+
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+		SDL_RenderSetLogicalSize(video_data.renderer, screen_size->w, screen_size->h);
+	} 
+	else 
+	{
+		Uint32 sdl_flags = fullscreen_state ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
+		result = SDL_SetWindowFullscreen(video_data.window, sdl_flags);
+		if (result != 0)
+		{
+			printf("Error trying to set fullscreen state to %d: %s\n", fullscreen_state, SDL_GetError());
+		}
 	}
 
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
-	SDL_RenderSetLogicalSize(video_data.renderer, screen_size->w, screen_size->h);
+	assert(video_data.window != 0);
+	assert(video_data.renderer != 0);
 
-	video_data.surface = SDL_CreateRGBSurface( 0,
-		screen_size->w, screen_size->h, 8,
-		0, 0, 0, 0 );
-	if (video_data.surface == NULL)
+	if (video_data.surface != 0)
 	{
-		printf("Unable to create video surface: %s\n", SDL_GetError());
-		agi_exit();
+		if ((video_data.surface->h != screen_size->h) || (video_data.surface->w != screen_size->w))
+		{
+			vid_free_surfaces();
+			assert(video_data.surface == 0);
+		}
 	}
-	SDL_FillRect(video_data.surface, NULL, 0);
 
-	video_data.texture = SDL_CreateTexture( video_data.renderer,
-		SDL_PIXELFORMAT_RGB888,
-		SDL_TEXTUREACCESS_STREAMING,
-		screen_size->w, screen_size->h );
-	if (video_data.texture == NULL)
+	if (video_data.surface == 0)
 	{
-		printf("Unable to create video texture: %s\n", SDL_GetError());
-		agi_exit();
-	}	
+		assert(video_data.surface == 0);
+		video_data.surface = SDL_CreateRGBSurface( 0,
+			screen_size->w, screen_size->h, 8,
+			0, 0, 0, 0 );
+		if (video_data.surface == NULL)
+		{
+			printf("Unable to create video surface: %s\n", SDL_GetError());
+			agi_exit();
+		}
+		SDL_FillRect(video_data.surface, NULL, 0);
 
-	// Create intermediate surface to convert 8bit to 32bit pixels.
-	// TODO: Nick: I think it should be okay to just use SDL_ConvertSurfaceFormat but I thought I saw some issues.
+		assert(video_data.texture == 0);
+		video_data.texture = SDL_CreateTexture( video_data.renderer,
+			SDL_PIXELFORMAT_RGB888,
+			SDL_TEXTUREACCESS_STREAMING,
+			screen_size->w, screen_size->h );
+		if (video_data.texture == NULL)
+		{
+			printf("Unable to create video texture: %s\n", SDL_GetError());
+			agi_exit();
+		}	
+
+		// Create intermediate surface to convert 8bit to 32bit pixels.
+		// TODO: Nick: I think it should be okay to just use SDL_ConvertSurfaceFormat but I thought I saw some issues.
+		assert(video_data.surface_conv == 0);
 #if 1
-	video_data.surface_conv = SDL_ConvertSurfaceFormat(video_data.surface, SDL_PIXELFORMAT_RGB888, 0);
-	SDL_FillRect(video_data.surface_conv, NULL, SDL_MapRGBA(video_data.surface_conv->format, 0, 0, 0, 255));
+		video_data.surface_conv = SDL_ConvertSurfaceFormat(video_data.surface, SDL_PIXELFORMAT_RGB888, 0);
+		SDL_FillRect(video_data.surface_conv, NULL, SDL_MapRGBA(video_data.surface_conv->format, 0, 0, 0, 255));
 #else
-	int conv_bpp;
-	Uint32 conv_Rmask;
-	Uint32 conv_Gmask;
-	Uint32 conv_Bmask;
-	Uint32 conv_Amask;
-	if (!SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_RGB888, &conv_bpp, &conv_Rmask, &conv_Gmask, &conv_Bmask, &conv_Amask)) {
-		printf("Unable to create pixel format masks: %s\n", SDL_GetError());
-		agi_exit();
-	}
-	video_data.surface_conv = SDL_CreateRGBSurface(
-		0, 
-		screen_size->w, screen_size->h,
-		conv_bpp,
-		conv_Rmask, conv_Gmask, conv_Bmask, conv_Amask
-		);
+		int conv_bpp;
+		Uint32 conv_Rmask;
+		Uint32 conv_Gmask;
+		Uint32 conv_Bmask;
+		Uint32 conv_Amask;
+		if (!SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_RGB888, &conv_bpp, &conv_Rmask, &conv_Gmask, &conv_Bmask, &conv_Amask)) {
+			printf("Unable to create pixel format masks: %s\n", SDL_GetError());
+			agi_exit();
+		}
+		video_data.surface_conv = SDL_CreateRGBSurface(
+			0, 
+			screen_size->w, screen_size->h,
+			conv_bpp,
+			conv_Rmask, conv_Gmask, conv_Bmask, conv_Amask
+			);
 #endif
 
-	if (video_data.surface_conv == NULL) {
-		printf("Unable to create conversion video surface: %s\n", SDL_GetError());
-		agi_exit();
+		if (video_data.surface_conv == NULL) {
+			printf("Unable to create conversion video surface: %s\n", SDL_GetError());
+			agi_exit();
+		}
+
+		vid_notify_window_size_changed(SDL_GetWindowID(video_data.window));
 	}
 
 	// clear
@@ -161,7 +195,7 @@ void vid_display(AGISIZE *screen_size, int fullscreen_state)
 	SDL_RenderPresent(video_data.renderer);
 }
 
-void vid_free()
+static void vid_free_surfaces()
 {
 	if (video_data.texture != 0) 
 	{
@@ -180,6 +214,11 @@ void vid_free()
 		SDL_FreeSurface(video_data.surface_conv);
 		video_data.surface_conv = 0;
 	}
+}
+
+void vid_free()
+{
+	vid_free_surfaces();
 
 	if (video_data.renderer != 0) 
 	{
@@ -248,21 +287,47 @@ void vid_update(POS *pos, AGISIZE *size)
 }
 
 // when resizing a window, make sure the aspect ratio is preserved
-void vid_resize(s32 x, s32 y)
+void vid_notify_window_size_changed(Uint32 windowID)
 {
-	Uint32 format;
-	int access, texture_width, texture_height, window_width, window_height;
-	double ratio;
+	if (video_data.window == 0)
+	{ 
+		printf("vid_notify_window_size_changed(): ERROR: received window resize event, but no window!\n");
+		return; 
+	}
 
-	window_width = (int) x;
-	window_height = (int) y;
-	if(0 == SDL_QueryTexture(video_data.texture, &format, &access,
-		&texture_width, &texture_height))
+	Uint32 current_window_id = SDL_GetWindowID(video_data.window);
+	if (current_window_id == 0)
 	{
-		SDL_Window *window = vid_get_main_window();
-		ratio = (double)texture_height / (double)texture_width;
-		window_height = window_width * ratio;
-		SDL_SetWindowSize(window, window_width, window_height);
+		printf("vid_notify_window_size_changed(): ERROR: received window resize event, but unable to determine current window id: %s\n", SDL_GetError());
+		return;
+	}
+
+	if (current_window_id != windowID) { return; }
+
+	int window_width, window_height;
+	SDL_GetWindowSize(video_data.window, &window_width, &window_height);
+
+	if (video_data.texture == 0) 
+	{
+		printf("vid_notify_window_size_changed(): ERROR: received window resize event, but no backing texture!\n");
+		return; 
+	}
+
+	Uint32 format;
+	int access, texture_width, texture_height;
+	if (SDL_QueryTexture(video_data.texture, &format, &access, &texture_width, &texture_height) != 0)
+	{
+		printf("vid_notify_window_size_changed(): ERROR: received window resize event, but unable to determine texture size: %s\n", SDL_GetError());
+		return;
+	}
+
+	int new_window_width = window_width;
+	int new_window_height = window_width * texture_height / texture_width;
+
+	// we have to check size is different or we repeatedly get change events.
+	if ((new_window_height != window_height) || (new_window_width != window_width))
+	{
+		SDL_SetWindowSize(video_data.window, new_window_width, new_window_height);
 		vid_render(video_data.surface, 0, 0, texture_width, texture_height);
 	}
 }

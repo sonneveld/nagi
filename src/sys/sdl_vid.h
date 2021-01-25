@@ -14,7 +14,7 @@ extern void vid_free(void);
 extern void vid_lock(void);
 extern void vid_unlock(void);
 extern void vid_update(POS *pos, AGISIZE *size);
-extern void vid_resize(s32 x, s32 y);
+extern void vid_notify_window_size_changed(Uint32 windowID);
 extern void vid_palette_set(PCOLOUR *palette, u8 num);
 extern void vid_fill(POS *pos, AGISIZE *size, u32 colour);
 extern void vid_shake(int count);
