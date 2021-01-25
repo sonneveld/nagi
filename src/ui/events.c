@@ -16,7 +16,12 @@ static u16 dir_keymap(SDL_Keysym *keysym);
 
 
 static AGI_EVENT passed_agi_event; 
-static AGI_EVENT stop_ego = {2, 0};
+static AGI_EVENT stop_ego = {
+	.type = 2, 
+	.data = 0, 
+	.x = 0, 
+	.y = 0
+};
 
 // -------------------- INIT
 
