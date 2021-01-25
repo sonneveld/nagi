@@ -45,7 +45,9 @@ VSTRING *save_filename = 0;
 static u16 word_1aad = 0;
 u8 save_description[0x20];
 
+#if 0
 static u8 save_drive = 0;
+#endif
 
 struct save_struct
 {

@@ -21,8 +21,6 @@
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 
-static void pcm_out_avail(void);
-
 
 /* VARIABLES	---	---	---	---	---	---	--- */
 
@@ -65,7 +63,7 @@ void pcm_out_shutdown(void)
 }
 
 // get available options
-static void pcm_out_avail(void)
+void pcm_out_avail(void)
 {
 	pcm_out_drv.ptr_avail();
 }

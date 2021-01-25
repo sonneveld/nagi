@@ -113,7 +113,7 @@ u8 *int_to_hex_string(u16 num)
 	return string_reverse(string_buff);
 }
 
-
+#if 0
 static u8 *int_to_hex_string_v2(u16 num)
 {
 	u8 temp;
@@ -137,6 +137,7 @@ static u8 *int_to_hex_string_v2(u16 num)
 	*si = 0;
 	return string_reverse(string_buff);
 }
+#endif
 
 static u8 *string_reverse(u8 *str)
 {
@@ -170,6 +171,7 @@ u8 *string_lower(u8 *str)
 }
 
 
+#if 0
 // find character
 // u8 *strchr
 static u8 *sub4f96(u8 *given_string, u16 ch)
@@ -182,4 +184,5 @@ static u8 *sub4f96(u8 *given_string, u16 ch)
 	else
 		return s;
 }
+#endif
 

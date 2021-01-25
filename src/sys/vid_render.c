@@ -24,11 +24,15 @@
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 static void ega_update(int x, int y, int width, int height);
 static void cga_update(int x, int y, int width, int height);
+#if 0
 static void dummy_update(int x, int y, int width, int height);
+#endif
 
 static void ega_rect(int x, int y, int width, int height, u8 colour);
 static void cga_rect(int x, int y, int width, int height, u8 colour);
+#if 0
 static void dummy_rect(int x, int y, int width, int height, u8 colour);
+#endif
 
 static void dummy_view_dither(u8 *view_data);
 static void cga_view_dither(u8 *view_data);	// dither view
@@ -64,6 +68,7 @@ static RDRIVER render_drv_ega =
 	render_colour, dummy_view_dither
 };
 
+#if 0
 static RDRIVER render_drv_dummy = 
 {
 	R_NONE, 0, PAL_16,
@@ -71,6 +76,7 @@ static RDRIVER render_drv_dummy =
 	dummy_update, dummy_rect,
 	render_colour, dummy_view_dither
 };
+#endif
 
 RDRIVER *rend_drv;
 u8 *rend_buf;
@@ -238,6 +244,7 @@ static void cga_update(int x, int y, int width, int height)
 	}
 }
 
+#if 0
 static void dummy_update(int x, int y, int width, int height)
 {
 	(void) x;
@@ -246,6 +253,7 @@ static void dummy_update(int x, int y, int width, int height)
 	(void) height;
 	printf("render dummy update()\n");
 }
+#endif
 
 // ---------- RECT (ally) -------------------------
 
@@ -320,6 +328,7 @@ static void cga_rect(int x, int y, int width, int height, u8 colour)
 
 }
 
+#if 0
 static void dummy_rect(int x, int y, int width, int height, u8 colour)
 {
 	(void) x;
@@ -329,6 +338,7 @@ static void dummy_rect(int x, int y, int width, int height, u8 colour)
 	(void) colour;
 	printf("render dummy rect\n");
 }
+#endif
 
 // ---------- DITHERING -------------------------
 

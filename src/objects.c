@@ -201,7 +201,7 @@ void object_file_unload()
 	}
 }
 
-
+#if 0
 static void inv_obj_table_print(void)
 {
 	int i;
@@ -213,6 +213,7 @@ static void inv_obj_table_print(void)
 	}
 	
 }
+#endif
 
 u8 *cmd_get(u8 *c)
 {

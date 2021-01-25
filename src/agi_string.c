@@ -108,6 +108,7 @@ u8 *cmd_word_to_string(u8 *c)
 	return c;
 }
 
+#if 0
 // whatever is in str... it displays it and then allows you to edit it
 // at least within the len limits
 static u16 string_edit_old(u8 *str, u16 len)
@@ -174,6 +175,7 @@ static u16 string_edit_old(u8 *str, u16 len)
 	ch_update();
 	return di;
 }
+#endif
 
 u8 *cmd_set_game_id(u8 *c)
 {

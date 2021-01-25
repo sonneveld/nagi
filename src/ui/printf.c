@@ -40,6 +40,7 @@ static u8 format_to_string = 0;	// boolean value
 
 static u8 *di;	// sprintf string
 
+#if 0
 static int charCount(char *str)
 {
 	int count;
@@ -58,6 +59,7 @@ static int charCount(char *str)
 
 	return count;
 }
+#endif
 
 void agi_printf(u8 *var8, ...)
 {

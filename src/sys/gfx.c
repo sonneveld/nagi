@@ -83,10 +83,12 @@ static PCOLOUR cga_1_palette[] =
 	{170,85,0}	// yellow
 };
 
+#if 0
 static PCOLOUR bw_palette[] =
 {	{0,0,0},		// black
 	{255, 255, 255}	// white
 };
+#endif
 
 
 //VSURFACE *gfx_surface = 0;

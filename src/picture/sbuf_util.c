@@ -46,6 +46,7 @@ void sbuff_fill(u8 colour)
 	memset(gfx_picbuff, colour, PICBUFF_WIDTH*PICBUFF_HEIGHT);
 }
 
+#if 0
 static void sbuff_testpattern()
 {
 	int i, m,n;
@@ -71,6 +72,7 @@ static void sbuff_testpattern()
 		}
 	}
 }
+#endif
 
 
 // y pos's should be equal or you suck
