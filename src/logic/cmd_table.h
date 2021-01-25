@@ -3,10 +3,10 @@
 
 struct func_struct
 {
-	u8 *func_name;
+	const char *func_name;
 	void *func;
-	u8 param_total;		// 2
-	u8 param_flag;		// 3
+	int param_total;		// 2
+	unsigned int param_flag;		// 3
 };
 typedef struct func_struct FUNC;
 

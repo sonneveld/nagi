@@ -400,9 +400,9 @@ typedef u8 *CONF_STRING;
 
 struct conf_struct
 {
-	u8 *key;
-	u8 *section;
-	u8 type;
+	const char *key;
+	const char *section;
+	int type;
 	
 	union {
 		struct
