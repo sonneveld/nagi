@@ -47,6 +47,9 @@ else()
         -Wall
         -Wextra
 
+        -Wcast-align
+        -Wcast-qual
+        -Wconditional-uninitialized
         -Wendif-labels
         -Wfloat-equal
         -Wformat
@@ -54,11 +57,21 @@ else()
         -Winit-self
         -Winline
         -Wmissing-noreturn
+        -Wmissing-declarations
+        -Wmissing-variable-declarations
         -Wpointer-arith
         -Wshadow
         -Wundef
-        -Wwrite-strings
+        -Wunreachable-code
+        -Wunreachable-code-break
+        -Wunreachable-code-return
         -Wunused-result
+        -Wwrite-strings
+
+        # -Weverything
+        # -Wno-padded
+        # -Wno-conversion
+        # -Wno-format-pedantic
 
         -Werror=write-strings
         -Werror=implicit-function-declaration
