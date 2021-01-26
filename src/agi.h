@@ -29,6 +29,12 @@
 #define AGI_UNUSED __attribute__((unused))
 #endif
 
+#ifdef _MSC_VER
+#define AGI_ALIGNED(x) __declspec(align(x))
+#else
+#define AGI_ALIGNED(x) __attribute__((aligned(x)))
+#endif
+
 
 // ok no warning here
 
@@ -40,7 +46,7 @@ struct node_struct
 {
 	struct node_struct *next;
 	struct node_struct *prev;
-	__attribute__((aligned (8))) unsigned char contents[0];
+	AGI_ALIGNED(8) unsigned char contents[0];
 };
 typedef struct node_struct NODE;
 
