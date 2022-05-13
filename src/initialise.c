@@ -221,7 +221,7 @@ void agi_init()
 	logic_load_2(0);
 	//_SetMemRm0();	// pointer to data AFTER loaded logic 0
 
-	flag_set(9);	// turn sound on
+	flag_set(F09_SOUND);	// turn sound on
 }
 
 void game_init(void)
@@ -250,7 +250,7 @@ void game_init(void)
 	else
 	{
 		state.var[V22_SNDTYPE] = 3;	// tandy
-		flag_set(F11_NEWLOGIC0);		// logic 0 executed for first time.
+		flag_set(F11_HAS_NOISE_CHANNEL);
 	}
 }
 

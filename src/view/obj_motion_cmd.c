@@ -119,7 +119,7 @@ u8 *cmd_stop_motion(u8 *c)
 	v->motion = MT_NORM;
 	if ( v == objtable)
 	{
-		state.var[6] = 0;	// ego direction
+		state.var[V06_DIRECTION] = 0;	// ego direction
 		state.ego_control_state = 0;
 	}
 	return c;
@@ -133,7 +133,7 @@ u8 *cmd_start_motion(u8 *c)
 	v->motion = MT_NORM;
 	if ( v == objtable)
 	{
-		state.var[6] = 0;	// ego direction
+		state.var[V06_DIRECTION] = 0;	// ego direction
 		state.ego_control_state = 1;
 	}
 	return c;

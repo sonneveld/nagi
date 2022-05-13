@@ -174,7 +174,7 @@ u8 *cmd_restore_game(u8 *c)
 			else
 			{
 				state.var[V22_SNDTYPE] = 3;
-				flag_set(F11_NEWLOGIC0);
+				flag_set(F11_HAS_NOISE_CHANNEL);
 			}
 			state_reload();
 			control_state_clear();

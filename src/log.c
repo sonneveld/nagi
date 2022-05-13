@@ -48,7 +48,7 @@ u8 *cmd_log(u8 *c)
 		//si = dup(log_stream);
 	//	if (si != 0xFFFF)
 	//	{
-			sprintf(msg, "\n\nRoom %d\nInput line: %s\n", state.var[0],
+			sprintf(msg, "\n\nRoom %d\nInput line: %s\n", state.var[V00_ROOM0],
 				input_prev);
 			fwrite(msg, strlen(msg), 1, log_stream);
 			str_wordwrap(msg, logic_msg(str_num), 78);

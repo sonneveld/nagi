@@ -199,7 +199,7 @@ void obj_move_update(VIEW *v)
 {
 	v->direction = move16ed(v->x, v->y, v->move.x, v->move.y, v->step_size);
 	if ( objtable == v)
-		state.var[6] = v->direction;
+		state.var[V06_DIRECTION] = v->direction;
 	if (v->direction == 0)
 		obj_move_stop(v);	// reached destination
 }

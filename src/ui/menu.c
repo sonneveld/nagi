@@ -271,7 +271,7 @@ static void menu_item_set(u16 cont, u16 new_state)
 
 u8 *cmd_menu_input(u8 *c)
 {
-	if ( flag_test(0xE) != 0)
+	if ( flag_test(F14_MENU) != 0)
 		menu_next_input = 1;
 	return c;
 }

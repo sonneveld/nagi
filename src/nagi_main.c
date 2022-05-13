@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 			state.var[V09_BADWORD] = 0;
 			state.var[V05_OBJBORDER] = 0;
 			state.var[V04_OBJECT] = 0;
-			flag_reset(2);	// player has not issued command line
+			flag_reset(F02_PLAYERCMD);	// player has not issued command line
 			old_score = state.var[V03_SCORE];
 		} 
 

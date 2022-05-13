@@ -33,8 +33,8 @@ u16 update_var8(void)	// return via ax
 {
 	// store in multiples of 0x100 or 256
 	// free_mem
-	state.var[8] = 127;
-	return(state.var[8]);
+	state.var[V08_FREEMEM] = 127;
+	return(state.var[V08_FREEMEM]);
 }
 
 #if 0
@@ -78,8 +78,8 @@ u16 update_var8(void)	// return via ax
 {
 	// store in multiples of 0x100 or 256
 	// free_mem
-	state.var[8] = ((u8 *)mem_end-(u8 *)mem_ptr) / 0x100;
-	return(state.var[8]);
+	state.var[V08_FREEMEM] = ((u8 *)mem_end-(u8 *)mem_ptr) / 0x100;
+	return(state.var[V08_FREEMEM]);
 }
 
 void *agi_malloc(u16 size)

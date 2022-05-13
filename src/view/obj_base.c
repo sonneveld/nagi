@@ -418,7 +418,7 @@ void objtable_update()
 						new_loop = loop_large[v->direction];
 					else if (c_game_loop_update==L_FLAG)
 					{
-						if ((flag_test(0x14)!=0)&&(v->loop_total>4))
+						if ((flag_test(F20_LOCK_OBJ_LOOP)!=0)&&(v->loop_total>4))   // I think this was added for v3
 							new_loop = loop_large[v->direction];
 					}
 				}

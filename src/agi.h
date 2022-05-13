@@ -109,15 +109,16 @@ typedef int32_t		s32;
 #define F05_NEWROOM		5
 #define F06_RESTART		6
 #define F07_SCRIPTBLOCK	7
-#define F08_JOYSENS		8
+#define F08_DOUBLE_CLICK		8  /* for ST */
 #define F09_SOUND		9
 #define F10_DEBUG		10
-#define F11_NEWLOGIC0	11
+#define F11_HAS_NOISE_CHANNEL	11 /* set if machine has noise channel */
 #define F12_RESTORE		12
 #define F13_STATSELECT	13
 #define F14_MENU		14
 #define F15_PRINTMODE	15
 #define F16_RESTARTMODE   16
+#define F20_LOCK_OBJ_LOOP 20  /* lock obj loop in objtable_update */
 
 // VIEW OBJECTS FLAGS
 

@@ -98,7 +98,7 @@ void script_write(u16 var8, u16 vara)
 	printf("script write %s - %d\n", script_name, vara);
 #endif
 	
-	if (flag_test(0x07) == 0)
+	if (flag_test(F07_SCRIPTBLOCK) == 0)
 	{
 		if (write_ok != 0)
 		{

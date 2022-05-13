@@ -143,8 +143,8 @@ void obj_blit(VIEW *v)
 	if (v->num == 0)		// if view 0
 	{
 		if (cel_invis == 0) 
-			flag_reset(1);	// not-invisible
+			flag_reset(F01_EGOINVIS);	// not-invisible
 		else
-			flag_set(1);	// the invisible man
+			flag_set(F01_EGOINVIS);	// the invisible man
 	}
 }
