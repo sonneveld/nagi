@@ -188,6 +188,128 @@ u8 cmd_obj_in_room()
 	return ( obj_room == state.var[*(logic_data++)] );
 }
 
+static char *word_str_lookup[1000] = {0};
+
+char *sentences_seen[1000] = {0};
+int sentences_count = 0;
+char *sentences_entered[1000] = {0};
+int sentences_entered_count = 0;
+int room_for_sentences = -1;
+
+void clear_sentences()
+{
+	for (int i = 0; i < sentences_count; i++) {
+		free(sentences_seen[i]);
+		sentences_seen[i] = 0;
+	}
+	sentences_count = 0;
+
+	for (int i = 0; i < sentences_entered_count; i++) {
+		free(sentences_entered[i]);
+		sentences_entered[i] = 0;
+	}
+	sentences_entered_count = 0;
+}
+
+void add_sentence(char *sentence)
+{
+	if (sentence == 0){ return; }
+	if (strlen(sentence) <= 0) { return; }
+	// does it exist?
+	for (int i = 0; i < sentences_count; i++) {
+		if (strcmp(sentence, sentences_seen[i]) == 0) {
+			return;
+		}
+	}
+	if (sentences_count == 1000) {
+		return;
+	}
+	// add it to end
+	sentences_seen[sentences_count] = strdup(sentence);
+	sentences_count += 1;
+}
+
+
+void add_entered_sentence(char *sentence)
+{
+	if (sentence == 0){ return; }
+	if (strlen(sentence) <= 0) { return; }
+	// does it exist?
+	for (int i = 0; i < sentences_entered_count; i++) {
+		if (strcmp(sentence, sentences_entered[i]) == 0) {
+			return;
+		}
+	}
+	if (sentences_entered_count == 1000) {
+		return;
+	}
+	// add it to end
+	sentences_entered[sentences_entered_count] = strdup(sentence);
+	sentences_entered_count += 1;
+}
+int is_sentence_entered(const char *sentence)
+{
+	for (int i = 0; i < sentences_entered_count; i++) {
+		if (strcmp(sentence, sentences_entered[i])== 0) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int comp (const void * elem1, const void * elem2) 
+{
+	const char **ia = (const char **)elem1;
+    	const char **ib = (const char **)elem2;
+	return strcmp(*ia, *ib);
+}
+
+void sentences_dump()
+{
+	qsort(sentences_seen, sentences_count, sizeof(char*), comp);
+
+	for (int i = 0; i < sentences_count; i++) {
+		printf("%s\n", sentences_seen[i]);
+	}
+	printf("num sentences: %d\n", sentences_count);
+}
+
+void load_words()
+{
+	char line[500];
+
+	if (word_str_lookup[0] != 0) {
+		return;
+
+	}
+	FILE *f = fopen("sq1_words.txt", "r");
+
+	int index = 0;
+
+	while(fgets(line, 500, f)) {
+
+		for (;;) {
+			int x = strlen(line);
+			if ( x == 0) {
+				break;
+			}
+			if (line[x-1] != '\n') {
+				break;
+			}
+			line[x-1] = 0;
+		}
+		// printf("%s\n", line);
+
+		word_str_lookup[index] = malloc(strlen(line) + 1);
+		strcpy(word_str_lookup[index], line);
+
+		index += 1;
+	}
+
+	fclose(f);
+
+}
+
 u8 cmd_said()
 {
 	u16 word_remaining;
@@ -197,6 +319,34 @@ u8 cmd_said()
 	
 	word_remaining = *(logic_data++);	// number of words to check.
 	word_bad = word_total;
+
+	load_words();
+
+
+	int cur_room = state.var[V00_ROOM0];
+
+	if (room_for_sentences != cur_room) {
+		clear_sentences();
+		room_for_sentences = cur_room;
+	}
+
+
+	char sentencebuf[200] = {0};
+
+	u8 *dbg_logic = logic_data;
+	for (int i = 0; i < word_remaining; i++) {
+		int dbg_num = load_le_16(dbg_logic);
+		dbg_logic += 2;
+		if (dbg_num == 9999) {
+			strcat(sentencebuf, "*");
+			break;
+		}
+		else {
+			strcat(sentencebuf, word_str_lookup[dbg_num]);
+			strcat(sentencebuf, " ");
+		}
+	}
+	add_sentence(sentencebuf);
 	
 	if (word_bad != 0)
 		if (flag_test(F04_SAIDACCEPT) == 0)
@@ -230,6 +380,7 @@ u8 cmd_said()
 
 	if ((word_remaining | word_bad) == 0)
 	{
+		add_entered_sentence(sentencebuf);
 		flag_set(F04_SAIDACCEPT);	// said command accepted
 		return 1;
 	}

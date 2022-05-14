@@ -479,14 +479,19 @@ u16 char_poll()
 		return 0xFFFF;
 }
 
+extern void vid_update_whole_screen();
+
+
 u16 char_wait()
 {
 	u16 si;
 	do
 	{
 		si = char_poll();
-		if  (  (si == 0) || (si == 0xFFFF)  )
-			SDL_Delay(10);
+		if  (  (si == 0) || (si == 0xFFFF)  ){
+				vid_update_whole_screen();
+				SDL_Delay(10);
+			}
 	} while (  si == 0 || (si == 0xFFFF)  );
 	return si;
 }
@@ -515,8 +520,10 @@ u16 user_bolean_poll()
 	
 	events_clear();
 	
-	while (  (di=has_user_reply()) == 0xFFFF  )
-		SDL_Delay(10);
+	while (  (di=has_user_reply()) == 0xFFFF  ){
+				vid_update_whole_screen();
+				SDL_Delay(10);
+			}
 		
 	return di;
 }
@@ -543,8 +550,10 @@ AGI_EVENT *event_wait()
 	do
 	{
 		si = event_read();
-		if ( si == 0)
-			SDL_Delay(10);
+		if ( si == 0){
+				vid_update_whole_screen();
+				SDL_Delay(10);
+			}
 	} while (  si == 0  );
 	return si;
 }

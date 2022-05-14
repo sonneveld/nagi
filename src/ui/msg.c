@@ -145,6 +145,7 @@ u8 *cmd_display_v(u8 *c)
 }
 
 
+extern void vid_update_whole_screen();
 
 
 
@@ -170,8 +171,10 @@ int message_box(const char *var8)
 		else
 		{
 			temp = calc_agi_tick() + state.var[V21_WINDOWTIMER] * 10;
-			while (  (calc_agi_tick() < temp) && (has_user_reply() == 0xFFFF) )
-				SDL_Delay(50);
+			while (  (calc_agi_tick() < temp) && (has_user_reply() == 0xFFFF) ){
+				vid_update_whole_screen();
+				SDL_Delay(10);
+			}
 			ret = 1;
 			state.var[V21_WINDOWTIMER] = 0;
 		}

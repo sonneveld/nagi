@@ -66,6 +66,10 @@ int main(int argc, char *argv[]);
 // Score before running logic scripts, to determine whether we update status bar
 static u16 old_score = 0;
 
+extern void vid_debug_render();
+extern void vid_debug_strings_render();
+extern void draw_strings();
+
 /* CODE	---	---	---	---	---	---	---	--- */
 int main(int argc, char *argv[])
 {
@@ -116,8 +120,12 @@ int main(int argc, char *argv[])
 		// someone set us up the jump!
 		setjmp(agi_err_state);
 
-		while (logic_call(0) == 0)	// logic 0
+		for(;;)	
 		{
+			if (logic_call(0) != 0) {// logic 0
+				break;
+			}
+
 			// comes here if we need to restart logic0
 			// newroom, restart, restore
 			state.var[V09_BADWORD] = 0;
@@ -138,8 +146,14 @@ int main(int argc, char *argv[])
 		flag_reset(F06_RESTART);	// restart game not executed
 		flag_reset(F12_RESTORE);	// restore game not executed
 
+		vid_debug_render();
+		
+		draw_strings();
+		vid_debug_strings_render();
+
 		// update graphics if not in textmode		
-		if (chgen_textmode == 0)
+		if (chgen_textmode == 0) {
 			objtable_update();
+		}
 	}
 }

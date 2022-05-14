@@ -31,11 +31,16 @@ Mini code sample for SDL2 256-color palette https://discourse.libsdl.org/t/mini-
 
 #include "sdl_vid.h"
 
+#include "IBM_VGA_8x8.h"
+#include "SDL.h"
 
 
 /* PROTOTYPES	---	---	---	---	---	---	--- */
 
-	
+void vid_debug_render();
+void vid_debug_strings_render();
+void draw_strings();
+
 static void vid_free_surfaces(void);
 static void vid_render(SDL_Surface* surface, const u32 x, const u32 y, const u32 w, const u32 h);
 
@@ -48,11 +53,116 @@ struct video_struct
 	SDL_Texture *texture;
 	SDL_Surface *surface;
 	SDL_Surface *surface_conv;
+
+	SDL_Window *debug_window;
+	SDL_Renderer *debug_renderer;
+	SDL_Palette *debug_palette;
+	SDL_Surface *debug_surface;
+	SDL_Texture *debug_texture;
+
+	SDL_Window *debug_strings_window;
+	SDL_Renderer *debug_strings_renderer;
+	SDL_Palette *debug_strings_palette;
+	SDL_Surface *debug_strings_surface;
+	SDL_Texture *debug_strings_texture;
+
 };
 
 typedef struct video_struct VIDEO;
 
 static VIDEO video_data = { 0 };
+
+
+
+
+#define PALETTE_ALPHA (0xFF)
+
+static SDL_Colour ega_colour_map[] = {
+    {0x00, 0x00, 0x00, PALETTE_ALPHA},
+    {0x00, 0x00, 0xAA, PALETTE_ALPHA},
+    {0x00, 0xAA, 0x00, PALETTE_ALPHA},
+    {0x00, 0xAA, 0xAA, PALETTE_ALPHA},
+    {0xAA, 0x00, 0x00, PALETTE_ALPHA},
+    {0xAA, 0x00, 0xAA, PALETTE_ALPHA},
+    {0xAA, 0xAA, 0x00, PALETTE_ALPHA},
+    {0xAA, 0xAA, 0xAA, PALETTE_ALPHA},
+    {0x00, 0x00, 0x55, PALETTE_ALPHA},
+    {0x00, 0x00, 0xFF, PALETTE_ALPHA},
+    {0x00, 0xAA, 0x55, PALETTE_ALPHA},
+    {0x00, 0xAA, 0xFF, PALETTE_ALPHA},
+    {0xAA, 0x00, 0x55, PALETTE_ALPHA},
+    {0xAA, 0x00, 0xFF, PALETTE_ALPHA},
+    {0xAA, 0xAA, 0x55, PALETTE_ALPHA},
+    {0xAA, 0xAA, 0xFF, PALETTE_ALPHA},
+    {0x00, 0x55, 0x00, PALETTE_ALPHA},
+    {0x00, 0x55, 0xAA, PALETTE_ALPHA},
+    {0x00, 0xFF, 0x00, PALETTE_ALPHA},
+    {0x00, 0xFF, 0xAA, PALETTE_ALPHA},
+    {0xAA, 0x55, 0x00, PALETTE_ALPHA},
+    {0xAA, 0x55, 0xAA, PALETTE_ALPHA},
+    {0xAA, 0xFF, 0x00, PALETTE_ALPHA},
+    {0xAA, 0xFF, 0xAA, PALETTE_ALPHA},
+    {0x00, 0x55, 0x55, PALETTE_ALPHA},
+    {0x00, 0x55, 0xFF, PALETTE_ALPHA},
+    {0x00, 0xFF, 0x55, PALETTE_ALPHA},
+    {0x00, 0xFF, 0xFF, PALETTE_ALPHA},
+    {0xAA, 0x55, 0x55, PALETTE_ALPHA},
+    {0xAA, 0x55, 0xFF, PALETTE_ALPHA},
+    {0xAA, 0xFF, 0x55, PALETTE_ALPHA},
+    {0xAA, 0xFF, 0xFF, PALETTE_ALPHA},
+    {0x55, 0x00, 0x00, PALETTE_ALPHA},
+    {0x55, 0x00, 0xAA, PALETTE_ALPHA},
+    {0x55, 0xAA, 0x00, PALETTE_ALPHA},
+    {0x55, 0xAA, 0xAA, PALETTE_ALPHA},
+    {0xFF, 0x00, 0x00, PALETTE_ALPHA},
+    {0xFF, 0x00, 0xAA, PALETTE_ALPHA},
+    {0xFF, 0xAA, 0x00, PALETTE_ALPHA},
+    {0xFF, 0xAA, 0xAA, PALETTE_ALPHA},
+    {0x55, 0x00, 0x55, PALETTE_ALPHA},
+    {0x55, 0x00, 0xFF, PALETTE_ALPHA},
+    {0x55, 0xAA, 0x55, PALETTE_ALPHA},
+    {0x55, 0xAA, 0xFF, PALETTE_ALPHA},
+    {0xFF, 0x00, 0x55, PALETTE_ALPHA},
+    {0xFF, 0x00, 0xFF, PALETTE_ALPHA},
+    {0xFF, 0xAA, 0x55, PALETTE_ALPHA},
+    {0xFF, 0xAA, 0xFF, PALETTE_ALPHA},
+    {0x55, 0x55, 0x00, PALETTE_ALPHA},
+    {0x55, 0x55, 0xAA, PALETTE_ALPHA},
+    {0x55, 0xFF, 0x00, PALETTE_ALPHA},
+    {0x55, 0xFF, 0xAA, PALETTE_ALPHA},
+    {0xFF, 0x55, 0x00, PALETTE_ALPHA},
+    {0xFF, 0x55, 0xAA, PALETTE_ALPHA},
+    {0xFF, 0xFF, 0x00, PALETTE_ALPHA},
+    {0xFF, 0xFF, 0xAA, PALETTE_ALPHA},
+    {0x55, 0x55, 0x55, PALETTE_ALPHA},
+    {0x55, 0x55, 0xFF, PALETTE_ALPHA},
+    {0x55, 0xFF, 0x55, PALETTE_ALPHA},
+    {0x55, 0xFF, 0xFF, PALETTE_ALPHA},
+    {0xFF, 0x55, 0x55, PALETTE_ALPHA},
+    {0xFF, 0x55, 0xFF, PALETTE_ALPHA},
+    {0xFF, 0xFF, 0x55, PALETTE_ALPHA},
+    {0xFF, 0xFF, 0xFF, PALETTE_ALPHA},
+};
+
+
+static int palette_ega_default[] = {
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    20,
+    7,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+};
 
 /* CODE	---	---	---	---	---	---	---	--- */
 
@@ -83,6 +193,130 @@ void vid_shutdown()
 }
 
 
+void vid_debug_display()
+{
+	int res = 0;
+
+	if (video_data.debug_window != 0) { return; }
+
+	res = SDL_CreateWindowAndRenderer( 320, 168, SDL_WINDOW_RESIZABLE, &video_data.debug_window, &video_data.debug_renderer);
+
+
+	SDL_SetWindowTitle(video_data.debug_window, "NAGI Debug");
+
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+	SDL_RenderSetLogicalSize(video_data.debug_renderer, 320, 168);
+
+
+
+
+ 	if (video_data.debug_palette == 0) {
+		// You must allocate 256 colours even though we're only used 16
+		// This is because SDL doesn't check the palette range and will
+		// try to go out of bounds if our surface has colours outside 16
+		video_data.debug_palette = SDL_AllocPalette(256);
+		assert(video_data.debug_palette != 0);
+	}
+
+    // set some ugly colour for if we accidentally go out of the 16 colour range.
+    for (int i = 0; i < 256; i++) {
+        SDL_Color c = {0xFF,0x00,0xFF,PALETTE_ALPHA};
+        res = SDL_SetPaletteColors(video_data.debug_palette, &c, i, 1);
+        assert(res == 0);
+    }
+
+
+
+	for (int i = 0; i < 16; i++) {
+
+    res = SDL_SetPaletteColors(video_data.debug_palette, &ega_colour_map[palette_ega_default[i]], i, 1);
+    assert(res == 0);
+	}
+
+
+    video_data.debug_surface = SDL_CreateRGBSurface(0, 160, 168, 8, 0, 0, 0, 0);
+    assert(video_data.debug_surface != 0);
+
+    res = SDL_SetSurfacePalette(video_data.debug_surface, video_data.debug_palette);
+    assert(res == 0);
+
+    if (video_data.debug_texture == 0) {
+        video_data.debug_texture = SDL_CreateTexture(video_data.debug_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 160, 168);
+        assert(video_data.debug_texture != 0);
+        res = SDL_SetTextureBlendMode(video_data.debug_texture, SDL_BLENDMODE_NONE);
+        assert(res == 0);
+    }
+
+
+    	SDL_RenderClear(video_data.debug_renderer);
+
+	SDL_RenderPresent(video_data.debug_renderer);
+
+}
+
+
+
+void vid_debug_strings_display()
+{
+	int res = 0;
+
+	if (video_data.debug_strings_window != 0) { return; }
+
+	res = SDL_CreateWindowAndRenderer( 640, 480, SDL_WINDOW_RESIZABLE, &video_data.debug_strings_window, &video_data.debug_strings_renderer);
+
+
+	SDL_SetWindowTitle(video_data.debug_strings_window, "NAGI Strings");
+
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+	// SDL_RenderSetLogicalSize(video_data.debug_strings_renderer, 320, 168);
+
+
+
+
+ 	if (video_data.debug_strings_palette == 0) {
+		// You must allocate 256 colours even though we're only used 16
+		// This is because SDL doesn't check the palette range and will
+		// try to go out of bounds if our surface has colours outside 16
+		video_data.debug_strings_palette = SDL_AllocPalette(256);
+		assert(video_data.debug_strings_palette != 0);
+	}
+
+    // set some ugly colour for if we accidentally go out of the 16 colour range.
+    for (int i = 0; i < 256; i++) {
+        SDL_Color c = {0xFF,0x00,0xFF,PALETTE_ALPHA};
+        res = SDL_SetPaletteColors(video_data.debug_strings_palette, &c, i, 1);
+        assert(res == 0);
+    }
+
+
+
+	for (int i = 0; i < 16; i++) {
+
+		res = SDL_SetPaletteColors(video_data.debug_strings_palette, &ega_colour_map[palette_ega_default[i]], i, 1);
+		assert(res == 0);
+	}
+
+
+    video_data.debug_strings_surface = SDL_CreateRGBSurface(0, 640, 480, 8, 0, 0, 0, 0);
+    assert(video_data.debug_strings_surface != 0);
+
+    res = SDL_SetSurfacePalette(video_data.debug_strings_surface, video_data.debug_strings_palette);
+    assert(res == 0);
+
+    if (video_data.debug_strings_texture == 0) {
+        video_data.debug_strings_texture = SDL_CreateTexture(video_data.debug_strings_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 640, 480);
+        assert(video_data.debug_strings_texture != 0);
+        res = SDL_SetTextureBlendMode(video_data.debug_strings_texture, SDL_BLENDMODE_NONE);
+        assert(res == 0);
+    }
+
+
+    	SDL_RenderClear(video_data.debug_strings_renderer);
+
+	SDL_RenderPresent(video_data.debug_strings_renderer);
+
+}
+
 // create an 8bit window with such a size
 // clear it with colour 0
 // 1= fullscreen
@@ -90,6 +324,10 @@ void vid_shutdown()
 void vid_display(AGISIZE *screen_size, int fullscreen_state)
 {
 	int result = 0;
+
+	vid_debug_display();
+
+	vid_debug_strings_display();
 
 	if (video_data.window == 0)
 	{
@@ -122,6 +360,9 @@ void vid_display(AGISIZE *screen_size, int fullscreen_state)
 
 	assert(video_data.window != 0);
 	assert(video_data.renderer != 0);
+
+
+	SDL_SetWindowTitle(video_data.window, "NAGI");
 
 	if (video_data.surface != 0)
 	{
@@ -286,6 +527,16 @@ void vid_update(POS *pos, AGISIZE *size)
 
 }
 
+void vid_update_whole_screen()
+{
+	vid_debug_render();
+		
+	draw_strings();
+	vid_debug_strings_render();
+
+	vid_render(video_data.surface, 0, 0, 0, 0);
+}
+
 // when resizing a window, make sure the aspect ratio is preserved
 void vid_notify_window_size_changed(Uint32 windowID)
 {
@@ -332,8 +583,212 @@ void vid_notify_window_size_changed(Uint32 windowID)
 	}
 }
 
+extern u8 *gfx_picbuff;	// created in gfx_init();
+
+void vid_debug_render()
+{
+    int res = -1;
+
+
+    res = SDL_RenderClear(video_data.debug_renderer);
+    assert(res == 0);
+
+
+	u8 *dest_px = (u8 *)video_data.debug_surface->pixels;
+	for (int i = 0; i < 160*168 ; i ++)
+	{
+		dest_px[i] = (gfx_picbuff[i] >> 4) & 0xF;
+	}
+
+
+    SDL_Surface *textureSurface = 0;
+    res = SDL_LockTextureToSurface(video_data.debug_texture, 0, &textureSurface);
+    assert(res == 0);
+    assert(textureSurface != 0);
+
+    res = SDL_BlitSurface(video_data.debug_surface, 0, textureSurface, 0);
+    assert(res == 0);
+
+    SDL_UnlockTexture(video_data.debug_texture);
+
+
+    res = SDL_RenderCopy(video_data.debug_renderer, video_data.debug_texture, 0, 0);
+    assert(res == 0);
+
+    SDL_RenderPresent(video_data.debug_renderer);
+}
+
+
+void draw_char(SDL_Surface *surface, int col, int row, int ch, int dos_char_fg)
+{
+	int total_rows = video_data.debug_strings_surface->h / 8;
+	int total_cols = video_data.debug_strings_surface->w / 8;
+
+
+	if (row < 0) { return; }
+	if (row >= total_rows) { return; }
+	if (col < 0) { return; }
+	if (col >= total_cols) { return; }
+
+	// int dos_char_fg = 0xf;
+	int dos_char_bg = 0;
+
+
+	unsigned char *pixels = (unsigned char *)surface->pixels;
+
+	uint8_t *bptr = &IBM_VGA_8x8[ch*8];
+
+	for (int y = 0; y < 8; y++) {
+		uint8_t b = *bptr++;
+		uint8_t *dest = pixels + col*8 + (row*8+y)*surface->pitch ;
+		for (int x = 0; x < 8; x++) {
+			*dest++ = (b & 0x80) ? dos_char_fg : dos_char_bg;
+			b <<= 1;
+		}
+	}
+}
+
+void print_string(SDL_Surface *surface, int col, int row, const char *string, int colour)
+{
+	while(*string) {
+		draw_char(surface, col, row, *string, colour);
+		col += 1;
+		string++;
+	}
+}
+
+extern char *sentences_seen[1000];
+extern int sentences_count;
+extern int is_sentence_entered(const char *sentence);
+
+
+void reconstruct_debug_strings()
+{
+	int res;
+
+	int win_w, win_h;
+	SDL_GetWindowSize(video_data.debug_strings_window, &win_w, &win_h);
+
+	SDL_RenderSetLogicalSize(video_data.debug_strings_renderer, win_w, win_h);
+
+ 	if (video_data.debug_strings_palette == 0) {
+		// You must allocate 256 colours even though we're only used 16
+		// This is because SDL doesn't check the palette range and will
+		// try to go out of bounds if our surface has colours outside 16
+		video_data.debug_strings_palette = SDL_AllocPalette(256);
+		assert(video_data.debug_strings_palette != 0);
+	}
+
+    // set some ugly colour for if we accidentally go out of the 16 colour range.
+    for (int i = 0; i < 256; i++) {
+        SDL_Color c = {0xFF,0x00,0xFF,PALETTE_ALPHA};
+        res = SDL_SetPaletteColors(video_data.debug_strings_palette, &c, i, 1);
+        assert(res == 0);
+    }
+
+
+
+	for (int i = 0; i < 16; i++) {
+
+		res = SDL_SetPaletteColors(video_data.debug_strings_palette, &ega_colour_map[palette_ega_default[i]], i, 1);
+		assert(res == 0);
+	}
+
+
+	if (video_data.debug_strings_surface) {
+		SDL_FreeSurface(video_data.debug_strings_surface);
+		video_data.debug_strings_surface = 0;
+	}
+
+    video_data.debug_strings_surface = SDL_CreateRGBSurface(0, win_w, win_h, 8, 0, 0, 0, 0);
+    assert(video_data.debug_strings_surface != 0);
+
+    res = SDL_SetSurfacePalette(video_data.debug_strings_surface, video_data.debug_strings_palette);
+    assert(res == 0);
+
+
+	if (video_data.debug_strings_texture) {
+		SDL_DestroyTexture(video_data.debug_strings_texture);
+		video_data.debug_strings_texture = 0;
+	}
+
+    if (video_data.debug_strings_texture == 0) {
+        video_data.debug_strings_texture = SDL_CreateTexture(video_data.debug_strings_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, win_w, win_h);
+        assert(video_data.debug_strings_texture != 0);
+        res = SDL_SetTextureBlendMode(video_data.debug_strings_texture, SDL_BLENDMODE_NONE);
+        assert(res == 0);
+    }
+
+}
+
+
+void draw_strings()
+{
+	int win_w, win_h;
+	SDL_GetWindowSize(video_data.debug_strings_window, &win_w, &win_h);
+
+	if (win_w != video_data.debug_strings_surface->w || win_h != video_data.debug_strings_surface->h)
+	{
+		reconstruct_debug_strings();
+	}
+
+	SDL_FillRect(video_data.debug_strings_surface, 0, 0);
+	int total_rows;
+
+	total_rows = video_data.debug_strings_surface->h / 8;
+
+	int row = 0;
+	int col = 0;
+
+	for (int i = 0; i < sentences_count; i++) {
+
+		if (is_sentence_entered(sentences_seen[i])) {
+			print_string(video_data.debug_strings_surface, col*20, row, sentences_seen[i], 0xE);
+		}
+		else {
+			print_string(video_data.debug_strings_surface, col*20, row, sentences_seen[i], 0xF);
+		}
+
+		row += 1;
+		if (row >= total_rows) {
+			row = 0;
+			col += 1;
+		}
+
+	}
+
+
+}
+
+void vid_debug_strings_render()
+{
+    int res = -1;
+
+
+    res = SDL_RenderClear(video_data.debug_strings_renderer);
+    assert(res == 0);
+
+
+    SDL_Surface *textureSurface = 0;
+    res = SDL_LockTextureToSurface(video_data.debug_strings_texture, 0, &textureSurface);
+    assert(res == 0);
+    assert(textureSurface != 0);
+
+    res = SDL_BlitSurface(video_data.debug_strings_surface, 0, textureSurface, 0);
+    assert(res == 0);
+
+    SDL_UnlockTexture(video_data.debug_strings_texture);
+
+    res = SDL_RenderCopy(video_data.debug_strings_renderer, video_data.debug_strings_texture, 0, 0);
+    assert(res == 0);
+
+    SDL_RenderPresent(video_data.debug_strings_renderer);
+}
+
+
 static void vid_render(SDL_Surface *surface, const u32 x, const u32 y, const u32 w, const u32 h)
 {
+
 	SDL_Rect rect;
 	rect.x = x;
 	rect.y = y;

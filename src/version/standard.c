@@ -739,10 +739,9 @@ static void standard_init_ng(GAMEINFO *game, INI *ini)
 			int title_len = snprintf(NULL, 0, "%s - NAGI", game->name);
 			char *title = alloca(title_len + 1);
 			snprintf(title, title_len + 1, "%s - NAGI", game->name);
-			SDL_SetWindowTitle(window, title);
+			// SDL_SetWindowTitle(window, title);
 		}
-		else
-			SDL_SetWindowTitle(window, "NAGI");
+		// SDL_SetWindowTitle(window, "NAGI");
 	}
 }
 
